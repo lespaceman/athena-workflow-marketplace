@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "mcp__athena-browser-mcp-local__navigate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Navigation completed\" >> /tmp/athena-browser-log.txt"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__athena-browser-mcp-local__click",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Click action completed\" >> /tmp/athena-browser-log.txt"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__athena-browser-mcp-local__launch_browser",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Browser session started\" >> /tmp/athena-browser-log.txt"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__athena-browser-mcp-local__close_session",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Browser session closed\" >> /tmp/athena-browser-log.txt && echo '---' >> /tmp/athena-browser-log.txt"
+          }
+        ]
+      }
+    ]
+  }
+}

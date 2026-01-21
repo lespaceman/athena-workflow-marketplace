@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "athena-browser-mcp": {
+      "command": "npx",
+      "args": ["-y", "athena-browser-mcp@latest"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
