@@ -1,5 +1,4 @@
 ---
-name: complete-purchase
 description: End-to-end Apple Store purchase - navigate, configure, add to bag, and checkout.
 ---
 

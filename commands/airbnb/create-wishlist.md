@@ -1,5 +1,4 @@
 ---
-name: create-wishlist
 description: Create and manage Airbnb wishlists - create new lists, add properties, organize saved stays.
 ---
 

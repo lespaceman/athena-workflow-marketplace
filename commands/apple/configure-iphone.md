@@ -1,5 +1,4 @@
 ---
-name: configure-iphone
 description: Configure iPhone model, color, storage, and carrier options in the Apple Store.
 ---
 

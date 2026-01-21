@@ -1,5 +1,4 @@
 ---
-name: navigate-store
 description: Navigate to Apple Store sections - iPhone, Mac, iPad, Watch, and accessories.
 ---
 

@@ -1,5 +1,4 @@
 ---
-name: add-to-bag
 description: Add configured Apple product to shopping bag and verify cart contents.
 ---
 

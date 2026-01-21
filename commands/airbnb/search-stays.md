@@ -1,5 +1,4 @@
 ---
-name: search-stays
 description: Search for Airbnb stays with location, dates, guests, and filters like price and amenities.
 ---
 

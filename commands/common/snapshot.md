@@ -1,5 +1,4 @@
 ---
-name: snapshot
 description: Capture a semantic snapshot of the current page state including elements and accessibility tree.
 ---
 

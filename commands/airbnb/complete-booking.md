@@ -1,5 +1,4 @@
 ---
-name: complete-booking
 description: End-to-end Airbnb booking workflow - login, search, select property, and complete reservation.
 ---
 

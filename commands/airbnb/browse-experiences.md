@@ -1,5 +1,4 @@
 ---
-name: browse-experiences
 description: Discover and browse Airbnb Experiences - tours, activities, and local guides.
 ---
 

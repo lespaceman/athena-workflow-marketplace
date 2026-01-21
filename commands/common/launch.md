@@ -1,5 +1,4 @@
 ---
-name: launch
 description: Launch a new browser instance for automation. Supports headless and visible modes.
 ---
 

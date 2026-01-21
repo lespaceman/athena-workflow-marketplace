@@ -1,5 +1,4 @@
 ---
-name: close
 description: Close the browser session and clean up resources.
 ---
 

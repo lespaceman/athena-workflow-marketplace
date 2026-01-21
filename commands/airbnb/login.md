@@ -1,5 +1,4 @@
 ---
-name: login
 description: Authenticate to Airbnb with email/phone and password or OAuth providers.
 ---
 
