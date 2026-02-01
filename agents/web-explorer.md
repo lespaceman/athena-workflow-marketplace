@@ -1,5 +1,5 @@
 ---
-name: browser-use
+name: web-explorer
 description: >
   Use this agent when the user wants to explore, navigate, or interact with a website using a browser.
   This includes browsing web pages, filling forms, clicking buttons, extracting page content or selectors,
@@ -11,7 +11,7 @@ description: >
   <example>
   Context: The user wants to explore a website's checkout flow.
   user: "Go to apple.com and walk me through the iPhone purchase flow"
-  assistant: "I'll use the browser-use agent to navigate apple.com and explore the checkout flow."
+  assistant: "I'll use the web-explorer agent to navigate apple.com and explore the checkout flow."
   <commentary>
   The user wants live browser exploration of a website, not test case generation or test code.
   </commentary>
@@ -20,16 +20,16 @@ description: >
   <example>
   Context: The user wants to extract selectors from a web page.
   user: "Find the login form selectors on airbnb.com"
-  assistant: "I'll use the browser-use agent to navigate to Airbnb and extract the login form selectors."
+  assistant: "I'll use the web-explorer agent to navigate to Airbnb and extract the login form selectors."
   <commentary>
-  The user needs selector extraction from a live page, which is core browser-use functionality.
+  The user needs selector extraction from a live page, which is core web-explorer functionality.
   </commentary>
   </example>
 
   <example>
   Context: The user wants to interact with a web application.
   user: "Search for stays in Tokyo on Airbnb for next weekend"
-  assistant: "I'll use the browser-use agent to search Airbnb for stays in Tokyo."
+  assistant: "I'll use the web-explorer agent to search Airbnb for stays in Tokyo."
   <commentary>
   The user wants to perform actions on a website, not generate tests or write test code.
   </commentary>

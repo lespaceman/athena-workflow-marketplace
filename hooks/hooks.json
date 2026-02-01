@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Navigation completed\" >> /tmp/athena-browser-log.txt"
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Navigation completed\" >> /tmp/agent-browser-log.txt"
           }
         ]
       },
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Click action completed\" >> /tmp/athena-browser-log.txt"
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Click action completed\" >> /tmp/agent-browser-log.txt"
           }
         ]
       },
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Browser session closed\" >> /tmp/athena-browser-log.txt && echo '---' >> /tmp/athena-browser-log.txt"
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Browser session closed\" >> /tmp/agent-browser-log.txt && echo '---' >> /tmp/agent-browser-log.txt"
           }
         ]
       }

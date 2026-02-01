@@ -1,29 +1,63 @@
 ---
-name: playwright-compiler
+name: write-e2e-tests
 description: >
-  Use when converting browser exploration results into Playwright test code. Reference for locator
-  priority strategies, scope-to-locator mapping, action-to-Playwright mapping, assertion patterns,
-  test templates, and fixture policies.
-user-invocable: false
+  This skill should be used when the user asks to "write tests", "create Playwright tests", "write e2e tests",
+  "convert selectors to tests", "turn exploration into tests", "fix a flaky test", "add a test for this flow",
+  or wants to convert browser exploration results or test case specs into executable Playwright test code.
+user-invocable: true
+argument-hint: <test description or path to test case spec file>
 allowed-tools:
+  - mcp__agent-web-interface__ping
   - mcp__agent-web-interface__navigate
   - mcp__agent-web-interface__go_back
+  - mcp__agent-web-interface__go_forward
   - mcp__agent-web-interface__reload
-  - mcp__agent-web-interface__click
-  - mcp__agent-web-interface__type
-  - mcp__agent-web-interface__select
-  - mcp__agent-web-interface__press
-  - mcp__agent-web-interface__hover
   - mcp__agent-web-interface__capture_snapshot
-  - mcp__agent-web-interface__scroll_page
-  - mcp__agent-web-interface__scroll_element_into_view
   - mcp__agent-web-interface__find_elements
   - mcp__agent-web-interface__get_element_details
+  - mcp__agent-web-interface__scroll_element_into_view
+  - mcp__agent-web-interface__scroll_page
+  - mcp__agent-web-interface__click
+  - mcp__agent-web-interface__type
+  - mcp__agent-web-interface__press
+  - mcp__agent-web-interface__select
+  - mcp__agent-web-interface__hover
   - mcp__agent-web-interface__get_form_understanding
   - mcp__agent-web-interface__get_field_context
+  - mcp__agent-web-interface__list_pages
+  - mcp__agent-web-interface__close_page
+  - mcp__agent-web-interface__close_session
 ---
 
-# Playwright Test Compiler Skill Reference
+# Write E2E Tests
+
+Write, refactor, or fix Playwright E2E tests by converting browser exploration results or test case specifications into executable test code.
+
+## Workflow
+
+1. **Parse the input** — extract the test description or test case spec file path from the arguments: $ARGUMENTS
+2. **Launch the playwright-test-writer agent** — use the Task tool to invoke the `playwright-test-writer` agent with the test description
+3. **The agent will**:
+   - Understand the user journey to test and success criteria
+   - Inspect repo conventions (existing tests, fixtures, page objects, locator patterns)
+   - Write tests using stable locators and event-driven waits
+   - Assign unique test case IDs (`TC-<FEATURE>-<NUMBER>`) to every test
+   - Run the tests to verify they pass
+4. **Output** — the agent creates Playwright test files and returns a summary of changes, test case IDs, stability notes, and run commands
+
+## Example Usage
+
+```
+/write-e2e-tests Write a login flow test for https://example.com/login
+```
+
+```
+/write-e2e-tests Convert test-cases/checkout.md into Playwright tests
+```
+
+```
+/write-e2e-tests Fix the flaky timeout in tests/e2e/cart.spec.ts
+```
 
 ## Locator Priority Strategy
 
@@ -34,11 +68,9 @@ Use locators in this order of preference:
 | 1 | `getByRole('role', { name })` | Buttons, links, headings, form controls |
 | 2 | `getByLabel()` | Form fields with visible labels |
 | 3 | `getByPlaceholder()` | Inputs with placeholder text |
-| 4 | `getByTestId()` | When data-testid is available in journey JSON |
+| 4 | `getByTestId()` | When data-testid is available |
 | 5 | `getByText()` | Short, stable text (avoid marketing copy) |
 | 6 | CSS selectors | Last resort, always scoped tightly |
-
----
 
 ## Scope-to-Locator Mapping
 
@@ -51,13 +83,6 @@ Use locators in this order of preference:
 | `dialog` | `page.locator('[role="dialog"]')` |
 | `footer` | `page.locator('footer')` |
 
-Example with scoping:
-```typescript
-await page.locator('main').getByRole('button', { name: /add to bag/i }).click();
-```
-
----
-
 ## Action-to-Playwright Mapping
 
 | Journey Action | Playwright Code |
@@ -67,8 +92,6 @@ await page.locator('main').getByRole('button', { name: /add to bag/i }).click();
 | `fill` | `await locator.fill(value)` |
 | `select` | `await locator.selectOption(value)` |
 | `assert` | `await expect(locator).toBeVisible()` |
-
----
 
 ## Target Kind to Locator Mapping
 
@@ -82,8 +105,6 @@ await page.locator('main').getByRole('button', { name: /add to bag/i }).click();
 | `text` | `Continue` | `getByText(/continue/i)` |
 | `testid` | `checkout-button` | `getByTestId('checkout-button')` |
 
----
-
 ## Assertion Mapping (from observed effects)
 
 | Observed Effect | Playwright Assertion |
@@ -93,8 +114,6 @@ await page.locator('main').getByRole('button', { name: /add to bag/i }).click();
 | `radio 256GB now checked` | `await expect(locator).toBeChecked()` |
 | `button now enabled` | `await expect(locator).toBeEnabled()` |
 | `cart badge shows '1'` | `await expect(page.getByText('1')).toBeVisible()` |
-
----
 
 ## Low Confidence Handling (<0.7)
 
@@ -113,8 +132,6 @@ await storageRadio.click();
 await expect(storageRadio).toBeChecked({ timeout: 5000 });
 ```
 
----
-
 ## Test Template
 
 ```typescript
@@ -126,34 +143,17 @@ test.use({
   timezoneId: 'America/Los_Angeles',
 });
 
-test('add iPhone 16 Pro to cart', async ({ page }) => {
-  // s1: Navigate to Apple Store
-  await page.goto('https://www.apple.com/store');
+test('TC-FEATURE-001: Description of test case', async ({ page }) => {
+  // s1: Navigate to target page
+  await page.goto('https://example.com');
 
-  // s2: Click iPhone link in navigation
-  await page.locator('nav').getByRole('link', { name: /iphone/i }).click();
-  await expect(page).toHaveURL(/\/iphone/);
-
-  // s3: Select iPhone 16 Pro
-  await page.locator('main').getByRole('link', { name: /iphone 16 pro/i }).click();
-  await expect(page).toHaveURL(/\/iphone-16-pro/);
-
-  // s4: Click Buy button
-  await page.getByRole('link', { name: /buy/i }).first().click();
-
-  // s5: Select 256GB storage
-  await page.getByRole('radio', { name: /256gb/i }).click();
-  await expect(page.getByRole('radio', { name: /256gb/i })).toBeChecked();
-
-  // s6: Add to Bag
-  await page.getByRole('button', { name: /add to bag/i }).click();
+  // s2: Perform action
+  await page.locator('main').getByRole('button', { name: /submit/i }).click();
 
   // Final assertions
-  await expect(page.getByText(/added to bag/i)).toBeVisible();
+  await expect(page.getByText(/success/i)).toBeVisible();
 });
 ```
-
----
 
 ## Selector Map Format
 
@@ -163,8 +163,6 @@ For complex journeys, document primary and fallback locators:
 - s2: primary `nav >> getByRole('link', { name: /iphone/i })`, fallback `getByText(/^iPhone$/i)`
 - s5: primary `getByRole('radio', { name: /256gb/i })`, fallback `getByLabel(/256gb/i)`
 ```
-
----
 
 ## Fixtures Policy
 
@@ -190,8 +188,6 @@ export const test = base.extend({
 });
 ```
 
----
-
 ## Defaults Reference
 
 | Setting | Default Value |
@@ -201,8 +197,6 @@ export const test = base.extend({
 | Locale | en-US |
 | Timezone | UTC |
 | Test file | `tests/e2e/{goal-slug}.spec.ts` |
-
----
 
 ## Anti-Patterns to Avoid
 

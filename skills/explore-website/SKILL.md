@@ -1,15 +1,66 @@
 ---
-name: browser-use
+name: explore-website
 description: >
-  Use when interacting with any website via agent-web-interface MCP tools. Reference for tool usage,
-  XML response formats, selector extraction from get_element_details, form analysis patterns, and
-  snapshot workflows.
-user-invocable: false
+  This skill should be used when the user asks to "explore a website", "browse a page", "navigate a site",
+  "interact with a web app", "extract selectors from a page", "fill out a form on a website", or provides
+  a URL and wants live browser interaction, selector extraction, or form analysis.
+user-invocable: true
+argument-hint: <url> <what to explore or do>
+allowed-tools:
+  - mcp__agent-web-interface__ping
+  - mcp__agent-web-interface__navigate
+  - mcp__agent-web-interface__go_back
+  - mcp__agent-web-interface__go_forward
+  - mcp__agent-web-interface__reload
+  - mcp__agent-web-interface__capture_snapshot
+  - mcp__agent-web-interface__find_elements
+  - mcp__agent-web-interface__get_element_details
+  - mcp__agent-web-interface__scroll_element_into_view
+  - mcp__agent-web-interface__scroll_page
+  - mcp__agent-web-interface__click
+  - mcp__agent-web-interface__type
+  - mcp__agent-web-interface__press
+  - mcp__agent-web-interface__select
+  - mcp__agent-web-interface__hover
+  - mcp__agent-web-interface__get_form_understanding
+  - mcp__agent-web-interface__get_field_context
+  - mcp__agent-web-interface__list_pages
+  - mcp__agent-web-interface__close_page
+  - mcp__agent-web-interface__close_session
 ---
 
-# Browser Use Reference
+# Explore Website
 
-## MCP Tools Overview
+Explore and interact with a live website using a browser, reporting observations, extracting Playwright selectors, and analyzing forms.
+
+## Workflow
+
+1. **Parse the input** — extract the target URL and exploration goal from the arguments: $ARGUMENTS
+2. **Launch the web-explorer agent** — use the Task tool to invoke the `web-explorer` agent with the URL and goal
+3. **The agent will**:
+   - Navigate to the URL and interact as a real user would
+   - Use structured accessibility-tree snapshots to understand page structure
+   - Extract Playwright-compatible selectors via `get_element_details`
+   - Analyze forms with `get_form_understanding` and `get_field_context`
+   - Report observations from `<appeared>` tags and state diffs
+   - Note blockers (auth walls, CAPTCHA, geo restrictions)
+4. **Output** — the agent returns a structured exploration report with selectors, form insights, and recommendations
+
+## Example Usage
+
+```
+/explore-website https://airbnb.com Walk through the search and booking flow for stays in Tokyo
+```
+
+```
+/explore-website https://apple.com/store Find the iPhone purchase flow and extract all form selectors
+```
+
+```
+/explore-website https://example.com/login Extract the login form selectors and field purposes
+```
+
+## MCP Tools Reference
 
 | Tool | Purpose | Key Response Elements |
 |------|---------|----------------------|
@@ -26,11 +77,9 @@ user-invocable: false
 | `list_pages` | List open browser pages | Page IDs, URLs, titles |
 | `close_page` / `close_session` | Close page or entire session | Cleanup |
 
----
-
 ## Response Format Examples
 
-### 1. State/Snapshot
+### State/Snapshot
 
 After `navigate` or `capture_snapshot`:
 
@@ -48,13 +97,7 @@ After `navigate` or `capture_snapshot`:
 </state>
 ```
 
-**Key fields:**
-- `id` attributes are eids for interaction
-- `<region name="...">` indicates page section (nav, main, header, footer)
-
----
-
-### 2. After Actions (click/type)
+### After Actions (click/type)
 
 ```xml
 <state step="3" title="..." url="...">
@@ -68,14 +111,7 @@ After `navigate` or `capture_snapshot`:
 </state>
 ```
 
-**Key fields:**
-- `<diff>` shows what changed
-- `<observations><appeared>` contains new visible text - **report these**
-- Element attributes like `expanded`, `focused`, `checked` show state changes
-
----
-
-### 3. get_element_details (Playwright Selectors)
+### get_element_details (Playwright Selectors)
 
 ```xml
 <node eid="3e9a1da76faa" kind="button" label="Shopping Bag">
@@ -87,40 +123,17 @@ After `navigate` or `capture_snapshot`:
 </node>
 ```
 
-**Key fields:**
-- `<find primary="...">` → **Playwright-compatible selector** (extract and report)
-- `alternates` → semicolon-separated fallback selectors
-- `<state>` → current element state
-
-**Selector extraction:**
-```
-primary="role=button[name=&quot;Shopping Bag&quot;]"
-→ Playwright: role=button[name="Shopping Bag"]
-```
-
----
-
-### 4. find_elements
+### find_elements
 
 ```xml
 <result type="find_elements" count="5">
   <match eid="b366be1381dd" kind="button" label="Store menu"
          region="nav" selector="role=button[name=&quot;Store menu&quot;]"
          visible="true" enabled="true" />
-  <match eid="c7f9a2b3c4d5" kind="button" label="Search"
-         region="nav" selector="role=button[name=&quot;Search&quot;]"
-         visible="true" enabled="true" />
 </result>
 ```
 
-**Key fields:**
-- `eid` for interaction
-- `selector` attribute is Playwright-ready
-- `region` for scope context
-
----
-
-### 5. get_form_understanding
+### get_form_understanding
 
 ```xml
 <form_understanding>
@@ -136,62 +149,6 @@ primary="role=button[name=&quot;Shopping Bag&quot;]"
   </form>
 </form_understanding>
 ```
-
-**Key fields:**
-- `intent`: login, signup, search, checkout, contact, etc.
-- `completion`: percentage of form filled
-- `can_submit`: whether form is ready to submit
-- `fields[purpose]`: name, email, password, phone, address, etc.
-- `next_action`: suggested next field to interact with
-
----
-
-### 6. get_field_context
-
-```xml
-<field_context eid="108">
-  <field label="Username" kind="input" purpose="name" purpose_confidence="0.70">
-    <purpose_signals>
-      <signal>label contains "name"</signal>
-    </purpose_signals>
-    <state filled="false" valid="true" enabled="true" />
-    <constraints required="false" />
-  </field>
-  <next_action eid="108" label="Username" reason="Optional field" />
-</field_context>
-```
-
-**Key fields:**
-- `purpose` + `purpose_confidence`: field type inference
-- `purpose_signals`: why it inferred this purpose
-- `constraints`: validation rules (required, pattern, etc.)
-
----
-
-## Workflow Patterns
-
-### Extract Playwright Selector for Element
-
-1. Find element: `find_elements(kind="button", label="Submit")`
-2. Get details: `get_element_details(eid="...")`
-3. Extract: `<find primary="role=button[name=&quot;Submit&quot;]">`
-4. Report: `role=button[name="Submit"]`
-
-### Understand Form Before Filling
-
-1. Analyze: `get_form_understanding()`
-2. Check `intent` and `fields[purpose]`
-3. Note `completion` and `can_submit`
-4. Fill fields based on `purpose` (email, password, etc.)
-
-### Track Action Effects
-
-1. Perform action: `click(eid="...")`
-2. Check response for `<observations><appeared>`
-3. Report what appeared to user
-4. Note state changes in element attributes
-
----
 
 ## Best Practices
 

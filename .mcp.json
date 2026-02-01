@@ -2,7 +2,7 @@
   "mcpServers": {
     "agent-web-interface": {
       "command": "npx",
-      "args": ["-y", "athena-browser-mcp@latest"],
+      "args": ["-y", "agent-web-interface@latest"],
       "env": {
         "NODE_ENV": "production"
       }
