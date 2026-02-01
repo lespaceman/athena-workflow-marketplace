@@ -1,6 +1,10 @@
 ---
 name: airbnb
-description: Patterns and best practices for automating Airbnb - search, listings, booking, experiences
+description: >
+  Use when automating airbnb.com, searching for stays, browsing experiences, creating wishlists,
+  completing bookings, or writing tests for Airbnb flows. Covers site structure, element patterns,
+  search forms, modal handling, and common issues.
+user-invocable: false
 ---
 
 # Airbnb Automation Skill

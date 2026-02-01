@@ -1,9 +1,9 @@
 {
   "name": "athena-browser",
-  "description": "AI-driven browser automation for Airbnb and Apple workflows using athena-browser-mcp",
+  "description": "AI-driven browser automation workflows using agent-web-interface MCP server",
   "version": "1.0.0",
   "author": {
-    "name": "Athena Browser MCP Team"
+    "name": "Athena Browser Team"
   },
   "repository": "https://github.com/lespaceman/athena-browser-mcp"
 }

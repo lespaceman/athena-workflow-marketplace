@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "athena-browser-mcp": {
+    "agent-web-interface": {
       "command": "npx",
       "args": ["-y", "athena-browser-mcp@latest"],
       "env": {

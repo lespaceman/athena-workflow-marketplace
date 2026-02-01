@@ -1,25 +1,26 @@
 ---
 name: apple-testing-guide
-description: Accumulated learnings for writing Playwright tests on apple.com. Reference this when creating or debugging Apple Store automation tests.
+description: >
+  Use when creating or debugging Playwright tests for apple.com. Contains accumulated learnings about
+  Apple's hidden radio inputs, React state handlers, sticky header interception, sequential form
+  enablement, and dynamic IDs.
 user-invocable: false
-allowed_tools:
-  - mcp__athena-browser-mcp__launch_browser
-  - mcp__athena-browser-mcp__connect_browser
-  - mcp__athena-browser-mcp__close_session
-  - mcp__athena-browser-mcp__navigate
-  - mcp__athena-browser-mcp__go_back
-  - mcp__athena-browser-mcp__click
-  - mcp__athena-browser-mcp__type
-  - mcp__athena-browser-mcp__select
-  - mcp__athena-browser-mcp__press
-  - mcp__athena-browser-mcp__hover
-  - mcp__athena-browser-mcp__capture_snapshot
-  - mcp__athena-browser-mcp__scroll_page
-  - mcp__athena-browser-mcp__scroll_element_into_view
-  - mcp__athena-browser-mcp__find_elements
-  - mcp__athena-browser-mcp__get_node_details
-  - mcp__athena-browser-mcp__get_form_understanding
-  - mcp__athena-browser-mcp__get_field_context
+allowed-tools:
+  - mcp__agent-web-interface__navigate
+  - mcp__agent-web-interface__go_back
+  - mcp__agent-web-interface__reload
+  - mcp__agent-web-interface__click
+  - mcp__agent-web-interface__type
+  - mcp__agent-web-interface__select
+  - mcp__agent-web-interface__press
+  - mcp__agent-web-interface__hover
+  - mcp__agent-web-interface__capture_snapshot
+  - mcp__agent-web-interface__scroll_page
+  - mcp__agent-web-interface__scroll_element_into_view
+  - mcp__agent-web-interface__find_elements
+  - mcp__agent-web-interface__get_element_details
+  - mcp__agent-web-interface__get_form_understanding
+  - mcp__agent-web-interface__get_field_context
 ---
 
 # Apple.com Playwright Testing Guide
@@ -60,7 +61,9 @@ await page.evaluate((id) => {
   radio.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
 }, radioId);
 
-await page.waitForTimeout(300); // Allow React state update
+// KNOWN EXCEPTION: Apple's React state propagation requires this delay;
+// no observable DOM event to wait for after dispatchEvent.
+await page.waitForTimeout(300);
 ```
 
 ### Form Behavior

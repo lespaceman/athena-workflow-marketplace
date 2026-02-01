@@ -1,25 +1,26 @@
 ---
 name: playwright-compiler
-description: Detailed patterns for the playwright-test-compiler agent. Reference for locator strategies, scope mapping, action mapping, and test templates.
+description: >
+  Use when converting browser exploration results into Playwright test code. Reference for locator
+  priority strategies, scope-to-locator mapping, action-to-Playwright mapping, assertion patterns,
+  test templates, and fixture policies.
 user-invocable: false
-allowed_tools:
-  - mcp__athena-browser-mcp__launch_browser
-  - mcp__athena-browser-mcp__connect_browser
-  - mcp__athena-browser-mcp__close_session
-  - mcp__athena-browser-mcp__navigate
-  - mcp__athena-browser-mcp__go_back
-  - mcp__athena-browser-mcp__click
-  - mcp__athena-browser-mcp__type
-  - mcp__athena-browser-mcp__select
-  - mcp__athena-browser-mcp__press
-  - mcp__athena-browser-mcp__hover
-  - mcp__athena-browser-mcp__capture_snapshot
-  - mcp__athena-browser-mcp__scroll_page
-  - mcp__athena-browser-mcp__scroll_element_into_view
-  - mcp__athena-browser-mcp__find_elements
-  - mcp__athena-browser-mcp__get_node_details
-  - mcp__athena-browser-mcp__get_form_understanding
-  - mcp__athena-browser-mcp__get_field_context
+allowed-tools:
+  - mcp__agent-web-interface__navigate
+  - mcp__agent-web-interface__go_back
+  - mcp__agent-web-interface__reload
+  - mcp__agent-web-interface__click
+  - mcp__agent-web-interface__type
+  - mcp__agent-web-interface__select
+  - mcp__agent-web-interface__press
+  - mcp__agent-web-interface__hover
+  - mcp__agent-web-interface__capture_snapshot
+  - mcp__agent-web-interface__scroll_page
+  - mcp__agent-web-interface__scroll_element_into_view
+  - mcp__agent-web-interface__find_elements
+  - mcp__agent-web-interface__get_element_details
+  - mcp__agent-web-interface__get_form_understanding
+  - mcp__agent-web-interface__get_field_context
 ---
 
 # Playwright Test Compiler Skill Reference
@@ -181,9 +182,9 @@ import { test as base } from '@playwright/test';
 export const test = base.extend({
   authenticatedPage: async ({ page }, use) => {
     await page.goto('/login');
-    await page.fill('#email', 'test@example.com');
-    await page.fill('#password', 'password');
-    await page.click('button[type="submit"]');
+    await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
+    await page.getByRole('textbox', { name: /password/i }).fill('password');
+    await page.getByRole('button', { name: /log in|sign in|submit/i }).click();
     await use(page);
   },
 });

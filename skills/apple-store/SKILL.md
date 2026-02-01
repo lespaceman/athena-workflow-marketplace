@@ -1,6 +1,10 @@
 ---
-name: apple
-description: Patterns and best practices for automating Apple Store - products, configuration, checkout
+name: apple-store
+description: >
+  Use when automating apple.com, configuring iPhones or other Apple products, navigating the Apple
+  Store, adding items to bag, or writing tests for Apple Store flows. Covers site structure, element
+  patterns, configuration flows, and common issues.
+user-invocable: false
 ---
 
 # Apple Store Automation Skill
