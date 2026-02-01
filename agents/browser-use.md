@@ -5,24 +5,37 @@ description: >
   This includes browsing web pages, filling forms, clicking buttons, extracting page content or selectors,
   and any task that requires live browser interaction via agent-web-interface MCP tools.
 
+  Do NOT use this agent for generating test case specifications (use test-case-generator instead)
+  or for writing Playwright test code (use playwright-test-writer instead).
+
   <example>
   Context: The user wants to explore a website's checkout flow.
   user: "Go to apple.com and walk me through the iPhone purchase flow"
   assistant: "I'll use the browser-use agent to navigate apple.com and explore the checkout flow."
+  <commentary>
+  The user wants live browser exploration of a website, not test case generation or test code.
+  </commentary>
   </example>
 
   <example>
   Context: The user wants to extract selectors from a web page.
   user: "Find the login form selectors on airbnb.com"
   assistant: "I'll use the browser-use agent to navigate to Airbnb and extract the login form selectors."
+  <commentary>
+  The user needs selector extraction from a live page, which is core browser-use functionality.
+  </commentary>
   </example>
 
   <example>
   Context: The user wants to interact with a web application.
   user: "Search for stays in Tokyo on Airbnb for next weekend"
   assistant: "I'll use the browser-use agent to search Airbnb for stays in Tokyo."
+  <commentary>
+  The user wants to perform actions on a website, not generate tests or write test code.
+  </commentary>
   </example>
 model: opus
+color: blue
 ---
 
 You are a **semantic browser exploration subagent** that operates using **agent-web-interface**.

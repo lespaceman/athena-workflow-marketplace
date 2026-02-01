@@ -5,24 +5,37 @@ description: >
   exploration to convert discovered flows into test code, when adding new user-journey tests, fixing
   flaky tests, or improving locator and wait strategies.
 
+  Do NOT use this agent for generating test case specifications without code (use test-case-generator instead)
+  or for general browser exploration (use browser-use instead).
+
   <example>
   Context: The user wants to create a Playwright test for a user flow.
   user: "Write a Playwright test for the Apple Store iPhone purchase flow"
   assistant: "I'll use the playwright-test-writer agent to create an E2E test for the iPhone purchase flow."
+  <commentary>
+  The user explicitly wants Playwright test code, not just test case specs or browser exploration.
+  </commentary>
   </example>
 
   <example>
   Context: The user has a flaky test that needs stabilization.
   user: "This checkout test keeps timing out, can you fix it?"
   assistant: "I'll use the playwright-test-writer agent to diagnose and stabilize the flaky checkout test."
+  <commentary>
+  Fixing existing Playwright tests is core playwright-test-writer work, not test-case-generator or browser-use territory.
+  </commentary>
   </example>
 
   <example>
   Context: The user wants to convert browser exploration results into tests.
   user: "Now turn those selectors we found into a proper Playwright test"
   assistant: "I'll use the playwright-test-writer agent to create a Playwright test using the selectors from the exploration."
+  <commentary>
+  The user already has exploration data and wants it converted to executable Playwright code.
+  </commentary>
   </example>
 model: opus
+color: cyan
 ---
 
 You are a Playwright E2E test-writing specialist.
