@@ -27,6 +27,7 @@ allowed-tools:
   - mcp__agent-web-interface__list_pages
   - mcp__agent-web-interface__close_page
   - mcp__agent-web-interface__close_session
+  - mcp__agent-web-interface__take_screenshot
 ---
 
 # Generate Test Cases
