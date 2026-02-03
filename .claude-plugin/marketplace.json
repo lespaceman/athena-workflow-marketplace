@@ -1,0 +1,18 @@
+{
+  "name": "athena-plugin-marketplace",
+  "owner": {
+    "name": "Browser Automation Team"
+  },
+  "metadata": {
+    "description": "A marketplace of AI-powered browser automation plugins for Claude Code",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "web-testing-toolkit",
+      "source": "./plugins/web-testing-toolkit",
+      "description": "AI-driven browser automation for web exploration, test case generation, and Playwright E2E test writing",
+      "version": "1.0.0"
+    }
+  ]
+}

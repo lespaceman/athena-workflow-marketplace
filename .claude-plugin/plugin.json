@@ -1,9 +1,0 @@
-{
-  "name": "browser-workflow-agents",
-  "description": "AI-driven browser automation workflows using agent-web-interface MCP server",
-  "version": "1.0.0",
-  "author": {
-    "name": "Browser Automation Team"
-  },
-  "repository": "https://github.com/lespaceman/agent-web-interface"
-}
