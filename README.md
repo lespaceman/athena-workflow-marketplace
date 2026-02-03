@@ -8,10 +8,10 @@ Add this marketplace to Claude Code:
 
 ```shell
 # From GitHub
-/plugin marketplace add lespaceman/athena-plugin-marketplace
+claude plugin marketplace add lespaceman/athena-plugin-marketplace
 
 # From a local clone
-/plugin marketplace add ./athena-plugin-marketplace
+claude plugin marketplace add ./athena-plugin-marketplace
 ```
 
 ## Install a Plugin
@@ -19,20 +19,20 @@ Add this marketplace to Claude Code:
 Once the marketplace is added, install a plugin:
 
 ```shell
-/plugin install web-testing-toolkit@athena-plugin-marketplace
+claude plugin install web-testing-toolkit@athena-plugin-marketplace
 ```
 
 ### Installation Scopes
 
 ```shell
 # For yourself across all projects (default)
-/plugin install web-testing-toolkit@athena-plugin-marketplace --scope user
+claude plugin install web-testing-toolkit@athena-plugin-marketplace --scope user
 
 # For all collaborators on a project (writes to .claude/settings.json)
-/plugin install web-testing-toolkit@athena-plugin-marketplace --scope project
+claude plugin install web-testing-toolkit@athena-plugin-marketplace --scope project
 
 # For yourself in this repo only
-/plugin install web-testing-toolkit@athena-plugin-marketplace --scope local
+claude plugin install web-testing-toolkit@athena-plugin-marketplace --scope local
 ```
 
 ## Available Plugins
@@ -116,25 +116,34 @@ plugins/
 4. Commit, push, and update the marketplace:
 
 ```shell
-/plugin marketplace update athena-plugin-marketplace
+claude plugin marketplace update athena-plugin-marketplace
 ```
 
 ## Managing the Marketplace
 
 ```shell
 # List configured marketplaces
-/plugin marketplace list
+claude plugin marketplace list
 
 # Update to pull latest plugins
-/plugin marketplace update athena-plugin-marketplace
+claude plugin marketplace update athena-plugin-marketplace
 
 # Remove the marketplace
-/plugin marketplace remove athena-plugin-marketplace
+claude plugin marketplace remove athena-plugin-marketplace
+
+# List installed plugins
+claude plugin list
 
 # Disable/enable a plugin
-/plugin disable web-testing-toolkit@athena-plugin-marketplace
-/plugin enable web-testing-toolkit@athena-plugin-marketplace
+claude plugin disable web-testing-toolkit@athena-plugin-marketplace
+claude plugin enable web-testing-toolkit@athena-plugin-marketplace
+
+# Update a plugin
+claude plugin update web-testing-toolkit@athena-plugin-marketplace
 
 # Uninstall a plugin
-/plugin uninstall web-testing-toolkit@athena-plugin-marketplace
+claude plugin uninstall web-testing-toolkit@athena-plugin-marketplace
+
+# Validate a plugin or marketplace manifest
+claude plugin validate ./plugins/my-plugin
 ```
