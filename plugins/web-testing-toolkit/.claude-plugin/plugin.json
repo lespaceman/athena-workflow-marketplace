@@ -1,0 +1,9 @@
+{
+  "name": "web-testing-toolkit",
+  "description": "AI-driven browser automation for web exploration, test case generation, and Playwright E2E test writing",
+  "version": "1.0.0",
+  "author": {
+    "name": "Browser Automation Team"
+  },
+  "repository": "https://github.com/lespaceman/agent-web-interface"
+}

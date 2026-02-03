@@ -2,7 +2,7 @@
   "mcpServers": {
     "agent-web-interface": {
       "command": "npx",
-      "args": ["-y", "agent-web-interface@latest"],
+      "args": ["-y", "agent-web-interface@latest", "--autoConnect"],
       "env": {
         "NODE_ENV": "production"
       }

@@ -5,27 +5,6 @@ description: >
   Apple's hidden radio inputs, React state handlers, sticky header interception, sequential form
   enablement, and dynamic IDs.
 user-invocable: false
-allowed-tools:
-  - mcp__agent-web-interface__ping
-  - mcp__agent-web-interface__navigate
-  - mcp__agent-web-interface__go_back
-  - mcp__agent-web-interface__go_forward
-  - mcp__agent-web-interface__reload
-  - mcp__agent-web-interface__capture_snapshot
-  - mcp__agent-web-interface__find_elements
-  - mcp__agent-web-interface__get_element_details
-  - mcp__agent-web-interface__scroll_element_into_view
-  - mcp__agent-web-interface__scroll_page
-  - mcp__agent-web-interface__click
-  - mcp__agent-web-interface__type
-  - mcp__agent-web-interface__press
-  - mcp__agent-web-interface__select
-  - mcp__agent-web-interface__hover
-  - mcp__agent-web-interface__get_form_understanding
-  - mcp__agent-web-interface__get_field_context
-  - mcp__agent-web-interface__list_pages
-  - mcp__agent-web-interface__close_page
-  - mcp__agent-web-interface__close_session
 ---
 
 # Apple.com Playwright Testing Guide
