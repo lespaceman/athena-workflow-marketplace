@@ -7,7 +7,7 @@ description: >
   test case specifications organized by category with unique TC-IDs.
 
   Do NOT use this agent for writing Playwright test code (use playwright-test-writer instead) or for general browsing
-  without test case generation intent (use web-explorer instead).
+  without test case generation intent (use browser-operator instead).
 
   <example>
   Context: The user wants test cases for a login flow.

@@ -37,7 +37,7 @@ Explore and interact with a live website using a browser, reporting observations
 ## Workflow
 
 1. **Parse the input** — extract the target URL and exploration goal from the arguments: $ARGUMENTS
-2. **Launch the web-explorer agent** — use the Task tool to invoke the `web-explorer` agent with the URL and goal
+2. **Launch the browser-operator agent** — use the Task tool to invoke the `browser-operator` agent with the URL and goal
 3. **The agent will**:
    - Navigate to the URL and interact as a real user would
    - Use structured accessibility-tree snapshots to understand page structure

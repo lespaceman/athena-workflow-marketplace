@@ -53,7 +53,7 @@ AI-driven browser automation for web exploration, test case generation, and Play
 
 | Agent | Description |
 |-------|-------------|
-| `web-explorer` | Browses web pages, fills forms, clicks buttons, extracts page content and selectors |
+| `browser-operator` | Completes browser tasks (add to cart, fill forms, find info), explores sites, extracts selectors |
 | `test-case-generator` | Explores a live application and generates structured test cases from a user journey |
 | `playwright-test-writer` | Converts discovered flows into Playwright test code, fixes flaky tests |
 
@@ -63,6 +63,7 @@ AI-driven browser automation for web exploration, test case generation, and Play
 - `amazon` — Amazon.com automation patterns
 - `apple-store` — Apple.com store automation patterns
 - `apple-testing-guide` — Playwright testing patterns specific to Apple.com
+- `agent-web-interface-guide` — MCP response patterns and best practices
 
 **MCP Server:** Uses [agent-web-interface](https://github.com/lespaceman/agent-web-interface) for browser control.
 

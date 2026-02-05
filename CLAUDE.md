@@ -19,7 +19,7 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 
 **Agents** (`plugins/web-testing-toolkit/agents/*.md`): Specialized AI sub-agents invoked via the Task tool. Each is a markdown file with YAML frontmatter (`name`, `description`, `model`, `color`) and a system prompt body.
 
-- `web-explorer` — Live browser navigation, form filling, selector extraction. Does NOT generate test specs or write test code.
+- `browser-operator` — Completes browser tasks (add to cart, fill forms, find info), explores sites, extracts selectors. Does NOT generate test specs or write test code.
 - `test-case-generator` — Systematic site exploration producing structured test case specs (TC-ID format). Does NOT write executable test code.
 - `playwright-test-writer` — Converts test specs into Playwright TypeScript tests. Does NOT do live browser exploration.
 
@@ -28,15 +28,17 @@ These three agents have strict responsibility boundaries. Route work to the corr
 **Skills** (`plugins/web-testing-toolkit/skills/<skill-name>/SKILL.md`): Markdown files with YAML frontmatter (`name`, `description`, `user-invocable`, `argument-hint`, `allowed-tools`).
 
 User-invocable skills (slash commands):
-- `/explore-website <url> <goal>` — Delegates to web-explorer agent
+- `/explore-website <url> <goal>` — Delegates to browser-operator agent
 - `/generate-test-cases <url> <user-journey>` — Delegates to test-case-generator agent
 - `/write-e2e-tests <test-description>` — Delegates to playwright-test-writer agent
 
 Auto-applied site knowledge (not user-invocable): `airbnb`, `amazon`, `apple-store`, `apple-testing-guide` — injected as context when relevant sites are detected.
 
+Reference skill: `agent-web-interface-guide` — Documents MCP response patterns (state snapshots, observations, sequential forms, element attributes).
+
 **Hooks** (`plugins/web-testing-toolkit/hooks/hooks.json`): PostToolUse hooks that log browser events (navigation, clicks, session close) to `/tmp/agent-browser-log.txt`.
 
-**MCP Config** (`plugins/web-testing-toolkit/.mcp.json`): Configures `agent-web-interface` MCP server providing browser control tools (navigate, click, type, find_elements, etc.). All MCP tool names follow the pattern `mcp__agent-web-interface__<tool>`.
+**MCP Config** (`plugins/web-testing-toolkit/.mcp.json`): Configures `agent-web-interface` MCP server providing browser control tools (navigate, click, type, find_elements, etc.). All MCP tool names follow the pattern `mcp__plugin_web-testing-toolkit_agent-web-interface__<tool>`.
 
 ## Adding a New Plugin
 
@@ -51,3 +53,4 @@ Auto-applied site knowledge (not user-invocable): `airbnb`, `amazon`, `apple-sto
 - Playwright locator preference: semantic (`getByRole`, `getByLabel`) > `data-testid` > text > CSS selectors
 - No arbitrary `waitForTimeout` sleeps in generated tests — use event-driven waits
 - Skill `allowed-tools` must explicitly list every MCP tool the skill needs
+- Sequential form sites (Apple Store): Options show `enabled="false"` until prerequisites are selected — work through forms in order
