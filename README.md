@@ -63,6 +63,7 @@ AI-driven browser automation for web exploration, test case generation, and Play
 - `amazon` — Amazon.com automation patterns
 - `apple-store` — Apple.com store automation patterns
 - `apple-testing-guide` — Playwright testing patterns specific to Apple.com
+- `agent-web-interface-guide` — MCP response patterns and best practices
 
 **MCP Server:** Uses [agent-web-interface](https://github.com/lespaceman/agent-web-interface) for browser control.
 

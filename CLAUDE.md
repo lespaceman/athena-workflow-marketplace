@@ -34,9 +34,11 @@ User-invocable skills (slash commands):
 
 Auto-applied site knowledge (not user-invocable): `airbnb`, `amazon`, `apple-store`, `apple-testing-guide` — injected as context when relevant sites are detected.
 
+Reference skill: `agent-web-interface-guide` — Documents MCP response patterns (state snapshots, observations, sequential forms, element attributes).
+
 **Hooks** (`plugins/web-testing-toolkit/hooks/hooks.json`): PostToolUse hooks that log browser events (navigation, clicks, session close) to `/tmp/agent-browser-log.txt`.
 
-**MCP Config** (`plugins/web-testing-toolkit/.mcp.json`): Configures `agent-web-interface` MCP server providing browser control tools (navigate, click, type, find_elements, etc.). All MCP tool names follow the pattern `mcp__agent-web-interface__<tool>`.
+**MCP Config** (`plugins/web-testing-toolkit/.mcp.json`): Configures `agent-web-interface` MCP server providing browser control tools (navigate, click, type, find_elements, etc.). All MCP tool names follow the pattern `mcp__plugin_web-testing-toolkit_agent-web-interface__<tool>`.
 
 ## Adding a New Plugin
 
@@ -51,3 +53,4 @@ Auto-applied site knowledge (not user-invocable): `airbnb`, `amazon`, `apple-sto
 - Playwright locator preference: semantic (`getByRole`, `getByLabel`) > `data-testid` > text > CSS selectors
 - No arbitrary `waitForTimeout` sleeps in generated tests — use event-driven waits
 - Skill `allowed-tools` must explicitly list every MCP tool the skill needs
+- Sequential form sites (Apple Store): Options show `enabled="false"` until prerequisites are selected — work through forms in order
