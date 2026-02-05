@@ -6,7 +6,7 @@ description: >
   flaky tests, or improving locator and wait strategies.
 
   Do NOT use this agent for generating test case specifications without code (use test-case-generator instead)
-  or for general browser exploration (use web-explorer instead).
+  or for general browser exploration (use browser-operator instead).
 
   <example>
   Context: The user wants to create a Playwright test for a user flow.
@@ -22,7 +22,7 @@ description: >
   user: "This checkout test keeps timing out, can you fix it?"
   assistant: "I'll use the playwright-test-writer agent to diagnose and stabilize the flaky checkout test."
   <commentary>
-  Fixing existing Playwright tests is core playwright-test-writer work, not test-case-generator or web-explorer territory.
+  Fixing existing Playwright tests is core playwright-test-writer work, not test-case-generator or browser-operator territory.
   </commentary>
   </example>
 

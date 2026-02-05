@@ -19,7 +19,7 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 
 **Agents** (`plugins/web-testing-toolkit/agents/*.md`): Specialized AI sub-agents invoked via the Task tool. Each is a markdown file with YAML frontmatter (`name`, `description`, `model`, `color`) and a system prompt body.
 
-- `web-explorer` — Live browser navigation, form filling, selector extraction. Does NOT generate test specs or write test code.
+- `browser-operator` — Completes browser tasks (add to cart, fill forms, find info), explores sites, extracts selectors. Does NOT generate test specs or write test code.
 - `test-case-generator` — Systematic site exploration producing structured test case specs (TC-ID format). Does NOT write executable test code.
 - `playwright-test-writer` — Converts test specs into Playwright TypeScript tests. Does NOT do live browser exploration.
 
@@ -28,7 +28,7 @@ These three agents have strict responsibility boundaries. Route work to the corr
 **Skills** (`plugins/web-testing-toolkit/skills/<skill-name>/SKILL.md`): Markdown files with YAML frontmatter (`name`, `description`, `user-invocable`, `argument-hint`, `allowed-tools`).
 
 User-invocable skills (slash commands):
-- `/explore-website <url> <goal>` — Delegates to web-explorer agent
+- `/explore-website <url> <goal>` — Delegates to browser-operator agent
 - `/generate-test-cases <url> <user-journey>` — Delegates to test-case-generator agent
 - `/write-e2e-tests <test-description>` — Delegates to playwright-test-writer agent
 
