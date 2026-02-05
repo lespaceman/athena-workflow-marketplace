@@ -2,29 +2,32 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "mcp__agent-web-interface__navigate",
+        "matcher": "mcp__plugin_web-testing-toolkit_agent-web-interface__navigate",
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Navigation completed\" >> /tmp/agent-browser-log.txt"
+            "command": "mkdir -p ${CLAUDE_PLUGIN_ROOT}/logs && echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Navigation completed\" >> ${CLAUDE_PLUGIN_ROOT}/logs/browser-log.txt",
+            "timeout": 5
           }
         ]
       },
       {
-        "matcher": "mcp__agent-web-interface__click",
+        "matcher": "mcp__plugin_web-testing-toolkit_agent-web-interface__click",
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Click action completed\" >> /tmp/agent-browser-log.txt"
+            "command": "mkdir -p ${CLAUDE_PLUGIN_ROOT}/logs && echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Click action completed\" >> ${CLAUDE_PLUGIN_ROOT}/logs/browser-log.txt",
+            "timeout": 5
           }
         ]
       },
       {
-        "matcher": "mcp__agent-web-interface__close_session",
+        "matcher": "mcp__plugin_web-testing-toolkit_agent-web-interface__close_session",
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Browser session closed\" >> /tmp/agent-browser-log.txt && echo '---' >> /tmp/agent-browser-log.txt"
+            "command": "mkdir -p ${CLAUDE_PLUGIN_ROOT}/logs && echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Browser session closed\" >> ${CLAUDE_PLUGIN_ROOT}/logs/browser-log.txt && echo '---' >> ${CLAUDE_PLUGIN_ROOT}/logs/browser-log.txt",
+            "timeout": 5
           }
         ]
       }

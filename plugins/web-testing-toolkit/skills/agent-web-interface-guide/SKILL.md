@@ -1,6 +1,7 @@
 ---
 name: agent-web-interface-guide
 description: Guide to using the agent-web-interface MCP server for browser automation - understanding state snapshots, element interactions, form handling, and response patterns
+user-invocable: false
 ---
 
 # agent-web-interface MCP Server Guide
