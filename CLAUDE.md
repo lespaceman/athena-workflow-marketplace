@@ -4,7 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Claude Code Plugin Marketplace** — a collection of AI-powered browser automation plugins. The primary plugin is `web-testing-toolkit`, which provides browser automation for web exploration, test case generation, and Playwright E2E test writing.
+This is a **Claude Code Plugin Marketplace** — a collection of AI-powered browser automation plugins.
+
+- **e2e-test-builder** — Workflow runner for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → write tests. Uses subagent-driven development to save context.
+- **site-knowledge** — Site-specific automation patterns for popular websites (Airbnb, Amazon, Apple Store).
 
 This is not a Node.js project with build/test scripts. It is a metadata-driven plugin marketplace where runtime is managed by Claude Code and the `agent-web-interface` MCP server (installed dynamically via `npx`).
 
@@ -15,37 +18,38 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 - `.claude-plugin/marketplace.json` — Central registry listing all plugins with `pluginRoot: ./plugins`
 - Each plugin lives under `plugins/<plugin-name>/` with its own `.claude-plugin/plugin.json` manifest
 
-### Plugin Components (web-testing-toolkit)
+### e2e-test-builder Plugin
 
-**Agents** (`plugins/web-testing-toolkit/agents/*.md`): Specialized AI sub-agents invoked via the Task tool. Each is a markdown file with YAML frontmatter (`name`, `description`, `model`, `color`) and a system prompt body.
-
-- `browser-operator` — Completes browser tasks (add to cart, fill forms, find info), explores sites, extracts selectors. Does NOT generate test specs or write test code.
-- `test-case-generator` — Systematic site exploration producing structured test case specs (TC-ID format). Does NOT write executable test code.
-- `playwright-test-writer` — Converts test specs into Playwright TypeScript tests. Does NOT do live browser exploration.
-
-These three agents have strict responsibility boundaries. Route work to the correct agent.
-
-**Skills** (`plugins/web-testing-toolkit/skills/<skill-name>/SKILL.md`): Markdown files with YAML frontmatter (`name`, `description`, `user-invocable`, `argument-hint`, `allowed-tools`).
+**Skills** (`plugins/e2e-test-builder/skills/<skill-name>/SKILL.md`): Each skill is a self-contained workflow with full knowledge embedded. Heavy browser/file work is delegated to general-purpose subagents via Task tool.
 
 User-invocable skills (slash commands):
-- `/explore-website <url> <goal>` — Delegates to browser-operator agent
-- `/generate-test-cases <url> <user-journey>` — Delegates to test-case-generator agent
-- `/write-e2e-tests <test-description>` — Delegates to playwright-test-writer agent
+- `/add-e2e-tests <url> <feature>` — **Full pipeline orchestrator**: analyze → plan → explore → generate → write (uses subagents)
+- `/analyze-test-codebase [path]` — Detect Playwright config, test conventions, existing patterns
+- `/plan-test-coverage <url> <feature>` — Plan what to test based on existing coverage gaps
+- `/explore-website <url> <goal>` — Live browser interaction, selector extraction, form analysis
+- `/generate-test-cases <url> <user-journey>` — Explore site and produce structured TC-ID test specs
+- `/write-e2e-tests <test-description>` — Write executable Playwright test code following project conventions
 
-Auto-applied site knowledge (not user-invocable): `airbnb`, `amazon`, `apple-store`, `apple-testing-guide` — injected as context when relevant sites are detected.
+Reference skill (not user-invocable): `agent-web-interface-guide` — Documents MCP response patterns (state snapshots, observations, sequential forms, element attributes).
 
-Reference skill: `agent-web-interface-guide` — Documents MCP response patterns (state snapshots, observations, sequential forms, element attributes).
+**Hooks** (`plugins/e2e-test-builder/hooks/hooks.json`): PostToolUse hooks that log browser events (navigation, clicks, type, select, session close) to `${CLAUDE_PLUGIN_ROOT}/logs/browser-log.txt`.
 
-**Hooks** (`plugins/web-testing-toolkit/hooks/hooks.json`): PostToolUse hooks that log browser events (navigation, clicks, session close) to `/tmp/agent-browser-log.txt`.
+**MCP Config** (`plugins/e2e-test-builder/.mcp.json`): Configures `agent-web-interface` MCP server. All MCP tool names follow the pattern `mcp__plugin_e2e-test-builder_agent-web-interface__<tool>`.
 
-**MCP Config** (`plugins/web-testing-toolkit/.mcp.json`): Configures `agent-web-interface` MCP server providing browser control tools (navigate, click, type, find_elements, etc.). All MCP tool names follow the pattern `mcp__plugin_web-testing-toolkit_agent-web-interface__<tool>`.
+### site-knowledge Plugin
+
+**Skills** (`plugins/site-knowledge/skills/<site-name>/SKILL.md`): Auto-applied site knowledge (not user-invocable) — injected as context when relevant sites are detected.
+
+- `airbnb` — Airbnb.com automation patterns, element selectors, modal handling
+- `amazon` — Amazon.com product search, cart, buying options patterns
+- `apple-store` — Apple Store configuration flows, sequential form handling
+- `apple-testing-guide` — Learnings from implementing Playwright tests for apple.com
 
 ## Adding a New Plugin
 
-1. Create `plugins/<name>/` with `.claude-plugin/plugin.json`, and optionally `agents/`, `skills/`, `hooks/`, `.mcp.json`
+1. Create `plugins/<name>/` with `.claude-plugin/plugin.json`, and optionally `skills/`, `hooks/`, `.mcp.json`
 2. Register in `.claude-plugin/marketplace.json` under the `plugins` array
-3. Agent files: YAML frontmatter with `name`, `description`, `model`, `color` + markdown system prompt
-4. Skill files: YAML frontmatter with `name`, `description`, `user-invocable`, `argument-hint`, `allowed-tools` + markdown content
+3. Skill files: YAML frontmatter with `name`, `description`, `user-invocable`, `argument-hint`, `allowed-tools` + markdown content
 
 ## Key Conventions
 
@@ -53,4 +57,5 @@ Reference skill: `agent-web-interface-guide` — Documents MCP response patterns
 - Playwright locator preference: semantic (`getByRole`, `getByLabel`) > `data-testid` > text > CSS selectors
 - No arbitrary `waitForTimeout` sleeps in generated tests — use event-driven waits
 - Skill `allowed-tools` must explicitly list every MCP tool the skill needs
-- Sequential form sites (Apple Store): Options show `enabled="false"` until prerequisites are selected — work through forms in order
+- Skills delegate heavy work to general-purpose subagents via Task tool to save main context
+- Skill descriptions must include exhaustive trigger phrases and clearly state what the skill does vs doesn't do

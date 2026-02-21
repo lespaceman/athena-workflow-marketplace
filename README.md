@@ -19,25 +19,25 @@ claude plugin marketplace add ./athena-plugin-marketplace
 Once the marketplace is added, install a plugin:
 
 ```shell
-claude plugin install web-testing-toolkit@athena-plugin-marketplace
+claude plugin install e2e-test-builder@athena-plugin-marketplace
 ```
 
 ### Installation Scopes
 
 ```shell
 # For yourself across all projects (default)
-claude plugin install web-testing-toolkit@athena-plugin-marketplace --scope user
+claude plugin install e2e-test-builder@athena-plugin-marketplace --scope user
 
 # For all collaborators on a project (writes to .claude/settings.json)
-claude plugin install web-testing-toolkit@athena-plugin-marketplace --scope project
+claude plugin install e2e-test-builder@athena-plugin-marketplace --scope project
 
 # For yourself in this repo only
-claude plugin install web-testing-toolkit@athena-plugin-marketplace --scope local
+claude plugin install e2e-test-builder@athena-plugin-marketplace --scope local
 ```
 
 ## Available Plugins
 
-### web-testing-toolkit
+### e2e-test-builder
 
 AI-driven browser automation for web exploration, test case generation, and Playwright E2E test writing.
 
@@ -136,14 +136,14 @@ claude plugin marketplace remove athena-plugin-marketplace
 claude plugin list
 
 # Disable/enable a plugin
-claude plugin disable web-testing-toolkit@athena-plugin-marketplace
-claude plugin enable web-testing-toolkit@athena-plugin-marketplace
+claude plugin disable e2e-test-builder@athena-plugin-marketplace
+claude plugin enable e2e-test-builder@athena-plugin-marketplace
 
 # Update a plugin
-claude plugin update web-testing-toolkit@athena-plugin-marketplace
+claude plugin update e2e-test-builder@athena-plugin-marketplace
 
 # Uninstall a plugin
-claude plugin uninstall web-testing-toolkit@athena-plugin-marketplace
+claude plugin uninstall e2e-test-builder@athena-plugin-marketplace
 
 # Validate a plugin or marketplace manifest
 claude plugin validate ./plugins/my-plugin

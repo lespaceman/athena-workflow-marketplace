@@ -2,7 +2,7 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "mcp__plugin_web-testing-toolkit_agent-web-interface__navigate",
+        "matcher": "mcp__plugin_e2e-test-builder_agent-web-interface__navigate",
         "hooks": [
           {
             "type": "command",
@@ -12,7 +12,7 @@
         ]
       },
       {
-        "matcher": "mcp__plugin_web-testing-toolkit_agent-web-interface__click",
+        "matcher": "mcp__plugin_e2e-test-builder_agent-web-interface__click",
         "hooks": [
           {
             "type": "command",
@@ -22,7 +22,27 @@
         ]
       },
       {
-        "matcher": "mcp__plugin_web-testing-toolkit_agent-web-interface__close_session",
+        "matcher": "mcp__plugin_e2e-test-builder_agent-web-interface__type",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p ${CLAUDE_PLUGIN_ROOT}/logs && echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Type action completed\" >> ${CLAUDE_PLUGIN_ROOT}/logs/browser-log.txt",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_e2e-test-builder_agent-web-interface__select",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p ${CLAUDE_PLUGIN_ROOT}/logs && echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Select action completed\" >> ${CLAUDE_PLUGIN_ROOT}/logs/browser-log.txt",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_e2e-test-builder_agent-web-interface__close_session",
         "hooks": [
           {
             "type": "command",
