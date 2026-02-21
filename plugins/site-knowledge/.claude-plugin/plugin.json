@@ -1,0 +1,8 @@
+{
+  "name": "site-knowledge",
+  "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
+  "version": "1.0.0",
+  "author": {
+    "name": "Browser Automation Team"
+  }
+}
