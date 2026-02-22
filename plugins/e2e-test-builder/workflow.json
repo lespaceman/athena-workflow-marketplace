@@ -1,0 +1,12 @@
+{
+	"name": "e2e-test-builder",
+	"description": "Iterative E2E test coverage builder",
+	"promptTemplate": "Use /add-e2e-tests {input}",
+	"loop": {
+		"enabled": true,
+		"completionPromise": "E2E COMPLETE",
+		"maxIterations": 15
+	},
+	"isolation": "minimal",
+	"requiredPlugins": ["ralph-loop"]
+}
