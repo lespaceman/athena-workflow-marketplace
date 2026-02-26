@@ -39,33 +39,37 @@ claude plugin install e2e-test-builder@athena-workflow-marketplace --scope local
 
 ### e2e-test-builder
 
-AI-driven browser automation for web exploration, test case generation, and Playwright E2E test writing.
+Iterative workflow for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → write tests. Supports stateless looping via athena-cli with a tracker file for cross-session state.
 
-**Slash Commands (user-invocable skills):**
+**Skills:**
 
-| Command | Description |
-|---------|-------------|
-| `/explore-website` | Explore, navigate, and interact with a website using a browser |
-| `/generate-test-cases` | Generate comprehensive test cases from a URL and user journey |
-| `/write-e2e-tests` | Write, refactor, or fix Playwright E2E tests |
-
-**Agents:**
-
-| Agent | Description |
+| Skill | Description |
 |-------|-------------|
-| `browser-operator` | Completes browser tasks (add to cart, fill forms, find info), explores sites, extracts selectors |
-| `test-case-generator` | Explores a live application and generates structured test cases from a user journey |
-| `playwright-test-writer` | Converts discovered flows into Playwright test code, fixes flaky tests |
+| `/add-e2e-tests <url> <feature>` | Full pipeline orchestrator — runs all stages, maintains tracker |
+| `/analyze-test-codebase [path]` | Detect Playwright config, test conventions, existing patterns |
+| `/plan-test-coverage <url> <feature>` | Plan what to test based on existing coverage gaps |
+| `/explore-website <url> <goal>` | Live browser interaction, selector extraction, form analysis |
+| `/generate-test-cases <url> <journey>` | Explore site and produce structured TC-ID test specs |
+| `/write-e2e-tests <description>` | Write executable Playwright test code following project conventions |
 
-**Site-specific knowledge (auto-applied):**
-
-- `airbnb` — Airbnb.com automation patterns
-- `amazon` — Amazon.com automation patterns
-- `apple-store` — Apple.com store automation patterns
-- `apple-testing-guide` — Playwright testing patterns specific to Apple.com
-- `agent-web-interface-guide` — MCP response patterns and best practices
+**Reference skill (auto-applied):** `agent-web-interface-guide` — MCP response patterns and best practices.
 
 **MCP Server:** Uses [agent-web-interface](https://github.com/lespaceman/agent-web-interface) for browser control.
+
+**Scaffolding:** If no Playwright config exists in the target project, automatically scaffolds from [playwright-typescript-e2e-boilerplate](https://github.com/lespaceman/playwright-typescript-e2e-boilerplate) with POM pattern, fixtures, and helpers.
+
+---
+
+### site-knowledge
+
+Site-specific automation patterns for popular websites. These skills are auto-applied when relevant sites are detected — no manual invocation needed.
+
+| Skill | Description |
+|-------|-------------|
+| `airbnb` | Airbnb.com automation patterns, element selectors, modal handling |
+| `amazon` | Amazon.com product search, cart, buying options patterns |
+| `apple-store` | Apple Store configuration flows, sequential form handling |
+| `apple-testing-guide` | Playwright testing patterns specific to Apple.com |
 
 ## Adding a New Plugin
 
@@ -77,8 +81,6 @@ plugins/
     ├── .claude-plugin/
     │   └── plugin.json
     ├── .mcp.json          # optional - MCP server config
-    ├── agents/            # optional - agent definitions
-    │   └── my-agent.md
     ├── skills/            # optional - slash commands and knowledge
     │   └── my-skill/
     │       └── SKILL.md
