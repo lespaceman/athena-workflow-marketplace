@@ -1,12 +1,14 @@
 {
 	"name": "e2e-test-builder",
-	"description": "Iterative E2E test coverage builder",
-	"promptTemplate": "Use /add-e2e-tests {input}",
+	"description": "Iterative E2E test coverage builder with tracker-based state management",
+	"promptTemplate": "{input}",
+	"systemPromptFile": "e2e-workflow-prompt.md",
 	"loop": {
 		"enabled": true,
-		"completionPromise": "E2E COMPLETE",
+		"completionMarkers": ["E2E_COMPLETE", "E2E_BLOCKED"],
+		"trackerFile": "e2e-tracker.md",
 		"maxIterations": 15
 	},
 	"isolation": "minimal",
-	"requiredPlugins": ["ralph-loop"]
+	"requiredPlugins": []
 }
