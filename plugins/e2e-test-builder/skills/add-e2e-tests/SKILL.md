@@ -10,8 +10,7 @@ description: >
   (4) generate structured test case specs, (5) write executable Playwright tests.
   Uses subagent-driven development — delegates heavy browser exploration and test writing to general-purpose
   subagents via Task tool to save main context.
-  Ralph Loop compatible — detects progress from files and picks up where it left off. Outputs
-  <promise>E2E COMPLETE</promise> when all TC-IDs have passing tests.
+  Iterative and resumable — detects progress from files and picks up where it left off.
 user-invocable: true
 argument-hint: <url> <feature to test>
 allowed-tools:
@@ -42,9 +41,9 @@ allowed-tools:
   - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_element_into_view
 ---
 
-# Add E2E Tests — Ralph Loop Compatible Pipeline
+# Add E2E Tests — Tracker-Based Pipeline
 
-You are an iterative E2E test builder. Each time you run, you detect your progress from existing files and advance to the next stage. You MUST follow this state detection logic exactly.
+You are an E2E test builder that uses `e2e-tracker.md` as the source of truth for progress. In this interactive session, you execute ALL steps in sequence, updating the tracker after each one.
 
 ## Input
 
@@ -52,116 +51,110 @@ Parse the target URL and feature description from: $ARGUMENTS
 
 Derive the **feature slug** from the feature description (e.g., "Login flow" → `login`, "Checkout with payment" → `checkout`). Use this slug for file naming throughout.
 
-## State Detection — Files ARE the State
+## State Detection
 
-Check these signals IN ORDER to determine where you are in the pipeline:
+### Primary: Read Tracker
 
-### Check 1: Playwright config exists?
+Check if `e2e-tracker.md` exists in the project root.
 
-```
-Glob: playwright.config.{ts,js,mjs}
-```
+- If it EXISTS → read it, find the first step whose status is NOT `done`, and resume from that step.
+- If it does NOT exist → go to **Bootstrap**.
 
-If NO config found anywhere in the project:
-- Report: "No Playwright configuration found. Please set up Playwright first: `npm init playwright@latest`"
-- Output: `<promise>E2E COMPLETE</promise>`
-- STOP.
+### Bootstrap (No Tracker)
 
-### Check 2: Test case spec exists?
+1. Check that a Playwright config exists: `Glob: playwright.config.{ts,js,mjs}`
+   - If NOT found: create `e2e-tracker.md` with step 1 as `blocked`, write `<!-- E2E_BLOCKED: No Playwright configuration found. Run: npm init playwright@latest -->` at the bottom, report the issue to the user, and STOP.
+2. Create the `e2e-plan/` directory
+3. Create `e2e-tracker.md` using this exact template:
 
-```
-Glob: test-cases/<feature-slug>.md
-```
+```markdown
+# E2E Test Tracker
 
-If NO spec file → go to **Stage A: Analyze, Plan, Explore & Generate Specs**.
+**Target:** <url>
+**Feature:** <feature description>
+**Feature Slug:** <slug>
+**Created:** <YYYY-MM-DD>
 
-If spec file EXISTS → go to Check 3.
+## Steps
 
-### Check 3: Test files exist for this feature?
+| # | Step | Status | Artifact |
+|---|------|--------|----------|
+| 1 | Analyze codebase | pending | e2e-plan/conventions.md |
+| 2 | Plan test coverage | pending | e2e-plan/coverage-plan.md |
+| 3 | Explore site & generate specs | pending | test-cases/<slug>.md |
+| 4 | Write tests | pending | |
+| 5 | Verify & fix | pending | |
+| 6 | Coverage check | pending | |
 
-```
-Glob: **/<feature-slug>*.spec.{ts,js}
-# Also check: **/tests/**/<feature-slug>*  and  **/e2e/**/<feature-slug>*
-```
-
-If NO test files → go to **Stage B: Write Tests from Specs**.
-
-If test files EXIST → go to Check 4.
-
-### Check 4: Do all tests pass?
-
-Run the tests:
-```bash
-npx playwright test <test-file-path> --reporter=list 2>&1
+## Log
 ```
 
-If tests FAIL → go to **Stage C: Fix Failing Tests**.
+4. Proceed to Step 1.
 
-If all tests PASS → go to Check 5.
+### Fallback: File-Based Detection
 
-### Check 5: Are all TC-IDs covered?
+If the tracker exists but is corrupted or unreadable, fall back to checking files directly:
+- `e2e-plan/conventions.md` exists → step 1 done
+- `e2e-plan/coverage-plan.md` exists → step 2 done
+- `test-cases/<feature-slug>.md` exists → step 3 done
+- `**/<feature-slug>*.spec.{ts,js}` exists → step 4 done
 
-Read `test-cases/<feature-slug>.md` and extract all `TC-<FEATURE>-NNN` IDs.
-Grep test files for each TC-ID. Any TC-ID not found in test code is uncovered.
-
-If UNCOVERED TC-IDs exist → go to **Stage D: Write Remaining Tests**.
-
-If ALL TC-IDs are covered and passing:
-- Output summary: files created, TC-IDs covered, how to run
-- Output: `<promise>E2E COMPLETE</promise>`
-- DONE.
+Recreate the tracker with the correct statuses and continue from the first incomplete step.
 
 ---
 
-## Stage A: Analyze, Plan, Explore & Generate Specs
+## Step Definitions
 
-This stage does three things in sequence: understand the codebase, plan coverage, then explore the live site.
+Execute each step in sequence. After completing each step, update the tracker table status to `done` and append a session log entry before moving to the next step.
 
-### A1: Analyze Codebase (do directly — lightweight)
+### Step 1: Analyze Codebase (do directly — lightweight)
 
 1. Find and read `playwright.config.*` — extract `baseURL`, `testDir`, `projects`, `use` settings
 2. Glob for existing test files, read 2-3 to understand conventions:
    - Naming pattern (e.g., `feature.spec.ts`)
    - Locator strategy (semantic `getByRole` vs `data-testid` vs CSS)
    - Test structure (AAA, page objects, fixtures, auth setup)
-3. Note these conventions — all generated tests MUST follow them
+   - Import patterns, helper utilities
+3. Write findings to `e2e-plan/conventions.md`
+4. Update tracker: set step 1 status to `done`
 
-### A2: Plan Coverage (do directly with quick browser check)
+### Step 2: Plan Test Coverage (do directly with quick browser check)
 
-1. Grep existing tests for the target feature keywords to find existing coverage
-2. Navigate to the URL, use `find_elements` to catalog interactive elements
-3. Close the browser session
-4. Categorize test cases with priorities:
+1. Read `e2e-plan/conventions.md` for context
+2. Grep existing tests for the target feature keywords to find existing coverage
+3. Navigate to the URL, use `find_elements` to catalog interactive elements
+4. Close the browser session
+5. Categorize test cases with priorities:
    - **P0 Critical path**: Happy path flows that must work
    - **P1 Validation**: Error states, required fields, format validation
    - **P2 Edge cases**: Boundary conditions, concurrent actions, unusual inputs
+6. Write the plan to `e2e-plan/coverage-plan.md`
+7. Update tracker: set step 2 status to `done`
 
-### A3: Explore & Generate Specs (delegate to subagent)
+### Step 3: Explore Site & Generate Specs (delegate to subagent)
 
 **Delegate to a general-purpose subagent** via Task tool:
 
 Prompt the subagent with:
-- Target URL and the coverage plan from A2
+- Target URL and the coverage plan from `e2e-plan/coverage-plan.md`
 - Instructions to explore happy paths using `navigate`, `find_elements`, `get_form_understanding`, `click`, `type`
 - Instructions to probe failure paths: empty fields, invalid formats, boundary values
 - TC-ID format: `TC-<FEATURE>-<NNN>` (e.g., `TC-LOGIN-001`)
 - Output file: `test-cases/<feature-slug>.md`
-- Each test case must have: TC-ID, title, preconditions, steps (with concrete selectors/values), expected results
+- Each test case must have: TC-ID, title, priority, preconditions, steps (with concrete selectors/values), expected results
 - Quality: independently executable, concrete observable assertions, no vague "verify it works"
 
-After the subagent completes, verify `test-cases/<feature-slug>.md` was created successfully.
+After the subagent completes, verify `test-cases/<feature-slug>.md` was created and contains TC-IDs.
 
-**Then proceed immediately to Stage B** (no user prompt needed in Ralph Loop mode).
+Update tracker: set step 3 status to `done`.
 
----
-
-## Stage B: Write Tests from Specs
+### Step 4: Write Tests (delegate to subagent)
 
 **Delegate to a general-purpose subagent** via Task tool:
 
 Prompt the subagent with:
 - Path to `test-cases/<feature-slug>.md`
-- Codebase conventions discovered in Stage A (or re-analyze if this is a resumed iteration):
+- Codebase conventions from `e2e-plan/conventions.md`:
   - Config path, test directory, naming convention
   - Locator strategy, page object patterns, fixtures, auth
 - Playwright principles:
@@ -172,56 +165,77 @@ Prompt the subagent with:
 - Instructions to write test file(s) to the project's test directory following naming conventions
 - Instructions to run tests after writing: `npx playwright test <file> --reporter=list`
 
-**Then proceed to Check 4** to verify results.
+If the tracker notes specific uncovered TC-IDs (set by step 6), write tests only for those IDs.
+
+Note the test file path in the tracker's Artifact column for step 4.
+
+Update tracker: set step 4 status to `done`.
+
+### Step 5: Verify & Fix
+
+1. Read `e2e-plan/conventions.md` for context
+2. Find test files for this feature: `Glob: **/<feature-slug>*.spec.{ts,js}`
+3. Run: `npx playwright test <test-file> --reporter=list 2>&1`
+4. If tests pass → mark step 5 as `done`, proceed to step 6
+5. If tests fail:
+   a. Read the failure output carefully. Common issues:
+      - **Selector not found**: re-explore the page with `find_elements` to get current selectors
+      - **Timeout**: add proper `waitForURL` or `waitForLoadState`
+      - **Assertion mismatch**: verify against live site
+      - **Auth/state issue**: make tests independent
+   b. Edit the test file with fixes
+   c. Re-run tests
+   d. Maximum 2 fix-and-rerun cycles
+   e. If still failing after 2 cycles: mark step 5 as `in-progress`, log the failures, and continue to step 6 anyway
+
+Update tracker: set step 5 status to `done` (or `in-progress` if fixes exhausted).
+
+### Step 6: Coverage Check
+
+1. Read `test-cases/<feature-slug>.md` and extract all `TC-<FEATURE>-NNN` IDs
+2. Grep test files for each TC-ID
+3. If ALL TC-IDs are found in test files AND all tests pass:
+   - Update tracker: set step 6 status to `done`
+   - Write `<!-- E2E_COMPLETE -->` as the last line of `e2e-tracker.md`
+   - Output summary: files created, TC-IDs covered, how to run
+   - DONE.
+4. If uncovered TC-IDs exist:
+   - Log which TC-IDs are missing in the tracker session log
+   - Set step 4 back to `pending` in the tracker with a note: "Missing: TC-XXX-001, TC-XXX-005"
+   - Set step 5 back to `pending`
+   - Set step 6 back to `pending`
+   - Loop back to Step 4 to write the missing tests (one retry loop max)
 
 ---
 
-## Stage C: Fix Failing Tests
+## Tracker Updates
 
-Read the test failure output carefully. Common issues and fixes:
+After completing each step, you MUST:
 
-1. **Selector not found**: Element changed — re-explore the page with `find_elements` to get current selectors
-2. **Timeout**: Page load or navigation issue — add proper `waitForURL` or `waitForLoadState`
-3. **Assertion mismatch**: Expected value wrong — verify against live site
-4. **Auth/state issue**: Test depends on state from another test — make tests independent
+1. Update the step's Status in the tracker table to `done`, `in-progress`, or `blocked`
+2. If the step produced an artifact, ensure the Artifact column is filled
+3. Append a session log entry under `## Log`:
 
-Fix approach:
-1. Read the failing test file
-2. If selector issue: use browser tools to find correct selectors on the live site
-3. Edit the test file with fixes
-4. Run tests again: `npx playwright test <file> --reporter=list`
+```markdown
+### Step N completed — <YYYY-MM-DDTHH:MM:SSZ>
+- Completed: <what was accomplished>
+- Found: <key discoveries, if any>
+- Next: <what happens next>
+```
 
-If tests still fail after fixes, note what's wrong and let the next iteration try again (Ralph Loop will re-invoke).
-
-**Then proceed to Check 5** to see if coverage is complete.
-
----
-
-## Stage D: Write Remaining Tests
-
-Identify which TC-IDs from the spec are not yet in test files.
-
-**Delegate to a general-purpose subagent** via Task tool:
-
-Prompt the subagent with:
-- The specific uncovered TC-IDs and their specs from `test-cases/<feature-slug>.md`
-- Path to existing test file(s) so the subagent can follow the same style
-- Instructions to ADD new test cases to existing file or create a new file if appropriate
-- Same Playwright principles as Stage B
-- Instructions to run all tests after writing
-
-**Then proceed to Check 4** to verify.
+Status values: `pending`, `in-progress`, `done`, `blocked`
 
 ---
 
 ## Principles
 
-- **Files are state** — no separate progress file. The existence of `test-cases/*.md` and `*.spec.ts` tells you where you are.
-- **Idempotent** — each iteration checks what exists and only does what's missing. Safe to re-run.
+- **Tracker is the source of truth** — `e2e-tracker.md` records progress. Always read it first, always update it after each step.
+- **Idempotent** — each step checks what exists and only does what's missing. Safe to re-run.
 - **Subagent-driven** — heavy browser exploration and test writing delegated to Task tool subagents to save main context.
 - **Follow existing conventions** — match the project's test style, not a generic template.
 - **Traceable** — every test links back to a TC-ID from the spec.
 - **No arbitrary waits** — use Playwright's built-in auto-wait and explicit event-driven waits.
+- **Artifacts live in standard locations** — `e2e-plan/` for analysis, `test-cases/` for specs, project test dir for test files.
 
 ## Example Usage
 
@@ -230,7 +244,3 @@ Prompt the subagent with:
 /add-e2e-tests https://myapp.com/login User authentication including social login
 ```
 
-### With Ralph Loop (fully autonomous):
-```
-/ralph-loop "Use /add-e2e-tests https://myapp.com/login Login flow" --completion-promise "E2E COMPLETE" --max-iterations 10
-```
