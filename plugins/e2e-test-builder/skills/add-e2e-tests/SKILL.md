@@ -63,7 +63,7 @@ Check if `e2e-tracker.md` exists in the project root.
 ### Bootstrap (No Tracker)
 
 1. Check that a Playwright config exists: `Glob: playwright.config.{ts,js,mjs}`
-   - If NOT found: create `e2e-tracker.md` with step 1 as `blocked`, write `<!-- E2E_BLOCKED: No Playwright configuration found. Run: npm init playwright@latest -->` at the bottom, report the issue to the user, and STOP.
+   - If NOT found: scaffold from the boilerplate repo `git@github.com:lespaceman/playwright-typescript-e2e-boilerplate.git` — clone it, copy config/fixtures/pages/utils into the project, update `baseURL` to the target URL, remove example tests, merge devDependencies into package.json, run `npm install` and `npx playwright install --with-deps chromium`, then clean up the temp clone. Log the scaffolding in the first session log entry.
 2. Create the `e2e-plan/` directory
 3. Create `e2e-tracker.md` using this exact template:
 

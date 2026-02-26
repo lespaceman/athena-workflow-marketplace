@@ -19,7 +19,7 @@ Parse the user's query for the target URL and feature description.
 
 1. Derive a **feature slug** from the feature description (e.g., "Login flow" → `login`, "Checkout with payment" → `checkout`)
 2. Check that a Playwright config exists: `Glob: playwright.config.{ts,js,mjs}`
-   - If NOT found: create `e2e-tracker.md` with step 1 as `blocked`, write `<!-- E2E_BLOCKED: No Playwright configuration found. Run: npm init playwright@latest -->` at the bottom, and STOP.
+   - If NOT found: scaffold from the boilerplate (see **Scaffolding** below), then continue
 3. Create the `e2e-plan/` directory
 4. Create `e2e-tracker.md` using this exact template:
 
@@ -187,6 +187,33 @@ Before every exit, you MUST:
    - Mark step 6 as `pending`
 
 **Done when:** All TC-IDs covered and passing → E2E_COMPLETE written.
+
+## Scaffolding (No Playwright Config Found)
+
+When no `playwright.config.{ts,js,mjs}` exists in the project, scaffold from the boilerplate:
+
+1. Clone the boilerplate into the project root:
+   ```bash
+   git clone git@github.com:lespaceman/playwright-typescript-e2e-boilerplate.git e2e-scaffold-tmp
+   ```
+2. Copy scaffolding files into the project (do NOT overwrite existing files):
+   - `playwright.config.ts` — update `baseURL` to the target URL from the user's query
+   - `tsconfig.json` (if no tsconfig exists)
+   - `fixtures/index.ts`
+   - `pages/BasePage.ts`
+   - `utils/helpers.ts`
+   - `tests/` directory (empty — remove the example test files)
+3. Merge Playwright devDependencies into the project's `package.json`:
+   - `@playwright/test`, `@types/node`, `typescript`
+   - If no `package.json` exists, copy the boilerplate's `package.json` and update `name`
+4. Install dependencies: `npm install`
+5. Install Playwright browsers: `npx playwright install --with-deps chromium`
+6. Remove the scaffold temp directory: `rm -rf e2e-scaffold-tmp`
+7. Remove example files that were copied: `rm -f tests/example-domains.spec.ts tests/navigation.spec.ts pages/ExamplePage.ts`
+
+After scaffolding, the project has a working Playwright setup with POM pattern, custom fixtures, and helper utilities. Proceed with creating the tracker and starting step 1.
+
+**Do NOT add a step 0 to the tracker for scaffolding** — it happens during bootstrap before the tracker is created. Log it in the first session log entry.
 
 ## Guardrails
 
