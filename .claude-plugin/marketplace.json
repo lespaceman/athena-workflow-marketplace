@@ -20,5 +20,12 @@
       "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
       "version": "1.0.0"
     }
+  ],
+  "workflows": [
+    {
+      "name": "e2e-test-builder",
+      "source": "./plugins/e2e-test-builder/workflow.json",
+      "description": "Workflow for adding Playwright E2E tests to existing codebases"
+    }
   ]
 }
