@@ -10,5 +10,5 @@
 		"maxIterations": 15
 	},
 	"isolation": "minimal",
-	"requiredPlugins": []
+	"plugins": []
 }
