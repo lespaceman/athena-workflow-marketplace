@@ -220,6 +220,7 @@ After completing each step, you MUST:
 ### Step N completed — <YYYY-MM-DDTHH:MM:SSZ>
 - Completed: <what was accomplished>
 - Found: <key discoveries, if any>
+- Blocker: <issue preventing progress, if any>
 - Next: <what happens next>
 ```
 
