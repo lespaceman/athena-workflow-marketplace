@@ -7,7 +7,7 @@
     "description": "A marketplace of AI-powered browser automation workflows for Claude Code",
     "pluginRoot": "./plugins"
   },
-  "workflows": [
+  "plugins": [
     {
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
