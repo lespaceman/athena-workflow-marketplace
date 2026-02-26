@@ -1,6 +1,6 @@
-# Athena Plugin Marketplace
+# Athena Workflow Marketplace
 
-A marketplace of AI-powered browser automation plugins for Claude Code.
+A marketplace of AI-powered browser automation workflows for Claude Code.
 
 ## Install the Marketplace
 
@@ -8,10 +8,10 @@ Add this marketplace to Claude Code:
 
 ```shell
 # From GitHub
-claude plugin marketplace add lespaceman/athena-plugin-marketplace
+claude plugin marketplace add lespaceman/athena-workflow-marketplace
 
 # From a local clone
-claude plugin marketplace add ./athena-plugin-marketplace
+claude plugin marketplace add ./athena-workflow-marketplace
 ```
 
 ## Install a Plugin
@@ -19,20 +19,20 @@ claude plugin marketplace add ./athena-plugin-marketplace
 Once the marketplace is added, install a plugin:
 
 ```shell
-claude plugin install e2e-test-builder@athena-plugin-marketplace
+claude plugin install e2e-test-builder@athena-workflow-marketplace
 ```
 
 ### Installation Scopes
 
 ```shell
 # For yourself across all projects (default)
-claude plugin install e2e-test-builder@athena-plugin-marketplace --scope user
+claude plugin install e2e-test-builder@athena-workflow-marketplace --scope user
 
 # For all collaborators on a project (writes to .claude/settings.json)
-claude plugin install e2e-test-builder@athena-plugin-marketplace --scope project
+claude plugin install e2e-test-builder@athena-workflow-marketplace --scope project
 
 # For yourself in this repo only
-claude plugin install e2e-test-builder@athena-plugin-marketplace --scope local
+claude plugin install e2e-test-builder@athena-workflow-marketplace --scope local
 ```
 
 ## Available Plugins
@@ -117,7 +117,7 @@ plugins/
 4. Commit, push, and update the marketplace:
 
 ```shell
-claude plugin marketplace update athena-plugin-marketplace
+claude plugin marketplace update athena-workflow-marketplace
 ```
 
 ## Managing the Marketplace
@@ -127,23 +127,23 @@ claude plugin marketplace update athena-plugin-marketplace
 claude plugin marketplace list
 
 # Update to pull latest plugins
-claude plugin marketplace update athena-plugin-marketplace
+claude plugin marketplace update athena-workflow-marketplace
 
 # Remove the marketplace
-claude plugin marketplace remove athena-plugin-marketplace
+claude plugin marketplace remove athena-workflow-marketplace
 
 # List installed plugins
 claude plugin list
 
 # Disable/enable a plugin
-claude plugin disable e2e-test-builder@athena-plugin-marketplace
-claude plugin enable e2e-test-builder@athena-plugin-marketplace
+claude plugin disable e2e-test-builder@athena-workflow-marketplace
+claude plugin enable e2e-test-builder@athena-workflow-marketplace
 
 # Update a plugin
-claude plugin update e2e-test-builder@athena-plugin-marketplace
+claude plugin update e2e-test-builder@athena-workflow-marketplace
 
 # Uninstall a plugin
-claude plugin uninstall e2e-test-builder@athena-plugin-marketplace
+claude plugin uninstall e2e-test-builder@athena-workflow-marketplace
 
 # Validate a plugin or marketplace manifest
 claude plugin validate ./plugins/my-plugin

@@ -1,10 +1,10 @@
 {
-  "name": "athena-plugin-marketplace",
+  "name": "athena-workflow-marketplace",
   "owner": {
     "name": "Browser Automation Team"
   },
   "metadata": {
-    "description": "A marketplace of AI-powered browser automation plugins for Claude Code",
+    "description": "A marketplace of AI-powered browser automation workflows for Claude Code",
     "pluginRoot": "./plugins"
   },
   "plugins": [

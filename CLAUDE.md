@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Claude Code Plugin Marketplace** — a collection of AI-powered browser automation plugins.
+This is a **Claude Code Workflow Marketplace** — a collection of AI-powered browser automation workflows.
 
 - **e2e-test-builder** — Workflow runner for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → write tests. Uses subagent-driven development to save context.
 - **site-knowledge** — Site-specific automation patterns for popular websites (Airbnb, Amazon, Apple Store).
