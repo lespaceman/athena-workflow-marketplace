@@ -202,6 +202,43 @@ Use `page_id` to target specific browser tabs.
 </state>
 ```
 
+## Session Recovery
+
+The MCP server uses a persistent browser that survives across conversation sessions. Pages opened in previous sessions remain as open tabs. This means:
+
+- **No active page on new session**: When starting a new conversation, there is no "current" page. Calling `capture_snapshot` or actions without `page_id` may target an arbitrary tab from a prior session — not the page expected.
+- **"No page/session" errors**: If the MCP reports no page or session exists, this does not mean the browser is dead. It means no page is currently targeted.
+
+### Recovery Strategy
+
+When encountering a "no page/session" error or when resuming work from a prior session:
+
+1. **Call `list_pages`** to see all open tabs with their `page_id`, URL, and title
+2. **Identify the target page** by matching the URL or title
+3. **Pass `page_id` explicitly** to subsequent tool calls (`capture_snapshot`, `find_elements`, `click`, etc.) to target the correct tab
+4. **If the page is not found**, navigate fresh — the tab may have been closed or the browser restarted
+
+### Important Behaviors
+
+- **Tab URLs may be stale**: `list_pages` shows the URL at the time the tab was opened. If in-page navigation occurred (e.g., clicking links within a single-page app or Wikipedia), the listed URL may not reflect the current page content. Use `capture_snapshot` with the `page_id` to see actual current state.
+- **Many tabs may exist**: The persistent browser accumulates tabs across sessions (37+ tabs observed in testing). Always use `page_id` to target the correct one rather than relying on default tab selection.
+- **`close_session`** closes the entire browser and all tabs. Use `close_page` to close individual tabs without affecting others.
+
+### Example: Resuming a Previous Session
+
+```
+# 1. No active page — check what's open
+list_pages
+# Returns: page-abc123 url="https://example.com" title="Example"
+
+# 2. Target the specific page
+capture_snapshot(page_id="page-abc123")
+# Returns current state of that tab
+
+# 3. Continue interacting with page_id
+click(eid="some-element", page_id="page-abc123")
+```
+
 ## Error Responses
 
 ```xml
@@ -212,6 +249,7 @@ Common errors:
 - Element ID not found (page may have changed)
 - Element not visible/enabled
 - Form field not in any form context
+- No page/session (see Session Recovery above)
 
 ## Best Practices
 
@@ -221,3 +259,5 @@ Common errors:
 4. **Use `region` filter** to narrow searches in large pages
 5. **Handle sequential forms** by checking which options become enabled
 6. **Track `<baseline>` vs `<diff>`** to know if you have full or partial state
+7. **Always pass `page_id`** when working across sessions or with multiple tabs
+8. **Use `list_pages` first** when starting a new session to discover existing tabs
