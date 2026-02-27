@@ -1,22 +1,47 @@
 # Athena Workflow Marketplace
 
-A marketplace of AI-powered browser automation workflows for Claude Code.
+Marketplace repository for:
 
-## Install the Marketplace
+1. Claude plugins (`plugins/`)
+2. Athena workflows (`.workflows/`)
 
-Add this marketplace to Claude Code:
+## Spec
+
+Workflow and manifest contracts are defined in:
+
+- [RFC 0001: Long-Running Workflow Definition (Claude Plugin Compatible)](docs/rfcs/0001-workflow-marketplace-spec.md)
+
+Use this RFC as the source of truth for workflow behavior, lifecycle, and
+Claude plugin compatibility (skills, tools, and sub-agent/task patterns).
+
+## Repository Structure
+
+```text
+.
+├── .claude-plugin/
+│   └── marketplace.json            # Plugin catalog
+├── .athena-workflow/
+│   └── marketplace.json            # Workflow catalog
+├── .workflows/
+│   └── e2e-test-builder/
+│       ├── workflow.json
+│       └── e2e-workflow-prompt.md
+└── plugins/
+    ├── e2e-test-builder/
+    └── site-knowledge/
+```
+
+## Install This Marketplace (Claude Plugin Consumers)
 
 ```shell
 # From GitHub
 claude plugin marketplace add lespaceman/athena-workflow-marketplace
 
-# From a local clone
+# From local clone
 claude plugin marketplace add ./athena-workflow-marketplace
 ```
 
 ## Install a Plugin
-
-Once the marketplace is added, install a plugin:
 
 ```shell
 claude plugin install e2e-test-builder@athena-workflow-marketplace
@@ -25,13 +50,8 @@ claude plugin install e2e-test-builder@athena-workflow-marketplace
 ### Installation Scopes
 
 ```shell
-# For yourself across all projects (default)
 claude plugin install e2e-test-builder@athena-workflow-marketplace --scope user
-
-# For all collaborators on a project (writes to .claude/settings.json)
 claude plugin install e2e-test-builder@athena-workflow-marketplace --scope project
-
-# For yourself in this repo only
 claude plugin install e2e-test-builder@athena-workflow-marketplace --scope local
 ```
 
@@ -39,56 +59,49 @@ claude plugin install e2e-test-builder@athena-workflow-marketplace --scope local
 
 ### e2e-test-builder
 
-Iterative workflow for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → write tests. Supports stateless looping via athena-cli with a tracker file for cross-session state.
-
-**Skills:**
+Iterative workflow runner for adding Playwright E2E tests to existing codebases.
 
 | Skill | Description |
 |-------|-------------|
-| `/add-e2e-tests <url> <feature>` | Full pipeline orchestrator — runs all stages, maintains tracker |
-| `/analyze-test-codebase [path]` | Detect Playwright config, test conventions, existing patterns |
-| `/plan-test-coverage <url> <feature>` | Plan what to test based on existing coverage gaps |
-| `/explore-website <url> <goal>` | Live browser interaction, selector extraction, form analysis |
-| `/generate-test-cases <url> <journey>` | Explore site and produce structured TC-ID test specs |
-| `/write-e2e-tests <description>` | Write executable Playwright test code following project conventions |
-
-**Reference skill (auto-applied):** `agent-web-interface-guide` — MCP response patterns and best practices.
-
-**MCP Server:** Uses [agent-web-interface](https://github.com/lespaceman/agent-web-interface) for browser control.
-
-**Scaffolding:** If no Playwright config exists in the target project, automatically scaffolds from [playwright-typescript-e2e-boilerplate](https://github.com/lespaceman/playwright-typescript-e2e-boilerplate) with POM pattern, fixtures, and helpers.
-
----
+| `/add-e2e-tests <url> <feature>` | Full pipeline orchestrator |
+| `/analyze-test-codebase [path]` | Detect Playwright config and conventions |
+| `/plan-test-coverage <url> <feature>` | Build prioritized coverage plan |
+| `/explore-website <url> <goal>` | Extract selectors and behavior via browser interaction |
+| `/generate-test-cases <url> <journey>` | Generate TC-ID based structured specs |
+| `/write-e2e-tests <description>` | Implement executable Playwright tests |
 
 ### site-knowledge
 
-Site-specific automation patterns for popular websites. These skills are auto-applied when relevant sites are detected — no manual invocation needed.
+Auto-applied site-specific automation patterns.
 
 | Skill | Description |
 |-------|-------------|
-| `airbnb` | Airbnb.com automation patterns, element selectors, modal handling |
-| `amazon` | Amazon.com product search, cart, buying options patterns |
-| `apple-store` | Apple Store configuration flows, sequential form handling |
-| `apple-testing-guide` | Playwright testing patterns specific to Apple.com |
+| `airbnb` | Airbnb automation patterns |
+| `amazon` | Amazon automation patterns |
+| `apple-store` | Apple Store flow patterns |
+| `apple-testing-guide` | Apple testing-specific guidance |
 
-## Adding a New Plugin
+## Available Workflows
 
-1. Create a directory under `plugins/`:
+Workflows are registered in `.athena-workflow/marketplace.json` and implemented under `.workflows/`.
 
-```
-plugins/
-└── my-new-plugin/
-    ├── .claude-plugin/
-    │   └── plugin.json
-    ├── .mcp.json          # optional - MCP server config
-    ├── skills/            # optional - slash commands and knowledge
-    │   └── my-skill/
-    │       └── SKILL.md
-    └── hooks/             # optional - event hooks
-        └── hooks.json
-```
+| Workflow | Source |
+|----------|--------|
+| `e2e-test-builder` | `.workflows/e2e-test-builder/workflow.json` |
 
-2. Create `plugins/my-new-plugin/.claude-plugin/plugin.json`:
+Workflow intent:
+
+- Orchestrate long-running multi-session execution
+- Reuse existing Claude plugin capabilities
+- Keep tracker-based progress and completion semantics portable across runtimes
+
+## Add a New Plugin
+
+1. Create a plugin directory under `plugins/<name>/`.
+2. Add `plugins/<name>/.claude-plugin/plugin.json`.
+3. Register plugin in `.claude-plugin/marketplace.json` under `plugins[]`.
+
+Minimal `plugin.json`:
 
 ```json
 {
@@ -101,52 +114,37 @@ plugins/
 }
 ```
 
-3. Register it in `.claude-plugin/marketplace.json`:
+## Add a New Workflow
+
+1. Create `.workflows/<workflow-name>/workflow.json`.
+2. Add any workflow-local assets in the same directory.
+3. Register workflow in `.athena-workflow/marketplace.json` under `workflows[]`.
+4. Keep schema/behavior aligned with RFC 0001.
+
+Workflow registration example:
 
 ```json
 {
-  "plugins": [
+  "workflows": [
     {
-      "name": "my-new-plugin",
-      "source": "./plugins/my-new-plugin",
-      "description": "What this plugin does",
-      "version": "1.0.0"
+      "name": "my-workflow",
+      "source": "./.workflows/my-workflow/workflow.json",
+      "description": "My reusable workflow"
     }
   ]
 }
 ```
 
-4. Commit, push, and update the marketplace:
+## Manage Plugin Marketplace (Claude)
 
 ```shell
-claude plugin marketplace update athena-workflow-marketplace
-```
-
-## Managing the Marketplace
-
-```shell
-# List configured marketplaces
 claude plugin marketplace list
-
-# Update to pull latest plugins
 claude plugin marketplace update athena-workflow-marketplace
-
-# Remove the marketplace
 claude plugin marketplace remove athena-workflow-marketplace
-
-# List installed plugins
 claude plugin list
-
-# Disable/enable a plugin
 claude plugin disable e2e-test-builder@athena-workflow-marketplace
 claude plugin enable e2e-test-builder@athena-workflow-marketplace
-
-# Update a plugin
 claude plugin update e2e-test-builder@athena-workflow-marketplace
-
-# Uninstall a plugin
 claude plugin uninstall e2e-test-builder@athena-workflow-marketplace
-
-# Validate a plugin or marketplace manifest
 claude plugin validate ./plugins/my-plugin
 ```

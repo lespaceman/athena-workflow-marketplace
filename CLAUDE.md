@@ -16,6 +16,7 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 ### Marketplace Structure
 
 - `.claude-plugin/marketplace.json` — Central registry listing all plugins with `pluginRoot: ./plugins`
+- `.athena-workflow/marketplace.json` — Central registry listing Athena workflows
 - Each plugin lives under `plugins/<plugin-name>/` with its own `.claude-plugin/plugin.json` manifest
 
 ### e2e-test-builder Plugin
@@ -36,8 +37,8 @@ Reference skill (not user-invocable): `agent-web-interface-guide` — Documents 
 
 **MCP Config** (`plugins/e2e-test-builder/.mcp.json`): Configures `agent-web-interface` MCP server. All MCP tool names follow the pattern `mcp__plugin_e2e-test-builder_agent-web-interface__<tool>`.
 
-**Workflow** (`plugins/e2e-test-builder/workflow.json`): Athena-cli integration for stateless looping.
-- `e2e-workflow-prompt.md` — system prompt appended via `--append-system-prompt-file`
+**Workflow** (`.workflows/e2e-test-builder/workflow.json`): Athena-cli integration for stateless looping.
+- `.workflows/e2e-test-builder/e2e-workflow-prompt.md` — system prompt appended via `--append-system-prompt-file`
 - `e2e-tracker.md` (created in target project root) — tracker file, single source of truth across sessions
 - `e2e-plan/` — planning artifacts: `conventions.md` (codebase analysis), `coverage-plan.md` (test plan)
 - Completion markers in tracker: `<!-- E2E_COMPLETE -->` (success) or `<!-- E2E_BLOCKED: reason -->` (abort)
