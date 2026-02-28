@@ -3,9 +3,11 @@ name: write-e2e-tests
 description: >
   Use when the user wants executable Playwright test code written, refactored, or fixed.
   Triggers: "write Playwright tests", "write e2e tests", "create test code", "implement these test cases",
-  "convert test specs to code", "turn selectors into tests", "fix a flaky test", "stabilize this test",
-  "add a test for this flow", "write tests for this feature", "convert TC-IDs to Playwright",
-  "refactor this test", "improve test locators", "fix timeout in test".
+  "convert test specs to code", "turn selectors into tests", "add a test for this flow",
+  "write tests for this feature", "convert TC-IDs to Playwright", "refactor this test",
+  "improve test locators", "set up auth for Playwright tests", "mock API in test",
+  "create test fixture", "add network interception", "write error path tests".
+  For flaky/intermittent test failures, use fix-flaky-tests instead.
   This skill writes executable Playwright TypeScript tests following project conventions — semantic locators
   (getByRole > getByLabel > getByTestId), no arbitrary sleeps, AAA structure, TC-ID traceability.
   It does NOT generate test case specifications — use generate-test-cases for that.
@@ -132,6 +134,190 @@ Avoid `.first()` / `.nth()` unless a strong, documented reason exists — scope 
 ### Configuration Hygiene
 - Use `baseURL` and relative navigation (`page.goto('/')`)
 - Avoid hardcoded domains/URLs in tests
+- Configure `trace: 'on-first-retry'`, `screenshot: 'only-on-failure'`, `video: 'on-first-retry'` for CI debugging
+- Set `retries: process.env.CI ? 2 : 0` — retries in CI only
+- View traces with `npx playwright show-trace trace.zip` to time-travel through failures
+
+### Authentication Setup
+
+Choose the right auth strategy based on the project's needs:
+
+**Strategy 1: storageState (Recommended for most projects)**
+Log in once in global setup, save cookies/localStorage to a JSON file, and reuse across all tests:
+
+```typescript
+// global-setup.ts
+import { chromium, FullConfig } from '@playwright/test';
+
+async function globalSetup(config: FullConfig) {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.goto('/login');
+  await page.getByLabel(/email/i).fill(process.env.TEST_USER_EMAIL!);
+  await page.getByLabel(/password/i).fill(process.env.TEST_USER_PASSWORD!);
+  await page.getByRole('button', { name: /sign in/i }).click();
+  await page.waitForURL('/dashboard');
+  await page.context().storageState({ path: 'tests/.auth/user.json' });
+  await browser.close();
+}
+export default globalSetup;
+```
+
+Reference in config: `use: { storageState: 'tests/.auth/user.json' }`
+
+**Strategy 2: Worker-scoped fixture (for parallel workers needing separate accounts)**
+```typescript
+export const test = base.extend<{}, { workerStorageState: string }>({
+  storageState: ({ workerStorageState }, use) => use(workerStorageState),
+  workerStorageState: [async ({ browser }, use, testInfo) => {
+    const page = await browser.newPage({ storageState: undefined });
+    // Login with worker-specific account...
+    const path = `tests/.auth/worker-${testInfo.parallelIndex}.json`;
+    await page.context().storageState({ path });
+    await use(path);
+    await page.close();
+  }, { scope: 'worker' }],
+});
+```
+
+**Strategy 3: Multi-role testing (admin + user in same test)**
+```typescript
+test('TC-ADMIN-001: Admin sees user profile', async ({ browser }) => {
+  const adminContext = await browser.newContext({ storageState: 'tests/.auth/admin.json' });
+  const userContext = await browser.newContext({ storageState: 'tests/.auth/user.json' });
+  const adminPage = await adminContext.newPage();
+  const userPage = await userContext.newPage();
+  // Interact with both pages...
+  await adminContext.close();
+  await userContext.close();
+});
+```
+
+**Strategy 4: Per-test login** — only when testing login itself or permission-specific scenarios.
+
+Never hardcode tokens. Use environment variables or `.env.test`.
+
+### API-Driven Test Setup
+
+Use API calls to set up test data instead of clicking through UI. This is 10-50x faster and more reliable.
+
+**When to use API setup:** Creating test users, products, orders, seed data. Setting feature flags. Resetting state between tests.
+
+**When to use UI setup:** Only when the creation flow IS the test being verified.
+
+```typescript
+test('TC-CART-001: User sees items in cart', async ({ page, request }) => {
+  // Arrange: seed data via API (fast, deterministic)
+  await request.post('/api/cart/items', {
+    data: { productId: 'SKU-123', quantity: 2 }
+  });
+
+  // Act: navigate to verify UI
+  await page.goto('/cart');
+
+  // Assert
+  await expect(page.getByRole('listitem')).toHaveCount(2);
+});
+```
+
+**Reusable API fixture pattern:**
+```typescript
+export const test = base.extend<{ apiClient: APIRequestContext }>({
+  apiClient: async ({ playwright }, use) => {
+    const ctx = await playwright.request.newContext({
+      baseURL: process.env.API_BASE_URL,
+      extraHTTPHeaders: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+    });
+    await use(ctx);
+    await ctx.dispose();
+  },
+});
+```
+
+### Network Interception
+
+Use `page.route()` to intercept and mock network requests for deterministic error testing.
+
+**Mock server errors:**
+```typescript
+await page.route('**/api/checkout', route =>
+  route.fulfill({ status: 500, body: JSON.stringify({ error: 'Payment declined' }) })
+);
+```
+
+**Patch real responses (modify, don't replace):**
+```typescript
+await page.route('**/api/products', async route => {
+  const response = await route.fetch();
+  const json = await response.json();
+  json.results = json.results.slice(0, 1); // reduce to 1 item
+  await route.fulfill({ response, json });
+});
+```
+
+**Assert backend was called:**
+```typescript
+const [response] = await Promise.all([
+  page.waitForResponse(resp =>
+    resp.url().includes('/api/order') && resp.status() === 201
+  ),
+  page.getByRole('button', { name: /place order/i }).click(),
+]);
+expect(response.status()).toBe(201);
+```
+
+**Block heavy resources to speed up tests:**
+```typescript
+await page.route('**/*.{png,jpg,jpeg,gif,svg}', route => route.abort());
+```
+
+### Custom Fixtures (test.extend)
+
+Use `test.extend` to create reusable test setup without duplicating code:
+
+```typescript
+// fixtures/index.ts
+import { test as base, Page } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+
+export const test = base.extend<{
+  loginPage: LoginPage;
+  authenticatedPage: Page;
+}>({
+  loginPage: async ({ page }, use) => {
+    await use(new LoginPage(page));
+  },
+  authenticatedPage: async ({ browser }, use) => {
+    const context = await browser.newContext({
+      storageState: 'tests/.auth/user.json'
+    });
+    const page = await context.newPage();
+    await use(page);
+    await context.close();
+  },
+});
+export { expect } from '@playwright/test';
+```
+
+Import `test` from your fixtures file, not from `@playwright/test`, in test files that need custom fixtures.
+
+### Error Path Testing
+
+Every feature needs error path tests. Use network interception (see above) to simulate failures. At minimum, every feature test suite should cover:
+
+- **Server error** — `route.fulfill({ status: 500, ... })` — verify error UI appears
+- **Network timeout** — `route.abort('timedout')` — verify retry option or error message
+- **Empty state** — `route.fulfill({ status: 200, json: { items: [] } })` — verify empty state UI
+
+```typescript
+test('TC-DASHBOARD-005: Shows empty state when no data', async ({ page }) => {
+  await page.route('**/api/items', route =>
+    route.fulfill({ status: 200, json: { items: [] } })
+  );
+  await page.goto('/dashboard');
+  await expect(page.getByText(/no items/i)).toBeVisible();
+});
+```
 
 ## Mapping Tables
 
@@ -208,6 +394,12 @@ test('TC-FEATURE-001: Description of test case', async ({ page }) => {
 3. **Fragile `nth()`** — add comment if unavoidable
 4. **Exact long text** — use regex with key words
 5. **Unscoped locators** — scope to main/nav/dialog when possible
+6. **Login via UI in every test** — use storageState or API-based auth setup
+7. **UI clicks to set up test data** — use API requests for data seeding
+8. **No error path tests** — every feature needs at least one failure scenario test
+9. **Hardcoded test data** — use factories, unique IDs (`Date.now()`), or env vars
+10. **Tests depending on execution order** — each test must be independently runnable
+11. **`expect(await el.isVisible()).toBe(true)`** — use `await expect(el).toBeVisible()` (auto-retries)
 
 ## Context-Saving Strategy
 

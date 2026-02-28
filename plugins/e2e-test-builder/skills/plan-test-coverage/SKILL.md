@@ -49,11 +49,15 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
    - **Error states** — network errors, server errors, empty states
    - **Edge cases** — boundary values, special characters, concurrent actions
    - **Cross-feature** — interactions with other features (e.g., auth + checkout)
+   - **Accessibility** — keyboard navigation, screen reader support, focus management
+   - **Visual regression** — layout consistency, responsive breakpoints (375px, 768px, 1280px)
+   - **Performance** — loading states, lazy loading, large data sets
+   - **Network errors** — server 500s, timeouts, offline behavior
 
 5. **Prioritize** — rank tests by:
-   - **P0 (Must have)**: Core user journey, blocks revenue/signups if broken
-   - **P1 (Should have)**: Important validation, common error paths
-   - **P2 (Nice to have)**: Edge cases, accessibility, rare scenarios
+   - **P0 (Must have)**: Core user journey, auth flows, data corruption prevention. Blocks revenue/signups if broken.
+   - **P1 (Should have)**: Input validation, common error paths, accessibility basics (keyboard navigation, form labels)
+   - **P2 (Nice to have)**: Edge cases, visual regression, performance scenarios, cross-browser specifics, rare error paths
 
 6. **Output test plan**:
 
@@ -85,10 +89,28 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
 |-------|-------------|-------|
 | TC-FEATURE-030 | Special characters in search input | Unicode handling |
 
+#### Accessibility
+| TC-ID | Description | WCAG Criterion |
+|-------|-------------|----------------|
+| TC-FEATURE-A01 | Keyboard-only navigation through flow | 2.1.1 Keyboard |
+| TC-FEATURE-A02 | Form errors announced to screen readers | 1.3.1 Info and Relationships |
+
+#### Visual Regression (if project has visual testing setup)
+| TC-ID | Description | Viewport |
+|-------|-------------|----------|
+| TC-FEATURE-V01 | Layout consistency at mobile width | 375x812 |
+
+#### Cross-Browser Matrix
+| Browser | Priority | Reason |
+|---------|----------|--------|
+| Chromium | P0 | Primary target |
+| Firefox | P1 | Second largest desktop share |
+| WebKit/Safari | P1 | Required for iOS users |
+
 ### Recommended Order
 1. Write P0 tests first (N tests)
-2. Then P1 validation tests (N tests)
-3. P2 edge cases as time allows
+2. Then P1 validation + accessibility basics (N tests)
+3. P2 edge cases, visual regression, and performance as time allows
 
 ### Next Steps
 - Run `/generate-test-cases <url> <journey>` for detailed test specs

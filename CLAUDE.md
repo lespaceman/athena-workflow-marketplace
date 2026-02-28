@@ -30,6 +30,7 @@ User-invocable skills (slash commands):
 - `/explore-website <url> <goal>` — Live browser interaction, selector extraction, form analysis
 - `/generate-test-cases <url> <user-journey>` — Explore site and produce structured TC-ID test specs
 - `/write-e2e-tests <test-description>` — Write executable Playwright test code following project conventions
+- `/fix-flaky-tests <test-file-or-name>` — Diagnose and fix intermittent test failures using systematic root cause analysis
 
 Reference skill (not user-invocable): `agent-web-interface-guide` — Documents MCP response patterns (state snapshots, observations, sequential forms, element attributes).
 

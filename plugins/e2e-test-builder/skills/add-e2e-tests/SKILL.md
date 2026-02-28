@@ -163,6 +163,10 @@ Prompt the subagent with:
   - AAA structure (Arrange, Act, Assert)
   - Include TC-ID in test title: `test('TC-LOGIN-001: should login with valid credentials', ...)`
 - Instructions to write test file(s) to the project's test directory following naming conventions
+- If the project has API endpoints, use `request` fixture for test data setup instead of clicking through UI
+- Set up auth via storageState (if applicable) rather than logging in per test
+- Include at least one error path test per feature (mock 500 via `page.route`, mock empty state)
+- Use `page.route()` for network mocking when testing error scenarios
 - Instructions to run tests after writing: `npx playwright test <file> --reporter=list`
 
 If the tracker notes specific uncovered TC-IDs (set by step 6), write tests only for those IDs.
@@ -236,6 +240,9 @@ Status values: `pending`, `in-progress`, `done`, `blocked`
 - **Follow existing conventions** — match the project's test style, not a generic template.
 - **Traceable** — every test links back to a TC-ID from the spec.
 - **No arbitrary waits** — use Playwright's built-in auto-wait and explicit event-driven waits.
+- **API before UI for setup** — use API calls (`request` fixture) to create test data; reserve UI for what you are verifying.
+- **Auth setup once** — use storageState or worker-scoped fixtures, not login UI in every test.
+- **Test failures, not just success** — every feature needs error path coverage (mock 500s, empty states, network timeouts).
 - **Artifacts live in standard locations** — `e2e-plan/` for analysis, `test-cases/` for specs, project test dir for test files.
 
 ## Example Usage

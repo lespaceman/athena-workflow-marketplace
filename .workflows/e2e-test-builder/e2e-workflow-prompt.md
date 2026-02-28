@@ -75,6 +75,36 @@ Before every exit, you MUST:
 4. If step 6 is `done` and all TC-IDs are covered and passing: write `<!-- E2E_COMPLETE -->` as the last line
 5. If an unrecoverable blocker is found: write `<!-- E2E_BLOCKED: reason -->` as the last line
 
+## Testing Philosophy
+
+These principles guide every decision you make:
+
+1. **Test user outcomes, not implementation details.** Assert what the user sees and experiences — visible text, URL changes, enabled states — not internal state, CSS classes, or component hierarchy.
+
+2. **Tests must be deterministic.** A test that passes 99% of the time is a failing test. Every assertion must be backed by an event-driven wait, never a timer. `waitForTimeout` is a bug, not a fix.
+
+3. **Fast setup, thorough verification.** Use API calls to set up test state (10-50x faster than UI). Reserve the UI for what you are actually verifying.
+
+4. **Isolate everything.** Tests must not depend on execution order, shared mutable state, or other tests. Each test creates what it needs and cleans up after itself.
+
+5. **Error paths matter as much as happy paths.** Every feature test suite must include: what happens on server error (500), what happens on empty data, what happens on network failure.
+
+6. **Semantic locators are non-negotiable.** `getByRole` > `getByLabel` > `getByTestId` > text > CSS. No exceptions without a documented reason in a code comment.
+
+7. **No arbitrary waits. Ever.** Wait for: URL change, element visibility, network response, loading indicator removal, element enabled state. Never: `waitForTimeout(N)`.
+
+## Anti-Patterns (Never Do These)
+
+- **`page.waitForTimeout(N)`** as a fix for timing — find what you are actually waiting for
+- **`.first()` / `.nth(0)`** without a code comment explaining why — your selector is too broad
+- **Login via UI in every test** — use `storageState` from global setup
+- **Hardcoded domains in tests** — use `baseURL` from config and relative paths
+- **`expect(await el.isVisible()).toBe(true)`** — use `await expect(el).toBeVisible()` (auto-retries)
+- **Long test files (500+ lines)** — split by user journey, one journey per file
+- **Tests without TC-IDs** — every test must be traceable to a specification
+- **UI clicks to create test data** — use API requests via `request` fixture
+- **Shared mutable state between tests** — use unique data per test (`Date.now()` suffixes)
+
 ## Step Definitions
 
 ### Step 1: Analyze Codebase
@@ -145,6 +175,11 @@ Before every exit, you MUST:
    - AAA structure (Arrange, Act, Assert)
    - Include TC-ID in test title: `test('TC-LOGIN-001: should login with valid credentials', ...)`
    - Place test files in the project's test directory per conventions
+   - If the project has API endpoints, use `request` fixture for test data setup instead of UI clicks
+   - Set up auth via storageState (if applicable) rather than logging in per test
+   - Include at least one error path test per feature (mock 500 via `page.route`, mock empty state)
+   - Use `page.route()` for network mocking when testing error scenarios
+   - Never use `waitForTimeout` — wait for specific events (URL, response, visibility)
    - Run tests after writing: `npx playwright test <file> --reporter=list`
 4. Note the test file path in the tracker's Artifact column
 

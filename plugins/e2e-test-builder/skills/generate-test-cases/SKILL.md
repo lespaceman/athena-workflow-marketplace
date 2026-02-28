@@ -105,11 +105,35 @@ Launch another subagent to systematically probe beyond the happy path:
 
 ### Step 4: Reason About Additional Scenarios
 
-After exploration, reason about scenarios that could not be directly tested:
-- Concurrent access / race conditions
-- Network failure during submission
-- Session expiry mid-flow
-- Accessibility concerns (screen reader flows, keyboard-only navigation)
+After exploration, reason about scenarios that could not be directly triggered but must be covered:
+
+**Network & Performance:**
+- Network failure during form submission (mock 500, timeout)
+- Slow API response (loading states, skeleton screens, spinners)
+- Large data sets (pagination, infinite scroll, 100+ items)
+- Offline behavior (if PWA or service worker is present)
+
+**Accessibility (WCAG 2.1 AA):**
+- Keyboard-only navigation through the entire flow (Tab, Enter, Escape)
+- Screen reader announcements for dynamic content (ARIA live regions)
+- Focus management after modal open/close, page transitions
+- Color contrast for error states and disabled elements
+- Form error association (`aria-describedby` linking errors to fields)
+
+**Visual Consistency:**
+- Layout stability (no unexpected content shifts after load)
+- Responsive behavior at standard breakpoints (mobile 375px, tablet 768px, desktop 1280px)
+- Dark mode rendering if supported
+
+**Cross-browser Considerations:**
+- Safari-specific behavior (date inputs, smooth scrolling, storage quirks)
+- Firefox form validation differences
+- Mobile browser touch targets and gestures
+
+**Concurrent & Session:**
+- Session expiry mid-flow (cookie cleared during multi-step)
+- Concurrent access (two tabs, same user)
+- Race conditions (double-click submit, rapid navigation)
 
 ### Step 5: Generate Test Case Specifications
 
@@ -121,7 +145,7 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 ### TC-<FEATURE>-<NUMBER>: <Descriptive title>
 
 **Priority:** Critical | High | Medium | Low
-**Category:** Happy Path | Validation | Error Handling | Edge Case | Boundary | Security | Accessibility | UX
+**Category:** Happy Path | Validation | Error Handling | Edge Case | Boundary | Security | Accessibility | Visual | Performance | Network Error | UX
 **Preconditions:**
 - <What must be true before this test>
 
@@ -154,6 +178,9 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 ## Edge Cases
 ## Boundary Conditions
 ## Security & Access
+## Network Error Scenarios
+## Visual & Responsive
+## Performance & Loading
 ## Accessibility & UX
 ```
 

@@ -72,6 +72,25 @@ Use `get_element_details` with the element's eid to get Playwright-compatible se
 
 The `primary` attribute is the best Playwright locator. Record alternates as fallbacks.
 
+## Accessibility Observation
+
+When exploring, note accessibility-relevant patterns:
+- **Focus order**: Tab through interactive elements and note if focus order is logical
+- **ARIA landmarks**: Check for `role="main"`, `role="navigation"`, `role="banner"` using `find_elements`
+- **Dynamic content announcements**: After actions (form submit, modal open), check for `aria-live` regions in observations
+- **Form labels**: Note any inputs without visible labels or `aria-label` — use `get_field_context` to check
+- **Error association**: When form validation triggers, check if errors are linked to fields via `aria-describedby`
+- **Heading hierarchy**: Use `find_elements` with `kind: "heading"` to verify h1 > h2 > h3 (no level skips)
+
+## Form Validation Discovery
+
+When exploring forms, systematically trigger validation to document error patterns:
+1. **Submit the form empty** — observe which fields show required-field errors and what messages appear
+2. **Enter invalid formats** — wrong email, short password, letters in number fields — note inline validation messages
+3. **Note WHERE errors appear** — inline under field, toast notification, summary banner at top of form
+4. **Note WHEN errors appear** — on blur (leaving field), on submit, on keypress (real-time)
+5. **Record exact error message text** — these are used for assertion writing in test code
+
 ## Output Format
 
 Always include:
