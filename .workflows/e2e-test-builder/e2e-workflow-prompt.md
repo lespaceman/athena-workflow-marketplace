@@ -66,9 +66,11 @@ Before every exit, you MUST:
 
 ```markdown
 ### Session N — <YYYY-MM-DDTHH:MM:SSZ>
+- Step: <step number and name>
 - Completed: <what was accomplished>
 - Found: <key discoveries, if any>
 - Blocker: <issue preventing progress, if any>
+- Test output: <required for steps 5 and 6 — paste full `npx playwright test` stdout in a code block. For other steps, write "N/A">
 - Next: <what the next session should do>
 ```
 
@@ -180,48 +182,61 @@ These principles guide every decision you make:
    - Include at least one error path test per feature (mock 500 via `page.route`, mock empty state)
    - Use `page.route()` for network mocking when testing error scenarios
    - Never use `waitForTimeout` — wait for specific events (URL, response, visibility)
-   - Run tests after writing: `npx playwright test <file> --reporter=list`
-4. Note the test file path in the tracker's Artifact column
+4. After the subagent finishes, verify:
+   - Test file(s) exist in the expected directory
+   - Every TC-ID from the spec appears in a test title (grep for `TC-<FEATURE>`)
+5. Note the test file path in the tracker's Artifact column
 
-**Done when:** Test file(s) exist for the feature.
+**Done when:** Test file(s) exist AND every TC-ID from the spec has a corresponding test title.
+
+**This step does NOT run tests.** Test execution happens in Step 5. Do not mark Step 5 as done from this step.
 
 **If the tracker shows specific uncovered TC-IDs** (set by step 6), write tests only for those IDs.
 
-### Step 5: Verify & Fix
+### Step 5: Run Tests, Verify & Fix
 
-**No skill — custom step.**
+**No skill — custom step. Do NOT delegate to a subagent — you must run tests yourself and see the output.**
 
 **What to do:**
 1. Read `e2e-plan/conventions.md` for context
 2. Find test files for this feature: `Glob: **/<feature-slug>*.spec.{ts,js}`
-3. Run: `npx playwright test <test-file> --reporter=list 2>&1`
-4. If tests pass → mark done, proceed to step 6
-5. If tests fail:
-   a. Read the failure output
+3. Run tests and capture output: `npx playwright test <test-file> --reporter=list 2>&1`
+4. **You MUST paste the full test output into the session log** under a `- Test output:` field (use a code block). This is non-negotiable — it is the proof that tests were executed.
+5. If all tests pass → mark done, proceed to step 6
+6. If tests fail:
+   a. Read the failure output carefully — identify root cause before changing anything
    b. Common fixes: update selectors (use browser to re-check), add proper waits, fix assertions
    c. Edit the test file
-   d. Re-run tests
-   e. Maximum 2 fix-and-rerun cycles per session
-   f. If still failing: mark as `in-progress`, log the failures, let next session retry
+   d. Re-run tests: `npx playwright test <test-file> --reporter=list 2>&1`
+   e. Paste the re-run output into the session log as well
+   f. Maximum 3 fix-and-rerun cycles per session
+   g. If still failing after 3 cycles: mark as `in-progress`, log ALL failure outputs, let next session retry
 
-**Done when:** All tests pass.
+**Done when:** All tests pass AND the passing test output is recorded in the session log.
 
-### Step 6: Coverage Check
+**NEVER mark this step as `done` based on reading the test code and deciding it "looks correct." You must execute `npx playwright test` and see green results.**
 
-**No skill — custom step.**
+### Step 6: Coverage Check & Final Verification
+
+**No skill — custom step. Do NOT delegate to a subagent — you must run the final verification yourself.**
 
 **What to do:**
 1. Read `test-cases/<feature-slug>.md` and extract all `TC-<FEATURE>-NNN` IDs
-2. Grep test files for each TC-ID
-3. If all TC-IDs are found in test files AND all tests pass:
-   - Write `<!-- E2E_COMPLETE -->` as the last line of the tracker
-   - Mark step as `done`
-4. If uncovered TC-IDs exist:
+2. Grep test files for each TC-ID — build a checklist of covered vs missing
+3. If uncovered TC-IDs exist:
    - Log which TC-IDs are missing in the session log
    - Set step 4 back to `pending` in the tracker with a note: "Missing: TC-XXX-001, TC-XXX-005"
    - Mark step 6 as `pending`
+   - STOP — do not proceed to final verification until all TC-IDs are covered
+4. If all TC-IDs are covered, run the **final verification**:
+   - Run: `npx playwright test <test-file> --reporter=list 2>&1`
+   - **Paste the full output into the session log** — this is the final proof
+   - If all tests pass: write `<!-- E2E_COMPLETE -->` as the last line of the tracker, mark step as `done`
+   - If any test fails: set step 5 back to `in-progress`, log the failures, mark step 6 as `pending`
 
-**Done when:** All TC-IDs covered and passing → E2E_COMPLETE written.
+**Done when:** All TC-IDs are covered in test files AND `npx playwright test` passes with output recorded in the session log AND `E2E_COMPLETE` marker is written.
+
+**This step must independently verify — do NOT trust Step 5's results. Always re-run.**
 
 ## Scaffolding (No Playwright Config Found)
 
@@ -258,3 +273,6 @@ After scaffolding, the project has a working Playwright setup with POM pattern, 
 - **One major step per session** — steps 1-2 may combine since they're lightweight
 - **Never skip the tracker update** — the next session depends on it
 - **Tracker format is rigid** — use exact table headers and status values: `pending`, `in-progress`, `done`, `blocked`
+- **Never mark Step 5 or Step 6 as `done` without `npx playwright test` output in the session log.** No output = not done. Reading test code is not the same as running it. The session log must contain the actual test runner stdout as proof of execution.
+- **Step 5 and Step 6 must NOT be delegated to subagents.** You must run the tests yourself in the main context so you can see and log the output directly.
+- **Step 6 must re-run tests independently** — never trust a previous step's results. Tests may have regressed.
