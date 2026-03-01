@@ -93,6 +93,9 @@ Return:
 
 ## Operating Principles (Non-Negotiable)
 
+### Test User Outcomes
+Assert what the user sees — visible text, URL changes, enabled/disabled states — not internal state, CSS classes, or component hierarchy.
+
 ### No Arbitrary Sleeps
 Avoid `page.waitForTimeout()` except as a last-resort debug aid — remove before finishing.
 

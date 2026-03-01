@@ -1,3 +1,65 @@
+# Thin Router Workflow Prompt — Implementation Plan
+
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+
+**Goal:** Rewrite `e2e-workflow-prompt.md` from 278 lines to ~90 lines by removing duplicated domain knowledge and routing steps to existing skills.
+
+**Architecture:** The system prompt becomes a session protocol + routing table. Steps 1-4 delegate to skills for domain knowledge. Steps 5-6 stay inline (no skill exists for them). Testing philosophy, anti-patterns, locator strategy, and auth patterns are removed — they already live in `write-e2e-tests`, `fix-flaky-tests`, and `generate-test-cases` skills.
+
+**Tech Stack:** Markdown (system prompt), YAML frontmatter (skill metadata)
+
+---
+
+## Pre-Implementation Verification
+
+Before starting, verify that removed content is already covered by skills:
+
+| Removed Content | Covered By |
+|----------------|------------|
+| Testing philosophy (7 principles) | `write-e2e-tests` (Operating Principles), `add-e2e-tests` (Principles) |
+| Anti-patterns list | `write-e2e-tests` (Anti-Patterns to Avoid), `fix-flaky-tests` (Anti-Patterns) |
+| Locator priority table | `write-e2e-tests` (Locator Strategy table) |
+| Auth patterns (storageState, workers, multi-role) | `write-e2e-tests` (Authentication Setup) |
+| API-driven test setup | `write-e2e-tests` (API-Driven Test Setup) |
+| Network interception patterns | `write-e2e-tests` (Network Interception) |
+| Scaffolding detailed steps | `add-e2e-tests` (Bootstrap section, lines 65-67) |
+| Step 1 detailed procedure | `analyze-test-codebase` (Workflow section) |
+| Step 2 detailed procedure | `plan-test-coverage` (Workflow section) |
+| Step 3 detailed procedure | `generate-test-cases` (Workflow section) |
+| Step 4 detailed procedure | `write-e2e-tests` (Workflow section) |
+
+---
+
+### Task 1: Rewrite e2e-workflow-prompt.md
+
+**Files:**
+- Modify: `.workflows/e2e-test-builder/e2e-workflow-prompt.md`
+
+**Step 1: Read the current file**
+
+Read `.workflows/e2e-test-builder/e2e-workflow-prompt.md` to confirm current content.
+
+**Step 2: Replace with thin router version**
+
+Overwrite the file with the following content (target: ~90 lines). The new prompt retains:
+- Session protocol (read tracker → bootstrap or continue → execute step → exit)
+- Tracker template (exact markdown table)
+- Steps 5 & 6 full inline procedures (no skill for these)
+- Guardrails
+- Completion markers
+
+The new prompt removes:
+- Testing Philosophy section (lines 82-97) — in `write-e2e-tests` and `add-e2e-tests` skills
+- Anti-Patterns section (lines 98-108) — in `write-e2e-tests` and `fix-flaky-tests` skills
+- Detailed step 1-4 procedures — in respective skills
+- Detailed scaffolding steps (lines 241-263) — condensed to 4 lines
+
+The new prompt adds:
+- "Using Skills" section explaining invocation mechanism
+- Explicit stop rule for step combining
+- Fixed step 5 cycle count (standardize on 3)
+
+```markdown
 # E2E Test Automation Agent
 
 You are an E2E test automation agent that adds Playwright tests to codebases. You work in stateless sessions — the tracker file (`e2e-tracker.md`) in the project root is your only memory across sessions.
@@ -23,7 +85,7 @@ Parse the user's query for the target URL and feature description.
 
 1. Derive a **feature slug** from the feature description (e.g., "Login flow" → `login`, "Checkout with payment" → `checkout`)
 2. Check that a Playwright config exists: `Glob: playwright.config.{ts,js,mjs}`
-   - If NOT found: clone `git@github.com:lespaceman/playwright-typescript-e2e-boilerplate.git`, copy config/fixtures/pages/utils into the project (do NOT overwrite existing files), update `baseURL` to the target URL, remove example tests, merge devDependencies into `package.json`, run `npm install && npx playwright install --with-deps chromium`, clean up the temp clone. Log scaffolding in the first session log entry.
+   - If NOT found: clone `git@github.com:lespaceman/playwright-typescript-e2e-boilerplate.git`, copy config/fixtures/pages/utils into the project, update `baseURL` to the target URL, remove example tests, merge devDependencies into `package.json`, run `npm install && npx playwright install --with-deps chromium`, clean up the temp clone. Log scaffolding in the first session log entry.
 3. Create the `e2e-plan/` directory
 4. Create `e2e-tracker.md` using this exact template:
 
@@ -160,3 +222,94 @@ Note the test file path in the tracker's Artifact column for step 4.
 - **Never mark Step 5 or Step 6 as `done` without `npx playwright test` output in the session log.** No output = not done.
 - **Steps 5 and 6 must NOT be delegated to subagents.** You must run the tests yourself so you can see and log the output directly.
 - **Step 6 must re-run tests independently** — never trust a previous step's results. Tests may have regressed.
+```
+
+**Step 3: Verify the new file**
+
+Run: `wc -l .workflows/e2e-test-builder/e2e-workflow-prompt.md`
+Expected: ~120 lines (down from 278)
+
+**Step 4: Commit**
+
+```bash
+git add .workflows/e2e-test-builder/e2e-workflow-prompt.md
+git commit -m "refactor(workflow): slim e2e-workflow-prompt to thin router
+
+Remove duplicated testing philosophy, anti-patterns, locator strategy,
+auth patterns, and detailed step procedures that already exist in
+plugin skills. Steps 1-4 now route to skills. Steps 5-6 stay inline.
+
+Fixes: step 4 'run tests' contradiction, step-combining ambiguity."
+```
+
+---
+
+### Task 2: Fix step 4 contradiction in add-e2e-tests skill
+
+**Files:**
+- Modify: `plugins/e2e-test-builder/skills/add-e2e-tests/SKILL.md`
+
+**Step 1: Read line 170 of the skill**
+
+Locate this contradictory instruction in step 4:
+```
+- Instructions to run tests after writing: `npx playwright test <file> --reporter=list`
+```
+
+**Step 2: Remove the contradictory line**
+
+Delete the line that tells the subagent to run tests in step 4. The skill already says "This step does NOT run tests" on line 192.
+
+**Step 3: Standardize fix cycles to 3**
+
+In step 5 of the skill (line 193), change "Maximum 2 fix-and-rerun cycles" to "Maximum 3 fix-and-rerun cycles" to match the workflow prompt.
+
+**Step 4: Verify no other contradictions**
+
+Run: `grep -n "run tests\|fix-and-rerun\|Maximum.*cycles" plugins/e2e-test-builder/skills/add-e2e-tests/SKILL.md`
+Expected: No remaining contradictions.
+
+**Step 5: Commit**
+
+```bash
+git add plugins/e2e-test-builder/skills/add-e2e-tests/SKILL.md
+git commit -m "fix(skill): remove step 4 test-run contradiction, standardize cycle count"
+```
+
+---
+
+### Task 3: Verify skill coverage completeness
+
+**Files:**
+- Read only (no modifications expected)
+
+**Step 1: Verify testing philosophy coverage**
+
+Grep each of the 7 testing principles from the old prompt against skill files:
+- "Test user outcomes" → check `write-e2e-tests`
+- "Tests must be deterministic" → check `write-e2e-tests`
+- "Fast setup, thorough verification" → check `write-e2e-tests`
+- "Isolate everything" → check `write-e2e-tests`
+- "Error paths matter" → check `write-e2e-tests`
+- "Semantic locators" → check `write-e2e-tests`
+- "No arbitrary waits" → check `write-e2e-tests`
+
+**Step 2: Verify anti-patterns coverage**
+
+Grep each anti-pattern from the old prompt against skill files:
+- `waitForTimeout` → in `write-e2e-tests` and `fix-flaky-tests`
+- `.first()` / `.nth()` → in `write-e2e-tests` and `fix-flaky-tests`
+- Login via UI → in `write-e2e-tests`
+- Hardcoded domains → in `write-e2e-tests`
+- `isVisible().toBe(true)` → in `write-e2e-tests`
+
+**Step 3: Report any gaps**
+
+If any principle or anti-pattern is NOT covered in skills, add it to the relevant skill before proceeding.
+
+**Step 4: Commit (only if gaps were found and fixed)**
+
+```bash
+git add plugins/e2e-test-builder/skills/*/SKILL.md
+git commit -m "fix(skills): add missing testing principles from workflow prompt"
+```

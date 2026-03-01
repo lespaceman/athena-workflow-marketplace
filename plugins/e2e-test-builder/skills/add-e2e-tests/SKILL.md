@@ -167,7 +167,7 @@ Prompt the subagent with:
 - Set up auth via storageState (if applicable) rather than logging in per test
 - Include at least one error path test per feature (mock 500 via `page.route`, mock empty state)
 - Use `page.route()` for network mocking when testing error scenarios
-- Instructions to run tests after writing: `npx playwright test <file> --reporter=list`
+- Do NOT run tests — test execution happens in Step 5
 
 If the tracker notes specific uncovered TC-IDs (set by step 6), write tests only for those IDs.
 
@@ -189,8 +189,8 @@ Update tracker: set step 4 status to `done`.
       - **Auth/state issue**: make tests independent
    b. Edit the test file with fixes
    c. Re-run tests
-   d. Maximum 2 fix-and-rerun cycles
-   e. If still failing after 2 cycles: mark step 5 as `in-progress`, log the failures, and continue to step 6 anyway
+   d. Maximum 3 fix-and-rerun cycles
+   e. If still failing after 3 cycles: mark step 5 as `in-progress`, log the failures, and continue to step 6 anyway
 
 Update tracker: set step 5 status to `done` (or `in-progress` if fixes exhausted).
 
