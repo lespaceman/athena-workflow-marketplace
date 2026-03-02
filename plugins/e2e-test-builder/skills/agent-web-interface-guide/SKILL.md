@@ -251,6 +251,37 @@ Common errors:
 - Form field not in any form context
 - No page/session (see Session Recovery above)
 
+## Canvas Interactions
+
+HTML `<canvas>` elements render pixels rather than DOM nodes, so standard element selectors don't work inside them. The MCP server provides tools to inspect and interact with canvas-based UIs (drawing apps, games, data visualizations, etc.).
+
+### Identifying Canvas Elements
+
+- **`find_elements`** with `kind: "image"` or without a kind filter — finds `<canvas>` elements on the page and returns their eids
+- **`get_element_details`** — gets the exact position (`x`, `y`, `w`, `h`) of a canvas element in the viewport
+
+### Inspecting Canvas Contents
+
+- **`inspect_canvas`** — the key tool for canvas work. Pass it a canvas `eid` and it:
+  1. Auto-detects the rendering library (Fabric.js, Konva, PixiJS, Phaser, Three.js, EaselJS, or raw canvas)
+  2. Queries the library's scene graph for objects with their positions, sizes, and labels
+  3. Returns an annotated screenshot with coordinate grid overlay and bounding boxes
+  4. Supports configurable `grid_spacing` (use 10px for precise handle targeting)
+
+### Interacting with Canvas
+
+- **`click`** with `eid` + `x`/`y` — click at an offset relative to the canvas element's top-left corner (e.g., to select a shape)
+- **`drag`** with `eid` + source/target coordinates — drag within the canvas (e.g., for moving objects, scale handles, rotate handles)
+- **`take_screenshot`** with `eid` — capture just the canvas element to visually verify state after interactions
+
+### Canvas Workflow
+
+1. Find the canvas element with `find_elements`
+2. Get its position with `get_element_details`
+3. Inspect contents with `inspect_canvas` to discover objects and coordinates
+4. Interact using coordinate-based `click` or `drag` on the canvas eid
+5. Re-inspect or screenshot to verify the result
+
 ## Best Practices
 
 1. **Check `enabled` attribute** before clicking disabled elements
