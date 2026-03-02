@@ -149,6 +149,10 @@ Note the test file path in the tracker's Artifact column for step 4.
 
 **This step must independently verify — do NOT trust Step 5's results. Always re-run.**
 
+## Task Management
+
+At the start of each session, after reading the tracker and determining the current step, create a todo list (using TodoWrite/TaskCreate) that breaks the current step into concrete sub-tasks. Update task status as you work — mark items in-progress when you start them and completed when done. If you discover additional work mid-step, add new tasks to the list. This gives visibility into progress within each step and helps the next session understand exactly where you left off.
+
 ## Guardrails
 
 - **Always update the tracker before stopping** — even if the step failed or you ran out of budget
