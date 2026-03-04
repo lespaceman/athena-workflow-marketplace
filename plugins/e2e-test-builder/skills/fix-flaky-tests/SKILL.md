@@ -19,22 +19,22 @@ allowed-tools:
   - mcp__plugin_e2e-test-builder_agent-web-interface__go_back
   - mcp__plugin_e2e-test-builder_agent-web-interface__go_forward
   - mcp__plugin_e2e-test-builder_agent-web-interface__reload
-  - mcp__plugin_e2e-test-builder_agent-web-interface__capture_snapshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find_elements
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element_details
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_element_into_view
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_page
+  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__find
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_to
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
   - mcp__plugin_e2e-test-builder_agent-web-interface__click
   - mcp__plugin_e2e-test-builder_agent-web-interface__type
   - mcp__plugin_e2e-test-builder_agent-web-interface__press
   - mcp__plugin_e2e-test-builder_agent-web-interface__select
   - mcp__plugin_e2e-test-builder_agent-web-interface__hover
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form_understanding
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field_context
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
   - mcp__plugin_e2e-test-builder_agent-web-interface__list_pages
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_page
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
-  - mcp__plugin_e2e-test-builder_agent-web-interface__take_screenshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
   # File tools
   - Read
   - Write
@@ -109,7 +109,7 @@ Investigate based on the classification:
 - Check if the selector matches multiple elements — `.first()` or `.nth()` is a smell
 - Look for dynamically generated IDs, classes, or attributes
 - Check for conditional rendering that changes element order or presence
-- Verify locators against current DOM structure using `find_elements` and `get_element_details`
+- Verify locators against current DOM structure using `find` and `get_element`
 
 **Environment issues:**
 - Compare CI viewport size vs local — element may be off-screen in CI

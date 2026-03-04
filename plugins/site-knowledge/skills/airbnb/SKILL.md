@@ -179,8 +179,8 @@ For each listing card extract:
 ## Best Practices
 
 1. **Handle modals first**: Always dismiss cookie consent and login prompts before main interactions
-2. **Wait for dynamic content**: Airbnb uses heavy JavaScript - use `capture_snapshot` after actions
-3. **Use scroll for results**: Search results use infinite scroll - use `scroll_page` to load more
+2. **Wait for dynamic content**: Airbnb uses heavy JavaScript - use `snapshot` after actions
+3. **Use scroll for results**: Search results use infinite scroll - use `scroll` to load more
 4. **Verify selections**: After selecting dates/guests, verify the selection persisted
 5. **Extract before navigate**: Get listing data before clicking away
 6. **Handle rate limiting**: Add delays between rapid interactions

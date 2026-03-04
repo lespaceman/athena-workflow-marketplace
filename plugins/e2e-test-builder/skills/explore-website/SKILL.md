@@ -16,22 +16,22 @@ allowed-tools:
   - mcp__plugin_e2e-test-builder_agent-web-interface__go_back
   - mcp__plugin_e2e-test-builder_agent-web-interface__go_forward
   - mcp__plugin_e2e-test-builder_agent-web-interface__reload
-  - mcp__plugin_e2e-test-builder_agent-web-interface__capture_snapshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find_elements
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element_details
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_element_into_view
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_page
+  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__find
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_to
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
   - mcp__plugin_e2e-test-builder_agent-web-interface__click
   - mcp__plugin_e2e-test-builder_agent-web-interface__type
   - mcp__plugin_e2e-test-builder_agent-web-interface__press
   - mcp__plugin_e2e-test-builder_agent-web-interface__select
   - mcp__plugin_e2e-test-builder_agent-web-interface__hover
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form_understanding
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field_context
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
   - mcp__plugin_e2e-test-builder_agent-web-interface__list_pages
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_page
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
-  - mcp__plugin_e2e-test-builder_agent-web-interface__take_screenshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
 ---
 
 # Explore Website
@@ -46,14 +46,14 @@ Parse the target URL and exploration goal from: $ARGUMENTS
 
 1. **Navigate** to the URL
 2. **Complete the task** — interact as needed (click, fill forms, navigate pages)
-3. **Extract selectors** — use `get_element_details` on key elements to get the `primary` Playwright selector from the `<find primary="...">` attribute
-4. **Analyze forms** — use `get_form_understanding` to understand form intent, fields, completion state, and suggested next actions
+3. **Extract selectors** — use `get_element` on key elements to get the `primary` Playwright selector from the `<find primary="...">` attribute
+4. **Analyze forms** — use `get_form` to understand form intent, fields, completion state, and suggested next actions
 5. **Report** what you did, found, and observed
 
 ## Browser Operation Principles
 
-- **Action tools return fresh snapshots** — `navigate`, `click`, `type` etc. already return state; only use `capture_snapshot` when the page may have changed on its own (timers, live updates)
-- **Use `find_elements`** when a snapshot shows `<!-- trimmed N items -->` — filter by `kind`, `label`, or `region`
+- **Action tools return fresh snapshots** — `navigate`, `click`, `type` etc. already return state; only use `snapshot` when the page may have changed on its own (timers, live updates)
+- **Use `find`** when a snapshot shows `<!-- trimmed N items -->` — filter by `kind`, `label`, or `region`
 - **Check `enabled` attribute** before clicking — sequential forms disable options until prerequisites are selected
 - **Watch `<observations>`** — `<appeared>` and `<disappeared>` tags show what changed after actions
 - **Use `region` filter** to narrow searches: `main`, `nav`, `header`, `footer`
@@ -61,7 +61,7 @@ Parse the target URL and exploration goal from: $ARGUMENTS
 
 ## Selector Extraction
 
-Use `get_element_details` with the element's eid to get Playwright-compatible selectors:
+Use `get_element` with the element's eid to get Playwright-compatible selectors:
 
 ```xml
 <node eid="abc123" kind="button" label="Shopping Bag">
@@ -76,11 +76,11 @@ The `primary` attribute is the best Playwright locator. Record alternates as fal
 
 When exploring, note accessibility-relevant patterns:
 - **Focus order**: Tab through interactive elements and note if focus order is logical
-- **ARIA landmarks**: Check for `role="main"`, `role="navigation"`, `role="banner"` using `find_elements`
+- **ARIA landmarks**: Check for `role="main"`, `role="navigation"`, `role="banner"` using `find`
 - **Dynamic content announcements**: After actions (form submit, modal open), check for `aria-live` regions in observations
-- **Form labels**: Note any inputs without visible labels or `aria-label` — use `get_field_context` to check
+- **Form labels**: Note any inputs without visible labels or `aria-label` — use `get_field` to check
 - **Error association**: When form validation triggers, check if errors are linked to fields via `aria-describedby`
-- **Heading hierarchy**: Use `find_elements` with `kind: "heading"` to verify h1 > h2 > h3 (no level skips)
+- **Heading hierarchy**: Use `find` with `kind: "heading"` to verify h1 > h2 > h3 (no level skips)
 
 ## Form Validation Discovery
 

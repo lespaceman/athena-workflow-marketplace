@@ -108,7 +108,7 @@ When a product has no direct "Add to Cart" button (common for high-demand items)
 ### Basic Product Search
 1. Find search input: kind "textbox", label "Search Amazon"
 2. Type product name (use `clear: true` to replace any existing text)
-3. Autocomplete suggestions appear as rows — they are not directly findable by `find_elements`
+3. Autocomplete suggestions appear as rows — they are not directly findable by `find`
 4. Press Enter to submit search, or wait and try clicking a suggestion
 5. Results page loads with product grid
 
@@ -203,9 +203,9 @@ For each product listing extract:
 3. **Verify the correct product**: Amazon search results mix sponsored ads, competing products, and accessories — always verify the product title matches what you want
 4. **Use related search links**: The links below search results (e.g., "ps5 pro console") narrow results significantly
 5. **Handle region/currency**: Amazon may show prices in local currency (INR, EUR, etc.) based on detected location
-6. **Scroll for results**: Some elements are below the fold — use `scroll_page` to find them
+6. **Scroll for results**: Some elements are below the fold — use `scroll` to find them
 7. **Cart is guest-accessible**: Items can be added to cart without signing in, but checkout requires authentication
-8. **Action tools return snapshots**: `navigate`, `click`, `type` already return fresh state — no need for `capture_snapshot` after interactions
+8. **Action tools return snapshots**: `navigate`, `click`, `type` already return fresh state — no need for `snapshot` after interactions
 
 ## Common Issues
 
@@ -218,4 +218,4 @@ For each product listing extract:
 | Sponsored results mixed in | Look for "Sponsored" label; skip to organic results below |
 | Product out of stock | Buying options panel will show fewer or no sellers; check alternative listings |
 | Cart requires sign-in for checkout | Items stay in guest cart; sign-in needed only at checkout |
-| Page elements not found after search | Results page is dense — use `find_elements` with `region: "main"` and `kind: "link"` filters |
+| Page elements not found after search | Results page is dense — use `find` with `region: "main"` and `kind: "link"` filters |

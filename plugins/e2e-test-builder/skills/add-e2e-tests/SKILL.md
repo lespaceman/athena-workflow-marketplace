@@ -23,22 +23,22 @@ allowed-tools:
   - Task
   - mcp__plugin_e2e-test-builder_agent-web-interface__ping
   - mcp__plugin_e2e-test-builder_agent-web-interface__navigate
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find_elements
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element_details
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_page
+  - mcp__plugin_e2e-test-builder_agent-web-interface__find
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
   - mcp__plugin_e2e-test-builder_agent-web-interface__click
   - mcp__plugin_e2e-test-builder_agent-web-interface__type
   - mcp__plugin_e2e-test-builder_agent-web-interface__press
   - mcp__plugin_e2e-test-builder_agent-web-interface__select
   - mcp__plugin_e2e-test-builder_agent-web-interface__hover
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form_understanding
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field_context
-  - mcp__plugin_e2e-test-builder_agent-web-interface__capture_snapshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
+  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
   - mcp__plugin_e2e-test-builder_agent-web-interface__go_back
   - mcp__plugin_e2e-test-builder_agent-web-interface__reload
-  - mcp__plugin_e2e-test-builder_agent-web-interface__take_screenshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_element_into_view
+  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_to
 ---
 
 # Add E2E Tests — Tracker-Based Pipeline
@@ -122,7 +122,7 @@ Execute each step in sequence. After completing each step, update the tracker ta
 
 1. Read `e2e-plan/conventions.md` for context
 2. Grep existing tests for the target feature keywords to find existing coverage
-3. Navigate to the URL, use `find_elements` to catalog interactive elements
+3. Navigate to the URL, use `find` to catalog interactive elements
 4. Close the browser session
 5. Categorize test cases with priorities:
    - **P0 Critical path**: Happy path flows that must work
@@ -137,7 +137,7 @@ Execute each step in sequence. After completing each step, update the tracker ta
 
 Prompt the subagent with:
 - Target URL and the coverage plan from `e2e-plan/coverage-plan.md`
-- Instructions to explore happy paths using `navigate`, `find_elements`, `get_form_understanding`, `click`, `type`
+- Instructions to explore happy paths using `navigate`, `find`, `get_form`, `click`, `type`
 - Instructions to probe failure paths: empty fields, invalid formats, boundary values
 - TC-ID format: `TC-<FEATURE>-<NNN>` (e.g., `TC-LOGIN-001`)
 - Output file: `test-cases/<feature-slug>.md`
@@ -183,7 +183,7 @@ Update tracker: set step 4 status to `done`.
 4. If tests pass → mark step 5 as `done`, proceed to step 6
 5. If tests fail:
    a. Read the failure output carefully. Common issues:
-      - **Selector not found**: re-explore the page with `find_elements` to get current selectors
+      - **Selector not found**: re-explore the page with `find` to get current selectors
       - **Timeout**: add proper `waitForURL` or `waitForLoadState`
       - **Assertion mismatch**: verify against live site
       - **Auth/state issue**: make tests independent

@@ -18,22 +18,22 @@ allowed-tools:
   - mcp__plugin_e2e-test-builder_agent-web-interface__go_back
   - mcp__plugin_e2e-test-builder_agent-web-interface__go_forward
   - mcp__plugin_e2e-test-builder_agent-web-interface__reload
-  - mcp__plugin_e2e-test-builder_agent-web-interface__capture_snapshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find_elements
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element_details
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_element_into_view
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_page
+  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__find
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_to
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
   - mcp__plugin_e2e-test-builder_agent-web-interface__click
   - mcp__plugin_e2e-test-builder_agent-web-interface__type
   - mcp__plugin_e2e-test-builder_agent-web-interface__press
   - mcp__plugin_e2e-test-builder_agent-web-interface__select
   - mcp__plugin_e2e-test-builder_agent-web-interface__hover
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form_understanding
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field_context
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
   - mcp__plugin_e2e-test-builder_agent-web-interface__list_pages
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_page
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
-  - mcp__plugin_e2e-test-builder_agent-web-interface__take_screenshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
   # File tools
   - Read
   - Write
@@ -71,7 +71,7 @@ Check for existing test coverage before exploring:
 
 Use a **general-purpose subagent** via the Task tool for browser exploration to save context. Pass it:
 - The URL and journey description
-- Instructions to walk through each step using `find_elements`, `get_form_understanding`, `get_field_context`
+- Instructions to walk through each step using `find`, `get_form`, `get_field`
 - Instructions to catalog all interactive elements, form fields, navigation options
 - Instructions to document each step: what was done, what appeared, what selectors were found
 

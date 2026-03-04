@@ -16,8 +16,8 @@ allowed-tools:
   - Grep
   - mcp__plugin_e2e-test-builder_agent-web-interface__ping
   - mcp__plugin_e2e-test-builder_agent-web-interface__navigate
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find_elements
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_page
+  - mcp__plugin_e2e-test-builder_agent-web-interface__find
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
   - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
 ---
 
@@ -39,7 +39,7 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
 
 3. **Quick site inspection** (lightweight, not full exploration):
    - Navigate to the URL
-   - Use `find_elements` to catalog the main interactive elements
+   - Use `find` to catalog the main interactive elements
    - Identify the key user flows visible on the page
    - Close the browser session when done
 
