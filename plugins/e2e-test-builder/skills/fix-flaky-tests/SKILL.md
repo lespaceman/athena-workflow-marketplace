@@ -1,15 +1,19 @@
 ---
 name: fix-flaky-tests
 description: >
-  Use when a Playwright E2E test passes sometimes and fails other times (flaky/intermittent).
-  Triggers: "fix flaky test", "test is flaky", "test sometimes fails", "stabilize test",
-  "debug intermittent failure", "test is unreliable", "test passes locally fails in CI",
-  "test timeout intermittent", "race condition in test", "fix intermittent test failure",
-  "test is non-deterministic", "flaky spec", "unstable test", "test randomly fails",
-  "flaky CI", "test passes sometimes", "CI keeps failing randomly".
-  This skill systematically diagnoses WHY a test is flaky using structured root cause analysis,
-  then applies the correct fix pattern. It does NOT write new tests — use write-e2e-tests for that.
-  It does NOT explore websites — use explore-website for that.
+  Use to fix any existing Playwright test that is failing, flaky, timing out, or behaving
+  inconsistently. Invoke whenever a user needs to: stabilize a test that passes sometimes and
+  fails other times, debug a timeout (e.g. "Test timeout of 30000ms exceeded"), fix a race
+  condition in test code, investigate why a test works locally but fails in CI or headless mode,
+  or run tests repeatedly (--repeat-each) to check for non-deterministic behavior before merging.
+  IMPORTANT: If you find yourself running tests with --repeat-each, --retries, or running the same
+  test suite multiple times to check stability, STOP and load this skill first — you are doing
+  flakiness investigation and this skill has structured root cause analysis that prevents brute-force
+  "run it 3x and hope" approaches.
+  If the user says "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI", "timeout on",
+  "race condition", "run N times to check stability", or "verify tests are stable" — this is the right
+  skill. NOT for writing new tests from scratch (use write-e2e-tests) or analyzing test setup
+  (use analyze-test-codebase).
 user-invocable: true
 argument-hint: <path to flaky test file or test name>
 allowed-tools:

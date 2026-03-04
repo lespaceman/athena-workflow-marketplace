@@ -1,13 +1,18 @@
 ---
 name: plan-test-coverage
 description: >
-  Use when the user wants to decide what E2E tests to write before exploring a site or writing code.
-  Triggers: "plan test coverage", "what should I test", "create a test plan", "prioritize tests",
-  "identify test gaps", "plan E2E tests for", "what tests are missing", "where are the coverage gaps",
-  "which features need tests", "test priority for this feature", "what's not covered yet".
-  This skill checks existing test files for coverage gaps, does a quick browser inspection of the target page,
-  then produces a prioritized test plan with proposed TC-IDs organized by P0/P1/P2 priority.
-  It does NOT write test specs or code — use generate-test-cases or write-e2e-tests for those.
+  Use before writing any test code, when the user needs to figure out WHAT to test. Trigger for:
+  "what tests do I need", "what's missing", "coverage gaps", "which features lack tests", "what E2E
+  tests should I write for", "help me plan tests", "create a test plan", "prioritize tests by risk",
+  "what's critical vs nice-to-have", "scan tests and compare", "missing edge cases", "missing error
+  paths", "what features don't have tests", "verify test coverage", "check coverage completeness",
+  "are all test cases covered", "coverage check", "what TC-IDs are missing".
+  IMPORTANT: If you are checking whether all test cases have been implemented, comparing TC-IDs against
+  test files, or verifying coverage completeness, load this skill — it has structured coverage gap
+  analysis methodology. This is the analytical/decision-making step — it scans existing test files,
+  inspects the app, identifies untested areas, and outputs a prioritized plan (P0/P1/P2) with TC-IDs.
+  It answers "what should we test?" but does NOT write test code. Use write-e2e-tests to implement
+  afterward.
 user-invocable: true
 argument-hint: <url> <feature or area to test>
 allowed-tools:

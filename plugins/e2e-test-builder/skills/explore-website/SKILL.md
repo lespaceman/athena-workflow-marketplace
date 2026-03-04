@@ -1,13 +1,17 @@
 ---
 name: explore-website
 description: >
-  Use when the user provides a URL and wants to interact with a live website using a real browser.
-  Triggers: "explore a website", "browse a page", "navigate a site", "open this URL", "interact with a web app",
-  "extract selectors", "fill out a form", "find elements on", "check what's on this page", "what does this site look like",
-  "click through the flow", "inspect the UI".
-  This skill drives a headless browser via agent-web-interface MCP tools to navigate, click, type, extract
-  Playwright-compatible selectors, and analyze forms. It does NOT generate test case specs or write test code —
-  use generate-test-cases or write-e2e-tests for those.
+  REQUIRED for any task that involves opening, visiting, or viewing a live web page in a browser.
+  This is the ONLY skill with browser access. Invoke this skill BEFORE any other skill whenever the
+  user's request includes a URL or page reference AND wants to see, check, verify, inspect, or interact
+  with that page. Common patterns: viewing page content or layout, checking if a page loads, logging
+  into a site, extracting form fields or selectors, verifying behavior after a change, or understanding
+  a page before writing tests. If the user mentions a localhost URL or asks you to "look at", "go to",
+  "open", "browse to", "check", "take a look at", "investigate", or "verify" any web page, use this
+  skill. IMPORTANT: If you are about to call any mcp__plugin_e2e-test-builder_agent-web-interface__*
+  tool directly, load this skill first — it provides structured browser interaction patterns that prevent
+  ad-hoc clicking. Does NOT write test code or generate test specs — use write-e2e-tests or
+  generate-test-cases for those.
 user-invocable: true
 argument-hint: <url> <what to explore or do>
 allowed-tools:

@@ -1,14 +1,15 @@
 ---
 name: analyze-test-codebase
 description: >
-  Use when the user wants to understand an existing Playwright test codebase before writing new tests.
-  Triggers: "analyze test setup", "check test codebase", "detect test framework", "scan test configuration",
-  "understand test structure", "what test framework does this project use", "how are tests organized",
-  "what conventions do existing tests follow", "show me the test setup", "what Playwright config is used",
-  "analyze existing tests", "check test patterns".
-  This skill scans the project for playwright.config, test directories, existing test files, page objects,
-  fixtures, auth setup, and naming conventions. Outputs a structured report of conventions to follow
-  when writing new tests. Does NOT write tests or explore websites — it only reads and analyzes local files.
+  Scan and report on an existing Playwright test codebase. Use this skill BEFORE writing new tests
+  whenever someone needs to know what's already there. Covers: playwright.config settings (baseURL,
+  testDir, browsers, timeouts, reporters, workers), page objects, fixtures, helpers, auth/globalSetup
+  patterns, test conventions, and directory structure. Trigger on any request to "understand", "check",
+  "show me", "inspect", or "analyze" the current test setup, config, infrastructure, patterns, or
+  conventions — even if the user's end goal is writing tests. IMPORTANT: Before writing ANY Playwright
+  test code in a new project, load this skill first to understand existing patterns — don't guess at
+  conventions. This skill is read-only: it examines existing files and outputs a structured report. It
+  does NOT write or fix tests, explore live websites, or install Playwright.
 user-invocable: true
 argument-hint: "[optional: path to project root]"
 allowed-tools:
