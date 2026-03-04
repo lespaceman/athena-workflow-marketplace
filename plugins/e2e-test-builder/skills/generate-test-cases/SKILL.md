@@ -1,14 +1,17 @@
 ---
 name: generate-test-cases
 description: >
-  Use when the user wants structured test case specifications (not executable code) for a web application feature.
-  Triggers: "generate test cases", "create test cases", "write test specs", "map all test paths",
-  "what should I test on this page", "discover testable scenarios", "explore and create test specs",
-  "find edge cases for this feature", "test case specifications for", "TC-IDs for".
-  This skill explores a live website via browser automation, systematically discovers all testable paths —
-  happy paths, validation errors, edge cases, boundary conditions — and outputs structured test case specs
-  in TC-ID format to test-cases/<feature>.md. It does NOT write executable Playwright code — use write-e2e-tests for that.
-  It does NOT do general browsing without test intent — use explore-website for that.
+  Use when the user wants structured test case specifications (not executable code) for a web application
+  feature. This skill explores a live website via browser automation, systematically discovers all testable
+  paths — happy paths, validation errors, edge cases, boundary conditions — and outputs structured test
+  case specs in TC-ID format to test-cases/<feature>.md. Trigger for: "generate test cases", "create test
+  cases", "write test specs", "map all test paths", "what should I test on this page", "discover testable
+  scenarios", "explore and create test specs", "find edge cases for this feature", "test case specifications
+  for", "TC-IDs for", "what are all the test scenarios", "map the user journeys", "document all test paths".
+  IMPORTANT: If you need to create TC-ID specifications before writing test code, use this skill. Don't skip
+  straight to writing tests — the structured specs ensure complete coverage and prevent missing edge cases.
+  Does NOT write executable Playwright code — use write-e2e-tests for that. Does NOT do general browsing
+  without test intent — use explore-website for that.
 user-invocable: true
 argument-hint: <url> <user journey description>
 allowed-tools:

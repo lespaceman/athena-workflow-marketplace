@@ -1,17 +1,18 @@
 ---
 name: write-e2e-tests
 description: >
-  Use when the user wants executable Playwright test code written, refactored, or fixed.
-  Triggers: "write Playwright tests", "write e2e tests", "create test code", "implement these test cases",
-  "convert test specs to code", "turn selectors into tests", "add a test for this flow",
-  "write tests for this feature", "convert TC-IDs to Playwright", "refactor this test",
-  "improve test locators", "set up auth for Playwright tests", "mock API in test",
-  "create test fixture", "add network interception", "write error path tests".
-  For flaky/intermittent test failures, use fix-flaky-tests instead.
-  This skill writes executable Playwright TypeScript tests following project conventions — semantic locators
-  (getByRole > getByLabel > getByTestId), no arbitrary sleeps, AAA structure, TC-ID traceability.
-  It does NOT generate test case specifications — use generate-test-cases for that.
-  It does NOT do general browser exploration — use explore-website for that.
+  Invoke whenever the user wants Playwright test code produced or changed. This is the code-writing
+  skill for E2E tests. The defining question: "Will this produce or modify executable test code?"
+  If yes, use this skill. Covers: creating new test files, converting test case specs or TC-IDs into
+  runnable code, refactoring locators or fixtures, adding API mocking or network interception inside
+  tests, writing error/edge-case scenarios, and modifying test infrastructure (testIgnore, playwright
+  config, fixtures, auth setup, test helpers). IMPORTANT: If you are about to edit a Playwright config
+  file, change testIgnore, create or modify fixtures, update auth setup, or make any change that affects
+  how tests run, load this skill first — it has operating principles on configuration hygiene, fixture
+  design, and test architecture that prevent quick-fix hacks.
+  Do NOT use for: opening a browser to explore a live site (use explore-website), generating test plans
+  or specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests
+  (use fix-flaky-tests), or running/checking test results.
 user-invocable: true
 argument-hint: <test description or path to test case spec file>
 allowed-tools:
