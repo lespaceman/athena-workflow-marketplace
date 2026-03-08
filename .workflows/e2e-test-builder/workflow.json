@@ -5,8 +5,9 @@
 	"systemPromptFile": "system_prompt.md",
 	"loop": {
 		"enabled": true,
-		"completionMarkers": ["E2E_COMPLETE", "E2E_BLOCKED"],
-		"trackerFile": "e2e-tracker.md",
+		"completionMarker": "E2E_COMPLETE",
+		"blockedMarker": "E2E_BLOCKED",
+		"trackerPath": "e2e-tracker.md",
 		"maxIterations": 15
 	},
 	"isolation": "minimal",

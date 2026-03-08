@@ -10,7 +10,6 @@
   "workflows": [
     {
       "name": "e2e-test-builder",
-      "npm": "@athenaflow/e2e-test-builder-workflow",
       "source": "./.workflows/e2e-test-builder/workflow.json",
       "description": "Workflow for adding Playwright E2E tests to existing codebases",
       "version": "1.0.0"

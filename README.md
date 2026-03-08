@@ -25,7 +25,7 @@ Claude plugin compatibility (skills, tools, and sub-agent/task patterns).
 ├── .workflows/
 │   └── e2e-test-builder/
 │       ├── workflow.json
-│       └── e2e-workflow-prompt.md
+│       └── system_prompt.md
 └── plugins/
     ├── e2e-test-builder/
     └── site-knowledge/

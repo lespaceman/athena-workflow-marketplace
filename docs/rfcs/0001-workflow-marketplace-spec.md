@@ -107,12 +107,13 @@ Example:
   "name": "e2e-test-builder",
   "description": "Iterative E2E workflow with tracker-based state",
   "promptTemplate": "{input}",
-  "systemPromptFile": "e2e-workflow-prompt.md",
+  "systemPromptFile": "system_prompt.md",
   "plugins": ["e2e-test-builder@lespaceman/athena-workflow-marketplace"],
   "loop": {
     "enabled": true,
-    "completionMarkers": ["E2E_COMPLETE", "E2E_BLOCKED"],
-    "trackerFile": "e2e-tracker.md",
+    "completionMarker": "E2E_COMPLETE",
+    "blockedMarker": "E2E_BLOCKED",
+    "trackerPath": "e2e-tracker.md",
     "maxIterations": 15
   },
   "isolation": "minimal"
@@ -134,8 +135,8 @@ Example:
 If `loop.enabled` is true:
 
 - Runtime SHOULD iterate until completion, blocked, or `maxIterations` reached.
-- Runtime SHOULD evaluate `completionMarkers` against tracker/output state.
-- Runtime SHOULD persist state between iterations using `trackerFile` or equivalent state artifact.
+- Runtime SHOULD evaluate `completionMarker` and `blockedMarker` against tracker/output state.
+- Runtime SHOULD persist state between iterations using `trackerPath` or equivalent state artifact.
 
 ## Execution Lifecycle
 

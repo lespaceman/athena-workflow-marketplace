@@ -51,8 +51,8 @@ Reference skill (not user-invocable): `agent-web-interface-guide` — Documents 
 ## Workflow System (RFC 0001)
 
 The `workflow.json` contract defines stateless looping sessions:
-- `loop.completionMarkers` — HTML comments (`E2E_COMPLETE`, `E2E_BLOCKED`) that signal termination
-- `loop.trackerFile` — markdown file tracking step-by-step progress
+- `loop.completionMarker` / `loop.blockedMarker` — HTML comments (`E2E_COMPLETE`, `E2E_BLOCKED`) that signal termination
+- `loop.trackerPath` — markdown file tracking step-by-step progress
 - `loop.maxIterations` — safety cap on session count
 - `plugins[]` — references plugins as `<plugin-name>@<owner>/<repo>`
 
