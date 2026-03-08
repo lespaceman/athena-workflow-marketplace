@@ -1,6 +1,6 @@
 {
 	"name": "e2e-test-builder",
-	"description": "Iterative E2E test coverage builder with tracker-based state management",
+	"description": "Multi-session workflow that adds Playwright E2E tests to any codebase — scaffolds a Playwright suite if missing, analyzes setup, plans coverage, explores the live site, writes tests, and verifies they pass",
 	"promptTemplate": "{input}",
 	"systemPromptFile": "e2e-workflow-prompt.md",
 	"loop": {

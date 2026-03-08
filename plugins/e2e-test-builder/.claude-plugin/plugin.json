@@ -3,6 +3,6 @@
   "description": "Workflow runner for adding Playwright E2E tests to existing codebases — analyzes, plans, explores, generates specs, and writes tests",
   "version": "2.0.0",
   "author": {
-    "name": "AthenaFlow"
+    "name": "Athenaflow"
   }
 }

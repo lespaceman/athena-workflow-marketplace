@@ -1,0 +1,26 @@
+{
+  "name": "@athenaflow/marketplace",
+  "private": true,
+  "description": "A marketplace of AI-powered browser automation workflows for Claude Code",
+  "workspaces": [
+    "plugins/*",
+    ".workflows/*"
+  ],
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "version:check": "node scripts/version-check.js",
+    "prepublishOnly": "npm run version:check",
+    "publish:e2e": "npm publish --workspace=@athenaflow/e2e-test-builder --access public",
+    "publish:site-knowledge": "npm publish --workspace=@athenaflow/site-knowledge --access public",
+    "publish:workflow": "npm publish --workspace=@athenaflow/e2e-test-builder-workflow --access public",
+    "publish:all": "npm publish --workspaces --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git"
+  },
+  "license": "MIT"
+}
