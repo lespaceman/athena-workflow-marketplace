@@ -14,7 +14,7 @@
   },
   "files": [
     "workflow.json",
-    "e2e-workflow-prompt.md"
+    "system_prompt.md"
   ],
   "publishConfig": {
     "access": "public"
