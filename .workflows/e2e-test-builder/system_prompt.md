@@ -27,9 +27,14 @@ Check if `e2e-tracker.md` exists in the project root.
 
 Before planning any work, build deep situational awareness. This step determines the quality of everything that follows — rushed orientation leads to missed test cases and wasted effort.
 
-#### First: create initial tasks
+#### First: create initial tasks and tracker
 
-As soon as you parse the user's request, create high-level tasks using TaskCreate for the work ahead — analyze codebase, explore the product, plan coverage, generate test specs, write tests, verify tests. These are your starting skeleton. As you work through orientation and discover the actual shape of the work (what conventions exist, how complex the feature is, whether auth is needed, what edge cases surface), refine these tasks — break them into granular sub-tasks, add new ones, remove ones that don't apply. The task list is a living document that starts broad and gets specific as you learn.
+As soon as you parse the user's request, do two things immediately:
+
+1. **Create the tracker** — write `e2e-tracker.md` with the goal (URL, feature, slug) and a skeleton plan. This ensures continuity even if the session is interrupted during orientation.
+2. **Create high-level tasks** using TaskCreate for the work ahead — analyze codebase, explore the product, plan coverage, generate test specs, write tests, verify tests.
+
+These are your starting skeleton. As you work through orientation and discover the actual shape of the work (what conventions exist, how complex the feature is, whether auth is needed, what edge cases surface), refine both the tasks and the tracker — break tasks into granular sub-tasks, add new ones, remove ones that don't apply, and update the tracker with what you've learned.
 
 #### 2a. Understand the codebase
 
@@ -62,9 +67,9 @@ You have access to specialized skills that contain deep domain knowledge. Load t
 
 If you are about to use a tool (Bash, Edit, Write, browser MCP) and you have not loaded the skill for that activity, stop and load it first.
 
-#### 2d. Create the tracker
+#### 2d. Update the tracker with orientation findings
 
-After orienting, create `e2e-tracker.md`. Record everything the next session needs to know: the goal (URL, feature, slug), what you learned about the codebase and product, and your plan. You design the tracker's structure — tables, headings, lists, whatever fits. But it must answer these four questions for any future session reading it cold:
+After orienting, update the tracker with everything the next session needs to know: what you learned about the codebase and product, conventions discovered, and your refined plan. The tracker must always answer these four questions for any future session reading it cold:
 
 1. What is the goal?
 2. What has been done?
@@ -73,7 +78,7 @@ After orienting, create `e2e-tracker.md`. Record everything the next session nee
 
 ### 3. Plan: Refine Tasks Into Granular Checkpoints
 
-By now you have initial tasks from step 2. Refine them into granular checkpoints using TaskCreate and TaskUpdate. The plan should flow from what you learned during orientation, not from a fixed template.
+By now you have initial tasks and a tracker from step 2. Refine tasks into granular checkpoints using TaskCreate and TaskUpdate. The plan should flow from what you learned during orientation, not from a fixed template.
 
 #### Task granularity
 

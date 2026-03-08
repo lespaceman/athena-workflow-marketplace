@@ -61,9 +61,14 @@ Before planning any work, build deep situational awareness. This step determines
 - If `e2e-tracker.md` exists in the project root, read it and resume from where you left off — skip to **step 2 (Plan)** with the remaining work.
 - If no tracker exists, this is a fresh start. Proceed with orientation below.
 
-#### First: create initial tasks
+#### First: create initial tasks and tracker
 
-As soon as you parse the user's request, create high-level tasks for the work ahead — analyze codebase, explore the product, plan coverage, generate test specs, write tests, verify tests. These are your starting skeleton. As you work through orientation and discover the actual shape of the work, refine these tasks — break them into granular sub-tasks, add new ones, remove ones that don't apply.
+As soon as you parse the user's request:
+
+1. **Create the tracker** — write `e2e-tracker.md` with the goal (URL, feature, slug) and a skeleton plan.
+2. **Create high-level tasks** for the work ahead — analyze codebase, explore the product, plan coverage, generate test specs, write tests, verify tests.
+
+These are your starting skeleton. As you work through orientation and discover the actual shape of the work, refine both the tasks and the tracker — break tasks into granular sub-tasks, add new ones, remove ones that don't apply.
 
 #### 1a. Understand the codebase
 
@@ -96,9 +101,9 @@ You have access to specialized skills that contain deep domain knowledge. Load t
 
 If you are about to use a tool (Bash, Edit, Write, browser MCP) and you have not loaded the skill for that activity, stop and load it first.
 
-#### 1d. Create the tracker
+#### 1d. Update the tracker with orientation findings
 
-After orienting, create `e2e-tracker.md`. Record everything needed to resume: the goal (URL, feature, slug), what you learned about the codebase and product, and your plan. You design the tracker's structure — tables, headings, lists, whatever fits. But it must answer these four questions for anyone reading it cold:
+After orienting, update the tracker with what you learned about the codebase and product, conventions discovered, and your refined plan. The tracker must always answer these four questions for anyone reading it cold:
 
 1. What is the goal?
 2. What has been done?
@@ -107,7 +112,7 @@ After orienting, create `e2e-tracker.md`. Record everything needed to resume: th
 
 ### 2. Plan: Refine Tasks Into Granular Checkpoints
 
-By now you have initial tasks from step 1. Refine them into granular checkpoints. The plan should flow from what you learned during orientation, not from a fixed template.
+By now you have initial tasks and a tracker from step 1. Refine tasks into granular checkpoints. The plan should flow from what you learned during orientation, not from a fixed template.
 
 #### Task granularity
 
@@ -191,6 +196,15 @@ If Playwright is not set up in the target project:
 5. Run `npm install && npx playwright install --with-deps chromium`
 6. Clean up the temp clone
 7. Log the scaffolding in the tracker
+
+## Authentication
+
+If the target feature requires login or any form of authentication:
+
+1. Check whether existing test fixtures, environment variables, or auth setup files already handle this. Load `analyze-test-codebase` to find auth patterns.
+2. If no auth setup exists, ask the user for credentials or an auth strategy (stored auth state, API tokens, test accounts). Do not proceed with tests that require login until auth is resolved.
+3. Never hardcode credentials in test files. Use environment variables, Playwright's `storageState`, or the project's existing auth fixture pattern.
+4. If you discover auth is needed mid-session (e.g., a page redirects to login), ask the user immediately and add auth setup as a prerequisite task.
 
 ## Principles
 
