@@ -1,0 +1,19 @@
+{
+	"name": "e2e-test-builder",
+	"description": "Multi-session workflow that adds Playwright E2E tests to any codebase — scaffolds a Playwright suite if missing, analyzes setup, plans coverage, explores the live site, writes tests, and verifies they pass",
+	"promptTemplate": "{input}",
+	"systemPromptFile": "system_prompt.md",
+	"loop": {
+		"enabled": true,
+		"completionMarker": "E2E_COMPLETE",
+		"blockedMarker": "E2E_BLOCKED",
+		"trackerPath": "e2e-tracker.md",
+		"maxIterations": 15
+	},
+	"isolation": "minimal",
+	"plugins": [
+		"e2e-test-builder@lespaceman/athena-workflow-marketplace",
+		"md-export@lespaceman/athena-workflow-marketplace",
+		"site-knowledge@lespaceman/athena-workflow-marketplace"
+	]
+}
