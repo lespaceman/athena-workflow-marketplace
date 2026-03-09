@@ -1,0 +1,388 @@
+/* Athena Markdown Export — PDF Stylesheet */
+/* Clean, human-readable dark document */
+
+:root {
+  --header-bg: rgba(11, 11, 11, 0.8);
+  --header-border: rgba(255, 255, 255, 0.08);
+  --bg: #08090a;
+  --surface: #0f1011;
+  --surface-2: #141516;
+  --surface-3: #1c1c1f;
+  --surface-4: #232326;
+  --border: #23252a;
+  --border-2: #34343a;
+  --border-3: #3e3e44;
+  --text: #f7f8f8;
+  --text-2: #d0d6e0;
+  --text-3: #8a8f98;
+  --text-4: #62666d;
+  --accent: #f7f8f8;
+  --accent-strong: #f7f8f8;
+  --accent-bright: #d0d6e0;
+  --accent-dim: #8a8f98;
+  --accent-deep: #141516;
+  --green: #7ee787;
+  --red: #ff7b72;
+  --amber: #e3b341;
+  --blue: #d0d6e0;
+  --shadow-low: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0px 4px 24px rgba(0, 0, 0, 0.2);
+  --shadow-high: 0px 7px 32px rgba(0, 0, 0, 0.35);
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--bg);
+}
+
+html {
+  position: relative;
+}
+
+body {
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 11pt;
+  line-height: 1.72;
+  letter-spacing: 0.005em;
+  color: var(--text);
+  padding: 18mm 14mm;
+  position: relative;
+  text-rendering: optimizeLegibility;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
+  background: var(--bg);
+  z-index: -1;
+}
+
+/* ═══════════════════════════════
+   FIRST PAGE — LOGO HERO BLOCK
+   ═══════════════════════════════ */
+
+.logo-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 36px;
+  padding: 28px 32px;
+  background: var(--header-bg);
+  border: 1px solid var(--header-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-low);
+}
+
+.logo-hero img {
+  height: 40px;
+  width: auto;
+}
+
+.logo-hero .badge {
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 8pt;
+  font-weight: 600;
+  color: var(--color-brand-text, #fff);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-left: auto;
+  background: var(--surface-4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 5px 16px;
+  border-radius: 20px;
+}
+
+/* ═══════════
+   TITLE (h1)
+   ═══════════ */
+
+h1 {
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 23pt;
+  color: var(--text) !important;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 3px;
+  background: var(--text-3);
+  border-radius: 2px;
+  margin-top: 10px;
+  margin-bottom: 28px;
+}
+
+/* ═══════════════════════
+   SECTION CARDS (h2)
+   ═══════════════════════ */
+
+h2 {
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 12pt;
+  color: var(--text);
+  margin-top: 28px;
+  margin-bottom: 12px;
+  padding: 13px 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border-2);
+  border-left: 3px solid var(--text-3);
+  border-radius: 8px;
+  box-shadow: var(--shadow-low);
+}
+
+/* ═════════════
+   SUB-HEADINGS
+   ═════════════ */
+
+h3 {
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 10.5pt;
+  color: var(--text-2);
+  margin-top: 18px;
+  margin-bottom: 7px;
+}
+
+h4 {
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 9.75pt;
+  color: var(--text-2);
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+
+/* ═══════════
+   TEXT BODY
+   ═══════════ */
+
+p {
+  margin-bottom: 10px;
+  color: var(--text-2);
+}
+
+.meta-line {
+  margin-bottom: 6px;
+}
+
+strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+p strong:first-child {
+  color: var(--text-2);
+}
+
+em {
+  color: var(--text-3);
+  font-style: italic;
+}
+
+/* ══════════════
+   DIVIDER (hr)
+   ══════════════ */
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 22px 0;
+}
+
+/* ═══════
+   LISTS
+   ═══════ */
+
+ol, ul {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+li {
+  margin-bottom: 6px;
+  color: var(--text-2);
+  line-height: 1.68;
+}
+
+li::marker {
+  color: var(--accent-dim);
+  font-weight: 600;
+}
+
+li ul, li ol {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+/* ════════════
+   INLINE CODE
+   ════════════ */
+
+code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 8.3pt;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--accent-bright);
+  background: color-mix(in srgb, var(--surface-4) 72%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--text-4) 45%, var(--border));
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+/* ════════════
+   CODE BLOCKS
+   ════════════ */
+
+pre {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 8px 0;
+  overflow-x: auto;
+  box-shadow: var(--shadow-low);
+}
+
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 8pt;
+  color: var(--text-2);
+  white-space: pre-wrap;
+}
+
+/* ════════
+   TABLES
+   ════════ */
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-2);
+  break-inside: auto;
+  page-break-inside: auto;
+  box-shadow: var(--shadow-low);
+}
+
+thead th {
+  font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-2);
+  background: var(--surface-3);
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-2);
+}
+
+thead {
+  display: table-header-group;
+}
+
+tfoot {
+  display: table-footer-group;
+}
+
+tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 9pt;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--surface-2); }
+tr, td, th { break-inside: avoid; page-break-inside: avoid; }
+
+/* ═════════════
+   BLOCKQUOTES
+   ═════════════ */
+
+blockquote {
+  border-left: 3px solid var(--text-3);
+  background: var(--surface-3);
+  padding: 12px 18px;
+  margin: 10px 0;
+  border-radius: 0 8px 8px 0;
+  color: var(--text-2);
+  font-size: 9.75pt;
+}
+
+/* ═══════
+   LINKS
+   ═══════ */
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--text);
+}
+
+/* ═══════════════════════════════════
+   PAGE BREAKS — keep sections whole
+   ═══════════════════════════════════ */
+
+h2 {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+h3 {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+h2 + p, h2 + ol, h2 + ul,
+h3 + p, h3 + ol, h3 + ul,
+h4 + p, h4 + ol, h4 + ul {
+  break-before: avoid;
+  page-break-before: avoid;
+}
+
+h3 + ul, h3 + ol,
+h4 + ul, h4 + ol {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+li { break-inside: avoid; page-break-inside: avoid; }
+pre, blockquote { break-inside: avoid; page-break-inside: avoid; }
+
+hr { break-after: auto; }
+
+p, li { orphans: 3; widows: 3; }
