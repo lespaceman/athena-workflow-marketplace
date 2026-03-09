@@ -11,7 +11,7 @@
     {
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
-      "description": "Workflow runner for adding Playwright E2E tests to existing codebases — analyzes, plans, explores, generates specs, and writes tests",
+      "description": "Workflow runner for adding Playwright E2E tests to existing codebases \u2014 analyzes, plans, explores, generates specs, and writes tests",
       "version": "2.0.0"
     },
     {
@@ -24,7 +24,7 @@
       "name": "md-export",
       "source": "./plugins/md-export",
       "description": "Export markdown files to styled PDFs with Athena dark theme branding",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ]
 }
