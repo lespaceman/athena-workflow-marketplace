@@ -1,18 +1,14 @@
 ---
 name: plan-test-coverage
 description: >
-  Use before writing any test code, when the user needs to figure out WHAT to test. Trigger for:
-  "what tests do I need", "what's missing", "coverage gaps", "which features lack tests", "what E2E
-  tests should I write for", "help me plan tests", "create a test plan", "prioritize tests by risk",
-  "what's critical vs nice-to-have", "scan tests and compare", "missing edge cases", "missing error
-  paths", "what features don't have tests", "verify test coverage", "check coverage completeness",
-  "are all test cases covered", "coverage check", "what TC-IDs are missing".
-  IMPORTANT: If you are checking whether all test cases have been implemented, comparing TC-IDs against
-  test files, or verifying coverage completeness, load this skill — it has structured coverage gap
-  analysis methodology. This is the analytical/decision-making step — it scans existing test files,
-  inspects the app, identifies untested areas, and outputs a prioritized plan (P0/P1/P2) with TC-IDs.
-  It answers "what should we test?" but does NOT write test code. Use write-e2e-tests to implement
-  afterward.
+  Use before writing test code to figure out WHAT to test. Triggers: "what tests do I need",
+  "coverage gaps", "which features lack tests", "what E2E tests should I write", "create a test plan",
+  "prioritize tests", "missing edge cases", "verify test coverage", "check coverage completeness",
+  "are all test cases covered", "what TC-IDs are missing". IMPORTANT: If checking whether test cases
+  are implemented, comparing TC-IDs against test files, or verifying coverage, use this skill — it has
+  structured coverage gap analysis. Scans existing test files, inspects the app, identifies untested
+  areas, outputs a prioritized plan (P0/P1/P2) with TC-IDs. Does NOT write test code — use
+  write-e2e-tests afterward.
 user-invocable: true
 argument-hint: <url> <feature or area to test>
 allowed-tools:

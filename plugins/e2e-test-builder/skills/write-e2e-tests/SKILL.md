@@ -1,18 +1,15 @@
 ---
 name: write-e2e-tests
 description: >
-  Invoke whenever the user wants Playwright test code produced or changed. This is the code-writing
-  skill for E2E tests. The defining question: "Will this produce or modify executable test code?"
-  If yes, use this skill. Covers: creating new test files, converting test case specs or TC-IDs into
-  runnable code, refactoring locators or fixtures, adding API mocking or network interception inside
-  tests, writing error/edge-case scenarios, and modifying test infrastructure (testIgnore, playwright
-  config, fixtures, auth setup, test helpers). IMPORTANT: If you are about to edit a Playwright config
-  file, change testIgnore, create or modify fixtures, update auth setup, or make any change that affects
-  how tests run, load this skill first — it has operating principles on configuration hygiene, fixture
-  design, and test architecture that prevent quick-fix hacks.
-  Do NOT use for: opening a browser to explore a live site (use agent-web-interface-guide), generating test plans
-  or specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests
-  (use fix-flaky-tests), or running/checking test results.
+  Invoke when the user wants Playwright test code produced or changed. The code-writing skill for E2E
+  tests — if the task produces or modifies executable test code, use this. Covers: creating test files,
+  converting TC-IDs to runnable code, refactoring locators or fixtures, adding API mocking, writing
+  edge-case scenarios, modifying test infrastructure (testIgnore, playwright config, fixtures, auth setup,
+  helpers). IMPORTANT: If editing Playwright config, fixtures, auth setup, or anything that affects how
+  tests run, load this skill first — it has principles on configuration hygiene, fixture design, and test
+  architecture. Do NOT use for: exploring a live site (use agent-web-interface-guide), generating test
+  plans/specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests
+  (use fix-flaky-tests), or running test results.
 user-invocable: true
 argument-hint: <test description or path to test case spec file>
 allowed-tools:
