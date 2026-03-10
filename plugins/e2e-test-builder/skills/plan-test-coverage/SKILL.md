@@ -118,13 +118,16 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
 3. P2 edge cases, visual regression, and performance as time allows
 
 ### Next Steps
-- Run `/generate-test-cases <url> <journey>` for detailed test specs
-- Run `/write-e2e-tests` to implement the tests
+- Invoke the `generate-test-cases` skill with the target URL and journey for detailed test specs
+- Invoke the `write-e2e-tests` skill to implement the tests
 ```
 
 ## Example Usage
 
 ```
-/plan-test-coverage https://myapp.com/checkout Checkout flow
-/plan-test-coverage https://myapp.com/login Authentication
+Claude Code: /plan-test-coverage https://myapp.com/checkout Checkout flow
+Codex: $plan-test-coverage https://myapp.com/checkout Checkout flow
+
+Claude Code: /plan-test-coverage https://myapp.com/login Authentication
+Codex: $plan-test-coverage https://myapp.com/login Authentication
 ```

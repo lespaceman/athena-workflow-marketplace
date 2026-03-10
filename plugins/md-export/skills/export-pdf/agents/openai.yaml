@@ -1,0 +1,4 @@
+interface:
+  display_name: "Export PDF"
+  short_description: "Convert markdown files into styled PDFs"
+  default_prompt: "Export this markdown file to a styled PDF."

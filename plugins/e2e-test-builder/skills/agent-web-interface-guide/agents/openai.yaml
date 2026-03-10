@@ -1,0 +1,10 @@
+interface:
+  display_name: "Agent Web Interface Guide"
+  short_description: "Explore a live site and use the browser MCP correctly"
+  default_prompt: "Open this site, explore the flow, and report the important selectors and observations."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP required for live page exploration"

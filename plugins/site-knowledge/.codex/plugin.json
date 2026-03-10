@@ -1,0 +1,10 @@
+{
+  "name": "site-knowledge",
+  "description": "Codex metadata for site-knowledge skills",
+  "version": "1.0.0",
+  "skills": [
+    "airbnb",
+    "amazon",
+    "apple-store"
+  ]
+}

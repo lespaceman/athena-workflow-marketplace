@@ -2,17 +2,19 @@
 
 Marketplace repository for:
 
-1. Claude plugins (`plugins/`)
-2. Athena workflows (`.workflows/`)
+1. Workflow plugins (`plugins/`)
+2. Athena workflows (`workflows/`)
 
 ## Spec
 
 Workflow and manifest contracts are defined in:
 
 - [RFC 0001: Long-Running Workflow Definition (Claude Plugin Compatible)](docs/rfcs/0001-workflow-marketplace-spec.md)
+- [RFC 0002: Cross-Runtime Workflow And Plugin Packaging](docs/rfcs/0002-cross-runtime-packaging-spec.md)
 
 Use this RFC as the source of truth for workflow behavior, lifecycle, and
-Claude plugin compatibility (skills, tools, and sub-agent/task patterns).
+cross-runtime plugin compatibility (skills, tools, and sub-agent/task
+patterns).
 
 ## Repository Structure
 
@@ -22,12 +24,13 @@ Claude plugin compatibility (skills, tools, and sub-agent/task patterns).
 │   └── marketplace.json            # Plugin catalog
 ├── .athena-workflow/
 │   └── marketplace.json            # Workflow catalog
-├── .workflows/
+├── workflows/
 │   └── e2e-test-builder/
 │       ├── workflow.json
 │       └── system_prompt.md
 └── plugins/
     ├── e2e-test-builder/
+    ├── md-export/
     └── site-knowledge/
 ```
 
@@ -63,12 +66,12 @@ Iterative workflow runner for adding Playwright E2E tests to existing codebases.
 
 | Skill | Description |
 |-------|-------------|
-| `/add-e2e-tests <url> <feature>` | Full pipeline orchestrator |
-| `/analyze-test-codebase [path]` | Detect Playwright config and conventions |
-| `/plan-test-coverage <url> <feature>` | Build prioritized coverage plan |
-| `/explore-website <url> <goal>` | Extract selectors and behavior via browser interaction |
-| `/generate-test-cases <url> <journey>` | Generate TC-ID based structured specs |
-| `/write-e2e-tests <description>` | Implement executable Playwright tests |
+| `add-e2e-tests` | Full pipeline orchestrator. Claude: `/add-e2e-tests`, Codex: `$add-e2e-tests` |
+| `analyze-test-codebase` | Detect Playwright config and conventions. Claude: `/analyze-test-codebase`, Codex: `$analyze-test-codebase` |
+| `plan-test-coverage` | Build prioritized coverage plan. Claude: `/plan-test-coverage`, Codex: `$plan-test-coverage` |
+| `agent-web-interface-guide` | Extract selectors and behavior via browser interaction. Claude: `/agent-web-interface-guide`, Codex: `$agent-web-interface-guide` |
+| `generate-test-cases` | Generate TC-ID based structured specs. Claude: `/generate-test-cases`, Codex: `$generate-test-cases` |
+| `write-e2e-tests` | Implement executable Playwright tests. Claude: `/write-e2e-tests`, Codex: `$write-e2e-tests` |
 
 ### site-knowledge
 
@@ -83,11 +86,11 @@ Auto-applied site-specific automation patterns.
 
 ## Available Workflows
 
-Workflows are registered in `.athena-workflow/marketplace.json` and implemented under `.workflows/`.
+Workflows are registered in `.athena-workflow/marketplace.json` and implemented under `workflows/`.
 
 | Workflow | Source |
 |----------|--------|
-| `e2e-test-builder` | `.workflows/e2e-test-builder/workflow.json` |
+| `e2e-test-builder` | `workflows/e2e-test-builder/workflow.json` |
 
 Workflow intent:
 
@@ -99,7 +102,8 @@ Workflow intent:
 
 1. Create a plugin directory under `plugins/<name>/`.
 2. Add `plugins/<name>/.claude-plugin/plugin.json`.
-3. Register plugin in `.claude-plugin/marketplace.json` under `plugins[]`.
+3. Add `plugins/<name>/.codex/plugin.json` if the plugin needs Codex-specific metadata.
+4. Register plugin in `.claude-plugin/marketplace.json` under `plugins[]`.
 
 Minimal `plugin.json`:
 
@@ -116,7 +120,7 @@ Minimal `plugin.json`:
 
 ## Add a New Workflow
 
-1. Create `.workflows/<workflow-name>/workflow.json`.
+1. Create `workflows/<workflow-name>/workflow.json`.
 2. Add any workflow-local assets in the same directory.
 3. Register workflow in `.athena-workflow/marketplace.json` under `workflows[]`.
 4. Keep schema/behavior aligned with RFC 0001.
@@ -128,7 +132,7 @@ Workflow registration example:
   "workflows": [
     {
       "name": "my-workflow",
-      "source": "./.workflows/my-workflow/workflow.json",
+      "source": "./workflows/my-workflow/workflow.json",
       "description": "My reusable workflow"
     }
   ]

@@ -1,0 +1,14 @@
+{
+  "name": "e2e-test-builder",
+  "description": "Codex metadata for the E2E test builder plugin",
+  "version": "2.0.0",
+  "skills": [
+    "add-e2e-tests",
+    "agent-web-interface-guide",
+    "analyze-test-codebase",
+    "fix-flaky-tests",
+    "generate-test-cases",
+    "plan-test-coverage",
+    "write-e2e-tests"
+  ]
+}

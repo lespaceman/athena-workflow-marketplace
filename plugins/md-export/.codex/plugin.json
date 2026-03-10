@@ -1,0 +1,8 @@
+{
+  "name": "md-export",
+  "description": "Codex metadata for markdown export skills",
+  "version": "1.0.1",
+  "skills": [
+    "export-pdf"
+  ]
+}

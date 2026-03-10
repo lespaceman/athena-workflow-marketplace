@@ -1,12 +1,61 @@
 ---
 name: agent-web-interface-guide
-description: Guide to using the agent-web-interface MCP server for browser automation - understanding state snapshots, element interactions, form handling, and response patterns
-user-invocable: false
+description: >
+  REQUIRED for any task that involves opening, visiting, or viewing a live web page in a browser with
+  the agent-web-interface MCP server. Use this skill whenever the user includes a URL or page reference
+  and wants to see, check, verify, inspect, extract selectors from, or interact with that page. This
+  skill combines live browser exploration with the operational guide for agent-web-interface response
+  patterns, state snapshots, forms, selectors, and multi-page recovery. If you are about to call any
+  mcp__plugin_e2e-test-builder_agent-web-interface__* tool directly, load this skill first.
+user-invocable: true
+argument-hint: <url> <what to explore or do>
+allowed-tools:
+  - mcp__plugin_e2e-test-builder_agent-web-interface__ping
+  - mcp__plugin_e2e-test-builder_agent-web-interface__navigate
+  - mcp__plugin_e2e-test-builder_agent-web-interface__go_back
+  - mcp__plugin_e2e-test-builder_agent-web-interface__go_forward
+  - mcp__plugin_e2e-test-builder_agent-web-interface__reload
+  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
+  - mcp__plugin_e2e-test-builder_agent-web-interface__find
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_to
+  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
+  - mcp__plugin_e2e-test-builder_agent-web-interface__click
+  - mcp__plugin_e2e-test-builder_agent-web-interface__type
+  - mcp__plugin_e2e-test-builder_agent-web-interface__press
+  - mcp__plugin_e2e-test-builder_agent-web-interface__select
+  - mcp__plugin_e2e-test-builder_agent-web-interface__hover
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
+  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
+  - mcp__plugin_e2e-test-builder_agent-web-interface__list_pages
+  - mcp__plugin_e2e-test-builder_agent-web-interface__close_page
+  - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
+  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
 ---
 
 # agent-web-interface MCP Server Guide
 
 This skill documents how to work with the `agent-web-interface` MCP server, which provides browser automation tools (`navigate`, `click`, `type`, `find`, `get_form`, etc.) for web exploration, form filling, and UI interaction.
+
+## Input
+
+Parse the target URL and exploration goal from: $ARGUMENTS
+
+## Workflow
+
+1. **Navigate** to the URL
+2. **Complete the task** — interact as needed (click, fill forms, navigate pages)
+3. **Extract selectors** — use `get_element` on key elements to capture the best Playwright selector
+4. **Analyze forms** — use `get_form` and `get_field` to understand intent, completion state, and validation
+5. **Report** what you did, found, and observed
+
+## Output Format
+
+Always include:
+1. **What you accomplished** — the result, finding, or outcome
+2. **Steps taken** — pages visited, buttons clicked, forms filled
+3. **Observations** — notable page states, messages, and behaviors
+4. **Selectors** (when relevant) — Playwright-compatible selectors for key elements
 
 ## State Snapshot Structure
 
@@ -223,3 +272,16 @@ Common errors:
 1. **Use `find`** when snapshot shows `<!-- trimmed -->`
 2. **Track `<baseline>` vs `<diff>`** to know if you have full or partial state
 3. **Always pass `page_id`** when working across sessions or with multiple tabs
+
+## Example Usage
+
+```
+Claude Code: /agent-web-interface-guide https://airbnb.com Walk through the search and booking flow for stays in Tokyo
+Codex: $agent-web-interface-guide https://airbnb.com Walk through the search and booking flow for stays in Tokyo
+
+Claude Code: /agent-web-interface-guide https://apple.com/store Find the iPhone purchase flow and extract all form selectors
+Codex: $agent-web-interface-guide https://apple.com/store Find the iPhone purchase flow and extract all form selectors
+
+Claude Code: /agent-web-interface-guide https://example.com/login Extract the login form selectors and field purposes
+Codex: $agent-web-interface-guide https://example.com/login Extract the login form selectors and field purposes
+```

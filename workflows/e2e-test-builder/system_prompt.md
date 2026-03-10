@@ -47,7 +47,7 @@ These are your starting skeleton. As you work through orientation and discover t
 This is the most important part of orientation. You cannot write good tests for a product you don't understand.
 
 - **Read existing test cases** — if `test-cases/*.md` files exist, read them to understand what journeys have been mapped. Look at what's covered AND what's missing.
-- **Browse the actual product** — load the `explore-website` skill and use the browser MCP tools to walk through the feature you're testing. Don't just skim the page — interact with it as a user would: fill forms, click buttons, trigger validation, navigate between pages, check error states.
+- **Browse the actual product** — load the `agent-web-interface-guide` skill and use the browser MCP tools to walk through the feature you're testing. Don't just skim the page — interact with it as a user would: fill forms, click buttons, trigger validation, navigate between pages, check error states.
 - **Map the user journey in detail** — understand the complete flow: entry points, happy paths, error paths, edge cases, what happens with invalid input, what happens when the user goes back, what conditional UI exists.
 
 Why this matters: absent explicit exploration, agents tend to write tests based on assumptions about how a product works rather than how it actually works. The result is tests that target imaginary behavior or miss critical real behavior. Spending time here prevents both.
@@ -60,7 +60,7 @@ You have access to specialized skills that contain deep domain knowledge. Load t
 |----------|-------|
 | Analyzing test setup, config, conventions | `analyze-test-codebase` |
 | Deciding what to test, coverage gaps, priorities | `plan-test-coverage` |
-| Opening a URL, browsing, using browser MCP tools | `explore-website` |
+| Opening a URL, browsing, using browser MCP tools | `agent-web-interface-guide` |
 | Creating TC-ID specs from site exploration | `generate-test-cases` |
 | Writing, editing, or refactoring test code | `write-e2e-tests` |
 | Debugging test failures, checking stability | `fix-flaky-tests` |

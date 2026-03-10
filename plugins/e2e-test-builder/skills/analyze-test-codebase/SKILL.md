@@ -133,6 +133,9 @@ Run this **before** writing any new tests to ensure new code follows existing co
 ## Example Usage
 
 ```
-/analyze-test-codebase
-/analyze-test-codebase ./my-app
+Claude Code: /analyze-test-codebase
+Codex: $analyze-test-codebase
+
+Claude Code: /analyze-test-codebase ./my-app
+Codex: $analyze-test-codebase ./my-app
 ```

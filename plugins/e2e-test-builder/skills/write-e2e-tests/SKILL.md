@@ -10,7 +10,7 @@ description: >
   file, change testIgnore, create or modify fixtures, update auth setup, or make any change that affects
   how tests run, load this skill first — it has operating principles on configuration hygiene, fixture
   design, and test architecture that prevent quick-fix hacks.
-  Do NOT use for: opening a browser to explore a live site (use explore-website), generating test plans
+  Do NOT use for: opening a browser to explore a live site (use agent-web-interface-guide), generating test plans
   or specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests
   (use fix-flaky-tests), or running/checking test results.
 user-invocable: true

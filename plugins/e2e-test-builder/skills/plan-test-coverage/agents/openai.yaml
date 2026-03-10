@@ -1,0 +1,10 @@
+interface:
+  display_name: "Plan Test Coverage"
+  short_description: "Find coverage gaps and prioritize E2E test scenarios"
+  default_prompt: "Review this feature and plan the highest-priority E2E coverage."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used for lightweight site inspection"

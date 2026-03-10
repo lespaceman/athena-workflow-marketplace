@@ -11,7 +11,7 @@ description: >
   IMPORTANT: If you need to create TC-ID specifications before writing test code, use this skill. Don't skip
   straight to writing tests — the structured specs ensure complete coverage and prevent missing edge cases.
   Does NOT write executable Playwright code — use write-e2e-tests for that. Does NOT do general browsing
-  without test intent — use explore-website for that.
+  without test intent — use agent-web-interface-guide for that.
 user-invocable: true
 argument-hint: <url> <user journey description>
 allowed-tools:
@@ -212,6 +212,9 @@ Report and work around:
 ## Example Usage
 
 ```
-/generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
-/generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
+Claude Code: /generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
+Codex: $generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
+
+Claude Code: /generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
+Codex: $generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
 ```

@@ -1,4 +1,4 @@
-# RFC 0001: Long-Running Workflow Definition (Claude Plugin Compatible)
+# RFC 0001: Long-Running Workflow Definition (Plugin Compatible)
 
 - Status: Draft
 - Author: Athena Workflow Marketplace Maintainers
@@ -7,9 +7,9 @@
 
 ## Abstract
 
-This RFC defines a workflow contract for long-running, multi-session automation. A workflow orchestrates existing Claude plugin capabilities (skills, tools, and sub-agent/task patterns) into resumable execution.
+This RFC defines a workflow contract for long-running, multi-session automation. A workflow orchestrates existing plugin capabilities (skills, tools, and sub-agent/task patterns) into resumable execution.
 
-The workflow layer does not replace plugin standards. It is an orchestration layer on top of today's Anthropic Claude plugin model, with a forward path to future open plugin standards.
+The workflow layer does not replace plugin standards. It is an orchestration layer on top of today's marketplace plugin model, with a forward path to future open plugin standards.
 
 ## Problem Statement
 
@@ -23,14 +23,14 @@ We need a portable workflow definition that:
 
 - keeps durable state across sessions
 - composes plugin-defined capabilities
-- remains compatible with current Claude plugin conventions
+- remains compatible with current plugin conventions
 
 ## Goals
 
 - Define what a "workflow" is and why it exists
 - Define workflow execution lifecycle for long-running tasks
 - Define a minimal `workflow.json` contract for consumers
-- Define interoperability with Claude plugin capabilities today
+- Define interoperability with plugin capabilities today
 - Preserve compatibility with future plugin standardization
 
 ## Non-Goals
@@ -42,7 +42,8 @@ We need a portable workflow definition that:
 ## Design Principles
 
 1. Reuse existing standards first
-- Skills, plugin manifests, and MCP config stay in Claude plugin format.
+- Shared skills, plugin manifests, and MCP config stay in the existing marketplace format.
+- Runtimes MAY layer optional harness-specific assets such as `.claude/` or `.codex/`.
 
 2. Workflow is orchestration
 - Workflow defines execution order, loop policy, and completion logic.
@@ -74,17 +75,18 @@ Without workflows, orchestration logic stays implicit in prompts and is difficul
 
 ## Interoperability Model (Current State)
 
-Workflows use Claude plugin capabilities as-is:
+Workflows use plugin capabilities as-is:
 
-- Skills: Existing slash-command or auto-applied skills
+- Skills: Existing invocable or auto-applied skills
 - Tools: Existing allowed tools declared by plugins/skills
 - Sub-agent definitions: Existing task delegation patterns used by skills
 
 Normative requirements:
 
 - A workflow runtime MUST treat plugin capability loading as a plugin-layer concern.
-- A workflow runtime MUST NOT require a new plugin format to execute workflows.
+- A workflow runtime MUST NOT require a brand-new shared plugin format to execute workflows.
 - A workflow MAY require specific plugins, referenced through the runtime's plugin resolver.
+- A workflow package MAY include harness-specific assets under runtime-owned directories such as `.claude/` and `.codex/`.
 
 ## MCP Guidance (Interim)
 
@@ -98,7 +100,7 @@ Interim guidance:
 
 ## Workflow Definition Contract
 
-Path convention in this repository: `/.workflows/<workflow-name>/workflow.json`
+Path convention in this repository: `/workflows/<workflow-name>/workflow.json`
 
 Example:
 
@@ -161,7 +163,7 @@ Terminal states:
 This repository uses:
 
 - `/.athena-workflow/marketplace.json` as workflow registry
-- `/.workflows/` as workflow definition root
+- `/workflows/` as workflow definition root
 
 These are packaging conventions for discovery. The core workflow contract is the `workflow.json` behavior above.
 

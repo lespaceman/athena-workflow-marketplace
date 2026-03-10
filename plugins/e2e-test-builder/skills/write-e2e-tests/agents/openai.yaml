@@ -1,0 +1,10 @@
+interface:
+  display_name: "Write E2E Tests"
+  short_description: "Implement or refactor executable Playwright tests"
+  default_prompt: "Write or update Playwright E2E tests for this scenario."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used when selectors or live behavior need verification"
