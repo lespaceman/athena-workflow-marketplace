@@ -74,7 +74,20 @@ Use a **general-purpose subagent** via the Task tool for browser exploration to 
 - The URL and journey description
 - Instructions to walk through each step using `find`, `get_form`, `get_field`
 - Instructions to catalog all interactive elements, form fields, navigation options
-- Instructions to document each step: what was done, what appeared, what selectors were found
+- Instructions to use `get_element` on key elements to capture the best Playwright selector
+- Instructions to return results in this structured format for each step:
+
+```
+Step: <what was done>
+URL: <current URL after action>
+Elements found:
+  - Submit button: getByRole('button', { name: /submit/i })
+  - Email field: getByLabel(/email/i)
+  - Error message: getByText(/required/i)
+Observations: <what appeared, validation messages, state changes>
+```
+
+This structured output ensures selectors survive the handoff to the spec file and ultimately to `write-e2e-tests`.
 
 ### Step 3: Explore Alternative and Failure Paths
 
@@ -156,6 +169,10 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 
 **Expected Result:**
 - <What should happen>
+
+**Selectors observed:**
+- <element>: `getByRole('button', { name: /submit/i })` or `getByLabel(/email/i)` — from `get_element`/`find` during exploration
+- (Include selectors for key interactive elements so `write-e2e-tests` doesn't have to rediscover them)
 
 **Notes:**
 - <Additional context discovered during exploration>

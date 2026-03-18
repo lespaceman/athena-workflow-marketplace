@@ -67,21 +67,28 @@ Parse the test description or spec file path from: $ARGUMENTS
 - Check for custom fixtures, POM patterns, auth setup (storageState, global setup)
 - Follow the project's existing style unless it clearly causes flakiness
 
-### 3. Implement Tests
+### 3. Verify Key Selectors Against the Live Site
+- If a test case spec file includes **Selectors observed**, use those as your starting point
+- If no spec or selectors are available, browse the target page using `agent-web-interface-guide` to discover the actual selectors before writing code — do not guess
+- Spot-check 2-3 critical selectors with `find` or `get_element` to confirm they resolve to the intended elements
+
+### 4. Implement Tests
 - Add/adjust fixtures and page objects first (if needed)
 - Write tests in a story-like flow with AAA structure: Arrange → Act → Assert
 - Add assertions that represent user outcomes
 
-### 4. Stabilize
+### 5. Stabilize
 - Replace any sleeps with meaningful waits
 - Tighten locators to avoid ambiguity
 - For network-driven flows, use `page.waitForResponse` for critical checkpoints
 
-### 5. Verify
-- Run the smallest relevant test command: `npx playwright test <file> --headed` or single test
+### 6. Verify
+- Run the smallest relevant test command: `npx playwright test <file> --reporter=list 2>&1`
+- In CI or headless environments (no display), never use `--headed` — it will fail silently or hang
+- Use `--headed` only during local interactive debugging when you need to visually observe the test
 - Fix root causes rather than extending timeouts
 
-### 6. Summarize
+### 7. Summarize
 Return:
 1. **What I changed** (bullets)
 2. **Test case IDs added** (list all new TC-IDs with brief description)
@@ -421,6 +428,9 @@ await expect(storageRadio).toBeChecked({ timeout: 5000 });
 ## Test Template
 
 ```typescript
+// If the project has custom fixtures (fixtures/index.ts), import from there:
+//   import { test, expect } from '@fixtures/index';
+// Otherwise, use the default:
 import { test, expect } from '@playwright/test';
 
 test('TC-FEATURE-001: Description of test case', async ({ page }) => {
@@ -434,6 +444,8 @@ test('TC-FEATURE-001: Description of test case', async ({ page }) => {
   await expect(page.getByText(/success/i)).toBeVisible();
 });
 ```
+
+Always check for a project fixtures file before using the default import. If custom fixtures exist, you MUST import from them to get access to page objects and custom setup.
 
 ## Anti-Patterns to Avoid
 
