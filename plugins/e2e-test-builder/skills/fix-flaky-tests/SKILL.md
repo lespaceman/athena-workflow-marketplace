@@ -1,19 +1,14 @@
 ---
 name: fix-flaky-tests
 description: >
-  Use to fix any existing Playwright test that is failing, flaky, timing out, or behaving
-  inconsistently. Invoke whenever a user needs to: stabilize a test that passes sometimes and
-  fails other times, debug a timeout (e.g. "Test timeout of 30000ms exceeded"), fix a race
-  condition in test code, investigate why a test works locally but fails in CI or headless mode,
-  or run tests repeatedly (--repeat-each) to check for non-deterministic behavior before merging.
-  IMPORTANT: If you find yourself running tests with --repeat-each, --retries, or running the same
-  test suite multiple times to check stability, STOP and load this skill first — you are doing
-  flakiness investigation and this skill has structured root cause analysis that prevents brute-force
-  "run it 3x and hope" approaches.
-  If the user says "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI", "timeout on",
-  "race condition", "run N times to check stability", or "verify tests are stable" — this is the right
-  skill. NOT for writing new tests from scratch (use write-e2e-tests) or analyzing test setup
-  (use analyze-test-codebase).
+  Fix any Playwright test that is failing, flaky, timing out, or behaving inconsistently. Covers:
+  stabilize intermittent tests, debug timeouts ("Test timeout of 30000ms exceeded"), fix race
+  conditions, investigate local-vs-CI divergence, run repeated stability checks (--repeat-each).
+  IMPORTANT: If running tests with --repeat-each, --retries, or multiple times to check stability,
+  STOP and load this skill first — it has structured root cause analysis that prevents brute-force
+  approaches. Triggers: "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI",
+  "timeout on", "race condition", "run N times to check stability", "verify tests are stable".
+  NOT for writing new tests (use write-e2e-tests) or analyzing setup (use analyze-test-codebase).
 user-invocable: true
 argument-hint: <path to flaky test file or test name>
 allowed-tools:
@@ -263,4 +258,5 @@ For suites with multiple flaky tests, use the Task tool to delegate individual t
 | Increased timeout to 30s | Hides missing wait or slow setup | Find what you're actually waiting for |
 | `test.skip()` | Ignoring the problem | Diagnose and fix |
 | `retries: 3` without fix | Masks real failures, wastes CI time | Fix the root cause, then keep retries as safety net |
+| `{ force: true }` | Bypasses actionability checks, hides overlapping elements or disabled state | Find and fix the actionability issue: wait for overlay to disappear, scroll element into view, or wait for enabled state |
 | `try/catch` swallowing errors | Test passes but doesn't verify anything | Fix the assertion |

@@ -96,7 +96,9 @@ You have access to specialized skills that contain deep domain knowledge. Load t
 | Deciding what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Opening a URL, browsing, using browser MCP tools | `agent-web-interface-guide` |
 | Creating TC-ID specs from site exploration | `generate-test-cases` |
+| Reviewing TC-ID specs before implementation | `review-test-cases` |
 | Writing, editing, or refactoring test code | `write-e2e-tests` |
+| Reviewing test code before execution signoff | `review-test-code` |
 | Debugging test failures, checking stability | `fix-flaky-tests` |
 
 If you are about to use a tool (Bash, Edit, Write, browser MCP) and you have not loaded the skill for that activity, stop and load it first.
@@ -163,7 +165,21 @@ Delegate heavy browser exploration and test writing to general-purpose subagents
 
 #### Quality gates
 
-Before marking any test-writing or test-fixing work as done:
+Two review gates are mandatory during execution. Both are review-only — they produce findings but do not modify files.
+
+**Gate 1: Review test case specs** (after `generate-test-cases`, before `write-e2e-tests`)
+1. Load the `review-test-cases` skill and run it against `test-cases/<feature>.md`
+2. If verdict is **NEEDS REVISION** — address all blockers in the spec before proceeding to implementation
+3. If verdict is **PASS WITH WARNINGS** — address warnings if quick, otherwise note them and proceed
+4. Record the review verdict in the tracker
+
+**Gate 2: Review test code** (after `write-e2e-tests`, before final test execution)
+1. Load the `review-test-code` skill and run it against the implemented test files
+2. If verdict is **NEEDS REVISION** — fix all blockers before running tests for signoff
+3. If verdict is **PASS WITH WARNINGS** — fix warnings that affect stability, proceed with execution
+4. Record the review verdict in the tracker
+
+**Gate 3: Test execution**
 1. Run the tests: `npx playwright test <file> --reporter=list 2>&1`
 2. Record full output — green test output is the only proof of correctness
 3. If tests fail, load the `fix-flaky-tests` skill and follow its structured diagnostic approach. Do not guess-and-retry.
@@ -192,6 +208,7 @@ If Playwright is not set up in the target project:
 1. Clone `git@github.com:lespaceman/playwright-typescript-e2e-boilerplate.git`
 2. Copy config/fixtures/pages/utils into the project (do not overwrite existing files)
 3. Update `baseURL` to the target URL, remove example tests
+3b. **Test execution strategy:** If the project needs role-based or category-based test filtering, configure it via Playwright `--grep` tags or file naming conventions (`*.admin.spec.ts`), NOT via `testIgnore` regex patterns. A `testIgnore` regex becomes a maintenance trap — every new test file requires updating the regex. If the boilerplate includes a `testIgnore` regex, replace it with tag-based filtering.
 4. Merge devDependencies into package.json
 5. Run `npm install && npx playwright install --with-deps chromium`
 6. Clean up the temp clone
@@ -212,6 +229,7 @@ If the target feature requires login or any form of authentication:
 - **Subagent-driven** — delegate heavy browser and writing work to subagents to save context
 - **Follow existing conventions** — match the project's test style, not a generic template
 - **Traceable** — every test links back to a TC-ID from the spec
+- **Use what the project provides** — if the scaffolded boilerplate includes Page Object Models (BasePage, pages/), path aliases (tsconfig paths), or utility modules, USE them in generated tests. Do not ship infrastructure that tests ignore. If a boilerplate file is unused after test generation, either integrate it or remove it — dead code in test infrastructure causes confusion.
 - **No arbitrary waits** — use Playwright's built-in auto-wait and event-driven waits
 - **API before UI for setup** — use API calls (`request` fixture) for test data; reserve UI for what you are verifying
 - **Test failures, not just success** — every feature needs error path coverage

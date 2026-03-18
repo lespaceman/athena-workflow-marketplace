@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Claude Code Workflow Marketplace** — a collection of AI-powered browser automation workflows.
 
-- **e2e-test-builder** — Workflow runner for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → write tests. Uses subagent-driven development to save context.
+- **e2e-test-builder** — Workflow runner for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → **review specs** → write tests → **review code** → execute. Uses subagent-driven development to save context.
 - **site-knowledge** — Site-specific automation patterns for popular websites (Airbnb, Amazon, Apple Store).
 
 This is not a Node.js project with build/test scripts. It is a metadata-driven plugin marketplace where runtime is managed by Claude Code and the `agent-web-interface` MCP server (installed dynamically via `npx`).
@@ -28,7 +28,9 @@ User-invocable skills (slash commands):
 - `/plan-test-coverage <url> <feature>` — Plan what to test based on existing coverage gaps
 - `/agent-web-interface-guide <url> <goal>` — Live browser interaction, selector extraction, form analysis
 - `/generate-test-cases <url> <user-journey>` — Explore site and produce structured TC-ID test specs
+- `/review-test-cases <spec-file>` — **Quality gate**: review TC-ID specs for gaps, duplication, and invented scenarios before implementation
 - `/write-e2e-tests <test-description>` — Write executable Playwright test code following project conventions
+- `/review-test-code <test-file>` — **Quality gate**: review Playwright code for brittle selectors, missing assertions, convention divergence before execution
 - `/fix-flaky-tests <test-file-or-name>` — Diagnose and fix intermittent test failures
 
 `agent-web-interface-guide` is the primary browser skill. It covers live exploration plus MCP response patterns (state snapshots, observations, sequential forms, element attributes).

@@ -1,0 +1,10 @@
+interface:
+  display_name: "Review Test Code"
+  short_description: "Review Playwright test code for stability, correctness, and convention adherence"
+  default_prompt: "Review the Playwright test implementation for quality issues before test execution."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used to verify selectors against the live site"

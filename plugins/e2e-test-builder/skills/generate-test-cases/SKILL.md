@@ -3,13 +3,13 @@ name: generate-test-cases
 description: >
   Use when the user wants structured test case specifications (not executable code) for a web app feature.
   Explores a live website via browser automation, discovers all testable paths — happy paths, validation
-  errors, edge cases, boundary conditions — and outputs TC-ID specs to test-cases/<feature>.md. Triggers:
-  "generate test cases", "create test cases", "write test specs", "map all test paths", "what should I test
-  on this page", "discover testable scenarios", "find edge cases for this feature", "TC-IDs for", "what are
-  all the test scenarios", "map the user journeys", "document all test paths". IMPORTANT: Use this to create
-  TC-ID specifications before writing test code — structured specs ensure complete coverage. Does NOT write
-  executable Playwright code — use write-e2e-tests. Does NOT do general browsing — use
-  agent-web-interface-guide.
+  errors, edge cases, boundary conditions, network errors, empty states — and outputs TC-ID specs to
+  test-cases/<feature>.md. Enforces minimum error path coverage (server error, network failure, empty state)
+  and recommends role-based file naming conventions over testIgnore regex. Triggers: "generate test cases",
+  "create test cases", "write test specs", "map all test paths", "what should I test on this page",
+  "discover testable scenarios", "find edge cases for this feature", "TC-IDs for", "what are all the test
+  scenarios", "map the user journeys", "document all test paths". Does NOT write executable Playwright code
+  — use write-e2e-tests. Does NOT do general browsing — use agent-web-interface-guide.
 user-invocable: true
 argument-hint: <url> <user journey description>
 allowed-tools:
@@ -185,6 +185,10 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 ## Accessibility & UX
 ```
 
+## File Naming Convention for Selective Execution
+
+When generating specs that span multiple roles or test categories, recommend role-based file naming (`*.admin.spec.ts`, `*.user.spec.ts`) or Playwright tag annotations (`@admin`, `@smoke`) in the spec. This enables selective execution via `--grep @admin` or glob patterns instead of fragile `testIgnore` regex in playwright.config.ts. NEVER recommend a `testIgnore` regex that must be updated for every new test file.
+
 ## TC-ID Convention
 
 - Format: `TC-<FEATURE>-<NNN>` where NNN is zero-padded to 3 digits
@@ -198,6 +202,7 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 - Steps must be **concrete and unambiguous** — "click the Submit button" not "submit the form"
 - Expected results must be **observable and verifiable** — include actual error messages observed
 - Priority must be **justified** — Critical = blocks core journey, High = significant, Medium = secondary, Low = cosmetic
+- Every feature spec MUST include at minimum: one network error scenario (500/timeout), one empty state scenario, and one session/auth edge case (if the feature requires auth). These are non-negotiable — omitting them is a BLOCKER in the review-test-cases quality gate.
 
 ## Blocking Conditions
 

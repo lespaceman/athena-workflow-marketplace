@@ -3,13 +3,13 @@ name: write-e2e-tests
 description: >
   Invoke when the user wants Playwright test code produced or changed. The code-writing skill for E2E
   tests — if the task produces or modifies executable test code, use this. Covers: creating test files,
-  converting TC-IDs to runnable code, refactoring locators or fixtures, adding API mocking, writing
-  edge-case scenarios, modifying test infrastructure (testIgnore, playwright config, fixtures, auth setup,
-  helpers). IMPORTANT: If editing Playwright config, fixtures, auth setup, or anything that affects how
-  tests run, load this skill first — it has principles on configuration hygiene, fixture design, and test
-  architecture. Do NOT use for: exploring a live site (use agent-web-interface-guide), generating test
-  plans/specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests
-  (use fix-flaky-tests), or running test results.
+  converting TC-IDs to runnable code, refactoring locators or fixtures, adding API mocking, test data
+  setup/teardown, parallel-safe isolation, modifying test infrastructure (testIgnore, config, fixtures,
+  auth, helpers, path aliases). IMPORTANT: Load this skill before editing any test infrastructure — it
+  has 15 anti-patterns to avoid (force:true, networkidle, Tailwind selectors, hardcoded data, exact
+  numeric assertions) plus configuration hygiene and fixture design principles. Do NOT use for:
+  exploring a live site (use agent-web-interface-guide), generating test plans/specs without code
+  (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
 user-invocable: true
 argument-hint: <test description or path to test case spec file>
 allowed-tools:
@@ -109,6 +109,8 @@ Avoid `page.waitForTimeout()` except as a last-resort debug aid — remove befor
 
 Avoid `.first()` / `.nth()` unless a strong, documented reason exists — scope locators to a container instead.
 
+**Within-file consistency:** Every test file must use ONE locator approach for equivalent elements. Do not mix `getByPlaceholder('Email')` in one test with `page.locator('input[placeholder="Email"]')` in another test within the same file. When adding tests to an existing file, match the locator style already in use. If the existing style is suboptimal, refactor all locators in the file together — do not create inconsistency.
+
 ### Waiting Strategy
 - Prefer Playwright auto-waits via actions and `expect(...)` assertions
 - If explicit waiting needed, wait for meaningful state: visibility, enabled, URL, specific network response, spinner gone
@@ -119,14 +121,17 @@ Avoid `.first()` / `.nth()` unless a strong, documented reason exists — scope 
 - Sequential within feature area, never reused
 - When adding to existing file, check existing IDs and continue the sequence
 
-### POM + Fixtures (if project uses it)
+### POM + Fixtures
+- If the project has a `pages/` directory or BasePage class, ALL new tests MUST use Page Objects for interactions
 - Page Objects contain HOW (locators + interactions)
 - Tests contain WHAT (behavior/outcome to verify)
 - Keep page objects thin and composable
+- If the boilerplate shipped a BasePage that no tests reference, either extend it for your feature or flag it for removal — do not leave dead infrastructure
 
 ### Determinism and Isolation
 - Tests must not depend on execution order
 - Use unique test data per test or suite
+- **Parallel-safe mutations:** When `fullyParallel: true` is configured, tests run concurrently across workers. A test that creates a record (e.g., a ticket) and then asserts it appears in a list WILL race with other tests creating records. Solutions: (a) assert on the specific record you created (filter/search by the unique ID from your API setup), not on list position or count; (b) use `test.describe.serial` for flows that genuinely require sequence (create-then-verify); (c) scope list assertions with `.filter({ hasText: uniqueIdentifier })` to avoid seeing other workers' data.
 
 ### Assertions
 - Use Playwright `expect` matchers (auto-retry, better error messages)
@@ -138,6 +143,7 @@ Avoid `.first()` / `.nth()` unless a strong, documented reason exists — scope 
 - Configure `trace: 'on-first-retry'`, `screenshot: 'only-on-failure'`, `video: 'on-first-retry'` for CI debugging
 - Set `retries: process.env.CI ? 2 : 0` — retries in CI only
 - View traces with `npx playwright show-trace trace.zip` to time-travel through failures
+- If `tsconfig.json` defines path aliases (e.g., `@pages/*`, `@fixtures/*`, `@utils/*`), use them in imports instead of relative paths. Check tsconfig paths before writing any import statement.
 
 ### Authentication Setup
 
@@ -234,6 +240,47 @@ export const test = base.extend<{ apiClient: APIRequestContext }>({
   },
 });
 ```
+
+### Test Data Teardown
+
+Tests that create persistent data (database records, uploaded files, user accounts) MUST clean up after themselves. Leaked test data accumulates across runs and causes false positives/negatives in other tests (pagination counts drift, filter results change, list assertions break).
+
+**Strategy 1: API teardown in afterEach (Recommended)**
+```typescript
+let createdTicketId: string;
+
+test.beforeEach(async ({ request }) => {
+  const resp = await request.post('/api/tickets', {
+    data: { title: `Test ${Date.now()}` }
+  });
+  createdTicketId = (await resp.json()).id;
+});
+
+test.afterEach(async ({ request }) => {
+  if (createdTicketId) {
+    await request.delete(`/api/tickets/${createdTicketId}`);
+  }
+});
+```
+
+**Strategy 2: Fixture with automatic cleanup**
+```typescript
+export const test = base.extend<{ testTicket: { id: string; title: string } }>({
+  testTicket: async ({ request }, use) => {
+    const resp = await request.post('/api/tickets', {
+      data: { title: `Test ${Date.now()}` }
+    });
+    const ticket = await resp.json();
+    await use(ticket);
+    // cleanup runs automatically when test finishes
+    await request.delete(`/api/tickets/${ticket.id}`);
+  },
+});
+```
+
+**Strategy 3: Bulk cleanup in globalTeardown** — for environments where individual deletion is impractical, tag test data (e.g., `title LIKE 'Test %'`) and delete in batch during `globalTeardown.ts`.
+
+If the cleanup API endpoint is unknown, still write the teardown code with the most likely endpoint and add a `// TODO: verify cleanup endpoint` comment. Never skip teardown entirely — a wrong endpoint that 404s is preferable to test data that accumulates silently. If cleanup is genuinely impossible (no API, no database access), document this as a known limitation in the test file header AND add an `afterEach` that logs a warning.
 
 ### Network Interception
 
@@ -398,9 +445,13 @@ test('TC-FEATURE-001: Description of test case', async ({ page }) => {
 6. **Login via UI in every test** — use storageState or API-based auth setup
 7. **UI clicks to set up test data** — use API requests for data seeding
 8. **No error path tests** — every feature needs at least one failure scenario test
-9. **Hardcoded test data** — use factories, unique IDs (`Date.now()`), or env vars
+9. **Hardcoded test data** — NEVER embed real entity IDs (`'ACC-SUB-2026-00025'`), real user names (`'Anas Client 73'`), real monetary amounts, or environment-specific strings in test code. Instead: (a) create data via API in `beforeEach` and capture the returned ID, (b) use `Date.now()` or `crypto.randomUUID()` suffixes for uniqueness, (c) read values from `process.env` or a test data module, (d) for read-only assertions on existing data, use pattern matchers (`expect(text).toMatch(/ACC-SUB-\d{4}-\d{5}/)`) instead of exact values. If you find yourself typing a specific ID or name into test code, STOP — that is a hardcoded value.
 10. **Tests depending on execution order** — each test must be independently runnable
 11. **`expect(await el.isVisible()).toBe(true)`** — use `await expect(el).toBeVisible()` (auto-retries)
+12. **`{ force: true }` on clicks/checks** — hides real interaction problems (overlapping elements, not scrolled into view, disabled state). Diagnose the root cause instead: use `scrollIntoViewIfNeeded()`, wait for overlay to disappear, or wait for element to be enabled. Only acceptable when interacting with a custom widget that Playwright cannot natively trigger (document why in a comment).
+13. **`waitForLoadState('networkidle')` as default strategy** — `networkidle` waits for 500ms of no network activity, which breaks on long-polling, WebSockets, analytics beacons, or chat widgets. Use it ONLY for initial full-page loads where no streaming/polling exists. For post-action waits, use `waitForResponse` targeting the specific API call, or assert directly on the resulting UI state (Playwright auto-retries).
+14. **CSS utility class selectors (Tailwind, Bootstrap, etc.)** — `button.rounded-l-lg`, `.flex.items-center`, `.bg-primary` are styling concerns that change during refactors. Treat ALL utility framework classes as volatile — never use them as selectors. If no semantic locator works, request a `data-testid` from the dev team.
+15. **Asserting exact server-computed values** — `expect(revenue).toHaveText('12450')` will break when data changes. For dashboard counters, totals, and aggregates: (a) assert the element exists and contains a number (`toMatch(/\$[\d,]+/)`), (b) assert non-zero or within a range, (c) assert format correctness (`/^\d{1,3}(,\d{3})*$/`), (d) if exact value matters, seed the data via API first so you control the expected value.
 
 ## Context-Saving Strategy
 
