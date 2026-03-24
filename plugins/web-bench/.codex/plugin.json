@@ -1,0 +1,12 @@
+{
+  "name": "web-bench",
+  "description": "Codex metadata for the WebBench benchmark runner plugin",
+  "version": "1.0.0",
+  "skills": [
+    "run-benchmark",
+    "load-dataset",
+    "execute-task",
+    "evaluate-task",
+    "generate-report"
+  ]
+}

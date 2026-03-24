@@ -1,0 +1,8 @@
+{
+  "name": "web-bench",
+  "description": "WebBench benchmark runner — executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
+  "version": "1.0.0",
+  "author": {
+    "name": "Athenaflow"
+  }
+}

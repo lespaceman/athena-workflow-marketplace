@@ -25,6 +25,12 @@
       "source": "./plugins/md-export",
       "description": "Export markdown files to styled PDFs with Athena dark theme branding",
       "version": "1.0.1"
+    },
+    {
+      "name": "web-bench",
+      "source": "./plugins/web-bench",
+      "description": "WebBench benchmark runner — executes real-world browser tasks from Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
+      "version": "1.0.0"
     }
   ]
 }

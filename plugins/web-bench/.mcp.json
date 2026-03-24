@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "agent-web-interface": {
+      "command": "npx",
+      "args": ["-y", "agent-web-interface@latest"],
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "options": [
+        { "label": "Visible browser", "args": ["-y", "agent-web-interface@latest"] },
+        { "label": "Headless browser", "args": ["-y", "agent-web-interface@latest", "--headless"] },
+        { "label": "Auto-connect to Chrome 144+ via DevToolsActivePort", "args": ["-y", "agent-web-interface@latest", "--autoConnect"] },
+        { "label": "Connect to CDP endpoint", "args": ["-y", "agent-web-interface@latest", "--browserUrl", "http://localhost:9222"] }
+      ]
+    }
+  }
+}
