@@ -12,9 +12,16 @@
     {
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
-      "description": "Semantic browser interface for LLM agents — token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
-      "version": "1.0.1",
-      "keywords": ["browser", "mcp", "puppeteer", "cdp", "automation", "semantic-snapshot"],
+      "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
+      "version": "1.0.2",
+      "keywords": [
+        "browser",
+        "mcp",
+        "puppeteer",
+        "cdp",
+        "automation",
+        "semantic-snapshot"
+      ],
       "category": "browser-automation",
       "repository": "https://github.com/lespaceman/agent-web-interface",
       "license": "MIT"
@@ -22,36 +29,59 @@
     {
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
-      "description": "Skills for building Playwright E2E tests — analyze codebase, plan coverage, generate test cases, write test code, review, and fix flaky tests",
-      "version": "2.0.3",
-      "keywords": ["playwright", "e2e", "testing", "test-generation", "test-automation"],
+      "description": "Skills for building Playwright E2E tests \u2014 analyze codebase, plan coverage, generate test cases, write test code, review, and fix flaky tests",
+      "version": "2.0.4",
+      "keywords": [
+        "playwright",
+        "e2e",
+        "testing",
+        "test-generation",
+        "test-automation"
+      ],
       "category": "testing"
     },
     {
       "name": "site-knowledge",
       "source": "./plugins/site-knowledge",
       "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
-      "version": "1.0.0",
-      "keywords": ["site-patterns", "airbnb", "amazon", "apple", "automation-knowledge"],
+      "version": "1.0.1",
+      "keywords": [
+        "site-patterns",
+        "airbnb",
+        "amazon",
+        "apple",
+        "automation-knowledge"
+      ],
       "category": "browser-automation"
     },
     {
       "name": "md-export",
       "source": "./plugins/md-export",
       "description": "Export markdown files to clean, dark-themed PDFs",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": {
         "name": "lespaceman"
       },
-      "keywords": ["markdown", "pdf", "export", "dark-theme"],
+      "keywords": [
+        "markdown",
+        "pdf",
+        "export",
+        "dark-theme"
+      ],
       "category": "developer-tools"
     },
     {
       "name": "web-bench",
       "source": "./plugins/web-bench",
-      "description": "WebBench benchmark runner — executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
-      "version": "1.0.1",
-      "keywords": ["benchmark", "evaluation", "webbench", "llm-judge", "browser-tasks"],
+      "description": "WebBench benchmark runner \u2014 executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
+      "version": "1.0.2",
+      "keywords": [
+        "benchmark",
+        "evaluation",
+        "webbench",
+        "llm-judge",
+        "browser-tasks"
+      ],
       "category": "evaluation"
     }
   ]
