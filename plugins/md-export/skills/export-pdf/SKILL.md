@@ -1,12 +1,12 @@
 ---
 name: export-pdf
-description: Export markdown file(s) to styled PDF with Athena dark theme. Use when the user asks to "export to PDF", "convert markdown to PDF", "generate PDF", "make a PDF from markdown", or "export md".
+description: Export markdown file(s) to styled dark-theme PDF. Use when the user asks to "export to PDF", "convert markdown to PDF", "generate PDF", "make a PDF from markdown", or "export md".
 user-invocable: true
 argument-hint: <path-to-md-file-or-glob>
 allowed-tools: Bash(node:*), Read, Glob
 ---
 
-Export the specified markdown file(s) to PDF using the Athena dark theme stylesheet.
+Export the specified markdown file(s) to a clean, dark-themed PDF.
 
 ## Instructions
 
@@ -24,9 +24,9 @@ node "<plugin-root>/scripts/generate-pdf.mjs" "<absolute-path-to-md-file>"
 ```
 
 The script will:
-- Auto-derive the badge label from the filename (e.g., `self-correction-report.md` → "Self-Correction Report")
+- Auto-derive the document label from the filename (e.g., `self-correction-report.md` → "Self Correction Report")
 - Output the PDF in the same directory as the source file
-- Use the Athena dark theme styling and logo
+- Apply the dark-theme stylesheet with clean typography and spacing
 
 4. Report the result to the user — list each PDF created and its path.
 

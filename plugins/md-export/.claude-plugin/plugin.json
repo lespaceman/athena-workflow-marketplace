@@ -1,8 +1,8 @@
 {
   "name": "md-export",
-  "description": "Export markdown files to styled PDFs with Athena dark-theme branding",
+  "description": "Export markdown files to clean, dark-themed PDFs",
   "version": "1.0.1",
   "author": {
-    "name": "Athenaflow"
+    "name": "lespaceman"
   }
 }

@@ -2200,13 +2200,10 @@ if (!resolvedPath.endsWith(".md")) {
   process.exit(1);
 }
 const basename = path.basename(resolvedPath, ".md");
-const badgeLabel = basename.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-const logoPath = path.join(scriptDir, "logo.svg");
-const logoSvg = fs.readFileSync(logoPath, "utf-8").replace(/<rect\b[^>]*\/>\s*/i, "");
-const logoDataUri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(logoSvg)}`;
-const heroHtml = `<div class="logo-hero">
-  <img src="${logoDataUri}" alt="Athenaflow" />
-  <span class="badge">${badgeLabel}</span>
+const docLabel = basename.split(/[-_]/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+const headerHtml = `<div class="doc-header">
+  <div class="doc-date">${today}</div>
 </div>`;
 const css = fs.readFileSync(path.join(scriptDir, "pdf-style.css"), "utf-8");
 function escapeHtml(value) {
@@ -2249,16 +2246,16 @@ function preprocessMarkdown(content) {
 <html>
 <head>
   <meta charset="utf-8">
-  <title>${badgeLabel}</title>
+  <title>${escapeHtml(docLabel)}</title>
   <style>${css}</style>
 </head>
 <body>
-  ${heroHtml}
+  ${headerHtml}
   ${bodyHtml}
 </body>
 </html>`;
   console.log(`Converting ${path.basename(resolvedPath)}...`);
-  console.log(`  Badge: "${badgeLabel}"`);
+  console.log(`  Label: "${docLabel}"`);
   const chromePath = findChrome();
   const browser = await puppeteer.launch({
     executablePath: chromePath,
