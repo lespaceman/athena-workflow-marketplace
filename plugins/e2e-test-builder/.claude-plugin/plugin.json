@@ -1,7 +1,7 @@
 {
   "name": "e2e-test-builder",
   "description": "Workflow runner for adding Playwright E2E tests to existing codebases \u2014 analyzes, plans, explores, generates specs, and writes tests",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": {
     "name": "Athenaflow"
   }

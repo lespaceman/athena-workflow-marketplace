@@ -1,7 +1,7 @@
 {
   "name": "agent-web-interface",
   "description": "Browser automation MCP server and operational guide for live web page interaction",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Athenaflow"
   }
