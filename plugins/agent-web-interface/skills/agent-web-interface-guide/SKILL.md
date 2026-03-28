@@ -6,31 +6,34 @@ description: >
   and wants to see, check, verify, inspect, extract selectors from, or interact with that page. This
   skill combines live browser exploration with the operational guide for agent-web-interface response
   patterns, state snapshots, forms, selectors, and multi-page recovery. If you are about to call any
-  mcp__plugin_e2e-test-builder_agent-web-interface__* tool directly, load this skill first.
+  mcp__plugin_agent-web-interface_browser__* tool directly, load this skill first.
 user-invocable: true
 argument-hint: <url> <what to explore or do>
 allowed-tools:
-  - mcp__plugin_e2e-test-builder_agent-web-interface__ping
-  - mcp__plugin_e2e-test-builder_agent-web-interface__navigate
-  - mcp__plugin_e2e-test-builder_agent-web-interface__go_back
-  - mcp__plugin_e2e-test-builder_agent-web-interface__go_forward
-  - mcp__plugin_e2e-test-builder_agent-web-interface__reload
-  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_to
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
-  - mcp__plugin_e2e-test-builder_agent-web-interface__click
-  - mcp__plugin_e2e-test-builder_agent-web-interface__type
-  - mcp__plugin_e2e-test-builder_agent-web-interface__press
-  - mcp__plugin_e2e-test-builder_agent-web-interface__select
-  - mcp__plugin_e2e-test-builder_agent-web-interface__hover
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
-  - mcp__plugin_e2e-test-builder_agent-web-interface__list_pages
-  - mcp__plugin_e2e-test-builder_agent-web-interface__close_page
-  - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
-  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
+  - mcp__plugin_agent-web-interface_browser__ping
+  - mcp__plugin_agent-web-interface_browser__navigate
+  - mcp__plugin_agent-web-interface_browser__go_back
+  - mcp__plugin_agent-web-interface_browser__go_forward
+  - mcp__plugin_agent-web-interface_browser__reload
+  - mcp__plugin_agent-web-interface_browser__snapshot
+  - mcp__plugin_agent-web-interface_browser__find
+  - mcp__plugin_agent-web-interface_browser__get_element
+  - mcp__plugin_agent-web-interface_browser__scroll_to
+  - mcp__plugin_agent-web-interface_browser__scroll
+  - mcp__plugin_agent-web-interface_browser__click
+  - mcp__plugin_agent-web-interface_browser__type
+  - mcp__plugin_agent-web-interface_browser__press
+  - mcp__plugin_agent-web-interface_browser__select
+  - mcp__plugin_agent-web-interface_browser__hover
+  - mcp__plugin_agent-web-interface_browser__get_form
+  - mcp__plugin_agent-web-interface_browser__get_field
+  - mcp__plugin_agent-web-interface_browser__list_pages
+  - mcp__plugin_agent-web-interface_browser__close_page
+  - mcp__plugin_agent-web-interface_browser__screenshot
+  - mcp__plugin_agent-web-interface_browser__read_page
+  - mcp__plugin_agent-web-interface_browser__drag
+  - mcp__plugin_agent-web-interface_browser__inspect_canvas
+  - mcp__plugin_agent-web-interface_browser__wheel
 ---
 
 # agent-web-interface MCP Server Guide

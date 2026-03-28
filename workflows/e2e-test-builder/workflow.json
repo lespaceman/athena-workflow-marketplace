@@ -11,5 +11,8 @@
     "maxIterations": 15
   },
   "isolation": "minimal",
-  "plugins": ["e2e-test-builder@lespaceman/athena-workflow-marketplace"]
+  "plugins": [
+    "agent-web-interface@lespaceman/athena-workflow-marketplace",
+    "e2e-test-builder@lespaceman/athena-workflow-marketplace"
+  ]
 }

@@ -12,20 +12,10 @@ description: >
 user-invocable: true
 argument-hint: <path to test-cases/*.md spec file>
 allowed-tools:
-  # MCP browser tools (for verifying observed behavior claims against live site)
-  - mcp__plugin_e2e-test-builder_agent-web-interface__ping
-  - mcp__plugin_e2e-test-builder_agent-web-interface__navigate
-  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
-  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
-  # File tools
   - Read
   - Glob
   - Grep
+  - Task
 ---
 
 # Review Test Cases

@@ -21,24 +21,6 @@ allowed-tools:
   - Grep
   - Bash
   - Task
-  - mcp__plugin_e2e-test-builder_agent-web-interface__ping
-  - mcp__plugin_e2e-test-builder_agent-web-interface__navigate
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_element
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
-  - mcp__plugin_e2e-test-builder_agent-web-interface__click
-  - mcp__plugin_e2e-test-builder_agent-web-interface__type
-  - mcp__plugin_e2e-test-builder_agent-web-interface__press
-  - mcp__plugin_e2e-test-builder_agent-web-interface__select
-  - mcp__plugin_e2e-test-builder_agent-web-interface__hover
-  - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_form
-  - mcp__plugin_e2e-test-builder_agent-web-interface__get_field
-  - mcp__plugin_e2e-test-builder_agent-web-interface__snapshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__go_back
-  - mcp__plugin_e2e-test-builder_agent-web-interface__reload
-  - mcp__plugin_e2e-test-builder_agent-web-interface__screenshot
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll_to
 ---
 
 # Add E2E Tests

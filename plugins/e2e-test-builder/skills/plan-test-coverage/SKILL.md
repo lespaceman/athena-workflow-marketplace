@@ -15,11 +15,7 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - mcp__plugin_e2e-test-builder_agent-web-interface__ping
-  - mcp__plugin_e2e-test-builder_agent-web-interface__navigate
-  - mcp__plugin_e2e-test-builder_agent-web-interface__find
-  - mcp__plugin_e2e-test-builder_agent-web-interface__scroll
-  - mcp__plugin_e2e-test-builder_agent-web-interface__close_session
+  - Task
 ---
 
 # Plan Test Coverage

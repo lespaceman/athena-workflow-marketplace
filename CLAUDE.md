@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Claude Code Workflow Marketplace** — a collection of AI-powered browser automation workflows.
 
-- **e2e-test-builder** — Workflow runner for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → **review specs** → write tests → **review code** → execute. Uses subagent-driven development to save context.
+- **agent-web-interface** — Browser automation MCP server (`agent-web-interface` via npx) and operational guide skill for live web page interaction, selector extraction, form analysis, and multi-page recovery.
+- **e2e-test-builder** — Workflow runner for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → **review specs** → write tests → **review code** → execute. Delegates browser work to subagents via Task tool (browser tools live in the `agent-web-interface` plugin).
 - **site-knowledge** — Site-specific automation patterns for popular websites (Airbnb, Amazon, Apple Store).
 
 This is not a Node.js project with build/test scripts. It is a metadata-driven plugin marketplace where runtime is managed by Claude Code and the `agent-web-interface` MCP server (installed dynamically via `npx`).
@@ -18,28 +19,31 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 1. **Claude Plugin Marketplace** — `.claude-plugin/marketplace.json` — registers plugins for `claude plugin` CLI (`pluginRoot: ./plugins`)
 2. **Athena Workflow Marketplace** — `.athena-workflow/marketplace.json` — registers workflow definitions for `athena-cli` (`workflowRoot: ./workflows`)
 
+### agent-web-interface Plugin
+
+**MCP Config** (`plugins/agent-web-interface/.mcp.json`): Configures `agent-web-interface` MCP server with server key `browser`. All MCP tool names follow the pattern `mcp__plugin_agent-web-interface_browser__<tool>`.
+
+**Skills** (`plugins/agent-web-interface/skills/`):
+- `/agent-web-interface-guide <url> <goal>` — Live browser interaction, selector extraction, form analysis. Operational guide for state snapshots, observations, sequential forms, element attributes, and multi-page recovery.
+
 ### e2e-test-builder Plugin
 
-**Skills** (`plugins/e2e-test-builder/skills/<skill-name>/SKILL.md`): Each skill is a self-contained workflow with full knowledge embedded. Heavy browser/file work is delegated to general-purpose subagents via Task tool.
+**Skills** (`plugins/e2e-test-builder/skills/<skill-name>/SKILL.md`): Each skill is a self-contained workflow with full knowledge embedded. Browser work is delegated to subagents via Task tool (browser tools live in the `agent-web-interface` plugin). Skills only have file tools (Read, Write, Edit, Bash, Glob, Grep) and Task.
 
 User-invocable skills (slash commands):
 - `/add-e2e-tests <url> <feature>` — **Full pipeline orchestrator**: analyze → plan → explore → generate → write (uses subagents)
 - `/analyze-test-codebase [path]` — Detect Playwright config, test conventions, existing patterns
 - `/plan-test-coverage <url> <feature>` — Plan what to test based on existing coverage gaps
-- `/agent-web-interface-guide <url> <goal>` — Live browser interaction, selector extraction, form analysis
 - `/generate-test-cases <url> <user-journey>` — Explore site and produce structured TC-ID test specs
 - `/review-test-cases <spec-file>` — **Quality gate**: review TC-ID specs for gaps, duplication, and invented scenarios before implementation
 - `/write-e2e-tests <test-description>` — Write executable Playwright test code following project conventions
 - `/review-test-code <test-file>` — **Quality gate**: review Playwright code for brittle selectors, missing assertions, convention divergence before execution
 - `/fix-flaky-tests <test-file-or-name>` — Diagnose and fix intermittent test failures
 
-`agent-web-interface-guide` is the primary browser skill. It covers live exploration plus MCP response patterns (state snapshots, observations, sequential forms, element attributes).
-
-**MCP Config** (`plugins/e2e-test-builder/.mcp.json`): Configures `agent-web-interface` MCP server. All MCP tool names follow the pattern `mcp__plugin_e2e-test-builder_agent-web-interface__<tool>`.
-
 **Workflow** (`workflows/e2e-test-builder/workflow.json`): Athena-cli integration for stateless looping.
 - `workflows/e2e-test-builder/system_prompt.md` — system prompt appended via `--append-system-prompt-file`
 - Each stateless session: read tracker → execute one step → update tracker → exit
+- Depends on both `agent-web-interface` and `e2e-test-builder` plugins
 
 ### site-knowledge Plugin
 

@@ -9,6 +9,12 @@
   },
   "plugins": [
     {
+      "name": "agent-web-interface",
+      "source": "./plugins/agent-web-interface",
+      "description": "Browser automation MCP server and operational guide for live web page interaction",
+      "version": "1.0.0"
+    },
+    {
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
       "description": "Workflow runner for adding Playwright E2E tests to existing codebases \u2014 analyzes, plans, explores, generates specs, and writes tests",
@@ -23,7 +29,7 @@
     {
       "name": "md-export",
       "source": "./plugins/md-export",
-      "description": "Export markdown files to styled PDFs with Athena dark theme branding",
+      "description": "Export markdown files to clean, dark-themed PDFs",
       "version": "1.0.1"
     },
     {
