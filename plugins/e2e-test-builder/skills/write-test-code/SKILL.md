@@ -1,5 +1,5 @@
 ---
-name: write-e2e-tests
+name: write-test-code
 description: >
   Invoke when the user wants Playwright test code produced or changed. The code-writing skill for E2E
   tests — if the task produces or modifies executable test code, use this. Covers: creating test files,

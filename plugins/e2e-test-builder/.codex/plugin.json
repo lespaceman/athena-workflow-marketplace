@@ -1,6 +1,6 @@
 {
   "name": "e2e-test-builder",
-  "description": "Codex metadata for the E2E test builder plugin",
+  "description": "Skills for building Playwright E2E tests — analyze, plan, generate, write, review, and fix",
   "version": "2.0.0",
   "skills": [
     "add-e2e-tests",
@@ -8,6 +8,8 @@
     "fix-flaky-tests",
     "generate-test-cases",
     "plan-test-coverage",
-    "write-e2e-tests"
+    "review-test-cases",
+    "review-test-code",
+    "write-test-code"
   ]
 }

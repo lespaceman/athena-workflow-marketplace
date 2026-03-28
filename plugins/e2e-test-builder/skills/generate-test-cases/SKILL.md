@@ -9,7 +9,7 @@ description: >
   "create test cases", "write test specs", "map all test paths", "what should I test on this page",
   "discover testable scenarios", "find edge cases for this feature", "TC-IDs for", "what are all the test
   scenarios", "map the user journeys", "document all test paths". Does NOT write executable Playwright code
-  — use write-e2e-tests. Does NOT do general browsing — use agent-web-interface-guide.
+  — use write-test-code. Does NOT do general browsing — use agent-web-interface-guide.
 user-invocable: true
 argument-hint: <url> <user journey description>
 allowed-tools:
@@ -64,7 +64,7 @@ Elements found:
 Observations: <what appeared, validation messages, state changes>
 ```
 
-This structured output ensures selectors survive the handoff to the spec file and ultimately to `write-e2e-tests`.
+This structured output ensures selectors survive the handoff to the spec file and ultimately to `write-test-code`.
 
 ### Step 3: Explore Alternative and Failure Paths
 
@@ -149,7 +149,7 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 
 **Selectors observed:**
 - <element>: `getByRole('button', { name: /submit/i })` or `getByLabel(/email/i)` — from `get_element`/`find` during exploration
-- (Include selectors for key interactive elements so `write-e2e-tests` doesn't have to rediscover them)
+- (Include selectors for key interactive elements so `write-test-code` doesn't have to rediscover them)
 
 **Notes:**
 - <Additional context discovered during exploration>

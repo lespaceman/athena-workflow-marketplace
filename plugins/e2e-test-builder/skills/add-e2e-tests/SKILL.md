@@ -79,7 +79,7 @@ You have access to specialized skills that contain deep domain knowledge. Load t
 | Opening a URL, browsing, using browser MCP tools | `agent-web-interface-guide` |
 | Creating TC-ID specs from site exploration | `generate-test-cases` |
 | Reviewing TC-ID specs before implementation | `review-test-cases` |
-| Writing, editing, or refactoring test code | `write-e2e-tests` |
+| Writing, editing, or refactoring test code | `write-test-code` |
 | Reviewing test code before execution signoff | `review-test-code` |
 | Debugging test failures, checking stability | `fix-flaky-tests` |
 
@@ -149,13 +149,13 @@ Delegate heavy browser exploration and test writing to general-purpose subagents
 
 Two review gates are mandatory during execution. Both are review-only — they produce findings but do not modify files.
 
-**Gate 1: Review test case specs** (after `generate-test-cases`, before `write-e2e-tests`)
+**Gate 1: Review test case specs** (after `generate-test-cases`, before `write-test-code`)
 1. Load the `review-test-cases` skill and run it against `test-cases/<feature>.md`
 2. If verdict is **NEEDS REVISION** — address all blockers in the spec before proceeding to implementation
 3. If verdict is **PASS WITH WARNINGS** — address warnings if quick, otherwise note them and proceed
 4. Record the review verdict in the tracker
 
-**Gate 2: Review test code** (after `write-e2e-tests`, before final test execution)
+**Gate 2: Review test code** (after `write-test-code`, before final test execution)
 1. Load the `review-test-code` skill and run it against the implemented test files
 2. If verdict is **NEEDS REVISION** — fix all blockers before running tests for signoff
 3. If verdict is **PASS WITH WARNINGS** — fix warnings that affect stability, proceed with execution

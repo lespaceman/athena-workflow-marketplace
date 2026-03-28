@@ -4,5 +4,7 @@
   "version": "1.0.0",
   "author": {
     "name": "Athenaflow"
-  }
+  },
+  "keywords": ["site-patterns", "airbnb", "amazon", "apple", "automation-knowledge"],
+  "category": "browser-automation"
 }

@@ -1,6 +1,6 @@
 {
   "name": "agent-web-interface",
-  "description": "Codex metadata for the agent-web-interface plugin",
+  "description": "Semantic browser interface for LLM agents — token-efficient page snapshots via Puppeteer/CDP",
   "version": "1.0.0",
   "skills": [
     "agent-web-interface-guide"

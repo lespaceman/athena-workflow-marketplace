@@ -8,7 +8,7 @@ description: >
   are implemented, comparing TC-IDs against test files, or verifying coverage, use this skill — it has
   structured coverage gap analysis. Scans existing test files, inspects the app, identifies untested
   areas, outputs a prioritized plan (P0/P1/P2) with TC-IDs. Does NOT write test code — use
-  write-e2e-tests afterward.
+  write-test-code afterward.
 user-invocable: true
 argument-hint: <url> <feature or area to test>
 allowed-tools:
@@ -111,7 +111,7 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
 
 ### Next Steps
 - Invoke the `generate-test-cases` skill with the target URL and journey for detailed test specs
-- Invoke the `write-e2e-tests` skill to implement the tests
+- Invoke the `write-test-code` skill to implement the tests
 ```
 
 ## Example Usage

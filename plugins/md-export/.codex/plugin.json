@@ -1,6 +1,6 @@
 {
   "name": "md-export",
-  "description": "Codex metadata for markdown export skills",
+  "description": "Export markdown files to clean, dark-themed PDFs",
   "version": "1.0.1",
   "skills": [
     "export-pdf"

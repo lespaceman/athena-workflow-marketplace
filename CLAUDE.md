@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Claude Code Workflow Marketplace** — a collection of AI-powered browser automation workflows.
+This is a **Claude Code Plugin Marketplace** — a collection of plugins with skills for browser automation, Playwright E2E testing, and developer tooling.
 
-- **agent-web-interface** — Browser automation MCP server (`agent-web-interface` via npx) and operational guide skill for live web page interaction, selector extraction, form analysis, and multi-page recovery.
-- **e2e-test-builder** — Workflow runner for adding Playwright E2E tests to existing codebases. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → **review specs** → write tests → **review code** → execute. Delegates browser work to subagents via Task tool (browser tools live in the `agent-web-interface` plugin).
+- **agent-web-interface** — Semantic browser interface for LLM agents — token-efficient page snapshots via Puppeteer/CDP (`agent-web-interface` via npx), with a skill for live page interaction, selector extraction, form analysis, and multi-page recovery.
+- **e2e-test-builder** — Skills for building Playwright E2E tests. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → **review specs** → write tests → **review code** → execute. Delegates browser work to subagents via Task tool (browser tools live in the `agent-web-interface` plugin).
 - **site-knowledge** — Site-specific automation patterns for popular websites (Airbnb, Amazon, Apple Store).
 
 This is not a Node.js project with build/test scripts. It is a metadata-driven plugin marketplace where runtime is managed by Claude Code and the `agent-web-interface` MCP server (installed dynamically via `npx`).
@@ -36,7 +36,7 @@ User-invocable skills (slash commands):
 - `/plan-test-coverage <url> <feature>` — Plan what to test based on existing coverage gaps
 - `/generate-test-cases <url> <user-journey>` — Explore site and produce structured TC-ID test specs
 - `/review-test-cases <spec-file>` — **Quality gate**: review TC-ID specs for gaps, duplication, and invented scenarios before implementation
-- `/write-e2e-tests <test-description>` — Write executable Playwright test code following project conventions
+- `/write-test-code <test-description>` — Write executable Playwright test code following project conventions
 - `/review-test-code <test-file>` — **Quality gate**: review Playwright code for brittle selectors, missing assertions, convention divergence before execution
 - `/fix-flaky-tests <test-file-or-name>` — Diagnose and fix intermittent test failures
 

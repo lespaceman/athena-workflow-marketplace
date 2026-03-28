@@ -1,8 +1,8 @@
-# Athena Workflow Marketplace
+# Athena Plugin Marketplace
 
 Marketplace repository for:
 
-1. Workflow plugins (`plugins/`)
+1. Claude Code plugins (`plugins/`)
 2. Athena workflows (`workflows/`)
 
 ## Spec
@@ -62,7 +62,7 @@ claude plugin install e2e-test-builder@athena-workflow-marketplace --scope local
 
 ### e2e-test-builder
 
-Iterative workflow runner for adding Playwright E2E tests to existing codebases.
+Skills for building Playwright E2E tests for existing codebases.
 
 | Skill | Description |
 |-------|-------------|
@@ -71,7 +71,7 @@ Iterative workflow runner for adding Playwright E2E tests to existing codebases.
 | `plan-test-coverage` | Build prioritized coverage plan. Claude: `/plan-test-coverage`, Codex: `$plan-test-coverage` |
 | `agent-web-interface-guide` | Extract selectors and behavior via browser interaction. Claude: `/agent-web-interface-guide`, Codex: `$agent-web-interface-guide` |
 | `generate-test-cases` | Generate TC-ID based structured specs. Claude: `/generate-test-cases`, Codex: `$generate-test-cases` |
-| `write-e2e-tests` | Implement executable Playwright tests. Claude: `/write-e2e-tests`, Codex: `$write-e2e-tests` |
+| `write-test-code` | Implement executable Playwright tests. Claude: `/write-test-code`, Codex: `$write-test-code` |
 
 ### site-knowledge
 

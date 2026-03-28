@@ -1,6 +1,6 @@
 {
   "name": "site-knowledge",
-  "description": "Codex metadata for site-knowledge skills",
+  "description": "Auto-applied automation patterns for popular websites (Airbnb, Amazon, Apple Store)",
   "version": "1.0.0",
   "skills": [
     "airbnb",

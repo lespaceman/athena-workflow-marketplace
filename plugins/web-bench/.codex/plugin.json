@@ -1,6 +1,6 @@
 {
   "name": "web-bench",
-  "description": "Codex metadata for the WebBench benchmark runner plugin",
+  "description": "WebBench benchmark runner — real-world browser tasks scored via LLM-as-judge",
   "version": "1.0.0",
   "skills": [
     "run-benchmark",

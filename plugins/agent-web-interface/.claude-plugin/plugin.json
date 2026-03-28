@@ -1,8 +1,12 @@
 {
   "name": "agent-web-interface",
-  "description": "Browser automation MCP server and operational guide for live web page interaction",
+  "description": "Semantic browser interface for LLM agents — token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
   "version": "1.0.1",
   "author": {
     "name": "Athenaflow"
-  }
+  },
+  "repository": "https://github.com/lespaceman/agent-web-interface",
+  "license": "MIT",
+  "keywords": ["browser", "mcp", "puppeteer", "cdp", "automation", "semantic-snapshot"],
+  "category": "browser-automation"
 }

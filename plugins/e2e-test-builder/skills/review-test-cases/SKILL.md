@@ -5,10 +5,10 @@ description: >
   before writing executable test code. Triggers: "review test cases", "check test specs", "review
   TC-IDs", "audit test coverage", "are my test cases good", "validate test specs", "review
   test-cases/*.md", "check for gaps in test cases", "review before writing tests", "quality check
-  test specs". Inserted as a quality gate between generate-test-cases and write-e2e-tests — catches
+  test specs". Inserted as a quality gate between generate-test-cases and write-test-code — catches
   gaps, duplication, weak assertions, missing error paths, and invented scenarios before they get
   encoded into test code. Review-only — does NOT modify the spec file, does NOT write test code.
-  Use write-e2e-tests for implementation.
+  Use write-test-code for implementation.
 user-invocable: true
 argument-hint: <path to test-cases/*.md spec file>
 allowed-tools:
@@ -127,9 +127,9 @@ Output a structured review with this format:
 
 ### Step 4: Verdict Rules
 
-- **PASS** — no blockers, 2 or fewer warnings. Proceed to write-e2e-tests.
+- **PASS** — no blockers, 2 or fewer warnings. Proceed to write-test-code.
 - **PASS WITH WARNINGS** — no blockers, 3+ warnings. Can proceed but should address warnings.
-- **NEEDS REVISION** — 1+ blockers. Do not proceed to write-e2e-tests until blockers are resolved.
+- **NEEDS REVISION** — 1+ blockers. Do not proceed to write-test-code until blockers are resolved.
 
 ## Principles
 

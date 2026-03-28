@@ -26,7 +26,7 @@ You have specialized skills that contain deep domain knowledge and implementatio
 | Open a URL, browse, interact with live pages | `agent-web-interface-guide` |
 | Create TC-ID specs from site exploration | `generate-test-cases` |
 | Review TC-ID specs before implementation | `review-test-cases` |
-| Write, edit, or refactor test code | `write-e2e-tests` |
+| Write, edit, or refactor test code | `write-test-code` |
 | Review test code before execution signoff | `review-test-code` |
 | Debug test failures, check stability | `fix-flaky-tests` |
 
@@ -83,12 +83,12 @@ Delegate heavy browser exploration and test writing to general-purpose subagents
 
 Three gates are mandatory. The first two are review-only (produce findings, do not modify files).
 
-**Gate 1: Review specs** — after `generate-test-cases`, before `write-e2e-tests`:
+**Gate 1: Review specs** — after `generate-test-cases`, before `write-test-code`:
 - Load `review-test-cases` and run it against `test-cases/<feature>.md`
 - If **NEEDS REVISION** — fix blockers before writing code
 - Record verdict in tracker
 
-**Gate 2: Review code** — after `write-e2e-tests`, before running tests:
+**Gate 2: Review code** — after `write-test-code`, before running tests:
 - Load `review-test-code` and run it against the test files
 - If **NEEDS REVISION** — fix blockers before running tests
 - Record verdict in tracker
