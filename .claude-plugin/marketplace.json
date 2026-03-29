@@ -13,7 +13,7 @@
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
       "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "keywords": [
         "browser",
         "mcp",
@@ -30,7 +30,7 @@
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
       "description": "Skills for building Playwright E2E tests \u2014 analyze codebase, plan coverage, generate test cases, write test code, review, and fix flaky tests",
-      "version": "2.0.5",
+      "version": "2.0.6",
       "keywords": [
         "playwright",
         "e2e",
