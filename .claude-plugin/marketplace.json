@@ -13,7 +13,7 @@
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
       "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "keywords": [
         "browser",
         "mcp",
@@ -30,7 +30,7 @@
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
       "description": "Skills for building Playwright E2E tests \u2014 analyze codebase, plan coverage, generate test cases, write test code, review, and fix flaky tests",
-      "version": "2.0.4",
+      "version": "2.0.5",
       "keywords": [
         "playwright",
         "e2e",
@@ -44,7 +44,7 @@
       "name": "site-knowledge",
       "source": "./plugins/site-knowledge",
       "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "keywords": [
         "site-patterns",
         "airbnb",
@@ -58,7 +58,7 @@
       "name": "md-export",
       "source": "./plugins/md-export",
       "description": "Export markdown files to clean, dark-themed PDFs",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": {
         "name": "lespaceman"
       },
@@ -74,7 +74,7 @@
       "name": "web-bench",
       "source": "./plugins/web-bench",
       "description": "WebBench benchmark runner \u2014 executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "keywords": [
         "benchmark",
         "evaluation",
