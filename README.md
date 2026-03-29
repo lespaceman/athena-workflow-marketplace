@@ -44,6 +44,23 @@ This repo uses a split skill metadata model so the same skills stay compatible w
 
 For the full conventions, see [docs/skills-compatibility.md](docs/skills-compatibility.md).
 
+### Official Vendor Config vs Repo Overlays
+
+Official vendor-aligned configuration lives outside this packaging layer:
+
+- Claude Code officially documents project config in `.claude/settings.json` and `.claude/settings.local.json`
+- Codex officially documents MCP/client configuration via `codex mcp add ...` and `~/.codex/config.toml`
+
+This repo also defines its own packaging overlays for distributing skills and plugins across runtimes:
+
+- `.claude-plugin/plugin.json`
+- `.codex-plugin/plugin.json`
+- `.agents/plugins/marketplace.json`
+- `agents/openai.yaml`
+- `agents/claude.yaml`
+
+These repo overlay files are conventions used by this repository. They are not presented here as official vendor-standard file formats.
+
 ### Local Environment
 
 The repo includes a local Python 3.12 virtualenv at `.venv` for running the official Agent Skills validator.

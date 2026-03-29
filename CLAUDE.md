@@ -22,6 +22,8 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 
 Each plugin has two manifests: `.claude-plugin/plugin.json` (Claude Code) and `.codex-plugin/plugin.json` (Codex). Shared fields (`name`, `version`, `description`) are kept identical. Claude-specific metadata (`keywords`, `repository`, `license`) lives in `.claude-plugin/`. Codex-specific metadata (`interface`, `skills` path, `mcpServers` path) lives in `.codex-plugin/`. The `scripts/bump-versions.sh` syncs version numbers to both.
 
+These marketplace and overlay files are repo conventions for packaging this marketplace. Treat them separately from official vendor runtime config such as `.claude/settings.json` or Codex MCP client config.
+
 ### agent-web-interface Plugin
 
 **MCP Config** (`plugins/agent-web-interface/.mcp.json`): Configures `agent-web-interface` MCP server with server key `browser`. All MCP tool names follow the pattern `mcp__plugin_agent-web-interface_browser__<tool>`.

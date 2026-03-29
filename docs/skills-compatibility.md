@@ -2,6 +2,15 @@
 
 This repo separates portable Agent Skills core data from runtime-specific metadata.
 
+## Vendor Alignment
+
+Official vendor configuration lives outside this repo packaging layer:
+
+- Claude Code officially documents project configuration in `.claude/settings.json` and `.claude/settings.local.json`
+- Codex officially documents MCP/client configuration via `codex mcp add ...` and `~/.codex/config.toml`
+
+The files described below are repo packaging conventions used to distribute shared skills and runtime-specific overlays. They should not be read as official vendor-standard file formats unless vendor docs explicitly say so.
+
 ## Goals
 
 - Keep `SKILL.md` compatible with the Agent Skills open standard
@@ -51,6 +60,16 @@ Menu and presentation metadata lives in `agents/openai.yaml`:
 - `default_prompt`
 
 This file is not part of the portable skill core.
+
+## Repo Packaging Overlays
+
+At the plugin/repo layer, this repository also uses:
+
+- `.claude-plugin/plugin.json`
+- `.codex-plugin/plugin.json`
+- `.agents/plugins/marketplace.json`
+
+These files are repo-specific packaging overlays rather than portable skill files.
 
 ## Validation
 
