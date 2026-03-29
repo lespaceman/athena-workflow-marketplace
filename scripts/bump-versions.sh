@@ -48,6 +48,20 @@ with open('$plugin_json', 'w') as f:
     f.write('\n')
 "
 
+  # Update .codex-plugin/plugin.json (if it exists)
+  local codex_json="$REPO_ROOT/plugins/$plugin_name/.codex-plugin/plugin.json"
+  if [[ -f "$codex_json" ]]; then
+    python3 -c "
+import json
+with open('$codex_json', 'r') as f:
+    data = json.load(f)
+data['version'] = '$new_version'
+with open('$codex_json', 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+"
+  fi
+
   # Update marketplace.json
   python3 -c "
 import json

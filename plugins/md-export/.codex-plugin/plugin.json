@@ -1,0 +1,15 @@
+{
+  "name": "md-export",
+  "version": "1.0.3",
+  "description": "Export markdown files to clean, dark-themed PDFs",
+  "author": {
+    "name": "lespaceman"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Markdown Export",
+    "shortDescription": "Export markdown to dark-themed PDFs",
+    "developerName": "lespaceman",
+    "category": "Developer Tools"
+  }
+}

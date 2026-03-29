@@ -1,8 +1,9 @@
 ---
 name: analyze-test-codebase
 description: >
-  Scan and report on an existing Playwright test codebase. Use this skill BEFORE writing new tests
-  whenever someone needs to know what's already there. Covers: playwright.config settings (baseURL,
+  Scan and report on an existing Playwright test codebase. Use this skill when the user wants to inspect
+  the current Playwright setup before writing, reviewing, or fixing tests. Use this skill BEFORE
+  writing new tests whenever someone needs to know what's already there. Covers: playwright.config settings (baseURL,
   testDir, browsers, timeouts, reporters, workers), page objects, fixtures, helpers, auth/globalSetup
   patterns, test conventions, and directory structure. Trigger on any request to "understand", "check",
   "show me", "inspect", or "analyze" the current test setup, config, infrastructure, patterns, or
@@ -10,13 +11,7 @@ description: >
   test code in a new project, load this skill first to understand existing patterns — don't guess at
   conventions. This skill is read-only: it examines existing files and outputs a structured report. It
   does NOT write or fix tests, explore live websites, or install Playwright.
-user-invocable: true
-argument-hint: "[optional: path to project root]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Bash
+allowed-tools: Read Glob Grep Bash
 ---
 
 # Analyze Test Codebase

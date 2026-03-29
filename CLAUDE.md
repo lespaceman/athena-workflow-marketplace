@@ -14,10 +14,13 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 
 ## Architecture
 
-### Two Parallel Registries
+### Three Parallel Registries
 
 1. **Claude Plugin Marketplace** — `.claude-plugin/marketplace.json` — registers plugins for `claude plugin` CLI (`pluginRoot: ./plugins`)
-2. **Athena Workflow Marketplace** — `.athena-workflow/marketplace.json` — registers workflow definitions for `athena-cli` (`workflowRoot: ./workflows`)
+2. **Codex Plugin Marketplace** — `.agents/plugins/marketplace.json` — registers plugins for Codex (`source.path: ./plugins/<name>`)
+3. **Athena Workflow Marketplace** — `.athena-workflow/marketplace.json` — registers workflow definitions for `athena-cli` (`workflowRoot: ./workflows`)
+
+Each plugin has two manifests: `.claude-plugin/plugin.json` (Claude Code) and `.codex-plugin/plugin.json` (Codex). Shared fields (`name`, `version`, `description`) are kept identical. Claude-specific metadata (`keywords`, `repository`, `license`) lives in `.claude-plugin/`. Codex-specific metadata (`interface`, `skills` path, `mcpServers` path) lives in `.codex-plugin/`. The `scripts/bump-versions.sh` syncs version numbers to both.
 
 ### agent-web-interface Plugin
 

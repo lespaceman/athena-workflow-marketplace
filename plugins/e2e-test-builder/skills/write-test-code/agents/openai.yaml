@@ -1,7 +1,7 @@
 interface:
-  display_name: "Write E2E Tests"
-  short_description: "Implement or refactor executable Playwright tests"
-  default_prompt: "Write or update Playwright E2E tests for this scenario."
+  display_name: "Implement Playwright Tests"
+  short_description: "Implement or refactor executable Playwright tests from a scenario or spec"
+  default_prompt: "Write or update Playwright E2E tests for this scenario or TC-ID spec."
 
 dependencies:
   tools:

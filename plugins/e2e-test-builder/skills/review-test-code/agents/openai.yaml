@@ -1,7 +1,7 @@
 interface:
-  display_name: "Review Test Code"
-  short_description: "Review Playwright test code for stability, correctness, and convention adherence"
-  default_prompt: "Review the Playwright test implementation for quality issues before test execution."
+  display_name: "Review Playwright Test Code"
+  short_description: "Review Playwright test implementation for stability and correctness"
+  default_prompt: "Review this Playwright test implementation before execution and flag quality issues."
 
 dependencies:
   tools:

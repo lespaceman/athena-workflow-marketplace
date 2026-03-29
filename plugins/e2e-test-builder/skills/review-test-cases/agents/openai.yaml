@@ -1,7 +1,7 @@
 interface:
-  display_name: "Review Test Cases"
-  short_description: "Review TC-ID specs for gaps, duplication, and quality issues"
-  default_prompt: "Review the test case specifications for completeness and quality before implementation."
+  display_name: "Review TC-ID Specs"
+  short_description: "Review TC-ID specs for gaps, duplication, and weak assertions"
+  default_prompt: "Review these TC-ID test case specifications before implementation and flag quality issues."
 
 dependencies:
   tools:

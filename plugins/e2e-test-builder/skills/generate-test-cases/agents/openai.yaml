@@ -1,7 +1,7 @@
 interface:
-  display_name: "Generate Test Cases"
-  short_description: "Create TC-ID test specifications from a live web flow"
-  default_prompt: "Explore this feature and generate structured TC-ID test cases."
+  display_name: "Write TC-ID Specs"
+  short_description: "Explore the feature and write detailed TC-ID test case specs"
+  default_prompt: "Explore this feature and generate detailed TC-ID test case specifications."
 
 dependencies:
   tools:

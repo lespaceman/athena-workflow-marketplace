@@ -1,44 +1,22 @@
 ---
 name: agent-web-interface-guide
 description: >
-  REQUIRED for any task that involves opening, visiting, or viewing a live web page in a browser with
-  the agent-web-interface MCP server. Use this skill whenever the user includes a URL or page reference
-  and wants to see, check, verify, inspect, extract selectors from, or interact with that page. This
-  skill combines live browser exploration with the operational guide for agent-web-interface response
-  patterns, state snapshots, forms, selectors, and multi-page recovery. If you are about to call any
-  mcp__plugin_agent-web-interface_browser__* tool directly, load this skill first.
-user-invocable: true
-argument-hint: <url> <what to explore or do>
-allowed-tools:
-  - mcp__plugin_agent-web-interface_browser__ping
-  - mcp__plugin_agent-web-interface_browser__navigate
-  - mcp__plugin_agent-web-interface_browser__go_back
-  - mcp__plugin_agent-web-interface_browser__go_forward
-  - mcp__plugin_agent-web-interface_browser__reload
-  - mcp__plugin_agent-web-interface_browser__snapshot
-  - mcp__plugin_agent-web-interface_browser__find
-  - mcp__plugin_agent-web-interface_browser__get_element
-  - mcp__plugin_agent-web-interface_browser__scroll_to
-  - mcp__plugin_agent-web-interface_browser__scroll
-  - mcp__plugin_agent-web-interface_browser__click
-  - mcp__plugin_agent-web-interface_browser__type
-  - mcp__plugin_agent-web-interface_browser__press
-  - mcp__plugin_agent-web-interface_browser__select
-  - mcp__plugin_agent-web-interface_browser__hover
-  - mcp__plugin_agent-web-interface_browser__get_form
-  - mcp__plugin_agent-web-interface_browser__get_field
-  - mcp__plugin_agent-web-interface_browser__list_pages
-  - mcp__plugin_agent-web-interface_browser__close_page
-  - mcp__plugin_agent-web-interface_browser__screenshot
-  - mcp__plugin_agent-web-interface_browser__read_page
-  - mcp__plugin_agent-web-interface_browser__drag
-  - mcp__plugin_agent-web-interface_browser__inspect_canvas
-  - mcp__plugin_agent-web-interface_browser__wheel
+  Use this skill to act on live web pages in a browser. It can open a page, click through flows,
+  type into fields, submit forms, add products to cart, review page state, and capture Playwright
+  selectors for important elements. Use it whenever the task includes a URL or page reference and
+  you need to check, verify, inspect, extract selectors from, or actively interact with that page.
 ---
 
-# agent-web-interface MCP Server Guide
+# Agent Web Interface Guide
 
-This skill documents how to work with the `agent-web-interface` MCP server, which provides browser automation tools (`navigate`, `click`, `type`, `find`, `get_form`, etc.) for web exploration, form filling, and UI interaction.
+Use this skill to open live web pages, carry out actions, move through multi-step flows, validate page state, and capture selectors for automation.
+
+Common uses:
+- Review a live page or multi-step flow
+- Click through navigation, buttons, dialogs, and other actions
+- Fill, submit, or inspect forms and validation states
+- Add products to cart or complete other in-page actions
+- Capture reliable Playwright selectors for key elements
 
 ## Input
 
@@ -46,11 +24,17 @@ Parse the target URL and exploration goal from: $ARGUMENTS
 
 ## Workflow
 
-1. **Navigate** to the URL
-2. **Complete the task** — interact as needed (click, fill forms, navigate pages)
-3. **Extract selectors** — use `get_element` on key elements to capture the best Playwright selector
-4. **Analyze forms** — use `get_form` and `get_field` to understand intent, completion state, and validation
-5. **Report** what you did, found, and observed
+1. **Navigate or recover the right page** — use `list_pages` and explicit `page_id` when session state may be ambiguous
+2. **Orient first** — read the current state, active region, and visible controls before acting
+3. **Choose the lightest useful tool**
+   - Use page state or `snapshot` output for quick orientation
+   - Use `find` with `label`, `kind`, and `region` to narrow targets
+   - Use `get_form` when the task is clearly form-driven
+   - Use `get_element` for a chosen target, offsets, or selector extraction
+4. **Act one step at a time** — click, type, select, scroll, or drag only as needed to advance the task
+5. **Reacquire state after meaningful changes** — after navigation, overlays, search expansion, dialog opening, or large DOM updates, refresh your understanding before reusing old `eid`s
+6. **Inspect forms or extract selectors only when relevant** — do this when the user asks for them or when they materially help complete the task
+7. **Report** what you did, what happened, and any selectors or form details that matter
 
 ## Output Format
 
@@ -59,6 +43,18 @@ Always include:
 2. **Steps taken** — pages visited, buttons clicked, forms filled
 3. **Observations** — notable page states, messages, and behaviors
 4. **Selectors** (when relevant) — Playwright-compatible selectors for key elements
+5. **Form details** (when relevant) — only include when they helped drive the task
+
+## Operating Heuristics
+
+- Prefer `find` over manual scanning when snapshots are trimmed or the page is dense
+- Filter `find` aggressively with `kind`, `label`, and `region` before broad exploration
+- Expect search UIs to appear as buttons or comboboxes before they expose a text field
+- Expect overlays, drawers, and dialogs to mutate the page in place without changing the URL
+- Treat `eid`s as short-lived after large mutations; reacquire targets instead of assuming old ids still work
+- Trust `get_form` as a helper, not as ground truth; busy pages may contain multiple unrelated forms
+- Use `observations`, `baseline`, and `diff` to confirm whether an action actually changed the page
+- Prefer sequential progress on gated flows; if a control is disabled, look for the prerequisite choice above it
 
 ## State Snapshot Structure
 
@@ -148,9 +144,9 @@ Page content is organized into semantic regions:
 | `selected="true"` | Option/tab is selected |
 | `val` | Element value |
 
-## Sequential Form Pattern
+## Progressive Enablement Pattern
 
-Many sites (especially Apple Store) use sequential enablement - options are disabled until prerequisites are selected:
+Many sites use progressive enablement: later options stay disabled until earlier choices are made.
 
 ```xml
 <!-- Step 1: Model selection enabled -->
@@ -162,7 +158,13 @@ Many sites (especially Apple Store) use sequential enablement - options are disa
 <rad id="color1" val="silver">Silver</rad>  <!-- now enabled -->
 ```
 
-**Strategy**: Check for `enabled="false"` and work through the form sequentially.
+Common places this appears:
+- Ecommerce product configuration
+- Checkout and payment flows
+- Onboarding wizards
+- Settings pages with dependent options
+
+**Strategy**: If you see `enabled="false"`, work upward to identify and complete the prerequisite step before continuing.
 
 ## find Response
 
@@ -245,7 +247,8 @@ When encountering a "no page/session" error or resuming from a prior session:
 **Caveats:**
 - **Stale tab URLs**: `list_pages` shows the URL at open time. For SPAs, use `snapshot` with `page_id` to see actual current state.
 - **Tab accumulation**: The browser accumulates tabs across sessions. Always use `page_id` to target the correct one.
-- **`close_session`** closes the entire browser. Use `close_page` to close individual tabs.
+- **Page cleanup**: Use `close_page` for tabs you no longer need. Do not assume a session-wide close tool exists in every environment.
+- **Single active work tab assumptions**: Do not assume you have multiple useful tabs open. Check `list_pages` instead of relying on prior turn memory.
 
 ## Error Responses
 
@@ -258,6 +261,11 @@ Common errors:
 - Element not visible/enabled
 - Form field not in any form context
 - No page/session (see Session Recovery above)
+
+When this happens:
+1. Re-check the current page state
+2. Re-run `find` or `get_form` from the latest state
+3. Continue only with fresh `eid`s
 
 ## Canvas Interactions
 
@@ -275,6 +283,8 @@ Common errors:
 1. **Use `find`** when snapshot shows `<!-- trimmed -->`
 2. **Track `<baseline>` vs `<diff>`** to know if you have full or partial state
 3. **Always pass `page_id`** when working across sessions or with multiple tabs
+4. **Reacquire targets after large mutations** instead of reusing stale `eid`s
+5. **Keep selector extraction optional** unless the task asks for it or automation handoff is part of the outcome
 
 ## Example Usage
 
@@ -282,8 +292,11 @@ Common errors:
 Claude Code: /agent-web-interface-guide https://airbnb.com Walk through the search and booking flow for stays in Tokyo
 Codex: $agent-web-interface-guide https://airbnb.com Walk through the search and booking flow for stays in Tokyo
 
-Claude Code: /agent-web-interface-guide https://apple.com/store Find the iPhone purchase flow and extract all form selectors
-Codex: $agent-web-interface-guide https://apple.com/store Find the iPhone purchase flow and extract all form selectors
+Claude Code: /agent-web-interface-guide https://apple.com/store Configure an iPhone and add it to the bag, then summarize the steps
+Codex: $agent-web-interface-guide https://apple.com/store Configure an iPhone and add it to the bag, then summarize the steps
+
+Claude Code: /agent-web-interface-guide https://developer.mozilla.org Find the Fetch API docs and note how the search flow behaves
+Codex: $agent-web-interface-guide https://developer.mozilla.org Find the Fetch API docs and note how the search flow behaves
 
 Claude Code: /agent-web-interface-guide https://example.com/login Extract the login form selectors and field purposes
 Codex: $agent-web-interface-guide https://example.com/login Extract the login form selectors and field purposes

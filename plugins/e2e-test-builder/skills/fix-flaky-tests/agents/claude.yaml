@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<path to flaky test file or test name>"
+  user-invocable: true

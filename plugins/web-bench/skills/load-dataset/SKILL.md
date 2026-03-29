@@ -7,13 +7,7 @@ description: >
   (category, sample size, website allowlist/blocklist), and writes web-bench-tasks.jsonl to the
   working directory. Zero Python dependencies — uses only curl and Node.js.
   Does NOT execute tasks — use execute-task for that.
-user-invocable: false
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
-  - Glob
+allowed-tools: Bash Read Write Edit Glob
 ---
 
 # Load WebBench Dataset

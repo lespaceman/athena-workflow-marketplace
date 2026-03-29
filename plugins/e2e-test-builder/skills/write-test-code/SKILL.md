@@ -1,8 +1,9 @@
 ---
 name: write-test-code
 description: >
-  Invoke when the user wants Playwright test code produced or changed. The code-writing skill for E2E
-  tests — if the task produces or modifies executable test code, use this. Covers: creating test files,
+  Invoke when the user wants executable Playwright test code produced or changed. This is the
+  implementation skill for E2E tests, whether starting from a scenario or a TC-ID spec. If the task
+  produces or modifies executable test code, use this skill. Covers: creating test files,
   converting TC-IDs to runnable code, refactoring locators or fixtures, adding API mocking, test data
   setup/teardown, parallel-safe isolation, modifying test infrastructure (testIgnore, config, fixtures,
   auth, helpers, path aliases). IMPORTANT: Load this skill before editing any test infrastructure — it
@@ -10,16 +11,7 @@ description: >
   numeric assertions) plus configuration hygiene and fixture design principles. Do NOT use for:
   exploring a live site (use agent-web-interface-guide), generating test plans/specs without code
   (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
-user-invocable: true
-argument-hint: <test description or path to test case spec file>
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
-  - Glob
-  - Grep
-  - Task
+allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
 # Write E2E Tests

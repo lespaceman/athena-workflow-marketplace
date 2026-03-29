@@ -1,24 +1,17 @@
 ---
 name: generate-test-cases
 description: >
-  Use when the user wants structured test case specifications (not executable code) for a web app feature.
+  Use when the user wants detailed TC-ID test case specifications for a web app feature, not executable code.
   Explores a live website via browser automation, discovers all testable paths — happy paths, validation
   errors, edge cases, boundary conditions, network errors, empty states — and outputs TC-ID specs to
-  test-cases/<feature>.md. Enforces minimum error path coverage (server error, network failure, empty state)
-  and recommends role-based file naming conventions over testIgnore regex. Triggers: "generate test cases",
+  files under `test-cases/`. Enforces minimum error path coverage (server error, network failure, empty state)
+  and recommends role-based file naming conventions over testIgnore regex. Use this after coverage planning
+  when the next deliverable is a detailed spec rather than code. Triggers: "generate test cases",
   "create test cases", "write test specs", "map all test paths", "what should I test on this page",
   "discover testable scenarios", "find edge cases for this feature", "TC-IDs for", "what are all the test
   scenarios", "map the user journeys", "document all test paths". Does NOT write executable Playwright code
   — use write-test-code. Does NOT do general browsing — use agent-web-interface-guide.
-user-invocable: true
-argument-hint: <url> <user journey description>
-allowed-tools:
-  - Read
-  - Write
-  - Bash
-  - Glob
-  - Grep
-  - Task
+allowed-tools: Read Write Bash Glob Grep Task
 ---
 
 # Generate Test Cases

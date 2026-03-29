@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "[--category READ|CREATE|UPDATE|DELETE|FILE_MANIPULATION] [--sample N] [--resume]"
+  user-invocable: true

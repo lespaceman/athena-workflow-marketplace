@@ -15,7 +15,7 @@ The core rule is:
 - keep workflow orchestration in shared `workflow.json`
 - keep shared plugin capability definitions in the normal marketplace layout
 - allow optional runtime-specific assets at the plugin layer under directories
-  such as `.claude/` and `.codex/`
+  such as `.claude/` and `.codex-plugin/`
 
 This RFC complements RFC 0001. RFC 0001 defines what a workflow is. This RFC
 defines how a workflow or plugin package can express runtime-specific execution
@@ -68,7 +68,7 @@ allowing runtime-specific execution hints and assets.
 
 2. Explicit overlays
 - Runtime-specific behavior should live in explicit directories such as
-  `.claude/` and `.codex/`, not in hidden assumptions inside shared files.
+  `.claude/` and `.codex-plugin/`, not in hidden assumptions inside shared files.
 
 3. One package, many consumers
 - A single workflow reference SHOULD remain installable across multiple
@@ -135,13 +135,13 @@ Recommended repository shape:
         │           └── openai.yaml
         ├── .claude/
         │   └── ...
-        └── .codex/
+        └── .codex-plugin/
             └── plugin.json
 ```
 
 Notes:
 
-- Plugin-level `.claude/` and `.codex/` are optional overlays.
+- Plugin-level `.claude/` and `.codex-plugin/` are optional overlays.
 - Shared `skills/` remain valid without either overlay.
 - `agents/openai.yaml` is optional but recommended for user-invocable Codex
   skills.
@@ -193,7 +193,7 @@ This preserves compatibility with existing marketplace resolution.
 
 Plugins MAY include overlay metadata files such as:
 
-- `plugins/<name>/.codex/plugin.json`
+- `plugins/<name>/.codex-plugin/plugin.json`
 
 These files SHOULD describe runtime-specific metadata that is difficult or
 undesirable to infer from shared Markdown alone. Examples:
@@ -240,7 +240,7 @@ If a shared skill body cannot remain runtime-neutral, authors MAY add
 runtime-specific variants in overlays such as:
 
 - `plugins/<name>/.claude/skills/...`
-- `plugins/<name>/.codex/skills/...`
+- `plugins/<name>/.codex-plugin/skills/...`
 
 Runtimes SHOULD prefer a runtime-specific variant when present and otherwise
 fall back to the shared `skills/` version.
@@ -282,7 +282,7 @@ Repositories adopting this RFC SHOULD migrate in this order:
 1. Keep the shared `workflow.json` unchanged.
 2. Remove runtime-specific invocation syntax from shared skills where practical.
 3. Add `agents/openai.yaml` to user-invocable Codex-facing skills.
-4. Add `.codex/` overlays only for behavior that cannot stay shared.
+4. Add `.codex-plugin/` overlays only for behavior that cannot stay shared.
 5. Keep `.claude/` overlays for Claude-only behavior.
 
 ## Security Considerations

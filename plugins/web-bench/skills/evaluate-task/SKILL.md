@@ -6,11 +6,7 @@ description: >
   Examines the execution trace, final page state, and extracted data against the original
   task description. Produces a structured verdict (PASS/PARTIAL/FAIL) with reasoning.
   Does NOT execute browser actions — use execute-task for that.
-user-invocable: false
-allowed-tools:
-  - Read
-  - Write
-  - Edit
+allowed-tools: Read Write Edit
 ---
 
 # Evaluate WebBench Task

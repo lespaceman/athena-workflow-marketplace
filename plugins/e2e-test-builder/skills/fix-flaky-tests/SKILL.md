@@ -9,16 +9,7 @@ description: >
   approaches. Triggers: "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI",
   "timeout on", "race condition", "run N times to check stability", "verify tests are stable".
   NOT for writing new tests (use write-test-code) or analyzing setup (use analyze-test-codebase).
-user-invocable: true
-argument-hint: <path to flaky test file or test name>
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
-  - Glob
-  - Grep
-  - Task
+allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
 # Fix Flaky Tests

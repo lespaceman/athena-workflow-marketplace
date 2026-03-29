@@ -43,7 +43,7 @@ We need a portable workflow definition that:
 
 1. Reuse existing standards first
 - Shared skills, plugin manifests, and MCP config stay in the existing marketplace format.
-- Runtimes MAY layer optional harness-specific assets such as `.claude/` or `.codex/`.
+- Runtimes MAY layer optional harness-specific assets such as `.claude/` or `.codex-plugin/`.
 
 2. Workflow is orchestration
 - Workflow defines execution order, loop policy, and completion logic.
@@ -86,7 +86,7 @@ Normative requirements:
 - A workflow runtime MUST treat plugin capability loading as a plugin-layer concern.
 - A workflow runtime MUST NOT require a brand-new shared plugin format to execute workflows.
 - A workflow MAY require specific plugins, referenced through the runtime's plugin resolver.
-- A workflow package MAY include harness-specific assets under runtime-owned directories such as `.claude/` and `.codex/`.
+- A workflow package MAY include harness-specific assets under runtime-owned directories such as `.claude/` and `.codex-plugin/`.
 
 ## MCP Guidance (Interim)
 

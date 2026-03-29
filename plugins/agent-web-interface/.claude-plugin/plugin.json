@@ -1,6 +1,6 @@
 {
   "name": "agent-web-interface",
-  "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
+  "description": "Open live web pages, click through real flows, fill forms, add items to cart, and inspect page state or selectors",
   "version": "1.0.2",
   "author": {
     "name": "Athenaflow"

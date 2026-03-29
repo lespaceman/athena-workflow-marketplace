@@ -1,26 +1,17 @@
 ---
 name: add-e2e-tests
 description: >
-  Use when the user wants the full end-to-end pipeline for adding Playwright tests to an existing codebase.
+  Use when the user wants the full end-to-end workflow for adding Playwright tests to an existing codebase.
   Triggers: "add E2E tests for this feature", "add end-to-end tests", "create Playwright tests for my app",
   "set up E2E testing", "I need tests for this feature from scratch", "build test coverage for",
   "full test pipeline for", "analyze my codebase and write tests".
   This skill orchestrates the complete workflow: analyze existing Playwright codebase conventions,
   plan test coverage with priorities, explore the live site to discover all testable paths,
-  generate structured test case specs, write executable Playwright tests.
+  generate structured TC-ID specs, write executable Playwright tests, and verify the result.
   Uses subagent-driven development — delegates heavy browser exploration and test writing to general-purpose
   subagents via Task tool to save main context.
   Iterative and resumable — detects progress from files and picks up where it left off.
-user-invocable: true
-argument-hint: <url> <feature to test>
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Grep
-  - Bash
-  - Task
+allowed-tools: Read Write Edit Glob Grep Bash Task
 ---
 
 # Add E2E Tests

@@ -1,7 +1,7 @@
 interface:
-  display_name: "Fix Flaky Tests"
-  short_description: "Stabilize flaky or timing-sensitive Playwright tests"
-  default_prompt: "Diagnose this flaky Playwright test and fix the root cause."
+  display_name: "Fix Flaky Playwright Tests"
+  short_description: "Diagnose unstable Playwright tests and fix the root cause"
+  default_prompt: "Diagnose this flaky Playwright test, reproduce the failure, and fix the root cause."
 
 dependencies:
   tools:

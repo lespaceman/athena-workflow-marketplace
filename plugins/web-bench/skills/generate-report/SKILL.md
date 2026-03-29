@@ -7,14 +7,7 @@ description: >
   Reads web-bench-results.jsonl, computes statistics by category/website/failure mode,
   and writes web-bench-report.md with pass rates, timing, token usage, and analysis.
   Does NOT execute or evaluate tasks — only aggregates existing results.
-user-invocable: false
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
-  - Glob
-  - Grep
+allowed-tools: Read Write Edit Bash Glob Grep
 ---
 
 # Generate WebBench Benchmark Report

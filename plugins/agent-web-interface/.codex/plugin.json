@@ -1,8 +1,0 @@
-{
-  "name": "agent-web-interface",
-  "description": "Semantic browser interface for LLM agents — token-efficient page snapshots via Puppeteer/CDP",
-  "version": "1.0.0",
-  "skills": [
-    "agent-web-interface-guide"
-  ]
-}

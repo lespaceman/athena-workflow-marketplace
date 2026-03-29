@@ -1,0 +1,16 @@
+{
+  "name": "agent-web-interface",
+  "version": "1.0.2",
+  "description": "Open live web pages, click through real flows, fill forms, add items to cart, and inspect page state or selectors",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Agent Web Interface",
+    "shortDescription": "Act inside live sites with clicks, forms, carts, and structured page snapshots",
+    "developerName": "Athenaflow",
+    "category": "Browser Automation"
+  }
+}

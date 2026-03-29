@@ -1,0 +1,15 @@
+{
+  "name": "site-knowledge",
+  "version": "1.0.1",
+  "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Site Knowledge",
+    "shortDescription": "Automation patterns for popular websites",
+    "developerName": "Athenaflow",
+    "category": "Browser Automation"
+  }
+}

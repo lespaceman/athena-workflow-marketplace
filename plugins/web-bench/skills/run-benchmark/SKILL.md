@@ -7,39 +7,7 @@ description: >
   Parses user configuration (category filter, sample size, resume), delegates to
   load-dataset, execute-task, evaluate-task, and generate-report skills.
   This is the user-invocable orchestrator that ties the full benchmark pipeline together.
-user-invocable: true
-argument-hint: "[--category READ|CREATE|UPDATE|DELETE|FILE_MANIPULATION] [--sample N] [--resume]"
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Grep
-  - Bash
-  - Task
-  - mcp__plugin_web-bench_agent-web-interface__ping
-  - mcp__plugin_web-bench_agent-web-interface__navigate
-  - mcp__plugin_web-bench_agent-web-interface__find
-  - mcp__plugin_web-bench_agent-web-interface__get_element
-  - mcp__plugin_web-bench_agent-web-interface__get_form
-  - mcp__plugin_web-bench_agent-web-interface__get_field
-  - mcp__plugin_web-bench_agent-web-interface__click
-  - mcp__plugin_web-bench_agent-web-interface__type
-  - mcp__plugin_web-bench_agent-web-interface__press
-  - mcp__plugin_web-bench_agent-web-interface__select
-  - mcp__plugin_web-bench_agent-web-interface__hover
-  - mcp__plugin_web-bench_agent-web-interface__drag
-  - mcp__plugin_web-bench_agent-web-interface__scroll
-  - mcp__plugin_web-bench_agent-web-interface__scroll_to
-  - mcp__plugin_web-bench_agent-web-interface__wheel
-  - mcp__plugin_web-bench_agent-web-interface__snapshot
-  - mcp__plugin_web-bench_agent-web-interface__screenshot
-  - mcp__plugin_web-bench_agent-web-interface__go_back
-  - mcp__plugin_web-bench_agent-web-interface__go_forward
-  - mcp__plugin_web-bench_agent-web-interface__reload
-  - mcp__plugin_web-bench_agent-web-interface__list_pages
-  - mcp__plugin_web-bench_agent-web-interface__close_page
-  - mcp__plugin_web-bench_agent-web-interface__close_session
+allowed-tools: Read Write Edit Glob Grep Bash Task mcp__plugin_web-bench_agent-web-interface__ping mcp__plugin_web-bench_agent-web-interface__navigate mcp__plugin_web-bench_agent-web-interface__find mcp__plugin_web-bench_agent-web-interface__get_element mcp__plugin_web-bench_agent-web-interface__get_form mcp__plugin_web-bench_agent-web-interface__get_field mcp__plugin_web-bench_agent-web-interface__click mcp__plugin_web-bench_agent-web-interface__type mcp__plugin_web-bench_agent-web-interface__press mcp__plugin_web-bench_agent-web-interface__select mcp__plugin_web-bench_agent-web-interface__hover mcp__plugin_web-bench_agent-web-interface__drag mcp__plugin_web-bench_agent-web-interface__scroll mcp__plugin_web-bench_agent-web-interface__scroll_to mcp__plugin_web-bench_agent-web-interface__wheel mcp__plugin_web-bench_agent-web-interface__snapshot mcp__plugin_web-bench_agent-web-interface__screenshot mcp__plugin_web-bench_agent-web-interface__go_back mcp__plugin_web-bench_agent-web-interface__go_forward mcp__plugin_web-bench_agent-web-interface__reload mcp__plugin_web-bench_agent-web-interface__list_pages mcp__plugin_web-bench_agent-web-interface__close_page mcp__plugin_web-bench_agent-web-interface__close_session
 ---
 
 # Run WebBench Benchmark

@@ -1,7 +1,7 @@
 interface:
-  display_name: "Plan Test Coverage"
-  short_description: "Find coverage gaps and prioritize E2E test scenarios"
-  default_prompt: "Review this feature and plan the highest-priority E2E coverage."
+  display_name: "Plan Coverage Priorities"
+  short_description: "Identify coverage gaps and prioritize what to test first"
+  default_prompt: "Review this feature and produce a prioritized E2E coverage plan without writing specs or code."
 
 dependencies:
   tools:

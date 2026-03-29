@@ -1,7 +1,7 @@
 interface:
-  display_name: "Add E2E Tests"
-  short_description: "Run the full Playwright test-building workflow"
-  default_prompt: "Add Playwright E2E tests for this feature end to end."
+  display_name: "Run Full E2E Workflow"
+  short_description: "Run the full workflow from discovery to passing Playwright tests"
+  default_prompt: "Run the full E2E workflow for this feature and deliver passing Playwright tests."
 
 dependencies:
   tools:
