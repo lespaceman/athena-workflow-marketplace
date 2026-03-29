@@ -215,7 +215,7 @@ These mask the problem. Never apply them without a real fix:
 
 ## Multiple Flaky Tests
 
-For suites with multiple flaky tests, use the Task tool to delegate individual test fixes to general-purpose subagents. Pass each subagent the test file path, this diagnostic workflow, and the root cause classification table.
+For suites with multiple flaky tests, use subagents to split independent fixes by test file when the write scopes do not overlap. Pass each subagent the test file path, this diagnostic workflow, and the root cause classification table.
 
 ## Anti-Patterns: What is NOT a Fix
 

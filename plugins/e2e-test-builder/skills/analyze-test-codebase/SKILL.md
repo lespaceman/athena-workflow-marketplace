@@ -121,10 +121,6 @@ Scan and analyze an existing Playwright test codebase to understand its conventi
 - Auth: reuse existing storageState setup
 ```
 
-## When to Use
-
-Run this **before** writing any new tests to ensure new code follows existing conventions. The output informs the playwright-test-writer agent about project-specific patterns.
-
 ## Example Usage
 
 ```

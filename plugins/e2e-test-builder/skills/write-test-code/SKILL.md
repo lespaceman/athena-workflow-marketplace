@@ -256,7 +256,7 @@ export const test = base.extend<{ testTicket: { id: string; title: string } }>({
 
 **Strategy 3: Bulk cleanup in globalTeardown** — for environments where individual deletion is impractical, tag test data (e.g., `title LIKE 'Test %'`) and delete in batch during `globalTeardown.ts`.
 
-If the cleanup API endpoint is unknown, still write the teardown code with the most likely endpoint and add a `// TODO: verify cleanup endpoint` comment. Never skip teardown entirely — a wrong endpoint that 404s is preferable to test data that accumulates silently. If cleanup is genuinely impossible (no API, no database access), document this as a known limitation in the test file header AND add an `afterEach` that logs a warning.
+If the cleanup API endpoint is unknown, do not invent one. Leave a clear `TODO` with the missing endpoint details, document the cleanup gap in the test file or tracker, and prefer fixture-scoped or environment reset strategies that you can verify. If cleanup is genuinely impossible (no API, no database access), document this as a known limitation in the test file header AND add an `afterEach` that logs a warning.
 
 ### Network Interception
 
@@ -436,7 +436,7 @@ Always check for a project fixtures file before using the default import. If cus
 
 ## Context-Saving Strategy
 
-For large test suites, use Task tool with `general-purpose` subagent to write individual test files. Pass the subagent:
+For large test suites, use subagents to write individual test files when the files or responsibilities can be split cleanly. Pass the subagent:
 - The test case spec (from `test-cases/<feature>.md`)
 - Codebase conventions discovered in step 2
 - These operating principles and mapping tables

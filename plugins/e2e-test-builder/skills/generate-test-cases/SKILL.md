@@ -40,7 +40,7 @@ Check for existing test coverage before exploring:
 
 ### Step 2: Explore the Happy Path
 
-Use a **general-purpose subagent** via the Task tool for browser exploration to save context. Pass it:
+Use a subagent for browser exploration when that saves context. Pass it:
 - The URL and journey description
 - Instructions to walk through each step using `find`, `get_form`, `get_field`
 - Instructions to catalog all interactive elements, form fields, navigation options
@@ -61,7 +61,7 @@ This structured output ensures selectors survive the handoff to the spec file an
 
 ### Step 3: Explore Alternative and Failure Paths
 
-Launch another subagent to systematically probe beyond the happy path:
+Launch another subagent, or continue in the main thread if the flow is small, to systematically probe beyond the happy path:
 
 **Validation & Error Handling:**
 - Submit forms with empty required fields

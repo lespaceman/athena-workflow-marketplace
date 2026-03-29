@@ -8,8 +8,8 @@ description: >
   This skill orchestrates the complete workflow: analyze existing Playwright codebase conventions,
   plan test coverage with priorities, explore the live site to discover all testable paths,
   generate structured TC-ID specs, write executable Playwright tests, and verify the result.
-  Uses subagent-driven development — delegates heavy browser exploration and test writing to general-purpose
-  subagents via Task tool to save main context.
+  Uses subagent-driven development — delegates heavy browser exploration and test writing to subagents
+  when that saves context and keeps the main thread focused on orchestration.
   Iterative and resumable — detects progress from files and picks up where it left off.
 allowed-tools: Read Write Edit Glob Grep Bash Task
 ---
@@ -74,7 +74,7 @@ You have access to specialized skills that contain deep domain knowledge. Load t
 | Reviewing test code before execution signoff | `review-test-code` |
 | Debugging test failures, checking stability | `fix-flaky-tests` |
 
-If you are about to use a tool (Bash, Edit, Write, browser MCP) and you have not loaded the skill for that activity, stop and load it first.
+Before doing a substantial activity, load the skill that covers that activity so you can follow its workflow rather than improvising.
 
 #### 1d. Update the tracker with orientation findings
 
@@ -131,7 +131,7 @@ Every test case you generate should trace back to something you actually observe
 
 #### Subagent delegation
 
-Delegate heavy browser exploration and test writing to general-purpose subagents via the Task tool — this saves your context for orchestration, verification, and debugging. When delegating:
+Delegate heavy browser exploration and test writing to subagents when that saves context for orchestration, verification, and debugging. When delegating:
 - Pass the relevant file paths (conventions, coverage plan, test specs)
 - Instruct the subagent to invoke the appropriate skill (subagents inherit access to plugin skills)
 - Specify concrete output expectations (file path, format, TC-ID conventions)
