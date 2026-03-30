@@ -5,9 +5,10 @@ description: >
   Triggers: "add E2E tests for this feature", "add end-to-end tests", "create Playwright tests for my app",
   "set up E2E testing", "I need tests for this feature from scratch", "build test coverage for",
   "full test pipeline for", "analyze my codebase and write tests".
-  This skill orchestrates the complete workflow: analyze existing Playwright codebase conventions,
-  plan test coverage with priorities, explore the live site to discover all testable paths,
-  generate structured TC-ID specs, write executable Playwright tests, and verify the result.
+  This is the entry point for the full workflow. It orchestrates the sequence: maintain a concise tracker
+  with meaningful progress updates, analyze existing Playwright conventions, explore the live site before
+  specs or code, plan coverage, generate structured TC-ID specs, write executable Playwright tests, and
+  verify the result.
   Uses subagent-driven development — delegates heavy browser exploration and test writing to subagents
   when that saves context and keeps the main thread focused on orchestration.
   Iterative and resumable — detects progress from files and picks up where it left off.

@@ -11,7 +11,7 @@
     {
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
-      "description": "Workflow for adding Playwright E2E tests to existing codebases",
+      "description": "End-to-end Playwright test workflow: browser exploration first, tracker-driven progress, coverage planning, spec and code review gates, execution, and stabilization",
       "version": "1.0.0"
     },
     {

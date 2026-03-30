@@ -20,7 +20,7 @@ You have specialized skills that contain deep domain knowledge and implementatio
 
 | Activity | Skill to Load |
 |----------|---------------|
-| Scaffold Playwright if missing, full pipeline orchestration | `add-e2e-tests` |
+| Full workflow entry point and orchestration | `add-e2e-tests` |
 | Analyze test setup, config, conventions | `analyze-test-codebase` |
 | Decide what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Open a URL, browse, interact with live pages | `agent-web-interface-guide` |
@@ -43,21 +43,23 @@ Check if `e2e-tracker.md` exists in the project root.
 
 ### 2. Orient (Session 1 Only)
 
+Begin session 1 by loading `add-e2e-tests`. Treat it as the top-level workflow skill for the entire add-tests job. Use the other E2E skills as focused sub-steps within that workflow, not as competing entry points.
+
 #### 2a. Create tracker immediately
 
-Write `e2e-tracker.md` with the goal (URL, feature, slug) and a skeleton plan. Create high-level tasks using TaskCreate. This ensures continuity even if the session is interrupted during orientation.
+Write `e2e-tracker.md` with the goal (URL, feature, slug) and a skeleton plan. Record the initial high-level tasks in the tracker immediately. This ensures continuity even if the session is interrupted during orientation.
 
 #### 2b. Understand the codebase
 
-Load `analyze-test-codebase` and follow its methodology. Key questions: does Playwright exist? What conventions are in use? If no Playwright setup exists, load `add-e2e-tests` for scaffolding.
+Within the `add-e2e-tests` workflow, load `analyze-test-codebase` and follow its methodology. Key questions: does Playwright exist? What conventions are in use? This analysis step happens before planning detailed coverage or writing any test code. If Playwright is missing, follow the scaffolding guidance from `add-e2e-tests`.
 
 #### 2c. Understand the product
 
-Load `agent-web-interface-guide` and browse the feature you're testing. Don't skim — interact as a user would. This is the most important step: agents that skip exploration write tests for imaginary behavior.
+Load `agent-web-interface-guide` and browse the feature you're testing. Do not skim. Interact as a user would: fill forms, click buttons, trigger validation, navigate across steps, inspect loading and error states, and note how the UI actually behaves. This is a required workflow step, not optional discovery. Agents that skip exploration write tests for imaginary behavior.
 
 #### 2d. Plan
 
-Refine tasks into granular checkpoints. Each task should be a concrete, verifiable unit of progress — not "Write tests" but "Write TC-LOGIN-001: happy path login". Add tasks for verification steps too (running tests, checking selectors), not just implementation. Tasks are a living document — add new ones as you discover work.
+Load `plan-test-coverage` before generating detailed specs or writing code. Refine tasks into granular checkpoints based on the analysis and product exploration findings. Each task should be a concrete, verifiable unit of progress — not "Write tests" but "Write TC-LOGIN-001: happy path login". Add tasks for verification steps too (running tests, checking selectors), not just implementation. Tasks are a living document — add new ones as you discover work.
 
 #### 2e. Update the tracker
 
@@ -67,13 +69,17 @@ The tracker must always answer these four questions for any future session:
 3. What is remaining?
 4. What should I do next?
 
+Record concrete product observations in the tracker after browser exploration: pages visited, major flows exercised, validation messages seen, error states observed, selectors or element strategies learned, and any behaviors that were assumed but not yet verified.
+
 ### 3. Execute
 
 Work through your tasks. Load the relevant skill before each activity.
 
 #### Workflow sequence
 
-The typical progression is: analyze → plan coverage → explore site → generate specs → **review specs** → write tests → **review code** → run tests. Not every session covers all steps — pick up where the tracker says.
+The typical progression is: **load `add-e2e-tests`** → analyze codebase → explore site → plan coverage → generate specs → **review specs** → write tests → **review code** → run tests. Use `plan-test-coverage` before `generate-test-cases`, and use `analyze-test-codebase` before `write-test-code` if conventions are still unclear. If execution fails or tests are unstable, load `fix-flaky-tests` before retrying. Not every session covers all steps — pick up where the tracker says rather than restarting the whole flow.
+
+Live browser exploration is the gating requirement for spec generation and test writing. Do not invoke `generate-test-cases` or `write-test-code` until the tracker contains concrete observations from real interaction with the product, unless the user explicitly forbids browser exploration or the target is unavailable.
 
 #### Subagent delegation
 
@@ -85,12 +91,12 @@ Three gates are mandatory. The first two are review-only (produce findings, do n
 
 **Gate 1: Review specs** — after `generate-test-cases`, before `write-test-code`:
 - Load `review-test-cases` and run it against `test-cases/<feature>.md`
-- If **NEEDS REVISION** — fix blockers before writing code
+- If **NEEDS REVISION** — revise the spec, then rerun `review-test-cases` before writing code
 - Record verdict in tracker
 
 **Gate 2: Review code** — after `write-test-code`, before running tests:
 - Load `review-test-code` and run it against the test files
-- If **NEEDS REVISION** — fix blockers before running tests
+- If **NEEDS REVISION** — revise the code, then rerun `review-test-code` before running tests
 - Record verdict in tracker
 
 **Gate 3: Test execution** — run `npx playwright test <file> --reporter=list 2>&1` directly (never delegate to subagents). Record full output. If tests fail, load `fix-flaky-tests`. Maximum 3 fix-and-rerun cycles per test per session.
@@ -113,7 +119,9 @@ Do not write terminal markers prematurely.
 - Read the tracker before doing anything else — every session
 - Load the relevant skill before each activity — every time
 - Update the tracker after meaningful progress — not just at session end
-- Browse the actual product before writing test cases — never test from assumptions
+- Browse the actual product before writing test cases or executable tests — never test from assumptions
+- Treat browser exploration as evidence gathering, not as a quick sanity check
+- Record observed validation, navigation, loading, and error behavior before turning exploration into specs or code
 - Run tests and record output before marking test work as done
 - Never delegate test execution to subagents
 - Never write the completion marker until all tests pass and coverage is verified
