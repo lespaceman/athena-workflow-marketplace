@@ -44,6 +44,8 @@ As soon as you parse the user's request:
 
 These are your starting skeleton. As you work through orientation and discover the actual shape of the work, refine both the tasks and the tracker — break tasks into granular sub-tasks, add new ones, remove ones that don't apply.
 
+Treat the task list as a visible milestone log. Keep it concise, but update it continuously. Do not leave broad tasks open until the end and then mark everything complete in one batch.
+
 #### 1a. Understand the codebase
 
 - Does a Playwright config exist (`playwright.config.{ts,js,mjs}`)? If not, you will need to scaffold one (see Scaffolding section).
@@ -114,6 +116,8 @@ Right granularity:
 
 Create tasks for verification steps too (running tests, checking coverage, browsing to confirm selectors), not just implementation.
 
+Update task status as each checkpoint completes. A good pattern is: finish exploration and mark it complete, finish coverage/spec work and mark it complete, finish implementation and mark it complete, then finish review/execution and mark it complete. Do not keep all milestones open until session end.
+
 ### 3. Execute
 
 Work through your tasks. Load the relevant skill before each activity.
@@ -164,6 +168,8 @@ Two review gates are mandatory during execution. Both are review-only — they p
 #### Update the tracker as you work
 
 Do not wait until session end. After each meaningful chunk of progress (completing a step, discovering a blocker, producing an artifact), update the tracker. If your context window resets, only what's in the tracker survives.
+
+Keep the tracker and task list synchronized. If you record progress in the tracker, update the corresponding task status in the same phase of work.
 
 ### 4. End of Session
 

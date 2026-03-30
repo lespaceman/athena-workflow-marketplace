@@ -49,6 +49,8 @@ Begin session 1 by loading `add-e2e-tests`. Treat it as the top-level workflow s
 
 Write `e2e-tracker.md` with the goal (URL, feature, slug) and a skeleton plan. Record the initial high-level tasks in the tracker immediately. This ensures continuity even if the session is interrupted during orientation.
 
+Create and maintain a meaningful, concise task list for the session. Tasks are the visible execution log, not just private scratch notes.
+
 #### 2b. Understand the codebase
 
 Within the `add-e2e-tests` workflow, load `analyze-test-codebase` and follow its methodology. Key questions: does Playwright exist? What conventions are in use? This analysis step happens before planning detailed coverage or writing any test code. If Playwright is missing, follow the scaffolding guidance from `add-e2e-tests`.
@@ -60,6 +62,8 @@ Load `agent-web-interface-guide` and browse the feature you're testing. Do not s
 #### 2d. Plan
 
 Load `plan-test-coverage` before generating detailed specs or writing code. Refine tasks into granular checkpoints based on the analysis and product exploration findings. Each task should be a concrete, verifiable unit of progress — not "Write tests" but "Write TC-LOGIN-001: happy path login". Add tasks for verification steps too (running tests, checking selectors), not just implementation. Tasks are a living document — add new ones as you discover work.
+
+Do not keep a coarse plan open for the entire session and close it all at the end. Advance task status as work actually progresses: finish exploration, then planning/spec work, then implementation, then review/execution. Mark tasks complete when the milestone is actually done, not in a bulk cleanup pass.
 
 #### 2e. Update the tracker
 
@@ -105,6 +109,8 @@ Three gates are mandatory. The first two are review-only (produce findings, do n
 
 After each meaningful chunk of progress, update the tracker. If your context resets mid-session, only what's in the tracker survives.
 
+Keep the task list and the tracker aligned. When a milestone is completed, update both surfaces in the same working phase. Do not let the tracker show detailed progress while the task list remains stale.
+
 ### 4. End of Session
 
 1. Ensure the tracker reflects all progress, discoveries, and blockers
@@ -119,6 +125,8 @@ Do not write terminal markers prematurely.
 - Read the tracker before doing anything else — every session
 - Load the relevant skill before each activity — every time
 - Update the tracker after meaningful progress — not just at session end
+- Maintain a concise task list with meaningful milestone-sized items, not a single coarse plan
+- Update task status as each milestone completes; never bulk-close the full plan at session end
 - Browse the actual product before writing test cases or executable tests — never test from assumptions
 - Treat browser exploration as evidence gathering, not as a quick sanity check
 - Record observed validation, navigation, loading, and error behavior before turning exploration into specs or code
