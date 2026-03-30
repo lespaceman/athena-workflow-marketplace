@@ -1,6 +1,6 @@
 {
   "name": "e2e-test-builder",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Skills for building Playwright E2E tests \u2014 analyze codebase, plan coverage, generate test cases, write test code, review, and fix flaky tests",
   "author": {
     "name": "Athenaflow"
