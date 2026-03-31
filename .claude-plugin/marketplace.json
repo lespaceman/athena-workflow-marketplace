@@ -13,7 +13,7 @@
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
       "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "keywords": [
         "browser",
         "mcp",
@@ -74,7 +74,7 @@
       "name": "web-bench",
       "source": "./plugins/web-bench",
       "description": "WebBench benchmark runner \u2014 executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "keywords": [
         "benchmark",
         "evaluation",
