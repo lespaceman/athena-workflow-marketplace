@@ -7,10 +7,12 @@
         "NODE_ENV": "production"
       },
       "options": [
-        { "label": "Visible browser", "args": ["-y", "agent-web-interface@latest"] },
-        { "label": "Headless browser", "args": ["-y", "agent-web-interface@latest", "--headless"] },
-        { "label": "Auto-connect to Chrome 144+ via DevToolsActivePort", "args": ["-y", "agent-web-interface@latest", "--autoConnect"] },
-        { "label": "Connect to CDP endpoint", "args": ["-y", "agent-web-interface@latest", "--browserUrl", "http://localhost:9222"] }
+        { "label": "Auto (user → persistent → isolated)", "env": {} },
+        { "label": "User's Chrome", "env": { "AWI_BROWSER_MODE": "user" } },
+        { "label": "Persistent profile", "env": { "AWI_BROWSER_MODE": "persistent" } },
+        { "label": "Isolated (temp profile)", "env": { "AWI_BROWSER_MODE": "isolated" } },
+        { "label": "Headless", "env": { "AWI_HEADLESS": "true" } },
+        { "label": "Connect to CDP endpoint", "env": { "AWI_CDP_URL": "http://localhost:9222" } }
       ]
     }
   }

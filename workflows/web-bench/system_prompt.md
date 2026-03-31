@@ -223,14 +223,6 @@ Update `web-bench-tracker.md`:
 - Recompute Pass Rate
 - Set next steps: "Execute task at index {next_task_index}" or "Generate report" if all tasks are done
 
-#### 3i. Close browser session
-
-Close the browser session to prevent state leakage:
-
-```
-close_session
-```
-
 **Session ends here.** Do not execute another task.
 
 ### 4. Generate Report (Final Session)

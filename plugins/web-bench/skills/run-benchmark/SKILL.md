@@ -7,7 +7,7 @@ description: >
   Parses user configuration (category filter, sample size, resume), delegates to
   load-dataset, execute-task, evaluate-task, and generate-report skills.
   This is the user-invocable orchestrator that ties the full benchmark pipeline together.
-allowed-tools: Read Write Edit Glob Grep Bash Task mcp__plugin_web-bench_agent-web-interface__ping mcp__plugin_web-bench_agent-web-interface__navigate mcp__plugin_web-bench_agent-web-interface__find mcp__plugin_web-bench_agent-web-interface__get_element mcp__plugin_web-bench_agent-web-interface__get_form mcp__plugin_web-bench_agent-web-interface__get_field mcp__plugin_web-bench_agent-web-interface__click mcp__plugin_web-bench_agent-web-interface__type mcp__plugin_web-bench_agent-web-interface__press mcp__plugin_web-bench_agent-web-interface__select mcp__plugin_web-bench_agent-web-interface__hover mcp__plugin_web-bench_agent-web-interface__drag mcp__plugin_web-bench_agent-web-interface__scroll mcp__plugin_web-bench_agent-web-interface__scroll_to mcp__plugin_web-bench_agent-web-interface__wheel mcp__plugin_web-bench_agent-web-interface__snapshot mcp__plugin_web-bench_agent-web-interface__screenshot mcp__plugin_web-bench_agent-web-interface__go_back mcp__plugin_web-bench_agent-web-interface__go_forward mcp__plugin_web-bench_agent-web-interface__reload mcp__plugin_web-bench_agent-web-interface__list_pages mcp__plugin_web-bench_agent-web-interface__close_page mcp__plugin_web-bench_agent-web-interface__close_session
+allowed-tools: Read Write Edit Glob Grep Bash Task mcp__plugin_web-bench_agent-web-interface__ping mcp__plugin_web-bench_agent-web-interface__navigate mcp__plugin_web-bench_agent-web-interface__find mcp__plugin_web-bench_agent-web-interface__get_element mcp__plugin_web-bench_agent-web-interface__get_form mcp__plugin_web-bench_agent-web-interface__get_field mcp__plugin_web-bench_agent-web-interface__click mcp__plugin_web-bench_agent-web-interface__type mcp__plugin_web-bench_agent-web-interface__press mcp__plugin_web-bench_agent-web-interface__select mcp__plugin_web-bench_agent-web-interface__hover mcp__plugin_web-bench_agent-web-interface__drag mcp__plugin_web-bench_agent-web-interface__scroll mcp__plugin_web-bench_agent-web-interface__scroll_to mcp__plugin_web-bench_agent-web-interface__wheel mcp__plugin_web-bench_agent-web-interface__snapshot mcp__plugin_web-bench_agent-web-interface__screenshot mcp__plugin_web-bench_agent-web-interface__go_back mcp__plugin_web-bench_agent-web-interface__go_forward mcp__plugin_web-bench_agent-web-interface__reload mcp__plugin_web-bench_agent-web-interface__list_pages mcp__plugin_web-bench_agent-web-interface__close_page
 ---
 
 # Run WebBench Benchmark
@@ -88,7 +88,5 @@ After each task, print a status line:
 
 ## Guardrails
 
-- **One task at a time.** Do not parallelize task execution — browser sessions are not concurrent.
 - **Always append, never overwrite** results. The JSONL file is append-only.
-- **Close browser session** between tasks to prevent state leakage.
 - **Respect the dataset.** Do not modify task descriptions or skip tasks without recording a FAIL.

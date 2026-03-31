@@ -248,7 +248,6 @@ When encountering a "no page/session" error or resuming from a prior session:
 **Caveats:**
 - **Stale tab URLs**: `list_pages` shows the URL at open time. For SPAs, use `snapshot` with `page_id` to see actual current state.
 - **Tab accumulation**: The browser accumulates tabs across sessions. Always use `page_id` to target the correct one.
-- **Page cleanup**: Use `close_page` for tabs you no longer need. Do not assume a session-wide close tool exists in every environment.
 - **Single active work tab assumptions**: Do not assume you have multiple useful tabs open. Check `list_pages` instead of relying on prior turn memory.
 
 ## Error Responses
