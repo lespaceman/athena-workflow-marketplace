@@ -34,6 +34,22 @@ patterns).
     └── site-knowledge/
 ```
 
+## Runtime Artifacts
+
+Each plugin package now generates versioned runtime artifacts during `npm pack` / `npm publish`:
+
+- `dist/<version>/release.json`
+- `dist/<version>/claude/plugin/`
+- `dist/<version>/codex/plugin/`
+- `dist/<version>/codex/marketplace.json`
+
+Build them locally for one plugin with:
+
+```shell
+cd plugins/<plugin-name>
+npm run build:artifacts
+```
+
 ## Skill Compatibility And Validation
 
 This repo uses a split skill metadata model so the same skills stay compatible with both Claude and Codex:

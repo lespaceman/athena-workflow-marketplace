@@ -1,0 +1,13 @@
+{
+  "name": "@athenaflow/plugin-web-bench",
+  "version": "1.0.3",
+  "description": "WebBench benchmark runner — executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

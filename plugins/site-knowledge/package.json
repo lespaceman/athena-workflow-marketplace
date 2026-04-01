@@ -1,0 +1,13 @@
+{
+  "name": "@athenaflow/plugin-site-knowledge",
+  "version": "1.0.2",
+  "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

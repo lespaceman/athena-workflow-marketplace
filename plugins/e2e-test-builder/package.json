@@ -1,0 +1,13 @@
+{
+  "name": "@athenaflow/plugin-e2e-test-builder",
+  "version": "2.0.8",
+  "description": "Full-pipeline Playwright E2E test generation — explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

@@ -10,7 +10,7 @@ This is a **Claude Code Plugin Marketplace** — a collection of plugins with sk
 - **e2e-test-builder** — Skills for building Playwright E2E tests. Full pipeline: analyze codebase → plan coverage → explore site → generate test specs → **review specs** → write tests → **review code** → execute. Delegates browser work to subagents via Task tool (browser tools live in the `agent-web-interface` plugin).
 - **site-knowledge** — Site-specific automation patterns for popular websites (Airbnb, Amazon, Apple Store).
 
-This is not a Node.js project with build/test scripts. It is a metadata-driven plugin marketplace where runtime is managed by Claude Code and the `agent-web-interface` MCP server (installed dynamically via `npx`).
+This is primarily a metadata-driven plugin marketplace. Plugin packages now generate versioned runtime artifacts during `npm pack` / `npm publish` via `scripts/build-plugin-artifacts.mjs`, while runtime execution is still managed by Claude Code, Codex, and the `agent-web-interface` MCP server (installed dynamically via `npx`).
 
 ## Architecture
 
@@ -20,7 +20,7 @@ This is not a Node.js project with build/test scripts. It is a metadata-driven p
 2. **Codex Plugin Marketplace** — `.agents/plugins/marketplace.json` — registers plugins for Codex (`source.path: ./plugins/<name>`)
 3. **Athena Workflow Marketplace** — `.athena-workflow/marketplace.json` — registers workflow definitions for `athena-cli` (`workflowRoot: ./workflows`)
 
-Each plugin has two manifests: `.claude-plugin/plugin.json` (Claude Code) and `.codex-plugin/plugin.json` (Codex). Shared fields (`name`, `version`, `description`) are kept identical. Claude-specific metadata (`keywords`, `repository`, `license`) lives in `.claude-plugin/`. Codex-specific metadata (`interface`, `skills` path, `mcpServers` path) lives in `.codex-plugin/`. The `scripts/bump-versions.sh` syncs version numbers to both.
+Each plugin has two manifests: `.claude-plugin/plugin.json` (Claude Code) and `.codex-plugin/plugin.json` (Codex). Shared fields (`name`, `version`, `description`) are kept identical. Claude-specific metadata (`keywords`, `repository`, `license`) lives in `.claude-plugin/`. Codex-specific metadata (`interface`, `skills` path, `mcpServers` path) lives in `.codex-plugin/`. `scripts/build-plugin-artifacts.mjs` emits versioned `dist/<version>/release.json`, `claude/plugin`, and `codex/{plugin,marketplace.json}` artifacts, and `scripts/bump-versions.sh` syncs source version numbers across manifests and plugin packages.
 
 These marketplace and overlay files are repo conventions for packaging this marketplace. Treat them separately from official vendor runtime config such as `.claude/settings.json` or Codex MCP client config.
 
