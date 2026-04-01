@@ -1,16 +1,16 @@
 ---
 name: write-test-code
 description: >
-  Invoke when the user wants executable Playwright test code produced or changed. This is the
-  implementation skill for E2E tests, whether starting from a scenario or a TC-ID spec. If the task
-  produces or modifies executable test code, use this skill. Covers: creating test files,
-  converting TC-IDs to runnable code, refactoring locators or fixtures, adding API mocking, test data
-  setup/teardown, parallel-safe isolation, modifying test infrastructure (testIgnore, config, fixtures,
-  auth, helpers, path aliases). IMPORTANT: Load this skill before editing any test infrastructure — it
-  has 15 anti-patterns to avoid (force:true, networkidle, Tailwind selectors, hardcoded data, exact
-  numeric assertions) plus configuration hygiene and fixture design principles. Do NOT use for:
-  exploring a live site (use agent-web-interface-guide), generating test plans/specs without code
-  (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
+  This skill should be used when writing, refactoring, or modifying Playwright E2E test code.
+  It covers creating test files from TC-ID specs, converting browser exploration results to
+  executable tests, refactoring locators or fixtures, adding API mocking, test data
+  setup/teardown, and parallel-safe isolation. Includes locator strategy hierarchy, auth setup
+  patterns, fixture design, teardown strategies, and network interception recipes.
+  Triggers: "write a test for", "add a test case", "refactor this locator", "add error path
+  tests", "convert specs to code", "add API mocking", "set up auth for tests".
+  NOT for: full pipeline from scratch (use add-e2e-tests), exploring live sites (use
+  agent-web-interface-guide), generating specs without code (use plan-test-coverage or
+  generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
@@ -45,6 +45,9 @@ Parse the test description or spec file path from: $ARGUMENTS
 - Add/adjust fixtures and page objects first (if needed)
 - Write tests in a story-like flow with AAA structure: Arrange → Act → Assert
 - Add assertions that represent user outcomes
+- **For large suites:** Use subagents (Task tool) to write individual test files in parallel.
+  Pass each subagent the test case spec path, codebase conventions from Step 2, and the
+  operating principles from this skill. Only split when files have independent responsibilities.
 
 ### 5. Stabilize
 - Replace any sleeps with meaningful waits
@@ -122,178 +125,28 @@ Avoid `.first()` / `.nth()` unless a strong, documented reason exists — scope 
 - If `tsconfig.json` defines path aliases (e.g., `@pages/*`, `@fixtures/*`, `@utils/*`), use them in imports instead of relative paths. Check tsconfig paths before writing any import statement.
 
 ### Authentication Setup
+Use `storageState` for most projects (log in once in global setup, reuse across tests).
+For parallel workers needing separate accounts, use worker-scoped fixtures.
+For multi-role tests (admin + user), create separate browser contexts.
+Per-test login is only for testing the login flow itself.
+Never hardcode tokens — use environment variables or `.env.test`.
 
-Choose the right auth strategy based on the project's needs:
+See [references/auth-patterns.md](references/auth-patterns.md) for full patterns with code examples.
 
-**Strategy 1: storageState (Recommended for most projects)**
-Log in once in global setup, save cookies/localStorage to a JSON file, and reuse across all tests:
+### API-Driven Test Setup and Teardown
+Use API calls (not UI clicks) to seed test data — 10-50x faster and more reliable.
+Use UI setup only when the creation flow IS the test. Tests that create persistent data
+MUST clean up: use `afterEach` API deletion, fixture-with-cleanup, or bulk `globalTeardown`.
+If no cleanup endpoint exists, document the gap with a TODO.
 
-```typescript
-// global-setup.ts
-import { chromium, FullConfig } from '@playwright/test';
+See [references/api-setup-teardown.md](references/api-setup-teardown.md) for full patterns with code examples.
 
-async function globalSetup(config: FullConfig) {
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-  await page.goto('/login');
-  await page.getByLabel(/email/i).fill(process.env.TEST_USER_EMAIL!);
-  await page.getByLabel(/password/i).fill(process.env.TEST_USER_PASSWORD!);
-  await page.getByRole('button', { name: /sign in/i }).click();
-  await page.waitForURL('/dashboard');
-  await page.context().storageState({ path: 'tests/.auth/user.json' });
-  await browser.close();
-}
-export default globalSetup;
-```
+### Network Interception and Error Paths
+Use `page.route()` to mock server errors, patch responses, assert backend calls, or block
+heavy resources. Every feature needs error path tests: server error (500), network timeout,
+and empty state at minimum.
 
-Reference in config: `use: { storageState: 'tests/.auth/user.json' }`
-
-**Strategy 2: Worker-scoped fixture (for parallel workers needing separate accounts)**
-```typescript
-export const test = base.extend<{}, { workerStorageState: string }>({
-  storageState: ({ workerStorageState }, use) => use(workerStorageState),
-  workerStorageState: [async ({ browser }, use, testInfo) => {
-    const page = await browser.newPage({ storageState: undefined });
-    // Login with worker-specific account...
-    const path = `tests/.auth/worker-${testInfo.parallelIndex}.json`;
-    await page.context().storageState({ path });
-    await use(path);
-    await page.close();
-  }, { scope: 'worker' }],
-});
-```
-
-**Strategy 3: Multi-role testing (admin + user in same test)**
-```typescript
-test('TC-ADMIN-001: Admin sees user profile', async ({ browser }) => {
-  const adminContext = await browser.newContext({ storageState: 'tests/.auth/admin.json' });
-  const userContext = await browser.newContext({ storageState: 'tests/.auth/user.json' });
-  const adminPage = await adminContext.newPage();
-  const userPage = await userContext.newPage();
-  // Interact with both pages...
-  await adminContext.close();
-  await userContext.close();
-});
-```
-
-**Strategy 4: Per-test login** — only when testing login itself or permission-specific scenarios.
-
-Never hardcode tokens. Use environment variables or `.env.test`.
-
-### API-Driven Test Setup
-
-Use API calls to set up test data instead of clicking through UI. This is 10-50x faster and more reliable.
-
-**When to use API setup:** Creating test users, products, orders, seed data. Setting feature flags. Resetting state between tests.
-
-**When to use UI setup:** Only when the creation flow IS the test being verified.
-
-```typescript
-test('TC-CART-001: User sees items in cart', async ({ page, request }) => {
-  // Arrange: seed data via API (fast, deterministic)
-  await request.post('/api/cart/items', {
-    data: { productId: 'SKU-123', quantity: 2 }
-  });
-
-  // Act: navigate to verify UI
-  await page.goto('/cart');
-
-  // Assert
-  await expect(page.getByRole('listitem')).toHaveCount(2);
-});
-```
-
-**Reusable API fixture pattern:**
-```typescript
-export const test = base.extend<{ apiClient: APIRequestContext }>({
-  apiClient: async ({ playwright }, use) => {
-    const ctx = await playwright.request.newContext({
-      baseURL: process.env.API_BASE_URL,
-      extraHTTPHeaders: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    });
-    await use(ctx);
-    await ctx.dispose();
-  },
-});
-```
-
-### Test Data Teardown
-
-Tests that create persistent data (database records, uploaded files, user accounts) MUST clean up after themselves. Leaked test data accumulates across runs and causes false positives/negatives in other tests (pagination counts drift, filter results change, list assertions break).
-
-**Strategy 1: API teardown in afterEach (Recommended)**
-```typescript
-let createdTicketId: string;
-
-test.beforeEach(async ({ request }) => {
-  const resp = await request.post('/api/tickets', {
-    data: { title: `Test ${Date.now()}` }
-  });
-  createdTicketId = (await resp.json()).id;
-});
-
-test.afterEach(async ({ request }) => {
-  if (createdTicketId) {
-    await request.delete(`/api/tickets/${createdTicketId}`);
-  }
-});
-```
-
-**Strategy 2: Fixture with automatic cleanup**
-```typescript
-export const test = base.extend<{ testTicket: { id: string; title: string } }>({
-  testTicket: async ({ request }, use) => {
-    const resp = await request.post('/api/tickets', {
-      data: { title: `Test ${Date.now()}` }
-    });
-    const ticket = await resp.json();
-    await use(ticket);
-    // cleanup runs automatically when test finishes
-    await request.delete(`/api/tickets/${ticket.id}`);
-  },
-});
-```
-
-**Strategy 3: Bulk cleanup in globalTeardown** — for environments where individual deletion is impractical, tag test data (e.g., `title LIKE 'Test %'`) and delete in batch during `globalTeardown.ts`.
-
-If the cleanup API endpoint is unknown, do not invent one. Leave a clear `TODO` with the missing endpoint details, document the cleanup gap in the test file or tracker, and prefer fixture-scoped or environment reset strategies that you can verify. If cleanup is genuinely impossible (no API, no database access), document this as a known limitation in the test file header AND add an `afterEach` that logs a warning.
-
-### Network Interception
-
-Use `page.route()` to intercept and mock network requests for deterministic error testing.
-
-**Mock server errors:**
-```typescript
-await page.route('**/api/checkout', route =>
-  route.fulfill({ status: 500, body: JSON.stringify({ error: 'Payment declined' }) })
-);
-```
-
-**Patch real responses (modify, don't replace):**
-```typescript
-await page.route('**/api/products', async route => {
-  const response = await route.fetch();
-  const json = await response.json();
-  json.results = json.results.slice(0, 1); // reduce to 1 item
-  await route.fulfill({ response, json });
-});
-```
-
-**Assert backend was called:**
-```typescript
-const [response] = await Promise.all([
-  page.waitForResponse(resp =>
-    resp.url().includes('/api/order') && resp.status() === 201
-  ),
-  page.getByRole('button', { name: /place order/i }).click(),
-]);
-expect(response.status()).toBe(201);
-```
-
-**Block heavy resources to speed up tests:**
-```typescript
-await page.route('**/*.{png,jpg,jpeg,gif,svg}', route => route.abort());
-```
+See [references/network-interception.md](references/network-interception.md) for full patterns with code examples.
 
 ### Custom Fixtures (test.extend)
 
@@ -325,74 +178,12 @@ export { expect } from '@playwright/test';
 
 Import `test` from your fixtures file, not from `@playwright/test`, in test files that need custom fixtures.
 
-### Error Path Testing
+### Mapping Tables
+When converting journey specs or exploration results to code, consult the mapping tables
+for standard translations of scopes, actions, assertions, and target kinds to Playwright API calls.
+For low-confidence journey steps (<0.7), add extra assertions and include fallback locators as comments.
 
-Every feature needs error path tests. Use network interception (see above) to simulate failures. At minimum, every feature test suite should cover:
-
-- **Server error** — `route.fulfill({ status: 500, ... })` — verify error UI appears
-- **Network timeout** — `route.abort('timedout')` — verify retry option or error message
-- **Empty state** — `route.fulfill({ status: 200, json: { items: [] } })` — verify empty state UI
-
-```typescript
-test('TC-DASHBOARD-005: Shows empty state when no data', async ({ page }) => {
-  await page.route('**/api/items', route =>
-    route.fulfill({ status: 200, json: { items: [] } })
-  );
-  await page.goto('/dashboard');
-  await expect(page.getByText(/no items/i)).toBeVisible();
-});
-```
-
-## Mapping Tables
-
-### Scope-to-Locator
-| Journey Scope | Playwright Scoping |
-|---------------|-------------------|
-| `page` | No scoping needed |
-| `header` | `page.locator('header')` |
-| `main` | `page.locator('main')` |
-| `nav` | `page.locator('nav')` |
-| `dialog` | `page.locator('[role="dialog"]')` |
-
-### Action-to-Playwright
-| Journey Action | Playwright Code |
-|----------------|-----------------|
-| `goto` | `await page.goto(url)` |
-| `click` | `await locator.click()` |
-| `fill` | `await locator.fill(value)` |
-| `select` | `await locator.selectOption(value)` |
-| `assert` | `await expect(locator).toBeVisible()` |
-
-### Assertion Mapping
-| Observed Effect | Playwright Assertion |
-|----------------|---------------------|
-| `url changed to /cart` | `await expect(page).toHaveURL(/cart/)` |
-| `text 'Added' visible` | `await expect(page.getByText(/added/i)).toBeVisible()` |
-| `radio 256GB checked` | `await expect(locator).toBeChecked()` |
-| `button now enabled` | `await expect(locator).toBeEnabled()` |
-
-### Target Kind to Locator
-| Target Kind | Value Pattern | Playwright Locator |
-|-------------|--------------|-------------------|
-| `role` | `button name~Add to Bag` | `getByRole('button', { name: /add to bag/i })` |
-| `role` | `radio name~256GB` | `getByRole('radio', { name: /256gb/i })` |
-| `label` | `Email address` | `getByLabel(/email address/i)` |
-| `testid` | `checkout-button` | `getByTestId('checkout-button')` |
-
-## Low Confidence Handling (<0.7)
-
-When journey step confidence is low:
-1. Add extra assertions to verify state
-2. Include fallback locators as comments
-3. Consider retry logic for flaky interactions
-
-```typescript
-// Primary locator
-const storageRadio = page.getByRole('radio', { name: /256gb/i });
-// Fallback: page.getByLabel(/256gb/i)
-await storageRadio.click();
-await expect(storageRadio).toBeChecked({ timeout: 5000 });
-```
+See [references/mapping-tables.md](references/mapping-tables.md) for the full tables.
 
 ## Test Template
 
@@ -416,27 +207,21 @@ test('TC-FEATURE-001: Description of test case', async ({ page }) => {
 
 Always check for a project fixtures file before using the default import. If custom fixtures exist, you MUST import from them to get access to page objects and custom setup.
 
-## Anti-Patterns to Avoid
+## Anti-Patterns (Quick Reference)
+1. Raw CSS selectors — use semantic locators
+2. `waitForTimeout()` — use proper assertions/waits
+3. Fragile `.nth()` / `.first()` — scope to container
+4. Exact long text matches — use regex with key words
+5. Unscoped locators — scope to container
+6. Login via UI in every test — use storageState
+7. UI clicks for test data setup — use API
+8. No error path tests — add failure scenarios
+9. Hardcoded test data — use API setup + dynamic values
+10. Tests depending on execution order
+11. `expect(await el.isVisible()).toBe(true)` — use `await expect(el).toBeVisible()`
+12. `{ force: true }` — diagnose root cause instead
+13. `networkidle` as default wait — use specific response waits
+14. CSS utility class selectors (Tailwind/Bootstrap)
+15. Asserting exact server-computed values — use patterns or seed data
 
-1. **Raw CSS selectors** — use semantic locators
-2. **`waitForTimeout()`** — use proper assertions
-3. **Fragile `nth()`** — add comment if unavoidable
-4. **Exact long text** — use regex with key words
-5. **Unscoped locators** — scope to main/nav/dialog when possible
-6. **Login via UI in every test** — use storageState or API-based auth setup
-7. **UI clicks to set up test data** — use API requests for data seeding
-8. **No error path tests** — every feature needs at least one failure scenario test
-9. **Hardcoded test data** — NEVER embed real entity IDs (`'ACC-SUB-2026-00025'`), real user names (`'Anas Client 73'`), real monetary amounts, or environment-specific strings in test code. Instead: (a) create data via API in `beforeEach` and capture the returned ID, (b) use `Date.now()` or `crypto.randomUUID()` suffixes for uniqueness, (c) read values from `process.env` or a test data module, (d) for read-only assertions on existing data, use pattern matchers (`expect(text).toMatch(/ACC-SUB-\d{4}-\d{5}/)`) instead of exact values. If you find yourself typing a specific ID or name into test code, STOP — that is a hardcoded value.
-10. **Tests depending on execution order** — each test must be independently runnable
-11. **`expect(await el.isVisible()).toBe(true)`** — use `await expect(el).toBeVisible()` (auto-retries)
-12. **`{ force: true }` on clicks/checks** — hides real interaction problems (overlapping elements, not scrolled into view, disabled state). Diagnose the root cause instead: use `scrollIntoViewIfNeeded()`, wait for overlay to disappear, or wait for element to be enabled. Only acceptable when interacting with a custom widget that Playwright cannot natively trigger (document why in a comment).
-13. **`waitForLoadState('networkidle')` as default strategy** — `networkidle` waits for 500ms of no network activity, which breaks on long-polling, WebSockets, analytics beacons, or chat widgets. Use it ONLY for initial full-page loads where no streaming/polling exists. For post-action waits, use `waitForResponse` targeting the specific API call, or assert directly on the resulting UI state (Playwright auto-retries).
-14. **CSS utility class selectors (Tailwind, Bootstrap, etc.)** — `button.rounded-l-lg`, `.flex.items-center`, `.bg-primary` are styling concerns that change during refactors. Treat ALL utility framework classes as volatile — never use them as selectors. If no semantic locator works, request a `data-testid` from the dev team.
-15. **Asserting exact server-computed values** — `expect(revenue).toHaveText('12450')` will break when data changes. For dashboard counters, totals, and aggregates: (a) assert the element exists and contains a number (`toMatch(/\$[\d,]+/)`), (b) assert non-zero or within a range, (c) assert format correctness (`/^\d{1,3}(,\d{3})*$/`), (d) if exact value matters, seed the data via API first so you control the expected value.
-
-## Context-Saving Strategy
-
-For large test suites, use subagents to write individual test files when the files or responsibilities can be split cleanly. Pass the subagent:
-- The test case spec (from `test-cases/<feature>.md`)
-- Codebase conventions discovered in step 2
-- These operating principles and mapping tables
+See [references/anti-patterns.md](references/anti-patterns.md) for detailed explanations and fix strategies.

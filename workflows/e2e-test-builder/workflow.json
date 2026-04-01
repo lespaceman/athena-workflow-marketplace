@@ -1,6 +1,6 @@
 {
   "name": "e2e-test-builder",
-  "description": "Multi-session workflow for adding Playwright E2E tests end to end: start with orchestration, analyze the existing setup, explore the live product in a browser, maintain a concise tracker with meaningful progress updates, plan coverage, generate and review specs, write and review tests, then execute and stabilize them",
+  "description": "Adds Playwright E2E tests end to end — analyzes existing setup, explores the live product in a browser, plans coverage, generates specs, writes tests, and stabilizes them across multiple sessions",
   "promptTemplate": "{input}",
   "systemPromptFile": "system_prompt.md",
   "loop": {
@@ -10,6 +10,11 @@
     "trackerPath": "e2e-tracker.md",
     "maxIterations": 15
   },
+  "examplePrompts": [
+    "Add E2E tests for the login and signup flows at https://myapp.com",
+    "Build Playwright coverage for the checkout process",
+    "Write E2E tests for the dashboard and settings pages"
+  ],
   "isolation": "minimal",
   "plugins": [
     "agent-web-interface@lespaceman/athena-workflow-marketplace",

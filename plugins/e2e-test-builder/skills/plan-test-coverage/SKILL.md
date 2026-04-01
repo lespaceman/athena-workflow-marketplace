@@ -2,12 +2,12 @@
 name: plan-test-coverage
 description: >
   Use before writing specs or test code to decide what E2E coverage is needed first. It scans existing tests, inspects the target flow, finds coverage gaps, and produces a prioritized P0/P1/P2 plan with TC-IDs. Use it for requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It does not write detailed specs or executable tests.
-allowed-tools: Read Glob Grep Task mcp__browser__ping mcp__browser__navigate mcp__browser__find mcp__browser__get_element mcp__browser__get_form mcp__browser__get_field mcp__browser__click mcp__browser__type mcp__browser__press mcp__browser__select mcp__browser__hover mcp__browser__drag mcp__browser__scroll mcp__browser__scroll_to mcp__browser__wheel mcp__browser__snapshot mcp__browser__screenshot mcp__browser__go_back mcp__browser__go_forward mcp__browser__reload mcp__browser__list_pages mcp__browser__close_page
+allowed-tools: Read Glob Grep Task
 ---
 
 # Plan Test Coverage
 
-Plan what E2E tests to write for a feature by analyzing existing test coverage and doing a quick site inspection.
+Plan what E2E tests to write for a feature by analyzing existing test coverage and, when browser tooling is available in the current context, doing a quick site inspection.
 
 ## Workflow
 
@@ -21,13 +21,14 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
    - Identify what's already covered and what's missing
    - Note existing TC-IDs for the feature area to avoid conflicts
 
-3. **Quick site inspection** (lightweight, not full exploration):
-   - Load the `agent-web-interface-guide` skill before using browser MCP tools
+3. **Quick site inspection** (lightweight, not full exploration, optional if browser tooling is unavailable):
+   - If the current context has browser tools, follow the `agent-web-interface-guide` skill's browsing patterns (orient before acting, use `list_pages` for session awareness, close only pages you opened)
    - Navigate to the URL in a dedicated page
    - Use `find` to catalog the main interactive elements
    - Use `get_form` or `get_field` if the page has forms worth covering
    - Identify the key user flows visible on the page
    - Close only the page you opened when done; do not rely on a session-wide close
+   - If browser tooling is unavailable, infer flows from the URL, existing tests, route names, component names, and user-provided context, and record that the plan was produced without live inspection
 
 4. **Identify test categories** — for the feature, determine tests needed across:
    - **Critical path** — core happy path that must never break
@@ -39,6 +40,8 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
    - **Visual regression** — layout consistency, responsive breakpoints (375px, 768px, 1280px)
    - **Performance** — loading states, lazy loading, large data sets
    - **Network errors** — server 500s, timeouts, offline behavior
+
+   Not all categories apply to every project. Include Accessibility, Visual Regression, and Cross-Browser sections only when the project has explicit requirements, tooling, or configuration for them. Omit them from the output plan if not relevant — a focused plan is more useful than a padded one.
 
 5. **Prioritize** — rank tests by:
    - **P0 (Must have)**: Core user journey, auth flows, data corruption prevention. Blocks revenue/signups if broken.
@@ -75,7 +78,7 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
 |-------|-------------|-------|
 | TC-FEATURE-030 | Special characters in search input | Unicode handling |
 
-#### Accessibility
+#### Accessibility (include if project has accessibility requirements or WCAG compliance goals)
 | TC-ID | Description | WCAG Criterion |
 |-------|-------------|----------------|
 | TC-FEATURE-A01 | Keyboard-only navigation through flow | 2.1.1 Keyboard |
@@ -86,7 +89,7 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
 |-------|-------------|----------|
 | TC-FEATURE-V01 | Layout consistency at mobile width | 375x812 |
 
-#### Cross-Browser Matrix
+#### Cross-Browser Matrix (include if project runs tests across multiple browsers)
 | Browser | Priority | Reason |
 |---------|----------|--------|
 | Chromium | P0 | Primary target |

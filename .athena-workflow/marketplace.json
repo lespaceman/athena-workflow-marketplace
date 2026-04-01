@@ -11,7 +11,7 @@
     {
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
-      "description": "End-to-end Playwright test workflow: browser exploration first, tracker-driven progress, coverage planning, spec and code review gates, execution, and stabilization",
+      "description": "Autonomous Playwright E2E pipeline — explores your live site, plans coverage from real page structure, generates and reviews test specs, writes production-grade tests with quality gates at each stage, then executes and stabilizes",
       "version": "1.0.0"
     },
     {

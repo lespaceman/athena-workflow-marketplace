@@ -1,6 +1,6 @@
 {
   "name": "e2e-test-builder",
-  "description": "Skills for building Playwright E2E tests \u2014 analyze codebase, plan coverage, generate test cases, write test code, review, and fix flaky tests",
+  "description": "Full-pipeline Playwright E2E test generation — explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
   "version": "2.0.8",
   "author": {
     "name": "Athenaflow"
@@ -10,7 +10,11 @@
     "e2e",
     "testing",
     "test-generation",
-    "test-automation"
+    "test-automation",
+    "browser-exploration",
+    "quality-gates",
+    "coverage-planning",
+    "flaky-test-fix"
   ],
   "category": "testing"
 }

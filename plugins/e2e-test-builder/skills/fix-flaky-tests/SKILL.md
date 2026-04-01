@@ -1,9 +1,10 @@
 ---
 name: fix-flaky-tests
 description: >
-  Fix any Playwright test that is failing, flaky, timing out, or behaving inconsistently. Covers:
-  stabilize intermittent tests, debug timeouts ("Test timeout of 30000ms exceeded"), fix race
-  conditions, investigate local-vs-CI divergence, run repeated stability checks (--repeat-each).
+  This skill should be used when a Playwright test is failing, flaky, timing out, or behaving
+  inconsistently. It provides structured root cause analysis for: stabilizing intermittent tests,
+  debugging timeouts ("Test timeout of 30000ms exceeded"), fixing race conditions, investigating
+  local-vs-CI divergence, running repeated stability checks (--repeat-each).
   IMPORTANT: If running tests with --repeat-each, --retries, or multiple times to check stability,
   STOP and load this skill first — it has structured root cause analysis that prevents brute-force
   approaches. Triggers: "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI",
@@ -87,90 +88,15 @@ Investigate based on the classification:
 
 ### Step 3: Apply the Correct Fix
 
-Use the right fix pattern for the diagnosed root cause. **Never apply a fix without understanding the cause.**
+Use the right fix pattern for the diagnosed root cause. **Never apply a fix without understanding the cause.** See [references/fix-patterns.md](references/fix-patterns.md) for full code examples.
 
-**Timing fixes — replace sleeps with event-driven waits:**
-```typescript
-// BAD: arbitrary sleep
-await page.waitForTimeout(2000);
-await expect(element).toBeVisible();
-
-// GOOD: wait for the network event that loads the content
-await page.waitForResponse(resp => resp.url().includes('/api/data'));
-await expect(element).toBeVisible();
-
-// GOOD: wait for loading indicator to disappear
-await expect(page.getByRole('progressbar')).toBeHidden();
-await expect(element).toBeVisible();
-
-// GOOD: wait for navigation to complete
-await page.goto('/page', { waitUntil: 'networkidle' });
-
-// GOOD: use auto-retrying assertion (retries until timeout)
-await expect(page.getByText(/loaded/i)).toBeVisible({ timeout: 10000 });
-```
-
-**State isolation fixes:**
-```typescript
-// Unique data per test
-const uniqueEmail = `test-${Date.now()}@example.com`;
-
-// Reset state via API before each test
-test.beforeEach(async ({ request }) => {
-  await request.post('/api/test/reset');
-});
-
-// Use fresh browser context (default in Playwright, but verify)
-// Do NOT share page or context between tests
-```
-
-**Race condition fixes:**
-```typescript
-// Wait for hydration/framework readiness
-await page.waitForFunction(() =>
-  document.querySelector('[data-hydrated="true"]')
-);
-
-// Use Promise.all for action + expected response
-const [response] = await Promise.all([
-  page.waitForResponse('**/api/submit'),
-  submitButton.click(),
-]);
-
-// Wait for animation/transition to complete
-await expect(modal).toBeVisible();
-await page.waitForFunction(() =>
-  !document.querySelector('.modal-animating')
-);
-```
-
-**Selector fixes:**
-```typescript
-// BAD: position-dependent, matches wrong element if order changes
-page.locator('.item').first();
-
-// GOOD: scoped to container with unique content
-page.getByRole('listitem').filter({ hasText: 'Specific Item' });
-
-// GOOD: use test IDs for ambiguous elements
-page.getByTestId('cart-item-sku-123');
-
-// GOOD: scope to a region first, then find within
-page.locator('main').getByRole('button', { name: /submit/i });
-```
-
-**Environment fixes:**
-```typescript
-// Set explicit viewport in test or config
-test.use({ viewport: { width: 1280, height: 720 } });
-
-// Use timezone-agnostic assertions
-await expect(dateElement).toContainText(/\d{4}/); // year, not full date string
-
-// Block third-party scripts that interfere
-await page.route('**/analytics/**', route => route.abort());
-await page.route('**/chat-widget/**', route => route.abort());
-```
+| Category | Principle |
+|----------|-----------|
+| **Timing** | Replace sleeps with event-driven waits (`waitForResponse`, auto-retrying assertions) |
+| **State isolation** | Unique data per test, API-based reset in `beforeEach`, no shared mutable state |
+| **Race condition** | Use `Promise.all` for action + expected response; wait for hydration before interaction |
+| **Selector** | Scope locators to containers with unique content; avoid `.first()` and position-dependent selectors |
+| **Environment** | Explicit viewport, timezone-agnostic assertions, block interfering third-party scripts |
 
 ### Step 4: Verify the Fix
 
@@ -183,6 +109,7 @@ await page.route('**/chat-widget/**', route => route.abort());
    npx playwright test --reporter=list 2>&1
    ```
 3. If still flaky → return to Step 2 with the new failure output. The initial classification may have been wrong.
+4. **Maximum 3 fix-and-rerun cycles.** If the test is still flaky after 3 attempts, stop and report the diagnostic findings (root cause hypothesis, fixes attempted, remaining failure output) so the user can decide next steps. Do not continue looping.
 
 ### Step 5: Summarize
 
@@ -213,12 +140,6 @@ When the standard categories don't fit, check these:
 
 These mask the problem. Never apply them without a real fix:
 
-## Multiple Flaky Tests
-
-For suites with multiple flaky tests, use subagents to split independent fixes by test file when the write scopes do not overlap. Pass each subagent the test file path, this diagnostic workflow, and the root cause classification table.
-
-## Anti-Patterns: What is NOT a Fix
-
 | "Fix" | Why It's Wrong | Real Fix |
 |-------|---------------|----------|
 | `waitForTimeout(3000)` | Hides timing race, will break under load | Wait for the specific event |
@@ -228,3 +149,12 @@ For suites with multiple flaky tests, use subagents to split independent fixes b
 | `retries: 3` without fix | Masks real failures, wastes CI time | Fix the root cause, then keep retries as safety net |
 | `{ force: true }` | Bypasses actionability checks, hides overlapping elements or disabled state | Find and fix the actionability issue: wait for overlay to disappear, scroll element into view, or wait for enabled state |
 | `try/catch` swallowing errors | Test passes but doesn't verify anything | Fix the assertion |
+
+## Multiple Flaky Tests
+
+When a suite has several flaky tests:
+
+1. **Triage first.** Run the full suite once and group failures by root cause category (timing, state leakage, etc.). Shared root causes (broken fixture, leaking state) should be fixed once, not per-test.
+2. **Fix shared infrastructure issues first.** A bad `beforeEach`, a leaking `storageState`, or a missing cleanup can cause many tests to fail. One fix resolves many failures.
+3. **Split independent fixes across subagents** when the fix scopes do not overlap (different test files, no shared fixtures). Pass each subagent the test file path, this diagnostic workflow, and the root cause classification table.
+4. The 3 fix-and-rerun cycle limit applies **per test**, not globally.

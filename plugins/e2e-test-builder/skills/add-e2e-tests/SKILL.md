@@ -1,23 +1,20 @@
 ---
 name: add-e2e-tests
 description: >
-  Use when the user wants the full end-to-end workflow for adding Playwright tests to an existing codebase.
-  Triggers: "add E2E tests for this feature", "add end-to-end tests", "create Playwright tests for my app",
-  "set up E2E testing", "I need tests for this feature from scratch", "build test coverage for",
-  "full test pipeline for", "analyze my codebase and write tests".
-  This is the entry point for the full workflow. It orchestrates the sequence: maintain a concise tracker
-  with meaningful progress updates, analyze existing Playwright conventions, explore the live site before
-  specs or code, plan coverage, generate structured TC-ID specs, write executable Playwright tests, and
-  verify the result.
-  Uses subagent-driven development — delegates heavy browser exploration and test writing to subagents
-  when that saves context and keeps the main thread focused on orchestration.
-  Iterative and resumable — detects progress from files and picks up where it left off.
+  THE DEFAULT ENTRY POINT for all Playwright / E2E test work. This skill should be used FIRST
+  whenever the user wants to add, create, or set up end-to-end tests for any feature, page, or
+  application. Runs the full pipeline: analyze codebase, explore the live site, plan coverage,
+  generate TC-ID specs, run quality-gate reviews, write production-grade test code, and execute.
+  Delegates to sub-skills (analyze-test-codebase, plan-test-coverage, generate-test-cases,
+  review-test-cases, write-test-code, review-test-code, fix-flaky-tests) internally — do NOT
+  skip to sub-skills directly unless the user explicitly requests a narrow activity.
+  Iterative and resumable via tracker file. Uses subagent delegation to save context.
 allowed-tools: Read Write Edit Glob Grep Bash Task
 ---
 
 # Add E2E Tests
 
-You are an E2E test builder. In this interactive session, you go from zero to passing Playwright tests for the user's feature.
+Go from zero to passing Playwright tests for the target feature in one interactive session.
 
 ## Input
 
@@ -88,6 +85,8 @@ After orienting, update the tracker with what you learned about the codebase and
 3. What is remaining?
 4. What should I do next?
 
+See [references/tracker-template.md](references/tracker-template.md) for a concrete template.
+
 ### 2. Plan: Refine Tasks Into Granular Checkpoints
 
 By now you have initial tasks and a tracker from step 1. Refine tasks into granular checkpoints. The plan should flow from what you learned during orientation, not from a fixed template.
@@ -143,7 +142,7 @@ Delegate heavy browser exploration and test writing to subagents when that saves
 
 #### Quality gates
 
-Two review gates are mandatory during execution. Both are review-only — they produce findings but do not modify files.
+Two review gates and a test execution checkpoint are mandatory during execution. The review gates are review-only — they produce findings but do not modify files.
 
 **Gate 1: Review test case specs** (after `generate-test-cases`, before `write-test-code`)
 1. Load the `review-test-cases` skill and run it against `test-cases/<feature>.md`
@@ -157,7 +156,7 @@ Two review gates are mandatory during execution. Both are review-only — they p
 3. If verdict is **PASS WITH WARNINGS** — fix warnings that affect stability, proceed with execution
 4. Record the review verdict in the tracker
 
-**Gate 3: Test execution**
+**Checkpoint: Test execution**
 1. Run the tests: `npx playwright test <file> --reporter=list 2>&1`
 2. Record full output — green test output is the only proof of correctness
 3. If tests fail, load the `fix-flaky-tests` skill and follow its structured diagnostic approach. Do not guess-and-retry.
@@ -171,6 +170,10 @@ Do not wait until session end. After each meaningful chunk of progress (completi
 
 Keep the tracker and task list synchronized. If you record progress in the tracker, update the corresponding task status in the same phase of work.
 
+#### Error recovery
+
+If infrastructure failures occur (browser MCP unavailable, clone failures, npm install errors), see [references/error-recovery.md](references/error-recovery.md) for diagnostic steps. General pattern: diagnose, attempt one known fix, if still stuck record in tracker and ask the user.
+
 ### 4. End of Session
 
 Before exiting:
@@ -183,25 +186,11 @@ Do not write terminal markers prematurely. Only after you are confident the work
 
 ## Scaffolding
 
-If Playwright is not set up in the target project:
-
-1. Clone `git@github.com:lespaceman/playwright-typescript-e2e-boilerplate.git`
-2. Copy config/fixtures/pages/utils into the project (do not overwrite existing files)
-3. Update `baseURL` to the target URL, remove example tests
-3b. **Test execution strategy:** If the project needs role-based or category-based test filtering, configure it via Playwright `--grep` tags or file naming conventions (`*.admin.spec.ts`), NOT via `testIgnore` regex patterns. A `testIgnore` regex becomes a maintenance trap — every new test file requires updating the regex. If the boilerplate includes a `testIgnore` regex, replace it with tag-based filtering.
-4. Merge devDependencies into package.json
-5. Run `npm install && npx playwright install --with-deps chromium`
-6. Clean up the temp clone
-7. Log the scaffolding in the tracker
+If Playwright is not set up in the target project, follow the procedure in [references/scaffolding.md](references/scaffolding.md) to clone the boilerplate, merge configuration, and install dependencies. Log all scaffolding steps in the tracker.
 
 ## Authentication
 
-If the target feature requires login or any form of authentication:
-
-1. Check whether existing test fixtures, environment variables, or auth setup files already handle this. Load `analyze-test-codebase` to find auth patterns.
-2. If no auth setup exists, ask the user for credentials or an auth strategy (stored auth state, API tokens, test accounts). Do not proceed with tests that require login until auth is resolved.
-3. Never hardcode credentials in test files. Use environment variables, Playwright's `storageState`, or the project's existing auth fixture pattern.
-4. If you discover auth is needed mid-session (e.g., a page redirects to login), ask the user immediately and add auth setup as a prerequisite task.
+If the target feature requires login, follow [references/authentication.md](references/authentication.md). Key rule: never hardcode credentials — use environment variables or `storageState`.
 
 ## Principles
 

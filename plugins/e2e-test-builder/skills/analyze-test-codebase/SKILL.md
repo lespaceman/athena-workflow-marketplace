@@ -1,18 +1,16 @@
 ---
 name: analyze-test-codebase
 description: >
-  Scan and report on an existing Playwright test codebase. Use this skill when the user wants to inspect
-  the current Playwright setup before writing, reviewing, or fixing tests. Use this skill BEFORE
-  writing new tests whenever someone needs to know what's already there. Covers: Playwright config,
-  page objects, fixtures, helpers, auth/globalSetup
-  patterns, test conventions, and directory structure. Trigger on any request to "understand", "check",
-  "show me", "inspect", or "analyze" the current test setup, config, infrastructure, patterns, or
-  conventions. IMPORTANT: Before writing ANY Playwright
-  test code in a new project, load this skill early to understand existing patterns. In the full
-  add-tests workflow, use it as an early read-only analysis sub-step before planning detailed coverage
-  or writing code, not as a replacement for the orchestration skill. This skill examines existing files
-  and outputs a structured report. It does NOT write or fix tests, explore live websites, or install
-  Playwright.
+  Scans and reports on an existing Playwright test codebase. This skill should be used to inspect
+  the current Playwright setup before writing, reviewing, or fixing tests, and should be loaded
+  early when working in a new project to understand existing patterns. Covers: Playwright config,
+  page objects, fixtures, helpers, auth/globalSetup patterns, test conventions, and directory
+  structure. Triggers: "understand", "check", "show me", "inspect", or "analyze"
+  the current test setup, config, infrastructure, patterns, or conventions. In the full add-tests
+  workflow, this skill serves as an early read-only analysis sub-step before planning detailed
+  coverage or writing code. This skill examines existing files and outputs a structured report.
+  It does NOT write or fix tests, install Playwright, or explore live websites — for live site
+  exploration, use agent-web-interface-guide instead.
 allowed-tools: Read Glob Grep Bash
 ---
 
@@ -60,13 +58,12 @@ Scan and analyze an existing Playwright test codebase to understand its conventi
 5. **Check for supporting infrastructure**:
    - `fixtures/` or `helpers/` directories
    - `pages/` or `pom/` (Page Object Model)
-   - `.env` or `.env.test` files
+   - `.env` or `.env.test` files (test-specific environment configuration)
    - CI configuration (`.github/workflows/`, `Jenkinsfile`, etc.)
    - `package.json` scripts for running tests
    - `*.har` files or HAR directories (recorded API responses for mocking)
    - Snapshot directories (`__snapshots__`, `screenshots/`) for visual regression baselines
    - Docker or `docker-compose` for test environment setup
-   - `.env.test` or test-specific environment configuration
    - Global setup/teardown scripts — what they do (auth, seeding, cleanup)
 
 6. **Generate report** — output a structured summary:
@@ -122,6 +119,17 @@ Scan and analyze an existing Playwright test codebase to understand its conventi
 - Use `baseURL` for navigation (relative paths)
 - Auth: reuse existing storageState setup
 ```
+
+## Out of Scope
+
+This skill only reads and reports on the codebase. For related tasks, use the appropriate skill:
+
+| Task | Skill |
+|------|-------|
+| Browsing a live site, interacting with UI elements | `agent-web-interface-guide` |
+| Deciding what to test, coverage gaps, priorities | `plan-test-coverage` |
+| Writing or modifying executable test code | `write-test-code` |
+| Diagnosing flaky or failing tests | `fix-flaky-tests` |
 
 ## Example Usage
 

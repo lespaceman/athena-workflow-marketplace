@@ -10,6 +10,11 @@
     "trackerPath": "web-bench-tracker.md",
     "maxIterations": 2500
   },
+  "examplePrompts": [
+    "Run the next WebBench task and score it",
+    "Execute all remaining benchmark tasks",
+    "Re-run failed tasks from the last batch"
+  ],
   "isolation": "minimal",
   "plugins": ["web-bench@lespaceman/athena-workflow-marketplace"]
 }

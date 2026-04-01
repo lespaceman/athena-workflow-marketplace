@@ -82,39 +82,21 @@ Launch another subagent, or continue in the main thread if the flow is small, to
 
 After exploration, reason about scenarios that could not be directly triggered but must be covered:
 
-**Network & Performance:**
-- Network failure during form submission (mock 500, timeout)
-- Slow API response (loading states, skeleton screens, spinners)
-- Large data sets (pagination, infinite scroll, 100+ items)
-- Offline behavior (if PWA or service worker is present)
+- **Network & Performance** — failure modes, slow responses, large data sets, offline behavior
+- **Accessibility (WCAG 2.1 AA)** — keyboard navigation, screen reader support, focus management, contrast
+- **Visual Consistency** — layout stability, responsive breakpoints, dark mode
+- **Cross-browser** — Safari/Firefox/mobile-specific behavioral differences
+- **Concurrent & Session** — session expiry, multi-tab conflicts, race conditions
 
-**Accessibility (WCAG 2.1 AA):**
-- Keyboard-only navigation through the entire flow (Tab, Enter, Escape)
-- Screen reader announcements for dynamic content (ARIA live regions)
-- Focus management after modal open/close, page transitions
-- Color contrast for error states and disabled elements
-- Form error association (`aria-describedby` linking errors to fields)
-
-**Visual Consistency:**
-- Layout stability (no unexpected content shifts after load)
-- Responsive behavior at standard breakpoints (mobile 375px, tablet 768px, desktop 1280px)
-- Dark mode rendering if supported
-
-**Cross-browser Considerations:**
-- Safari-specific behavior (date inputs, smooth scrolling, storage quirks)
-- Firefox form validation differences
-- Mobile browser touch targets and gestures
-
-**Concurrent & Session:**
-- Session expiry mid-flow (cookie cleared during multi-step)
-- Concurrent access (two tabs, same user)
-- Race conditions (double-click submit, rapid navigation)
+See [references/scenario-categories.md](references/scenario-categories.md) for detailed checklists within each category.
 
 ### Step 5: Generate Test Case Specifications
 
 Write structured test cases to `test-cases/<feature-name>.md`.
 
-## Test Case Format
+## Output Specification
+
+### Test Case Format
 
 ```markdown
 ### TC-<FEATURE>-<NUMBER>: <Descriptive title>
@@ -139,7 +121,7 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 - <Additional context discovered during exploration>
 ```
 
-## Output Organization
+### Output Organization
 
 ```markdown
 # Test Cases: <Feature Name>
@@ -163,11 +145,11 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 ## Accessibility & UX
 ```
 
-## File Naming Convention for Selective Execution
+### File Naming Convention
 
 When generating specs that span multiple roles or test categories, recommend role-based file naming (`*.admin.spec.ts`, `*.user.spec.ts`) or Playwright tag annotations (`@admin`, `@smoke`) in the spec. This enables selective execution via `--grep @admin` or glob patterns instead of fragile `testIgnore` regex in playwright.config.ts. NEVER recommend a `testIgnore` regex that must be updated for every new test file.
 
-## TC-ID Convention
+### TC-ID Convention
 
 - Format: `TC-<FEATURE>-<NNN>` where NNN is zero-padded to 3 digits
 - Feature abbreviation: short and clear (LOGIN, CHECKOUT, SEARCH, SIGNUP)
@@ -181,6 +163,7 @@ When generating specs that span multiple roles or test categories, recommend rol
 - Expected results must be **observable and verifiable** — include actual error messages observed
 - Priority must be **justified** — Critical = blocks core journey, High = significant, Medium = secondary, Low = cosmetic
 - Every feature spec MUST include at minimum: one network error scenario (500/timeout), one empty state scenario, and one session/auth edge case (if the feature requires auth). These are non-negotiable — omitting them is a BLOCKER in the review-test-cases quality gate.
+- **Test case count guidance:** Aim for 15-30 test cases per feature area as a baseline. Fewer than 10 suggests missing error paths or edge cases. More than 40 suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
 
 ## Blocking Conditions
 

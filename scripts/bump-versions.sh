@@ -62,6 +62,20 @@ with open('$codex_json', 'w') as f:
 "
   fi
 
+  # Update package.json (npm package)
+  local pkg_json="$REPO_ROOT/plugins/$plugin_name/package.json"
+  if [[ -f "$pkg_json" ]]; then
+    python3 -c "
+import json
+with open('$pkg_json', 'r') as f:
+    data = json.load(f)
+data['version'] = '$new_version'
+with open('$pkg_json', 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+"
+  fi
+
   # Update marketplace.json
   python3 -c "
 import json
@@ -98,10 +112,77 @@ while IFS= read -r file; do
 done < <(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD)
 
 if [[ ${#changed_plugins[@]} -eq 0 ]]; then
-  echo "No plugin changes detected, nothing to bump"
-  exit 0
+  echo "No plugin changes detected"
+else
+  for plugin in "${changed_plugins[@]}"; do
+    update_plugin_version "$plugin"
+  done
 fi
 
-for plugin in "${changed_plugins[@]}"; do
-  update_plugin_version "$plugin"
-done
+# --- Workflow version bumping ---
+# Any change to a workflow definition triggers a patch version bump.
+
+WF_MARKETPLACE="$REPO_ROOT/.athena-workflow/marketplace.json"
+
+update_workflow_version() {
+  local wf_name="$1"
+  local wf_json="$REPO_ROOT/workflows/$wf_name/workflow.json"
+
+  if [[ ! -f "$wf_json" ]]; then
+    echo "Warning: $wf_json not found, skipping" >&2
+    return
+  fi
+
+  local current_version
+  current_version=$(python3 -c "import json; print(json.load(open('$wf_json')).get('version', '0.0.0'))")
+  local new_version
+  new_version=$(bump_version "$current_version")
+
+  # Update workflow.json
+  python3 -c "
+import json
+with open('$wf_json', 'r') as f:
+    data = json.load(f)
+data['version'] = '$new_version'
+with open('$wf_json', 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+"
+
+  # Update .athena-workflow/marketplace.json
+  if [[ -f "$WF_MARKETPLACE" ]]; then
+    python3 -c "
+import json
+with open('$WF_MARKETPLACE', 'r') as f:
+    data = json.load(f)
+for w in data.get('workflows', []):
+    if w['name'] == '$wf_name':
+        w['version'] = '$new_version'
+        break
+with open('$WF_MARKETPLACE', 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+"
+  fi
+
+  echo "workflow $wf_name: $current_version -> $new_version"
+}
+
+# Auto-detect changed workflows from git diff
+changed_workflows=()
+while IFS= read -r file; do
+  if [[ "$file" =~ ^workflows/([^/]+)/ ]]; then
+    wf="${BASH_REMATCH[1]}"
+    if [[ ! " ${changed_workflows[*]:-} " =~ " $wf " ]]; then
+      changed_workflows+=("$wf")
+    fi
+  fi
+done < <(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD)
+
+if [[ ${#changed_workflows[@]} -eq 0 ]]; then
+  echo "No workflow changes detected"
+else
+  for wf in "${changed_workflows[@]}"; do
+    update_workflow_version "$wf"
+  done
+fi

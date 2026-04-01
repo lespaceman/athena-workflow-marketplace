@@ -1,10 +1,11 @@
-name: Auto-bump plugin versions
+name: Auto-bump versions
 
 on:
   push:
     branches: [main]
     paths:
       - 'plugins/**'
+      - 'workflows/**'
 
 jobs:
   bump-versions:
@@ -16,8 +17,29 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Bump changed plugin versions
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Bump changed plugin and workflow versions
         run: bash scripts/bump-versions.sh
+
+      - name: Collect bumped plugins
+        id: collect_plugins
+        run: |
+          changed_plugins="$(git diff --name-only -- plugins/*/package.json plugins/*/.claude-plugin/plugin.json plugins/*/.codex-plugin/plugin.json | awk -F/ '/^plugins\/[^/]+\// {print $2}' | sort -u)"
+          if [ -z "$changed_plugins" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          {
+            echo 'plugin_list<<EOF'
+            printf '%s\n' "$changed_plugins"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Commit version bumps
         run: |
@@ -27,6 +49,19 @@ jobs:
           if git diff --cached --quiet; then
             echo "No version changes to commit"
           else
-            git commit -m "chore: auto-bump plugin versions [skip ci]"
+            git commit -m "chore: auto-bump versions [skip ci]"
             git push
           fi
+
+      - name: Publish changed plugins to npm
+        if: steps.collect_plugins.outputs.changed == 'true'
+        run: |
+          while IFS= read -r plugin; do
+            [ -n "$plugin" ] || continue
+            echo "Publishing $plugin..."
+            (cd "plugins/$plugin" && npm publish --access public)
+          done <<'EOF'
+          ${{ steps.collect_plugins.outputs.plugin_list }}
+          EOF
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

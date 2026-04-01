@@ -1,8 +1,8 @@
 ---
 name: review-test-code
 description: >
-  Quality review of Playwright test code before final execution signoff. Use when the user wants
-  implementation review of executable Playwright tests, not diagnosis of runtime flakiness.
+  Quality review of Playwright test code before final execution signoff. This skill should be used
+  when implementation review of executable Playwright tests is needed, not for diagnosis of runtime flakiness.
   Triggers: "review test code", "review Playwright tests", "check test quality",
   "audit test implementation", "review my tests before merging", "check test code for issues",
   "review e2e tests", "code review Playwright", "are my tests stable",
@@ -30,7 +30,7 @@ If no argument provided, search for recently modified `*.spec.ts` or `*.test.ts`
 
 1. Read the test file(s) to review
 2. Read project conventions for comparison:
-   - `playwright.config.ts` or `playwright.config.js` — extract `baseURL`, `testDir`, projects, timeouts
+   - `playwright.config.ts` or `playwright.config.js` — extract `baseURL`, `testDir`, projects, timeouts, `fullyParallel`, `workers`
    - 2-3 existing test files (not the ones under review) to establish the project's conventions
    - `e2e-plan/conventions.md` if it exists
 3. Read the corresponding test case spec (`test-cases/<feature>.md`) if it exists — needed for traceability check
@@ -55,7 +55,7 @@ Evaluate the test code against each criterion. Track findings by severity:
 | Scoped to containers | Locators narrowed to `main`, `nav`, `[role="dialog"]` where needed |
 | No exact long text matches | Use regex with key words instead of full marketing copy |
 
-When a locator appears suspicious, open the target URL and verify the element exists and is unique using `find` and `get_element`.
+When a locator appears suspicious, delegate verification to a subagent (Task tool): instruct it to open the target URL, locate the element using the browser MCP tools (`find`, `get_element`), and report back whether the element exists and is unique.
 
 #### 2b. Waiting and Timing
 
@@ -88,7 +88,7 @@ When a locator appears suspicious, open the target URL and verify the element ex
 | No test coupling | Test B does not depend on side effects from Test A |
 | Auth handled correctly | `storageState` or fixture, not UI login in every test (unless testing login itself) |
 | Test data is unique | Uses `Date.now()`, factories, or unique IDs — not hardcoded shared data |
-| Parallel-safe when fullyParallel | Tests that create data must not assert on unscoped lists or counts — filter assertions to the specific data created |
+| Parallel-safe (if `fullyParallel: true` or `workers` > 1 found in config) | Tests that create data must not assert on unscoped lists or counts — filter assertions to the specific data created. If parallelism is disabled, note as SUGGESTION rather than WARNING |
 | Data cleanup present | Tests that create persistent records (API POST/PUT) must have corresponding teardown (`afterEach`, fixture cleanup, or `globalTeardown`) |
 
 #### 2e. Convention Adherence
@@ -125,6 +125,9 @@ Flag any instances of these known anti-patterns:
 10. `expect(await el.isVisible()).toBe(true)` instead of `await expect(el).toBeVisible()`
 11. Missing `await` on Playwright calls (easy to miss, causes silent failures)
 12. `{ force: true }` on interactions without documented justification (masks actionability issues — overlapping elements, disabled state, not scrolled into view)
+13. `waitForLoadState('networkidle')` as default wait strategy — breaks on long-polling, WebSockets, analytics beacons; use specific `waitForResponse` or UI assertions instead
+14. CSS utility class selectors (Tailwind `rounded-lg`, `flex`, Bootstrap `btn-primary`, `col-md-*`) — styling classes are volatile, never use as selectors
+15. Asserting exact server-computed values (`toHaveText('12450')`) — use pattern matchers, ranges, or seed data to control expected values
 
 ### Step 3: Produce the Review Report
 
@@ -170,7 +173,7 @@ Output a structured review with this format:
 
 - **Review-only** — never modify test files; report findings for the author to act on
 - **Evidence over opinion** — cite specific file paths, line numbers, and code snippets when flagging issues
-- **Spot-check selectors** — use browser tools to verify 2-3 suspicious locators against the live site
+- **Spot-check selectors** — delegate to a subagent with browser access to verify 2-3 suspicious locators against the live site
 - **Convention-first** — compare against the project's existing test patterns, not an abstract ideal
 - **Bounded output** — the review should be actionable and finite, not a full rewrite specification
 - **Severity matters** — a missing `await` is a blocker; a naming style preference is a suggestion

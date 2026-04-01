@@ -1,15 +1,15 @@
 ---
 name: review-test-cases
 description: >
-  Use when the user wants a quality review of TC-ID test case specifications before writing executable
-  test code. This reviews the spec artifact only; it does not implement or rewrite tests.
+  This skill should be used when a quality review of TC-ID test case specifications is needed before writing executable
+  test code. It reviews the spec artifact only; it does not implement or rewrite tests.
   Triggers: "review test cases", "check test specs", "review TC-IDs", "audit test coverage",
   "are my test cases good", "validate test specs", "review test-cases/*.md",
   "check for gaps in test cases", "review before writing tests", "quality check test specs".
   Inserted as a quality gate between generate-test-cases and write-test-code — catches
   gaps, duplication, weak assertions, missing error paths, and invented scenarios before they get
   encoded into test code. Review-only — does NOT modify the spec file, does NOT write test code.
-  Use write-test-code for implementation.
+  The write-test-code skill should be used for implementation.
 allowed-tools: Read Glob Grep Task
 ---
 
@@ -73,7 +73,7 @@ Red flags for invented scenarios:
 - Test cases for UI elements that may not exist (e.g., "retry button" on error page without visiting the error page)
 - Server-side behavior assumptions (e.g., "rate limit after 5 attempts" without evidence)
 
-When suspicious: open the target URL using the browser MCP tools and spot-check 2-3 claims. Verify that referenced elements exist and behave as described.
+When suspicious: delegate a spot-check to a subagent with browser access (Task tool). Pass it the target URL, the specific TC-IDs under suspicion, and the claims to verify (element existence, error message text, validation behavior). The subagent should return structured evidence: what it found, what matched, what differed.
 
 #### 2d. Duplication and Overlap
 
@@ -126,11 +126,13 @@ Output a structured review with this format:
 - **PASS WITH WARNINGS** — no blockers, 3+ warnings. Can proceed but should address warnings.
 - **NEEDS REVISION** — 1+ blockers. Do not proceed to write-test-code until blockers are resolved.
 
+Example: 0 blockers + 2 warnings = PASS. 0 blockers + 3 warnings = PASS WITH WARNINGS. 1+ blockers = NEEDS REVISION regardless of warning count.
+
 ## Principles
 
 - **Review-only** — never modify the spec file; report findings for the author to act on
 - **Evidence over opinion** — cite specific TC-IDs and quote specific steps/assertions when flagging issues
-- **Spot-check against live site** — use browser tools to verify 2-3 suspicious claims rather than trusting all text at face value
+- **Spot-check against live site** — delegate to a subagent with browser access to verify 2-3 suspicious claims rather than trusting all text at face value
 - **Bounded output** — the review report should be actionable and finite, not an exhaustive rewrite
 - **Severity matters** — distinguish blockers from suggestions; not every imperfection is worth fixing before implementation
 

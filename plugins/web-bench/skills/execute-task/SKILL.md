@@ -1,18 +1,18 @@
 ---
 name: execute-task
 description: >
-  Execute a single WebBench benchmark task via browser automation.
+  Methodology for executing a single WebBench benchmark task via browser automation.
   Triggers: "execute task", "run task", "perform benchmark task", "browser task".
-  Navigates to the Starting_URL, interprets the natural-language task description,
-  performs the required browser actions, and captures the final state (screenshot + snapshot).
+  Interprets the natural-language task description, defines the required browser actions,
+  and specifies what final evidence to capture (for example screenshot + snapshot).
   Records an execution trace with actions taken and errors encountered.
   Does NOT evaluate success — use evaluate-task for that.
-allowed-tools: Read Write Edit Bash mcp__plugin_web-bench_agent-web-interface__ping mcp__plugin_web-bench_agent-web-interface__navigate mcp__plugin_web-bench_agent-web-interface__find mcp__plugin_web-bench_agent-web-interface__get_element mcp__plugin_web-bench_agent-web-interface__get_form mcp__plugin_web-bench_agent-web-interface__get_field mcp__plugin_web-bench_agent-web-interface__click mcp__plugin_web-bench_agent-web-interface__type mcp__plugin_web-bench_agent-web-interface__press mcp__plugin_web-bench_agent-web-interface__select mcp__plugin_web-bench_agent-web-interface__hover mcp__plugin_web-bench_agent-web-interface__drag mcp__plugin_web-bench_agent-web-interface__scroll mcp__plugin_web-bench_agent-web-interface__scroll_to mcp__plugin_web-bench_agent-web-interface__wheel mcp__plugin_web-bench_agent-web-interface__snapshot mcp__plugin_web-bench_agent-web-interface__screenshot mcp__plugin_web-bench_agent-web-interface__go_back mcp__plugin_web-bench_agent-web-interface__go_forward mcp__plugin_web-bench_agent-web-interface__reload mcp__plugin_web-bench_agent-web-interface__list_pages mcp__plugin_web-bench_agent-web-interface__close_page
+allowed-tools: Read Write Edit Bash
 ---
 
 # Execute WebBench Task
 
-Execute a single WebBench task via browser automation. This skill handles the browser interaction — navigating, clicking, typing, extracting data — required to complete the task.
+Execute a single WebBench task using a browser-capable calling context. This skill does not own browser MCP tools; it defines the execution protocol the caller should follow while navigating, clicking, typing, and extracting data.
 
 ## Input
 
@@ -26,7 +26,7 @@ You receive a single task object:
 
 ### 1. Record Start Time
 
-Before any browser interaction:
+Before any browser interaction by the calling context:
 
 ```bash
 date +%s%3N
@@ -40,7 +40,7 @@ Save this as `start_time_ms`. You will need it for the result record.
 navigate → task.url
 ```
 
-Wait for the page to load. Take an initial snapshot to understand the page structure.
+The calling context should wait for the page to load and take an initial snapshot to understand the page structure.
 
 ### 3. Interpret the Task
 
@@ -60,7 +60,7 @@ Work through the task step by step:
 
 1. **Observe** — Use `snapshot` or `find` to understand the current page state
 2. **Plan** — Decide the next action based on what you see
-3. **Act** — Use the appropriate MCP tool (click, type, select, etc.)
+3. **Act** — Use the appropriate browser tool available in the calling context (`click`, `type`, `select`, etc.)
 4. **Verify** — Check that the action had the expected effect
 
 **Key principles:**
@@ -89,8 +89,8 @@ Work through the task step by step:
 
 After completing the task (or hitting a blocker):
 
-1. Take a **screenshot** of the final page state
-2. Take a **snapshot** of the final DOM state
+1. Have the calling context take a **screenshot** of the final page state
+2. Have the calling context take a **snapshot** of the final DOM state
 3. Record the **current URL**
 
 ### 7. Record End Time

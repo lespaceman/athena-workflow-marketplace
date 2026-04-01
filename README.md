@@ -43,6 +43,12 @@ Each plugin package now generates versioned runtime artifacts during `npm pack` 
 - `dist/<version>/codex/plugin/`
 - `dist/<version>/codex/marketplace.json`
 
+The generated runtime plugin directories are packaged artifacts, not source mirrors:
+
+- They keep the runtime-specific overlay for the target runtime plus the shared skill source.
+- They exclude transient local install state such as `node_modules/` and lockfiles.
+- They do not retain repo-only build hooks that depend on this repository layout.
+
 Build them locally for one plugin with:
 
 ```shell
