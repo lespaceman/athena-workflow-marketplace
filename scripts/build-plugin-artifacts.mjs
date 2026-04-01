@@ -2,6 +2,26 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+const EXCLUDED_TOP_LEVEL_NAMES = new Set([
+  'dist',
+  'node_modules',
+  '.git',
+]);
+
+const EXCLUDED_ANYWHERE_NAMES = new Set([
+  '.DS_Store',
+  'npm-debug.log',
+]);
+
+const EXCLUDED_TOP_LEVEL_FILES = new Set([
+  '.gitignore',
+  '.npmignore',
+  'package-lock.json',
+  'pnpm-lock.yaml',
+  'yarn.lock',
+  'bun.lockb',
+]);
+
 function findRepoRoot(startDir) {
   let current = path.resolve(startDir);
   for (;;) {
@@ -24,16 +44,66 @@ function ensureCleanDir(dir) {
   fs.mkdirSync(dir, {recursive: true});
 }
 
+function shouldSkipEntry({relativePath, entryName, excludedTopLevelName}) {
+  const segments = relativePath.split(path.sep).filter(Boolean);
+  if (segments.length === 1) {
+    if (entryName === excludedTopLevelName) return true;
+    if (EXCLUDED_TOP_LEVEL_NAMES.has(entryName)) return true;
+    if (EXCLUDED_TOP_LEVEL_FILES.has(entryName)) return true;
+  }
+  return segments.some((segment) => EXCLUDED_ANYWHERE_NAMES.has(segment));
+}
+
+function copyEntry(sourcePath, targetPath, excludedTopLevelName, rootDir) {
+  const relativePath = path.relative(rootDir, sourcePath);
+  const entryName = path.basename(sourcePath);
+  if (shouldSkipEntry({relativePath, entryName, excludedTopLevelName})) {
+    return;
+  }
+
+  const stat = fs.statSync(sourcePath);
+  if (stat.isDirectory()) {
+    fs.mkdirSync(targetPath, {recursive: true});
+    for (const entry of fs.readdirSync(sourcePath, {withFileTypes: true})) {
+      copyEntry(
+        path.join(sourcePath, entry.name),
+        path.join(targetPath, entry.name),
+        excludedTopLevelName,
+        rootDir,
+      );
+    }
+    return;
+  }
+
+  fs.mkdirSync(path.dirname(targetPath), {recursive: true});
+  fs.copyFileSync(sourcePath, targetPath);
+}
+
+function sanitizePackagedPackageJson(packageJsonPath) {
+  if (!fs.existsSync(packageJsonPath)) {
+    return;
+  }
+
+  const packageJson = readJson(packageJsonPath);
+  if (packageJson.scripts && typeof packageJson.scripts === 'object') {
+    delete packageJson.scripts.prepack;
+    delete packageJson.scripts['build:artifacts'];
+    if (Object.keys(packageJson.scripts).length === 0) {
+      delete packageJson.scripts;
+    }
+  }
+
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+}
+
 function copyPluginTree(sourceDir, targetDir, excludedTopLevelName) {
   ensureCleanDir(targetDir);
   for (const entry of fs.readdirSync(sourceDir, {withFileTypes: true})) {
-    if (entry.name === 'dist' || entry.name === excludedTopLevelName) {
-      continue;
-    }
     const sourcePath = path.join(sourceDir, entry.name);
     const targetPath = path.join(targetDir, entry.name);
-    fs.cpSync(sourcePath, targetPath, {recursive: true});
+    copyEntry(sourcePath, targetPath, excludedTopLevelName, sourceDir);
   }
+  sanitizePackagedPackageJson(path.join(targetDir, 'package.json'));
 }
 
 function buildReleaseJson({pluginName, marketplaceName, version}) {
@@ -50,7 +120,7 @@ function buildReleaseJson({pluginName, marketplaceName, version}) {
       },
       codex: {
         type: 'marketplace',
-        marketplacePath: './codex/marketplace.json',
+        marketplacePath: './.agents/plugins/marketplace.json',
         pluginPath: './codex/plugin',
       },
     },
@@ -67,7 +137,7 @@ function buildCodexMarketplaceJson({pluginName, marketplaceName, version}) {
         version,
         source: {
           source: 'local',
-          path: './plugin',
+          path: './codex/plugin',
         },
       },
     ],
@@ -115,9 +185,9 @@ function main() {
     path.join(versionRoot, 'release.json'),
     JSON.stringify(buildReleaseJson({pluginName, marketplaceName, version}), null, 2) + '\n',
   );
-  fs.mkdirSync(path.join(versionRoot, 'codex'), {recursive: true});
+  fs.mkdirSync(path.join(versionRoot, '.agents', 'plugins'), {recursive: true});
   fs.writeFileSync(
-    path.join(versionRoot, 'codex', 'marketplace.json'),
+    path.join(versionRoot, '.agents', 'plugins', 'marketplace.json'),
     JSON.stringify(buildCodexMarketplaceJson({pluginName, marketplaceName, version}), null, 2) + '\n',
   );
 

@@ -1,17 +1,8 @@
 ---
 name: plan-test-coverage
 description: >
-  Use before writing specs or test code to figure out WHAT to test first. This skill identifies
-  coverage gaps and produces a prioritized plan; it does not write detailed specs or executable tests.
-  Triggers: "what tests do I need",
-  "coverage gaps", "which features lack tests", "what E2E tests should I write", "create a test plan",
-  "prioritize tests", "missing edge cases", "verify test coverage", "check coverage completeness",
-  "are all test cases covered", "what TC-IDs are missing". IMPORTANT: If checking whether test cases
-  are implemented, comparing TC-IDs against test files, or verifying coverage, use this skill — it has
-  structured coverage gap analysis. Scans existing test files, inspects the app, identifies untested
-  areas, outputs a prioritized plan (P0/P1/P2) with TC-IDs. Does NOT write test code — use
-  write-test-code afterward.
-allowed-tools: Read Glob Grep Task mcp__plugin_agent-web-interface_browser__ping mcp__plugin_agent-web-interface_browser__navigate mcp__plugin_agent-web-interface_browser__find mcp__plugin_agent-web-interface_browser__get_element mcp__plugin_agent-web-interface_browser__get_form mcp__plugin_agent-web-interface_browser__get_field mcp__plugin_agent-web-interface_browser__click mcp__plugin_agent-web-interface_browser__type mcp__plugin_agent-web-interface_browser__press mcp__plugin_agent-web-interface_browser__select mcp__plugin_agent-web-interface_browser__hover mcp__plugin_agent-web-interface_browser__drag mcp__plugin_agent-web-interface_browser__scroll mcp__plugin_agent-web-interface_browser__scroll_to mcp__plugin_agent-web-interface_browser__wheel mcp__plugin_agent-web-interface_browser__snapshot mcp__plugin_agent-web-interface_browser__screenshot mcp__plugin_agent-web-interface_browser__go_back mcp__plugin_agent-web-interface_browser__go_forward mcp__plugin_agent-web-interface_browser__reload mcp__plugin_agent-web-interface_browser__list_pages mcp__plugin_agent-web-interface_browser__close_page
+  Use before writing specs or test code to decide what E2E coverage is needed first. It scans existing tests, inspects the target flow, finds coverage gaps, and produces a prioritized P0/P1/P2 plan with TC-IDs. Use it for requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It does not write detailed specs or executable tests.
+allowed-tools: Read Glob Grep Task mcp__browser__ping mcp__browser__navigate mcp__browser__find mcp__browser__get_element mcp__browser__get_form mcp__browser__get_field mcp__browser__click mcp__browser__type mcp__browser__press mcp__browser__select mcp__browser__hover mcp__browser__drag mcp__browser__scroll mcp__browser__scroll_to mcp__browser__wheel mcp__browser__snapshot mcp__browser__screenshot mcp__browser__go_back mcp__browser__go_forward mcp__browser__reload mcp__browser__list_pages mcp__browser__close_page
 ---
 
 # Plan Test Coverage
