@@ -50,6 +50,7 @@ jobs:
             echo "No version changes to commit"
           else
             git commit -m "chore: auto-bump versions [skip ci]"
+            git pull --rebase origin main
             git push
           fi
 
