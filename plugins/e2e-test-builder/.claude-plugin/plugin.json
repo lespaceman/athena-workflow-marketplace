@@ -1,7 +1,7 @@
 {
   "name": "e2e-test-builder",
-  "description": "Full-pipeline Playwright E2E test generation — explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
-  "version": "2.0.8",
+  "description": "Full-pipeline Playwright E2E test generation \u2014 explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
+  "version": "2.0.9",
   "author": {
     "name": "Athenaflow"
   },

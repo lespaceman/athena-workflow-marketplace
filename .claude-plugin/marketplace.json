@@ -13,7 +13,7 @@
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
       "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "keywords": [
         "browser",
         "mcp",
@@ -29,8 +29,8 @@
     {
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
-      "description": "Full-pipeline Playwright E2E test generation — explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
-      "version": "2.0.8",
+      "description": "Full-pipeline Playwright E2E test generation \u2014 explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
+      "version": "2.0.9",
       "keywords": [
         "playwright",
         "e2e",
@@ -78,7 +78,7 @@
       "name": "web-bench",
       "source": "./plugins/web-bench",
       "description": "WebBench benchmark runner \u2014 executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "keywords": [
         "benchmark",
         "evaluation",

@@ -11,14 +11,14 @@
     {
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
-      "description": "Autonomous Playwright E2E pipeline — explores your live site, plans coverage from real page structure, generates and reviews test specs, writes production-grade tests with quality gates at each stage, then executes and stabilizes",
-      "version": "1.0.0"
+      "description": "Autonomous Playwright E2E pipeline \u2014 explores your live site, plans coverage from real page structure, generates and reviews test specs, writes production-grade tests with quality gates at each stage, then executes and stabilizes",
+      "version": "0.0.1"
     },
     {
       "name": "web-bench",
       "source": "./workflows/web-bench/workflow.json",
-      "description": "Benchmark runner for WebBench — executes real-world browser tasks and produces evaluation reports with timing and token usage",
-      "version": "1.0.0"
+      "description": "Benchmark runner for WebBench \u2014 executes real-world browser tasks and produces evaluation reports with timing and token usage",
+      "version": "0.0.1"
     }
   ]
 }

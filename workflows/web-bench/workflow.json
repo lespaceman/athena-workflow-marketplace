@@ -1,6 +1,6 @@
 {
   "name": "web-bench",
-  "description": "Benchmark runner for WebBench — executes one real-world browser task per session from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports with timing and token usage",
+  "description": "Benchmark runner for WebBench \u2014 executes one real-world browser task per session from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports with timing and token usage",
   "promptTemplate": "{input}",
   "systemPromptFile": "system_prompt.md",
   "loop": {
@@ -16,5 +16,8 @@
     "Re-run failed tasks from the last batch"
   ],
   "isolation": "minimal",
-  "plugins": ["web-bench@lespaceman/athena-workflow-marketplace"]
+  "plugins": [
+    "web-bench@lespaceman/athena-workflow-marketplace"
+  ],
+  "version": "0.0.1"
 }
