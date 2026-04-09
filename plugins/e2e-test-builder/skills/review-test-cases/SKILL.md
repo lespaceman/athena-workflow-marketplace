@@ -30,7 +30,6 @@ If no argument provided, search for `test-cases/*.md` files and review the most 
 1. Read the test case spec file
 2. Read any related files for context:
    - `e2e-plan/conventions.md` or `e2e-plan/coverage-plan.md` if they exist
-   - `e2e-tracker.md` if it exists (to understand what was explored)
 3. Extract the target URL from the spec header
 
 ### Step 2: Run the Review Checklist

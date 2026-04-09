@@ -80,4 +80,4 @@ export const test = base.extend<{ testTicket: { id: string; title: string } }>({
 
 For environments where individual deletion is impractical, tag test data (e.g., `title LIKE 'Test %'`) and delete in batch during `globalTeardown.ts`.
 
-If the cleanup API endpoint is unknown, do not invent one. Leave a clear `TODO` with the missing endpoint details, document the cleanup gap in the test file or tracker, and prefer fixture-scoped or environment reset strategies that you can verify. If cleanup is genuinely impossible (no API, no database access), document this as a known limitation in the test file header AND add an `afterEach` that logs a warning.
+If the cleanup API endpoint is unknown, do not invent one. Leave a clear `TODO` with the missing endpoint details, document the cleanup gap in the test file or working notes, and prefer fixture-scoped or environment reset strategies that you can verify. If cleanup is genuinely impossible (no API, no database access), document this as a known limitation in the test file header AND add an `afterEach` that logs a warning.

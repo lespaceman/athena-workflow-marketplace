@@ -122,7 +122,7 @@ Recommended repository shape:
 ├── workflows/
 │   └── <workflow-name>/
 │       ├── workflow.json
-│       └── system_prompt.md
+│       └── workflow.md
 └── plugins/
     └── <plugin-name>/
         ├── .claude-plugin/

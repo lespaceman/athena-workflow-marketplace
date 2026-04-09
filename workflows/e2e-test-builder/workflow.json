@@ -2,12 +2,9 @@
   "name": "e2e-test-builder",
   "description": "Adds Playwright E2E tests end to end \u2014 analyzes existing setup, explores the live product in a browser, plans coverage, generates specs, writes tests, and stabilizes them across multiple sessions",
   "promptTemplate": "{input}",
-  "systemPromptFile": "system_prompt.md",
+  "workflowFile": "workflow.md",
   "loop": {
     "enabled": true,
-    "completionMarker": "E2E_COMPLETE",
-    "blockedMarker": "E2E_BLOCKED",
-    "trackerPath": "e2e-tracker.md",
     "maxIterations": 15
   },
   "examplePrompts": [

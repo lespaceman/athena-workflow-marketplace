@@ -32,7 +32,7 @@ if [ -f web-bench-tasks.jsonl ]; then
 fi
 ```
 
-**If `web-bench-tasks.jsonl` exists and is non-empty, skip the download and conversion entirely.** Jump straight to [Applying Filters](#applying-filters) if filters need to be applied, or report the existing dataset to the tracker.
+**If `web-bench-tasks.jsonl` exists and is non-empty, skip the download and conversion entirely.** Jump straight to [Applying Filters](#applying-filters) if filters need to be applied, or reuse the existing dataset.
 
 Only proceed with download if the file does not exist or is empty.
 
@@ -130,11 +130,11 @@ console.log('Total: ' + tasks.length + ' tasks across ' + sites.size + ' website
 
 ## Applying Filters
 
-After downloading, apply filters based on tracker configuration. All filters use Node.js.
+After downloading, apply filters based on the requested benchmark configuration. All filters use Node.js.
 
 ### Category Filter
 
-If the tracker specifies a category filter (e.g., `READ`, `CREATE`):
+If the requested configuration specifies a category filter (e.g., `READ`, `CREATE`):
 
 ```bash
 node -e "
@@ -149,7 +149,7 @@ console.log('Filtered to ' + filtered.length + ' ' + category + ' tasks');
 
 ### Sample Size
 
-If the tracker specifies a sample size (e.g., `--sample 50`):
+If the requested configuration specifies a sample size (e.g., `--sample 50`):
 
 ```bash
 node -e "
@@ -206,4 +206,4 @@ After successful conversion, remove the intermediate CSV:
 rm -f web-bench-dataset.csv
 ```
 
-Report the total count and category breakdown to the tracker.
+Report the total count and category breakdown in your result.

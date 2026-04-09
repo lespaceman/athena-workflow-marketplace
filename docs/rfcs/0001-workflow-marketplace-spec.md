@@ -48,8 +48,8 @@ We need a portable workflow definition that:
 2. Workflow is orchestration
 - Workflow defines execution order, loop policy, and completion logic.
 
-3. Stateless compute, stateful progress
-- Each run can be stateless; tracker artifacts persist progress.
+3. Stateless compute, runtime-managed progress
+- Each run can be stateless while the runtime manages session continuity.
 
 4. Tooling portability
 - Workflow definitions should be readable by multiple runtimes.
@@ -58,8 +58,6 @@ We need a portable workflow definition that:
 
 - Workflow: A declarative long-running execution contract
 - Plugin Capability: Skill/tool/sub-agent behavior provided by a plugin
-- Tracker: Persistent artifact used as cross-session memory
-- Completion Marker: String token indicating terminal workflow state
 - Workflow Reference: `<workflow-name>@<owner>/<repo>`
 
 ## Why Workflows
@@ -107,15 +105,12 @@ Example:
 ```json
 {
   "name": "e2e-test-builder",
-  "description": "Iterative E2E workflow with tracker-based state",
+  "description": "Iterative E2E workflow for multi-session execution",
   "promptTemplate": "{input}",
-  "systemPromptFile": "system_prompt.md",
+  "workflowFile": "workflow.md",
   "plugins": ["e2e-test-builder@lespaceman/athena-workflow-marketplace"],
   "loop": {
     "enabled": true,
-    "completionMarker": "E2E_COMPLETE",
-    "blockedMarker": "E2E_BLOCKED",
-    "trackerPath": "e2e-tracker.md",
     "maxIterations": 15
   },
   "isolation": "minimal"
@@ -127,7 +122,7 @@ Example:
 - `name` (required, string): Stable workflow identifier.
 - `description` (optional, string): Human-readable summary.
 - `promptTemplate` (required, string): User input mapping template. MUST include `{input}`.
-- `systemPromptFile` (optional, string): Relative path from workflow directory.
+- `workflowFile` (optional, string): Relative path to the workflow-specific orchestration doc, appended by the runtime to its workflow/system prompt.
 - `plugins` (required, array): Plugin refs/paths consumable by the runtime.
 - `loop` (optional, object): Loop execution behavior.
 - `isolation` (optional, string): Runtime isolation preference.
@@ -137,8 +132,7 @@ Example:
 If `loop.enabled` is true:
 
 - Runtime SHOULD iterate until completion, blocked, or `maxIterations` reached.
-- Runtime SHOULD evaluate `completionMarker` and `blockedMarker` against tracker/output state.
-- Runtime SHOULD persist state between iterations using `trackerPath` or equivalent state artifact.
+- Runtime SHOULD manage loop progression and terminal-state detection.
 
 ## Execution Lifecycle
 
@@ -146,7 +140,7 @@ Recommended per-iteration lifecycle:
 
 1. Load workflow definition.
 2. Resolve and load required plugins.
-3. Read tracker/state artifact.
+3. Restore any runtime-managed session state needed for the next iteration.
 4. Execute next actionable step.
 5. Persist step status and logs.
 6. Evaluate completion or blocked conditions.

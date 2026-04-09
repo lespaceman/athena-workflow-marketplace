@@ -1,7 +1,7 @@
 interface:
   display_name: "Run Full E2E Workflow"
   short_description: "Orchestrate browser-led E2E work from exploration to verified tests"
-  default_prompt: "Run the full E2E workflow for this feature: maintain a concise progress tracker, explore the live product first, then plan, spec, review, implement, and verify the Playwright tests."
+  default_prompt: "Run the full E2E workflow for this feature: explore the live product first, then plan, spec, review, implement, and verify the Playwright tests."
 
 dependencies:
   tools:

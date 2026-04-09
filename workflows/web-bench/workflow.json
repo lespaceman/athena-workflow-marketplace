@@ -2,12 +2,9 @@
   "name": "web-bench",
   "description": "Benchmark runner for WebBench \u2014 executes one real-world browser task per session from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports with timing and token usage",
   "promptTemplate": "{input}",
-  "systemPromptFile": "system_prompt.md",
+  "workflowFile": "workflow.md",
   "loop": {
     "enabled": true,
-    "completionMarker": "BENCH_COMPLETE",
-    "blockedMarker": "BENCH_BLOCKED",
-    "trackerPath": "web-bench-tracker.md",
     "maxIterations": 2500
   },
   "examplePrompts": [

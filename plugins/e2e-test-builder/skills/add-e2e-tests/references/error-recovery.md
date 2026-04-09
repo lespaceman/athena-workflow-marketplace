@@ -1,6 +1,6 @@
 # Error Recovery for Infrastructure Failures
 
-When infrastructure failures occur during E2E test building, follow the general pattern: diagnose, attempt one known fix, if still stuck record in tracker and ask the user.
+When infrastructure failures occur during E2E test building, follow the general pattern: diagnose, attempt one known fix, if still stuck ask the user.
 
 ## Browser MCP unavailable
 
@@ -8,7 +8,7 @@ The browser MCP server (`agent-web-interface`) must be running for site explorat
 
 1. Verify the MCP server is configured in the project (check `.mcp.json` or plugin config).
 2. Ask the user to confirm the MCP server is running or to restart it.
-3. If unreachable after user intervention, mark the session as blocked: `<!-- E2E_BLOCKED: browser MCP server unreachable -->`.
+3. If unreachable after user intervention, this is an unrecoverable blocker — inform the user that browser exploration cannot proceed.
 
 ## Boilerplate clone fails
 
@@ -40,4 +40,4 @@ For any infrastructure failure not listed above:
 
 1. **Diagnose** — read the error message carefully, check logs, identify the root cause.
 2. **Attempt one known fix** — apply the most likely solution based on the error.
-3. **If still stuck** — record the full error output and diagnostic steps taken in the tracker, then ask the user for help. Do not loop through multiple speculative fixes.
+3. **If still stuck** — ask the user for help with the full error output and diagnostic steps taken. Do not loop through multiple speculative fixes.

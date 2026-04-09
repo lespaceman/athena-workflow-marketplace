@@ -27,7 +27,7 @@ patterns).
 ├── workflows/
 │   └── e2e-test-builder/
 │       ├── workflow.json
-│       └── system_prompt.md
+│       └── workflow.md
 └── plugins/
     ├── e2e-test-builder/
     ├── md-export/
@@ -206,7 +206,7 @@ Workflow intent:
 
 - Orchestrate long-running multi-session execution
 - Reuse existing Claude plugin capabilities
-- Keep tracker-based progress and completion semantics portable across runtimes
+- Keep workflow semantics portable across runtimes
 
 ## Add a New Plugin
 

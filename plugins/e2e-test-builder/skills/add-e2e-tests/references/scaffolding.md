@@ -9,4 +9,4 @@ If Playwright is not set up in the target project, follow this procedure:
 4. Merge devDependencies into `package.json`.
 5. Run `npm install && npx playwright install --with-deps chromium`.
 6. Clean up the temp clone.
-7. Log all scaffolding steps in the tracker.
+7. Preserve the important scaffolding decisions in your working notes.

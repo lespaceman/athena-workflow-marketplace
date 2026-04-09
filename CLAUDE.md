@@ -33,7 +33,7 @@ These marketplace and overlay files are repo conventions for packaging this mark
 
 ### e2e-test-builder Plugin
 
-**Skills** (`plugins/e2e-test-builder/skills/<skill-name>/SKILL.md`): Each skill is a self-contained workflow with full knowledge embedded. Browser work is delegated to subagents via Task tool (browser tools live in the `agent-web-interface` plugin). Skills only have file tools (Read, Write, Edit, Bash, Glob, Grep) and Task.
+**Skills** (`plugins/e2e-test-builder/skills/<skill-name>/SKILL.md`): Each skill is a domain guide covering one activity (analysis, planning, test writing, review, debugging). Browser work is delegated to subagents via Task tool (browser tools live in the `agent-web-interface` plugin). Skills only have file tools (Read, Write, Edit, Bash, Glob, Grep) and Task.
 
 User-invocable skills (slash commands):
 - `/add-e2e-tests <url> <feature>` — **Full pipeline orchestrator**: analyze → plan → explore → generate → write (uses subagents)
@@ -46,9 +46,9 @@ User-invocable skills (slash commands):
 - `/fix-flaky-tests <test-file-or-name>` — Diagnose and fix intermittent test failures
 
 **Workflow** (`workflows/e2e-test-builder/workflow.json`): Athena-cli integration for stateless looping.
-- `workflows/e2e-test-builder/system_prompt.md` — system prompt appended via `--append-system-prompt-file`
-- Each stateless session: read tracker → execute one step → update tracker → exit
+- `workflows/e2e-test-builder/workflow.md` — workflow-specific orchestration, appended to the runtime's workflow/state-machine prompt
 - Depends on both `agent-web-interface` and `e2e-test-builder` plugins
+- Test execution and coverage checks are NEVER delegated to subagents — the main agent must run `npx playwright test` directly and record output as proof
 
 ### site-knowledge Plugin
 
@@ -56,13 +56,12 @@ User-invocable skills (slash commands):
 
 ## Workflow System (RFC 0001)
 
-The `workflow.json` contract defines stateless looping sessions:
-- `loop.completionMarker` / `loop.blockedMarker` — HTML comments (`E2E_COMPLETE`, `E2E_BLOCKED`) that signal termination
-- `loop.trackerPath` — markdown file tracking step-by-step progress
+Workflows have two authored layers in this repo: the **workflow doc** (`workflows/<name>/workflow.md`) defines domain-specific orchestration, and **skills** carry implementation knowledge for each activity. Session orchestration is runtime-owned, not stored in this marketplace.
+
+The `workflow.json` contract defines execution config:
+- `workflowFile` — domain-specific orchestration doc, appended to the runtime's workflow/system prompt
 - `loop.maxIterations` — safety cap on session count
 - `plugins[]` — references plugins as `<plugin-name>@<owner>/<repo>`
-
-Test execution and coverage checks are NEVER delegated to subagents — the main agent must run `npx playwright test` directly and record output as proof.
 
 ## Adding a New Plugin
 
@@ -73,7 +72,7 @@ Test execution and coverage checks are NEVER delegated to subagents — the main
 ## Adding a New Workflow
 
 1. Create `workflows/<name>/workflow.json` following the RFC 0001 contract
-2. Add a system prompt file in the same directory if needed
+2. Add a `workflow.md` in the same directory with domain-specific orchestration
 3. Register in `.athena-workflow/marketplace.json` under `workflows[]`
 
 ## Key Conventions
