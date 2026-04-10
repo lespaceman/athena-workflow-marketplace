@@ -1,0 +1,11 @@
+{
+  "name": "loop-test",
+  "description": "Minimal loop test — agent does a small thing each run, then finishes after a few iterations",
+  "promptTemplate": "{input}",
+  "plugins": [],
+  "workflowFile": "workflow.md",
+  "loop": {
+    "enabled": true,
+    "maxIterations": 6
+  }
+}

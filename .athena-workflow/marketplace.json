@@ -19,6 +19,12 @@
       "source": "./workflows/web-bench/workflow.json",
       "description": "Benchmark runner for WebBench \u2014 executes real-world browser tasks and produces evaluation reports with timing and token usage",
       "version": "0.0.1"
+    },
+    {
+      "name": "loop-test",
+      "source": "./workflows/loop-test/workflow.json",
+      "description": "Minimal loop test \u2014 agent does a small thing each run, then finishes after a few iterations",
+      "version": "0.0.1"
     }
   ]
 }

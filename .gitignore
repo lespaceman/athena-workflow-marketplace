@@ -4,4 +4,3 @@
 node_modules/
 plugins/*/dist/
 plugins/e2e-test-builder/skills/description-optimization-workspace/
-workflows/loop-test/
