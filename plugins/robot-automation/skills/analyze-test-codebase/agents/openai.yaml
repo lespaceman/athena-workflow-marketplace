@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analyze Existing Robot Framework Setup"
+  short_description: "Inspect Robot Framework conventions before planning or writing tests"
+  default_prompt: "Analyze this Robot Framework codebase and summarize the current setup as an early workflow step before planning detailed coverage or writing test code."

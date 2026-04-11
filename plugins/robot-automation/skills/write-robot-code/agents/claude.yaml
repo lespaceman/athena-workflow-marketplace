@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<test description or path to test case spec file>"
+  user-invocable: true

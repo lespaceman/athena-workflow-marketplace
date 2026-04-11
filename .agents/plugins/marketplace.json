@@ -29,6 +29,18 @@
       "category": "Testing"
     },
     {
+      "name": "robot-automation",
+      "source": {
+        "source": "local",
+        "path": "./plugins/robot-automation"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Testing"
+    },
+    {
       "name": "site-knowledge",
       "source": {
         "source": "local",

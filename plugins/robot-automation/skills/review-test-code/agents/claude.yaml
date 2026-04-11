@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<path to .robot file or tests directory>"
+  user-invocable: true

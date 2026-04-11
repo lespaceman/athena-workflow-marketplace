@@ -1,0 +1,10 @@
+interface:
+  display_name: "Write TC-ID Specs (Robot)"
+  short_description: "Explore the feature and write detailed TC-ID test case specs for Robot Framework"
+  default_prompt: "Explore this feature and generate detailed TC-ID test case specifications to feed write-robot-code."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used to inspect the live flow before writing specs"

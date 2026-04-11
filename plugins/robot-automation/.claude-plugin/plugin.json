@@ -1,0 +1,22 @@
+{
+  "name": "robot-automation",
+  "description": "Full-pipeline Robot Framework (Browser library) test generation — explores your live site via browser, detects existing .robot conventions, plans coverage gaps, produces reviewed TC-ID specs, writes production-grade .robot test suites with quality gates, and stabilizes flaky tests",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "robotframework",
+    "robot",
+    "browser-library",
+    "e2e",
+    "testing",
+    "test-generation",
+    "test-automation",
+    "browser-exploration",
+    "quality-gates",
+    "coverage-planning",
+    "flaky-test-fix"
+  ],
+  "category": "testing"
+}

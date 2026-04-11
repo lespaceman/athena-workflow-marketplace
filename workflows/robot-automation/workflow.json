@@ -1,0 +1,27 @@
+{
+  "name": "robot-automation",
+  "description": "Athena CLI runs this authored Robot Framework (Browser library) E2E workflow across sessions — analyze setup, explore the live product, plan coverage, generate and review specs, write and review .robot tests, then execute and stabilize them",
+  "promptTemplate": "{input}",
+  "workflowFile": "workflow.md",
+  "loop": {
+    "enabled": true,
+    "maxIterations": 15
+  },
+  "examplePrompts": [
+    "Add Robot Framework tests for the login and signup flows at https://myapp.com",
+    "Build Robot Framework (Browser library) coverage for the checkout process",
+    "Write .robot E2E tests for the dashboard and settings pages"
+  ],
+  "isolation": "minimal",
+  "plugins": [
+    {
+      "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
+      "version": "1.0.6"
+    },
+    {
+      "ref": "robot-automation@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.0"
+    }
+  ],
+  "version": "0.0.1"
+}

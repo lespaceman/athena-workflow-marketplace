@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "[optional: path to project root]"
+  user-invocable: true

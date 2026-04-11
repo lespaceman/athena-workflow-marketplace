@@ -1,0 +1,10 @@
+interface:
+  display_name: "Implement Robot Framework Tests"
+  short_description: "Implement or refactor executable Robot Framework tests from a scenario or TC-ID spec"
+  default_prompt: "Write or update Robot Framework E2E tests (Browser library) for this scenario or TC-ID spec."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used when selectors or live behavior need verification"
