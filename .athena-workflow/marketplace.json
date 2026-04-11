@@ -24,7 +24,7 @@
       "name": "web-bench",
       "source": "./workflows/web-bench/workflow.json",
       "description": "Benchmark runner for WebBench \u2014 executes real-world browser tasks and produces evaluation reports with timing and token usage",
-      "version": "0.0.1"
+      "version": "0.0.2"
     },
     {
       "name": "loop-test",
