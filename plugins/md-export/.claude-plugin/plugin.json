@@ -1,7 +1,7 @@
 {
   "name": "md-export",
   "description": "Export markdown files to clean, dark-themed PDFs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": {
     "name": "lespaceman"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-web-bench",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "WebBench benchmark runner \u2014 executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
   "license": "MIT",
   "publishConfig": {

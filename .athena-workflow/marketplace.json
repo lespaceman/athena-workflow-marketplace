@@ -18,7 +18,7 @@
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
       "description": "Autonomous Robot Framework (Browser library) E2E pipeline \u2014 explores your live site, plans coverage from real page structure, generates and reviews TC-ID specs, writes production-grade .robot suites with quality gates at each stage, then executes and stabilizes",
-      "version": "0.0.2"
+      "version": "0.0.3"
     },
     {
       "name": "web-bench",
