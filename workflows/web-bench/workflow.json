@@ -14,7 +14,10 @@
   ],
   "isolation": "minimal",
   "plugins": [
-    "web-bench@lespaceman/athena-workflow-marketplace"
+    {
+      "ref": "web-bench@lespaceman/athena-workflow-marketplace",
+      "version": "1.0.5"
+    }
   ],
   "version": "0.0.1"
 }
