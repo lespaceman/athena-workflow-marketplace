@@ -6,9 +6,12 @@ description: >
   written in Robot Framework for any feature, page, or application. Runs the full pipeline:
   analyze the .robot codebase, explore the live site, plan coverage, generate TC-ID specs,
   run quality-gate reviews, write production-grade .robot test suites, and execute.
-  Delegates to sub-skills (analyze-test-codebase, plan-test-coverage, generate-test-cases,
-  review-test-cases, write-robot-code, review-test-code, fix-flaky-tests) internally — do NOT
-  skip to sub-skills directly unless the user explicitly requests a narrow activity.
+  Robot-specific conventions, resilience guidance, and brownfield adaptation live in the shipped
+  skills themselves. An optional external scaffold repository may be cloned only when no Robot
+  project exists and the user wants a full bootstrap in one step. Delegates to sub-skills
+  (analyze-test-codebase, plan-test-coverage, generate-test-cases, review-test-cases,
+  write-robot-code, review-test-code, fix-flaky-tests) internally — do NOT skip to sub-skills
+  directly unless the user explicitly requests a narrow activity.
   Uses subagent delegation to save context.
 allowed-tools: Read Write Edit Glob Grep Bash Task
 ---
@@ -29,7 +32,7 @@ Before planning any work, build deep situational awareness. This step determines
 
 ### Understand the codebase
 
-- Does a Robot Framework setup exist? Look for `robot.toml`, `pyproject.toml` with `robotframework` in dependencies, `__init__.robot` suite init files, `tests/*.robot`, `resources/*.resource`, a `requirements.txt` listing `robotframework` and `robotframework-browser`. If the `Browser` library is not yet initialized, `rfbrowser init` must run before any test can execute (see Scaffolding section).
+- Does a Robot Framework setup exist? Look for `robot.toml`, `pyproject.toml` with `robotframework` in dependencies, `__init__.robot` suite init files, `tests/*.robot`, `resources/*.resource`, a `requirements.txt` listing `robotframework` and `robotframework-browser`. If a Robot project exists, adapt to its conventions and history rather than trying to re-bootstrap it. If no Robot project exists at all, the optional external scaffold repository can bootstrap one quickly; otherwise the shipped skills remain the source of truth for best practices and conventions.
 - Are there existing suites? What conventions do they follow — suite naming, keyword style, resource file layout, tags, variables, `Suite Setup` / `Test Setup` patterns, data-driven templates, authentication reuse?
 - Load the `analyze-test-codebase` skill and follow its methodology.
 
@@ -73,7 +76,7 @@ Too coarse: "Analyze codebase", "Write tests", "Verify tests"
 Right granularity:
 - "Read robot.toml — extract outputdir, default tags, listeners"
 - "Read 2 existing suites — identify locator style, Suite Setup pattern, resource imports"
-- "Write conventions report to e2e-plan/conventions.md"
+- "Write conventions contract to e2e-plan/conventions.yaml"
 - "Navigate to /login — catalog all form fields, buttons, and validation messages"
 - "Submit login form empty — record all validation error messages and their positions"
 - "Submit login with invalid email format — record inline validation behavior"
@@ -131,7 +134,8 @@ Two review gates and a test execution checkpoint are mandatory during execution.
 1. Run the suite: `robot -d results tests/<feature>.robot 2>&1`
 2. Inspect the full output — green test output AND the generated `results/log.html` / `results/report.html` are the only proof of correctness
 3. If tests fail, load the `fix-flaky-tests` skill and follow its structured diagnostic approach. Do not guess-and-retry.
-4. Maximum 3 fix-and-rerun cycles per test. If stuck after 3 cycles, move on with the diagnostic output.
+4. After the first green run, re-run the same suite 2 more times. Signoff requires 3 consecutive green runs.
+5. Maximum 3 fix-and-rerun cycles per test. If stuck after 3 cycles, move on with the diagnostic output.
 
 **Test execution and coverage checks must never be delegated to subagents.** Run `robot` directly.
 
@@ -139,9 +143,14 @@ Two review gates and a test execution checkpoint are mandatory during execution.
 
 If infrastructure failures occur (browser MCP unavailable, `rfbrowser init` failures, `pip install` errors), see [references/error-recovery.md](references/error-recovery.md) for diagnostic steps. General pattern: diagnose, attempt one known fix, if still stuck ask the user.
 
-## Scaffolding
+## Greenfield Bootstrap
 
-If Robot Framework + Browser library is not set up in the target project, follow the procedure in [references/scaffolding.md](references/scaffolding.md) to install dependencies, run `rfbrowser init`, and produce a minimal suite layout.
+If Robot Framework + Browser library is not set up in the target project, you have two paths:
+
+- If the user wants an all-at-once bootstrap, clone the optional external scaffold repository and use it to create the starting Robot project.
+- If the user already has a Robot codebase, or wants changes made directly in an existing repository, do not scaffold. Use the shipped skills to analyze the current setup, follow its conventions, and write the best possible `.robot` automation in place.
+
+The scaffold is convenience infrastructure for greenfield starts. It is not the source of Robot best practices; those remain in the shipped skills.
 
 ## Authentication
 

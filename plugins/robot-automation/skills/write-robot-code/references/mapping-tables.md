@@ -10,7 +10,7 @@ Standard translations for converting journey specs and exploration results to Br
 | `header` | `header >> ...` |
 | `main` | `main >> ...` |
 | `nav` | `nav >> ...` |
-| `dialog` | `[role="dialog"] >> ...` |
+| `dialog` | `${dialog}=    Get Element By Role    dialog    name=<name>` then use `parent=${dialog}` |
 
 `>>` is Browser library's chain combinator — scope a parent container first, then chain the target locator after it.
 
@@ -32,8 +32,8 @@ Standard translations for converting journey specs and exploration results to Br
 | Observed Effect | Browser Library Assertion |
 |----------------|--------------------------|
 | `url changed to /cart` | `Get Url    contains    /cart` |
-| `text 'Added' visible` | `Get Text    role=alert    contains    Added` |
-| `radio 256GB checked` | `Get Checkbox State    role=radio[name="256GB"]    ==    checked` |
+| `text 'Added' visible` | `${alert}=    Get Element By Role    alert` then `Get Text    ${alert}    contains    Added` |
+| `radio 256GB checked` | `${radio}=    Get Element By Role    radio    name=256GB` then `Get Checkbox State    ${radio}    ==    checked` |
 | `button now enabled` | `Get Element States    <locator>    *=    enabled` |
 | `element count is N` | `Get Element Count    <locator>    ==    ${N}` |
 
@@ -41,10 +41,10 @@ Standard translations for converting journey specs and exploration results to Br
 
 | Target Kind | Value Pattern | Browser Library Locator |
 |-------------|--------------|------------------------|
-| `role` | `button name~Add to Bag` | `role=button[name="Add to Bag"]` |
-| `role` | `radio name~256GB` | `role=radio[name="256GB"]` |
-| `label` | `Email address` | `label=Email address` |
-| `testid` | `checkout-button` | `[data-testid="checkout-button"]` |
+| `role` | `button name~Add to Bag` | `Get Element By Role    button    name=Add to Bag` |
+| `role` | `radio name~256GB` | `Get Element By Role    radio    name=256GB` |
+| `label` | `Email address` | `Get Element By Label    Email address` |
+| `testid` | `checkout-button` | `Get Element By Test Id    checkout-button` |
 | `text` | `Welcome back` | `text="Welcome back"` or `text=/welcome/i` |
 
 ## Low Confidence Handling (<0.7)
@@ -55,8 +55,8 @@ When journey step confidence is low:
 3. Consider keyword-level retry via `Wait For Elements State` instead of a single-shot action
 
 ```robotframework
-# Primary locator (fallback: label=256GB)
-${storage_radio}=    Set Variable    role=radio[name="256GB"]
+# Primary locator (fallback: Get Element By Label    256GB)
+${storage_radio}=    Get Element By Role    radio    name=256GB
 Click    ${storage_radio}
 Get Checkbox State    ${storage_radio}    ==    checked    timeout=5s
 ```

@@ -2,5 +2,7 @@
 .codex-tools/
 .venv/
 node_modules/
+# Generated plugin artifacts and local npm tarballs
 plugins/*/dist/
+plugins/*/*.tgz
 plugins/e2e-test-builder/skills/description-optimization-workspace/

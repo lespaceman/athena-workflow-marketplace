@@ -28,7 +28,8 @@ TC-CART-001 User sees items in cart
     [Documentation]    Cart page renders seeded items.
     ${item_id}=    Seed Cart    SKU-123    2
     Go To    ${BASE_URL}/cart
-    Get Element Count    role=listitem    ==    2
+    ${items}=    Set Variable    css=[role="listitem"]
+    Get Element Count    ${items}    ==    2
 ```
 
 Put `Create Session` and reusable keywords in `resources/api.resource` so every suite imports them once.
@@ -57,7 +58,8 @@ TC-TICKET-001 User can create a ticket
     ${ticket_id}=    Create Ticket Via API    title=Test ${{time.time_ns()}}
     Set Test Variable    ${CREATED_TICKET_ID}    ${ticket_id}
     Go To    ${BASE_URL}/tickets
-    Get Text    [data-testid="ticket-${ticket_id}"]    contains    Test
+    ${ticket}=    Get Element By Test Id    ticket-${ticket_id}
+    Get Text    ${ticket}    contains    Test
     [Teardown]    Delete Ticket Via API    ${CREATED_TICKET_ID}
 ```
 

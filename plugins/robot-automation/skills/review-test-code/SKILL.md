@@ -8,132 +8,123 @@ description: >
   "audit test implementation", "review my Robot tests before merging", "check .robot for issues",
   "review e2e tests", "code review Robot Framework", "are my tests stable",
   "check for brittle locators", "review before running tests". Quality gate
-  after write-robot-code — catches brittle locators, `force=True` misuse, `Sleep`, utility-class
-  selectors, exact numeric assertions, missing teardown, parallel-unsafe mutations (pabot),
-  hardcoded data, missing assertions, test coupling, and convention divergence. Review-only — does
-  NOT rewrite tests, does NOT run tests. Use fix-flaky-tests for fixing, write-robot-code for
-  rewriting.
+  after write-robot-code — catches wrong Browser-library dialect, brittle locators,
+  post-action response waits, `force=True` misuse, `Sleep`, utility-class selectors,
+  exact numeric assertions, missing teardown, parallel-unsafe mutations, hardcoded data,
+  missing assertions, test coupling, and convention divergence. Review-only — does NOT
+  rewrite tests, does NOT run tests. Use fix-flaky-tests for fixing, write-robot-code for rewriting.
 allowed-tools: Read Glob Grep Task
 ---
 
 # Review Test Code
 
-Review Robot Framework test code (Browser library) for stability, correctness, and adherence to project conventions before final execution signoff. This is a quality gate — catch structural issues in code before running tests, not after flaky failures.
+Review Robot Framework test code for stability, correctness, and adherence to project conventions before final execution signoff.
 
 ## Input
 
 Parse the test file path or directory from: $ARGUMENTS
 
-If no argument provided, search for recently modified `*.robot` files and review those.
+If no argument is provided, search for recently modified `*.robot` files and review those.
 
 ## Workflow
 
 ### Step 1: Load Context
-
-1. Read the `.robot` file(s) to review
+1. Read the `.robot` file or files under review
 2. Read project conventions for comparison:
-   - `robot.toml` / `pyproject.toml` — extract `outputdir`, default tags, listeners
-   - 2-3 existing `.robot` files (not the ones under review) to establish the project's conventions
-   - `e2e-plan/conventions.md` if it exists
-3. Read the corresponding test case spec (`test-cases/<feature>.md`) if it exists — needed for traceability check
-4. Note the project's locator strategy, resource patterns, auth approach, and naming conventions
+   - `robot.toml` or `pyproject.toml`
+   - 2-3 existing `.robot` files not under review
+   - `e2e-plan/conventions.yaml` if it exists, validating it against `plugins/robot-automation/schemas/conventions.schema.json`
+3. Read the corresponding `test-cases/<feature>.md` file if it exists
+4. Note the project's locator strategy, resource pattern, auth approach, tags, and runtime expectations
 
 ### Step 2: Run the Review Checklist
 
-Evaluate the test code against each criterion. Track findings by severity:
-
-- **BLOCKER** — will cause test failures or false passes (missing assertions, wrong locators, broken isolation, hidden `Run Keyword And Ignore Error`)
-- **WARNING** — will cause flakiness or maintenance burden (brittle locators, `Sleep`, poor structure)
-- **SUGGESTION** — style or convention improvement (naming, organization, minor readability)
+Track findings by severity:
+- BLOCKER: will cause failures, false passes, or major convention breakage
+- WARNING: likely to cause flakiness or maintenance burden
+- SUGGESTION: useful improvement, not required for correctness
 
 #### 2a. Locator Quality
-
 | Check | What to Look For |
 |-------|-----------------|
-| Semantic Browser locators preferred | `role=`, `label=`, `[data-testid=]` over `css=` / `xpath=` |
+| Canonical Browser dialect | `Get Element By Role` / `Get Element By Label` / `Get Element By Placeholder` / `Get Element By Test Id`, or justified `css=` / `xpath=` / `text=` / `id=` |
+| No fake selector engines | `role=`, `label=`, `placeholder=`, `alt=`, `title=`, `testid=` string prefixes are BLOCKERS unless hidden behind a deliberate custom keyword |
 | No fragile positional selectors | `>> nth=0`, `>> nth=N` without documented justification |
-| No dynamic IDs or classes | Selectors containing generated hashes, UUIDs, or auto-incremented values |
-| No utility framework classes | Locators must not contain Tailwind (`rounded-lg`, `flex`, `bg-*`), Bootstrap (`btn-primary`, `col-md-*`), or similar utility classes — these are styling, not identity |
-| Scoped to containers | Locators chained with `>>` to `main`, `nav`, `[role="dialog"]` where needed |
-| No exact long text matches | Use `text=/regex/i` with key words instead of full marketing copy |
+| No dynamic IDs or classes | Generated hashes, UUID-like values, volatile classes |
+| No utility framework classes | Tailwind, Bootstrap, or similar utility classes used as locators |
+| Scoped where needed | Parent scoping or `>>` chaining used when ambiguity is possible |
+| No exact long text matches | Prefer regex or shorter stable phrases |
 
-When a locator appears suspicious, delegate verification to a subagent (Task tool): instruct it to open the target URL, locate the element using the browser MCP tools (`find`, `get_element`), and report back whether the element exists and is unique.
+When a locator appears suspicious, delegate a live-site spot-check to a subagent with browser access.
 
 #### 2b. Waiting and Timing
-
 | Check | What to Look For |
 |-------|-----------------|
-| No `Sleep` | Arbitrary sleeps mask real timing issues |
-| Proper action-response waits | `Wait For Response` before asserting API-dependent UI |
-| Auto-retrying assertions used | `Get Text    <loc>    contains    <value>` not `Should Contain    ${text}    <value>` after a one-shot `Get Text` |
-| Reasonable explicit timeouts | Custom timeouts (`timeout=10s`) have a comment explaining why |
-| No `networkidle`-style waits | Browser library has no exact equivalent, but any custom keyword waiting on "all network done" is fragile — prefer specific `Wait For Response` |
+| No `Sleep` | Arbitrary delays masking timing issues |
+| Proper action-response waits | `Promise To    Wait For Response` attached before the triggering action |
+| Auto-retrying assertions used | Browser-library retrying assertions instead of one-shot snapshots where timing matters |
+| Reasonable explicit timeouts | Custom timeouts justified by the flow |
+| No custom network-idle logic | Prefer specific waits over vague “all network done” patterns |
 
 #### 2c. Assertions
-
 | Check | What to Look For |
 |-------|-----------------|
-| Every test has assertions | No test blocks without a `Get *` / `Should *` assertion |
-| Assertions test user outcomes | Visible text, URL changes, element states — not internal state or CSS classes |
-| Assertions are specific | `Get Text    role=heading    ==    Welcome, John` not just `visible` |
-| Error paths have assertions | Error scenario tests verify the error message, not just that "something happened" |
-| No exact server-computed values | Dashboard counters, totals, and aggregates must not assert exact numbers — use patterns, ranges, or seed data first |
-| No `Run Keyword And Ignore Error` around assertions | This silently swallows failures and produces green runs that verify nothing — BLOCKER |
+| Every test has assertions | No action-only tests |
+| Assertions test user outcomes | Visible text, URL, element states, expected errors |
+| Assertions are specific | Concrete expected outcome, not just “visible” when richer verification is available |
+| Error paths have assertions | Error tests verify the error UI |
+| No exact server-computed values | Use patterns, ranges, or seeded data |
+| No swallowed assertions | `Run Keyword And Ignore Error` around assertions is a BLOCKER |
 
-#### 2d. Test Isolation and Structure
-
+#### 2d. Isolation and Structure
 | Check | What to Look For |
 |-------|-----------------|
-| No shared mutable state | Tests do not depend on execution order or modify shared `Set Global Variable` values |
-| Proper setup/teardown | `Test Setup` / `Test Teardown` / `Suite Setup` for shared setup, not duplicated in each test |
-| AAA structure | Clear Arrange → Act → Assert sections inside each test case |
-| No test coupling | Test B does not depend on side effects from Test A |
-| Auth handled correctly | Persisted context state or shared keyword, not UI login in every test (unless testing login itself) |
-| Test data is unique | Uses `Get Time    epoch`, `Evaluate    time.time_ns()`, or unique IDs from API — not hardcoded shared data |
-| Parallel-safe (if `pabot` is in use) | Tests that create data must not assert on unscoped lists or counts — filter assertions to the specific data created. If pabot is not used, note as SUGGESTION rather than WARNING |
-| Data cleanup present | Tests that create persistent records (RequestsLibrary POST/PUT) must have corresponding teardown (`[Teardown]`, `Suite Teardown`, or listener cleanup) |
+| No shared mutable state | Tests do not depend on order |
+| Proper setup and teardown | Shared setup in `Suite Setup` / `Test Setup`, not duplicated everywhere |
+| Clear flow | Arrange, Act, Assert structure |
+| No test coupling | Test B does not rely on Test A |
+| Auth handled correctly | Reused state or shared auth keyword, not UI login in every test |
+| Unique data | Unique IDs or seeded API data |
+| Parallel-safe | `pabot` tests assert on the specific created entity, not global counts |
+| Cleanup present | Persistent test data gets cleaned up |
 
 #### 2e. Convention Adherence
-
 | Check | What to Look For |
 |-------|-----------------|
-| TC-ID in test name | Every test has `TC-<FEATURE>-<NNN> <description>` as the test case name |
-| File naming matches project | Follows existing `*.robot` convention |
-| Resource imports match project | Imports from project `resources/*.resource`, not inline keywords duplicating them |
-| `${BASE_URL}` used | `Go To    ${BASE_URL}/` not `Go To    https://example.com/` |
-| Resource pattern followed | Page-level interactions live in resources, tests contain assertions |
-| Consistent locator strategy | Same locator approach as existing tests |
+| TC-ID in test name | `TC-<FEATURE>-<NNN> <description>` |
+| File naming matches project | Same suite naming convention |
+| Resource imports match project | Reuse project resources |
+| `${BASE_URL}` used | No hardcoded domains |
+| Resource pattern followed | Interactions in resources, outcomes in tests |
+| Locator strategy matches project | Aligns with existing files and `conventions.yaml` |
 
 #### 2f. TC-ID Traceability
-
-If a test case spec file exists for this feature:
-- Verify every TC-ID from the spec has a corresponding test
-- Flag TC-IDs in the spec with no implementation
-- Flag tests with TC-IDs not present in the spec (orphaned tests)
-- Note: not every spec TC-ID must be implemented — but missing ones should be acknowledged
+If a spec exists:
+- Verify every spec TC-ID implemented here is present
+- Flag missing implementations
+- Flag orphaned tests not present in the spec
 
 #### 2g. Anti-Pattern Detection
-
-Flag any instances of these known anti-patterns:
-1. Raw CSS / XPath locators where semantic Browser locators would work
-2. `Sleep` used as a fix
-3. `>> nth=N` without justification
-4. Exact long text matches (fragile to copy changes)
-5. Login via UI in every test (should use persisted context state)
-6. UI clicks to set up test data (should use RequestsLibrary)
-7. No error path tests in the suite
-8. Hardcoded test data
-9. Tests depending on execution order
-10. `Run Keyword And Ignore Error` wrapping assertions (silent failure)
-11. Missing assertions after actions (action-only tests pass without verifying anything)
-12. `force=True` on interactions without documented justification (masks actionability issues — overlapping elements, disabled state, not scrolled into view)
-13. Custom "wait for network idle" keywords that break on long-polling, WebSockets, analytics beacons
-14. Utility-class selectors (Tailwind `rounded-lg`, `flex`, Bootstrap `btn-primary`, `col-md-*`) — never use as locators
-15. Asserting exact server-computed values (`Get Text    ...    ==    12450`) — use pattern matchers, ranges, or seed data
+Flag any instances of:
+1. Fake selector prefixes such as `role=` or `label=`
+2. Raw CSS or XPath where semantic Browser locators would work
+3. `Sleep`
+4. `>> nth=N` without justification
+5. Exact long text matches
+6. Login via UI in every test
+7. UI clicks to set up test data
+8. No error path tests in the suite
+9. Hardcoded test data
+10. Tests depending on execution order
+11. `Run Keyword And Ignore Error` wrapping assertions
+12. Missing assertions after actions
+13. `force=True` without documented justification
+14. Post-action `Wait For Response` without `Promise To`
+15. Custom network-idle helpers
+16. Utility-class selectors
+17. Exact server-computed value assertions without seeded data
 
 ### Step 3: Produce the Review Report
-
-Output a structured review with this format:
 
 ```markdown
 # Test Code Review: <file or feature>
@@ -154,38 +145,25 @@ Output a structured review with this format:
 - **<file>:<line>**: <issue description>
 
 ## Convention Divergences
-- <How this code differs from the project's established patterns>
+- <How this code differs from established patterns or `conventions.yaml`>
 
 ## TC-ID Traceability
 - **Implemented:** <count> / <total in spec>
-- **Missing from implementation:** <list of TC-IDs>
-- **Orphaned (no spec):** <list of TC-IDs>
+- **Missing from implementation:** <list>
+- **Orphaned:** <list>
 
 ## Summary
-<2-3 sentences on overall code quality and what to address before test execution>
+<2-3 sentences>
 ```
 
 ### Step 4: Verdict Rules
-
-- **PASS** — no blockers, 2 or fewer warnings. Proceed to test execution.
-- **PASS WITH WARNINGS** — no blockers, 3+ warnings. Can proceed but should address warnings for long-term stability.
-- **NEEDS REVISION** — 1+ blockers. Do not run tests expecting stable results until blockers are resolved.
+- PASS: no blockers, 2 or fewer warnings
+- PASS WITH WARNINGS: no blockers, 3 or more warnings
+- NEEDS REVISION: 1 or more blockers
 
 ## Principles
-
-- **Review-only** — never modify test files; report findings for the author to act on
-- **Evidence over opinion** — cite specific file paths, line numbers, and code snippets when flagging issues
-- **Spot-check locators** — delegate to a subagent with browser access to verify 2-3 suspicious locators against the live site
-- **Convention-first** — compare against the project's existing test patterns, not an abstract ideal
-- **Bounded output** — the review should be actionable and finite, not a full rewrite specification
-- **Severity matters** — a missing assertion or `Run Keyword And Ignore Error` swallowing failures is a blocker; a naming style preference is a suggestion
-
-## Example Usage
-
-```
-Claude Code: /review-test-code tests/login.robot
-Codex: $review-test-code tests/login.robot
-
-Claude Code: /review-test-code tests/
-Codex: $review-test-code tests/
-```
+- Review-only
+- Evidence over opinion
+- Convention-first
+- Spot-check suspicious locators against the live site
+- Keep output bounded and actionable

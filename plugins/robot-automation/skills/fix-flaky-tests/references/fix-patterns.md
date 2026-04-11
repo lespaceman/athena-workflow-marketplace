@@ -9,17 +9,20 @@ Code examples for each root cause category. Apply only after diagnosing the caus
 Sleep    2s
 Get Element States    ${element}    *=    visible
 
-# GOOD: wait for the network event that loads the content
-Wait For Response    matcher=**/api/data    timeout=10s
+# GOOD: attach the response wait before the triggering action
+${promise}=    Promise To    Wait For Response    matcher=**/api/data    timeout=10s
+# trigger action here
+${resp}=    Wait For    ${promise}
 Get Element States    ${element}    *=    visible
 
 # GOOD: wait for loading indicator to disappear
-Wait For Elements State    role=progressbar    hidden    timeout=10s
+Wait For Elements State    css=[role="progressbar"]    hidden    timeout=10s
 Get Element States    ${element}    *=    visible
 
 # GOOD: wait for a specific readiness signal after navigation
 Go To    ${BASE_URL}/page
-Wait For Elements State    role=heading[name="Dashboard"]    visible    timeout=10s
+${dashboard}=    Get Element By Role    heading    name=Dashboard
+Wait For Elements State    ${dashboard}    visible    timeout=10s
 
 # GOOD: use auto-retrying Browser assertion (retries until timeout)
 Get Text    text=/loaded/i    contains    loaded    timeout=10s
@@ -54,11 +57,11 @@ Wait For Elements State    [data-hydrated="true"]    attached    timeout=10s
 
 # Use Promise To + Wait For for action + expected response
 ${promise}=    Promise To    Wait For Response    matcher=**/api/submit    timeout=10s
-Click    role=button[name="Submit"]
+Click    ${submit_button}
 ${resp}=    Wait For    ${promise}
 
 # Wait for animation/transition to complete
-Wait For Elements State    role=dialog    visible    timeout=5s
+Wait For Elements State    ${dialog}    visible    timeout=5s
 Wait For Elements State    .modal-animating    detached    timeout=5s
 ```
 
@@ -66,16 +69,20 @@ Wait For Elements State    .modal-animating    detached    timeout=5s
 
 ```robotframework
 # BAD: position-dependent, matches wrong element if order changes
-Click    role=listitem >> nth=0
+Click    css=[role="listitem"] >> nth=0
 
 # GOOD: scoped to container with unique content
-Click    role=listitem >> text=Specific Item
+${item}=    Get Element By Text    Specific Item
+Click    ${item}
 
 # GOOD: use test IDs for ambiguous elements
-Click    [data-testid="cart-item-sku-123"]
+${cart_item}=    Get Element By Test Id    cart-item-sku-123
+Click    ${cart_item}
 
 # GOOD: scope to a region first, then find within
-Click    main >> role=button[name="Submit"]
+${main}=      Set Variable    css=main
+${submit}=    Get Element By Role    button    name=Submit    parent=${main}
+Click    ${submit}
 ```
 
 ## Environment Fixes

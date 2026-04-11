@@ -7,6 +7,13 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "scripts/",
+    "skills/",
+    "dist/"
+  ],
   "dependencies": {
     "puppeteer-core": "^24.40.0"
   },

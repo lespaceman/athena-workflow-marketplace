@@ -1,17 +1,13 @@
 ---
 name: analyze-test-codebase
 description: >
-  Scans and reports on an existing Robot Framework test codebase. This skill should be used
-  to inspect the current Robot Framework + Browser library setup before writing, reviewing,
-  or fixing tests, and should be loaded early when working in a new project to understand
-  existing patterns. Covers: robot.toml / pyproject, resource files, keyword libraries,
-  listeners, auth keywords, suite init (`__init__.robot`), tag conventions, and directory
-  structure. Triggers: "understand", "check", "show me", "inspect", or "analyze"
+  Use to inspect an existing Robot Framework + Browser library codebase before writing,
+  reviewing, or fixing tests. Covers robot.toml or pyproject config, resource files, keyword
+  libraries, listeners, auth keywords, suite init (`__init__.robot`), tag conventions,
+  directory structure, and emits the typed `e2e-plan/conventions.yaml` contract used by
+  downstream skills. Triggers: "understand", "check", "show me", "inspect", or "analyze"
   the current Robot Framework test setup, config, infrastructure, patterns, or conventions.
-  In the full add-robot-tests workflow, this skill serves as an early read-only analysis
-  sub-step before planning detailed coverage or writing code. It examines existing files and
-  outputs a structured report. Does NOT write or fix tests, install Robot Framework, or
-  explore live websites — for live site exploration, use agent-web-interface-guide instead.
+  Does NOT write or fix tests, install Robot Framework, or explore live websites.
 allowed-tools: Read Glob Grep Bash
 ---
 
@@ -41,7 +37,7 @@ Scan and analyze an existing Robot Framework test codebase to understand its con
    - Map directory organization (by feature? by role? flat?)
 
 4. **Detect patterns in existing suites** — read 2-3 representative `.robot` files and identify:
-   - **Locator style**: `role=`, `label=`, `[data-testid=]`, `text=`, CSS, XPath (flag raw XPath as a risk)
+   - **Locator style**: `Get Element By Role` / `Get Element By Label` / `Get Element By Test Id`, explicit `css=` / `xpath=` / `text=` / `id=`, or legacy mixed forms (flag raw XPath as a risk)
    - **Wait strategy**: auto-waits, `Wait For Elements State`, `Wait For Response`, any `Sleep` (flag these)
    - **Suite structure**: `*** Settings ***` / `*** Variables ***` / `*** Keywords ***` / `*** Test Cases ***` order, suite-level Documentation
    - **Data management**: `Variables    variables.py`, external YAML/CSV, fixtures loaded via listeners
@@ -80,7 +76,7 @@ Scan and analyze an existing Robot Framework test codebase to understand its con
 
 ### Conventions
 - File naming: `*.robot`
-- Locator preference: role= > label= > [data-testid=]
+- Locator preference: `Get Element By Role` > `Get Element By Label` > `Get Element By Test Id`
 - Structure: one suite per feature under `tests/<feature>.robot`
 - Shared keywords: `resources/common.resource`, `resources/<feature>.resource`
 - Custom libraries: Python modules under `libraries/`
@@ -121,6 +117,8 @@ Scan and analyze an existing Robot Framework test codebase to understand its con
 - Use `${BASE_URL}` for navigation (no hardcoded domains)
 - Auth: reuse existing persisted state setup
 ```
+
+7. **Emit `e2e-plan/conventions.yaml`** — in addition to the human-readable report, produce a strict, versioned conventions artifact for downstream skills to read. Validate it against `plugins/robot-automation/schemas/conventions.schema.json`. If no Robot project is present, stop and note that analysis could not infer conventions from history; only suggest the optional external scaffold repository if the user wants a greenfield bootstrap.
 
 ## Out of Scope
 

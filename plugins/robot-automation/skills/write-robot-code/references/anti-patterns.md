@@ -1,39 +1,39 @@
 # Anti-Patterns: Detailed Explanations and Fix Strategies
 
 ## 1. Raw CSS / XPath selectors
-Use semantic Browser library locators (`role=`, `label=`, `text=`, `[data-testid=]`) instead of raw CSS or XPath. CSS and XPath selectors are brittle and break when markup changes.
+Use canonical Browser library locators (`Get Element By Role`, `Get Element By Label`, `Get Element By Test Id`, `text=`) instead of raw CSS or XPath. CSS and XPath selectors are brittle and break when markup changes.
 
 **Why:** A class rename, component refactor, or CSS-in-JS migration breaks every CSS-based selector overnight. Semantic locators survive these changes because they target accessible roles and labels, not implementation details.
 
-**Fix:** Replace `css=.submit-btn` with `role=button[name="Submit"]`. Follow the locator strategy hierarchy in the main skill.
+**Fix:** Replace `css=.submit-btn` with `Get Element By Role    button    name=Submit`. Follow the locator strategy hierarchy in the main skill.
 
 ## 2. `Sleep`
 Use proper assertions and event-driven waits. `Sleep` adds arbitrary delays that slow tests and mask timing issues.
 
 **Why:** A 2-second `Sleep` that works locally may be too short in CI (slower machines) or too long everywhere (wasting time). It also hides the real question: "what am I actually waiting for?"
 
-**Fix:** Replace with `Wait For Response    matcher=**/api/data` for API-dependent UI, `Wait For Elements State    <locator>    visible` for element appearance, or `Wait For Elements State    role=progressbar    hidden` for loading states.
+**Fix:** Replace with `Promise To    Wait For Response    matcher=**/api/data` before the action for API-dependent UI, `Wait For Elements State    <locator>    visible` for element appearance, or `Wait For Elements State    css=[role=\"progressbar\"]    hidden` for loading states.
 
 ## 3. Fragile `>> nth=0` / positional selectors
 Scope locators to a parent with `>>` chaining instead of relying on position. If position is unavoidable, add a comment explaining why.
 
 **Why:** Element order can change when the page adds a banner, reorders a list, or renders asynchronously. `>> nth=0` silently picks the wrong element, causing false passes or mysterious failures.
 
-**Fix:** Use `[data-testid="cart"] >> role=button[name="Remove"]` or chain to a container with unique text: `role=listitem >> text=Specific Item`.
+**Fix:** Use a parent locator plus a semantic child locator, or chain to a container with unique text.
 
 ## 4. Exact long text matches
 Use `text=/regex/i` with key words instead of matching entire strings. Marketing copy and UI text change frequently.
 
 **Why:** A copywriter changes "Sign up for free today!" to "Create your free account" and every test matching the full string breaks, even though the feature works fine.
 
-**Fix:** Use `text=/sign up/i` or `role=button[name="/free/i"]` — match the stable semantic keywords.
+**Fix:** Use `text=/sign up/i` or `Get Element By Role    button    name=/free/i` — match the stable semantic keywords.
 
 ## 5. Unscoped locators
 Scope locators to `main`, `nav`, `dialog`, or another container when possible. Global locators match unintended elements.
 
-**Why:** A page-wide `role=button[name="Submit"]` may match a submit button in the header, footer, or a hidden modal — not just the one in your form. This causes the wrong click or ambiguous locator errors.
+**Why:** A page-wide `Get Element By Role    button    name=Submit` may match a submit button in the header, footer, or a hidden modal — not just the one in your form. This causes the wrong click or ambiguous locator errors.
 
-**Fix:** Scope first: `main >> role=button[name="Submit"]` or `[role="dialog"] >> role=button[name="Save"]`.
+**Fix:** Scope first with a parent locator, then find the child within it.
 
 ## 6. Login via UI in every test
 Reuse persisted browser state or API-based auth setup. UI login in every test wastes time and creates coupling to the login flow.
@@ -78,18 +78,18 @@ Each test must be independently runnable. Never rely on state left by a previous
 ## 12. `force=True` on actions without justification
 `Click    <locator>    force=${True}` bypasses actionability checks and hides real problems: overlapping elements, not scrolled into view, disabled state, unmounted components.
 
-**Fix:** Diagnose the root cause. Use `Scroll To Element`, wait for the overlay to disappear (`Wait For Elements State    role=dialog    hidden`), or wait for the target to become enabled. Only acceptable when interacting with a custom widget that the Browser library cannot natively trigger (document why in a comment next to the call).
+**Fix:** Diagnose the root cause. Use `Scroll To Element`, wait for the overlay to disappear, or wait for the target to become enabled. Only acceptable when interacting with a custom widget that the Browser library cannot natively trigger (document why in a comment next to the call).
 
 ## 13. `Sleep` after navigation instead of `Wait For Elements State` / `Wait For Response`
 `Go To` triggers a page load, but subsequent keywords race with framework hydration. A common "fix" is `Sleep    3s` — this is brittle and arbitrary.
 
-**Fix:** Wait for a concrete readiness signal. Either `Wait For Elements State    role=heading[name="Dashboard"]    visible` or `Wait For Response    matcher=**/api/bootstrap    timeout=10s`. Pick the thing you actually need to be ready.
+**Fix:** Wait for a concrete readiness signal. Either `Wait For Elements State    ${dashboard_heading}    visible` or `Promise To    Wait For Response    matcher=**/api/bootstrap    timeout=10s`. Pick the thing you actually need to be ready.
 
 ## 14. Utility-class selectors (Tailwind, Bootstrap, etc.)
 `css=.btn-primary`, `css=.rounded-lg`, `css=.flex.items-center` are styling concerns that change during refactors. Treat ALL utility framework classes as volatile — never use them as selectors. If no semantic locator works, request a `data-testid` from the dev team.
 
 ## 15. Asserting exact server-computed values
-`Get Text    role=text[name="Revenue"]    ==    $12,450` will break when data changes. For dashboard counters, totals, and aggregates:
+`Get Text    ${revenue_value}    ==    $12,450` will break when data changes. For dashboard counters, totals, and aggregates:
 - Assert the element exists and contains a number (`Get Text    ${loc}    matches    \\$[\\d,]+`)
 - Assert non-zero or within a range (`Should Be True    ${value} > 0`)
 - Assert format correctness (`matches    ^\\d{1,3}(,\\d{3})*$`)

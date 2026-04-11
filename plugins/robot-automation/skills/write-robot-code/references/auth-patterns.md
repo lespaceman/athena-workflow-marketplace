@@ -16,10 +16,14 @@ Save Authenticated State
     New Browser    chromium    headless=${HEADLESS}
     New Context
     New Page    ${BASE_URL}/login
-    Fill Text    label=Email       %{TEST_USER_EMAIL}
-    Fill Secret  label=Password    $TEST_USER_PASSWORD
-    Click        role=button[name="Sign in"]
-    Wait For Elements State    role=heading[name="Dashboard"]    visible    timeout=10s
+    ${email}=       Get Element By Label    Email
+    ${password}=    Get Element By Label    Password
+    ${submit}=      Get Element By Role     button    name=Sign in
+    Fill Text       ${email}                %{TEST_USER_EMAIL}
+    Fill Secret     ${password}             $TEST_USER_PASSWORD
+    Click           ${submit}
+    ${dashboard}=   Get Element By Role     heading    name=Dashboard
+    Wait For Elements State    ${dashboard}    visible    timeout=10s
     Save Storage State    path=${EXECDIR}/auth/user.json
     Close Browser
 ```
@@ -41,7 +45,7 @@ Run the login suite first (or from a `__init__.robot` Suite Setup) so `auth/user
 ```robotframework
 *** Keywords ***
 Open Authenticated Page For Worker
-    ${worker_id}=    Get Environment Variable    PABOT_QUEUE_INDEX    default=0
+    ${worker_id}=    Get Environment Variable    PABOTQUEUEINDEX    default=0
     New Browser    chromium    headless=${HEADLESS}
     New Context    storageState=${EXECDIR}/auth/worker-${worker_id}.json
     New Page    ${BASE_URL}

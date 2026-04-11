@@ -31,7 +31,8 @@ Reduce Products To One Item
 Place Order And Verify API Call
     ${promise}=    Promise To    Wait For Response
     ...    matcher=**/api/order    timeout=10s
-    Click    role=button[name="Place order"]
+    ${submit}=    Get Element By Role    button    name=Place order
+    Click    ${submit}
     ${response}=    Wait For    ${promise}
     Should Be Equal As Integers    ${response}[status]    201
 ```
@@ -57,5 +58,6 @@ TC-DASHBOARD-005 Shows empty state when no data
     [Documentation]    Dashboard renders empty state when API returns no items.
     Route URL    **/api/items    Response    status=200    body={"items": []}
     Go To    ${BASE_URL}/dashboard
-    Get Element States    role=status[name="No items"]    *=    visible
+    ${empty_state}=    Get Element By Role    status    name=No items
+    Get Element States    ${empty_state}    *=    visible
 ```

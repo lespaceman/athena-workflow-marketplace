@@ -48,7 +48,7 @@
       "name": "robot-automation",
       "source": "./plugins/robot-automation",
       "description": "Full-pipeline Robot Framework (Browser library) test generation \u2014 explores your live site via browser, detects existing .robot conventions, plans coverage gaps, produces reviewed TC-ID specs, writes production-grade .robot test suites with quality gates, and stabilizes flaky tests",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "keywords": [
         "robotframework",
         "robot",
