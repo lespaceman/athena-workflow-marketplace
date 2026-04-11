@@ -6,6 +6,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "skills/",
+    "dist/"
+  ],
   "scripts": {
     "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
     "prepack": "npm run build:artifacts"

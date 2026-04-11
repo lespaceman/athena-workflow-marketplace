@@ -30,7 +30,7 @@ If no argument provided, search for `test-cases/*.md` files and review the most 
 
 1. Read the test case spec file
 2. Read any related files for context:
-   - `e2e-plan/conventions.md` or `e2e-plan/coverage-plan.md` if they exist
+   - `e2e-plan/conventions.yaml` or `e2e-plan/coverage-plan.md` if they exist
 3. Extract the target URL from the spec header
 
 ### Step 2: Run the Review Checklist
@@ -62,7 +62,7 @@ Evaluate every test case against each criterion. Track findings by severity:
 | TC-IDs are sequential | No gaps, no duplicates, and use the canonical `TC-<FEATURE>-<NNN>` format |
 | Priority is justified | Critical = blocks core journey; not everything is Critical |
 | Categories are accurate | Happy Path vs Validation vs Edge Case — correctly classified |
-| Locators in Browser library syntax | `role=button[name="…"]`, `label=…`, `[data-testid="…"]`, not Playwright `getByRole()` syntax or raw XPath |
+| Locators in Browser library syntax | `Get Element By Role    button    name=...`, `Get Element By Label    ...`, `Get Element By Test Id    ...`, or justified `css=` / `xpath=` / `text=` / `id=` |
 
 #### 2c. Invented vs Observed
 

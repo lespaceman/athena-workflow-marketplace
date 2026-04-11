@@ -1,11 +1,18 @@
 {
   "name": "@athenaflow/plugin-robot-automation",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Full-pipeline Robot Framework (Browser library) test generation — explores your live site via browser, detects existing .robot conventions, plans coverage gaps, produces reviewed TC-ID specs, writes production-grade .robot test suites with quality gates, and stabilizes flaky tests",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "schemas/",
+    "skills/",
+    "dist/"
+  ],
   "scripts": {
     "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
     "prepack": "npm run build:artifacts"

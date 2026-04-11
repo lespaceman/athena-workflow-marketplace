@@ -174,10 +174,11 @@ function main() {
     throw new Error(`Plugin ${pluginName} is missing a valid version`);
   }
 
-  const versionRoot = path.join(pluginDir, 'dist', version);
+  const distRoot = path.join(pluginDir, 'dist');
+  const versionRoot = path.join(distRoot, version);
   const claudeTarget = path.join(versionRoot, 'claude', 'plugin');
   const codexTarget = path.join(versionRoot, 'codex', 'plugin');
-  ensureCleanDir(versionRoot);
+  ensureCleanDir(distRoot);
   copyPluginTree(pluginDir, claudeTarget, '.codex-plugin');
   copyPluginTree(pluginDir, codexTarget, '.claude-plugin');
 

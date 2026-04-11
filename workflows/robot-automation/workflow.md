@@ -24,7 +24,7 @@ Session 1 begins by loading `add-robot-tests` as the top-level workflow skill. T
 
 ### Understand the codebase
 
-Load `analyze-test-codebase` and follow its methodology. Key questions: is Robot Framework + Browser library installed? Has `rfbrowser init` run? What conventions are in use? What resource files, listeners, and custom libraries are already available? If Robot Framework is missing, follow the scaffolding guidance from `add-robot-tests`.
+Load `analyze-test-codebase` and follow its methodology. Key questions: is Robot Framework + Browser library installed? Has `rfbrowser init` run? What conventions are in use? What resource files, listeners, and custom libraries are already available? If a Robot project already exists, stay in that project and adapt to its history. Only reach for the optional external scaffold repository when no Robot project exists and the user wants a full bootstrap in one step.
 
 ### Understand the product
 

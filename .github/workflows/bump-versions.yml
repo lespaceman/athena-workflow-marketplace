@@ -1,4 +1,4 @@
-name: Auto-bump versions
+name: Release Changed Plugins And Workflows
 
 on:
   push:
@@ -6,12 +6,22 @@ on:
     paths:
       - 'plugins/**'
       - 'workflows/**'
+      - '.claude-plugin/marketplace.json'
+      - '.athena-workflow/marketplace.json'
+      - 'scripts/bump-versions.sh'
+      - 'scripts/build-plugin-artifacts.mjs'
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
 
 jobs:
-  bump-versions:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,16 +29,25 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Bump changed plugin and workflow versions
         run: bash scripts/bump-versions.sh
 
-      - name: Collect bumped plugins
+      - name: Collect changed plugins
         id: collect_plugins
+        shell: bash
         run: |
-          changed_plugins="$(git diff --name-only -- plugins/*/package.json plugins/*/.claude-plugin/plugin.json plugins/*/.codex-plugin/plugin.json | awk -F/ '/^plugins\/[^/]+\// {print $2}' | sort -u)"
+          changed_plugins="$(
+            git diff --name-only -- \
+              plugins/*/package.json \
+              plugins/*/.claude-plugin/plugin.json \
+              plugins/*/.codex-plugin/plugin.json \
+            | awk -F/ '/^plugins\/[^/]+\// {print $2}' \
+            | sort -u
+          )"
+
           if [ -z "$changed_plugins" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -41,7 +60,20 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
+      - name: Validate changed plugin packages
+        if: steps.collect_plugins.outputs.changed == 'true'
+        shell: bash
+        run: |
+          while IFS= read -r plugin; do
+            [ -n "$plugin" ] || continue
+            echo "Packing $plugin..."
+            (cd "plugins/$plugin" && npm pack --dry-run)
+          done <<'EOF'
+          ${{ steps.collect_plugins.outputs.plugin_list }}
+          EOF
+
       - name: Commit version bumps
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -56,11 +88,12 @@ jobs:
 
       - name: Publish changed plugins to npm
         if: steps.collect_plugins.outputs.changed == 'true'
+        shell: bash
         run: |
           while IFS= read -r plugin; do
             [ -n "$plugin" ] || continue
             echo "Publishing $plugin..."
-            (cd "plugins/$plugin" && npm publish --access public)
+            (cd "plugins/$plugin" && npm publish --access public --provenance)
           done <<'EOF'
           ${{ steps.collect_plugins.outputs.plugin_list }}
           EOF

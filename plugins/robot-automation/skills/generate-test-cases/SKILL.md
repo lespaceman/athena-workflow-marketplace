@@ -11,7 +11,7 @@ allowed-tools: Read Write Bash Glob Grep Task
 
 # Generate Test Cases
 
-Generate comprehensive, structured test case specifications for a web application by exploring it live in a browser. The specs feed the `write-robot-code` skill downstream.
+Generate structured test case specifications for a web application by exploring it live in a browser. The specs feed `write-robot-code`.
 
 ## Input
 
@@ -20,93 +20,49 @@ Parse the target URL and user journey description from: $ARGUMENTS
 ## Workflow
 
 ### Step 1: Understand the Journey and Existing Coverage
-
-Parse the journey description to identify:
-- **Base URL** and target feature area
-- **Primary user goal** (what the happy path achieves)
-- **Key interaction points** (forms, buttons, navigation, selections)
-- **Implicit requirements** (validation, authentication, authorization)
-
-Check for existing test coverage before exploring:
-- Search for existing suites related to this feature (`Grep` for feature keywords in `tests/**/*.robot`)
-- Read any existing `test-cases/*.md` spec files for this feature
-- Note existing TC-IDs to avoid conflicts — continue numbering from the highest existing ID
-- Focus on gaps in existing coverage
+- Parse the base URL, feature area, primary user goal, key interaction points, and implicit requirements
+- Search for existing suites related to the feature
+- Read any existing `test-cases/*.md` files for this feature
+- Read `e2e-plan/conventions.yaml` if it exists so observed selectors are recorded in the dialect downstream skills expect
+- Continue TC-ID numbering from the highest existing ID
 
 ### Step 2: Explore the Happy Path
+Use a subagent for browser exploration when that saves context. Ask it to return results in this structure:
 
-Use a subagent for browser exploration when that saves context. Pass it:
-- The URL and journey description
-- Instructions to walk through each step using `find`, `get_form`, `get_field`
-- Instructions to catalog all interactive elements, form fields, navigation options
-- Instructions to use `get_element` on key elements to capture the best Browser library locator
-- Instructions to return results in this structured format for each step:
-
-```
+```text
 Step: <what was done>
 URL: <current URL after action>
 Elements found:
-  - Submit button: role=button[name="Submit"]
-  - Email field: label=Email
-  - Error message: role=alert
+  - Submit button: Get Element By Role    button    name=Submit
+  - Email field: Get Element By Label    Email
+  - Error message: Get Element By Role    alert
 Observations: <what appeared, validation messages, state changes>
 ```
 
-This structured output ensures locators survive the handoff to the spec file and ultimately to `write-robot-code`.
+If `conventions.yaml` says `css_first`, record selectors in that dialect instead. Otherwise prefer canonical `Get Element By *` forms.
 
 ### Step 3: Explore Alternative and Failure Paths
-
-Launch another subagent, or continue in the main thread if the flow is small, to systematically probe beyond the happy path:
-
-**Validation & Error Handling:**
-- Submit forms with empty required fields
-- Enter invalid formats (wrong email, short passwords, letters in number fields)
-- Exceed field length limits, use special characters and Unicode
-
-**Boundary Conditions:**
-- Min/max values for numeric fields
-- Single character and max length strings
-- Zero quantities, negative numbers, date boundaries
-
-**State & Navigation:**
-- Browser back/forward during multi-step flows
-- Page refresh mid-flow
-- Accessing later steps directly via URL
-
-**UI & Interaction:**
-- Rapid repeated clicks on submit buttons
-- Dropdown default values, empty options
-- Loading states, disabled states, conditional visibility
-
-**Access & Authorization (observe only):**
-- Redirect behavior for unauthenticated users
-- Permission-related error messages
+Probe beyond the happy path:
+- Validation and error handling
+- Boundary conditions
+- State and navigation
+- UI and interaction edge cases
+- Access and authorization behavior
 
 ### Step 4: Reason About Additional Scenarios
+After exploration, add scenarios that are strongly implied but not directly triggered:
+- Network and performance
+- Accessibility
+- Visual consistency
+- Cross-browser
+- Concurrent and session behavior
 
-After exploration, reason about scenarios that could not be directly triggered but may still need coverage:
-
-- **Network & Performance** — failure modes, slow responses, large data sets, offline behavior
-- **Accessibility (WCAG 2.1 AA)** — keyboard navigation, screen reader support, focus management, contrast
-- **Visual Consistency** — layout stability, responsive breakpoints, dark mode
-- **Cross-browser** — Safari/Firefox/mobile-specific behavioral differences
-- **Concurrent & Session** — session expiry, multi-tab conflicts, race conditions
-
-For scenarios that were not directly observed:
-- label them clearly as inferred, mock-required, or environment-dependent in the spec notes
-- avoid inventing exact UI text, validation copy, or server behavior you did not observe
-- phrase expected results at the right confidence level (for example, "shows an error state" rather than exact copy if the exact message was not seen)
-- prefer these scenarios when they are strongly implied by the architecture or are standard negative paths the implementation will need to simulate via `Route URL`
-
-See [references/scenario-categories.md](references/scenario-categories.md) for detailed checklists within each category.
+Mark non-observed scenarios clearly as inferred, mock-required, or environment-dependent. Do not invent exact UI copy or backend behavior.
 
 ### Step 5: Generate Test Case Specifications
-
 Write structured test cases to `test-cases/<feature-name>.md`.
 
 ## Output Specification
-
-### Test Case Format
 
 ```markdown
 ### TC-<FEATURE>-<NUMBER>: <Descriptive title>
@@ -121,74 +77,41 @@ Write structured test cases to `test-cases/<feature-name>.md`.
 2. <Next action>
 
 **Expected Result:**
-- <What should happen>
+- <Observable outcome>
 
 **Selectors observed:**
-- <element>: `role=button[name="Submit"]` or `label=Email` — from `get_element`/`find` during exploration
-- (Include locators in Browser library syntax for key interactive elements so `write-robot-code` doesn't have to rediscover them)
+- <element>: `Get Element By Role    button    name=Submit`
+- <element>: `Get Element By Label    Email`
+- Or justified `css=` / `xpath=` / `text=` / `id=` when the project convention or DOM requires it
 
 **Notes:**
-- <Additional context discovered during exploration>
+- <Context discovered during exploration>
 ```
 
-### Output Organization
-
-```markdown
-# Test Cases: <Feature Name>
-
-**URL:** <base URL>
-**Generated:** <date>
-**Journey:** <brief description>
-
-## Summary
-- Total test cases: <count>
-- Critical: <count> | High: <count> | Medium: <count> | Low: <count>
-
-## Happy Path
-## Validation & Error Handling
-## Edge Cases
-## Boundary Conditions
-## Security & Access
-## Network Error Scenarios
-## Visual & Responsive
-## Performance & Loading
-## Accessibility & UX
-```
-
-### File Naming and Tag Convention
-
-When generating specs that span multiple roles or test categories, recommend role-based file naming (`<feature>_admin.robot`, `<feature>_user.robot`) or Robot Framework tag annotations (`admin`, `smoke`, `TC-LOGIN-001`) on `[Tags]`. This enables selective execution via `--include admin --exclude slow` instead of fragile suite-exclude regexes. NEVER recommend regex-based suite exclusion that must be updated for every new file.
-
-### TC-ID Convention
-
-- Format: `TC-<FEATURE>-<NNN>` where NNN is zero-padded to 3 digits
-- Feature abbreviation: short and clear (LOGIN, CHECKOUT, SEARCH, SIGNUP)
-- Start at 001, sequential, unique within the document
-- Happy path first, then validation, then edge cases
+Organize the output under:
+- Summary
+- Happy Path
+- Validation and Error Handling
+- Edge Cases
+- Boundary Conditions
+- Security and Access
+- Network Error Scenarios
+- Visual and Responsive
+- Performance and Loading
+- Accessibility and UX
 
 ## Quality Standards
-
-- Every test case must be **independently executable** — no hidden dependencies
-- Steps must be **concrete and unambiguous** — "click the Submit button" not "submit the form"
-- Expected results must be **observable and verifiable** — include actual error messages observed
-- Priority must be **justified** — Critical = blocks core journey, High = significant, Medium = secondary, Low = cosmetic
-- Include at minimum one network/server failure scenario, one empty state scenario, and one session/auth edge case when those scenarios meaningfully apply to the feature. If a category is not applicable, say so explicitly in the spec rather than inventing coverage.
-- **Test case count guidance:** Aim for 15-30 test cases per feature area as a baseline. Fewer than 10 suggests missing error paths or edge cases. More than 40 suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
+- Every test case must be independently executable
+- Steps must be concrete and unambiguous
+- Expected results must be observable and verifiable
+- Priorities must be justified
+- Include meaningful negative-path coverage when applicable
+- Prefer breadth of category coverage over padding one category
 
 ## Blocking Conditions
+- Login and auth walls
+- CAPTCHA
+- Payment gateways
+- Rate limiting
 
-Report and work around:
-- **Login/auth walls**: Document as precondition, test observable behavior
-- **CAPTCHA**: Report, skip, note in preconditions
-- **Payment gateways**: Don't enter real data, document flow up to that point
-- **Rate limiting**: Slow down, note rate limit behavior as a test case
-
-## Example Usage
-
-```
-Claude Code: /generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
-Codex: $generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
-
-Claude Code: /generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
-Codex: $generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
-```
+Document blockers rather than guessing through them.

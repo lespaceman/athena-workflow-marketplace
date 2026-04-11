@@ -1,0 +1,35 @@
+version: 1
+framework:
+  robot_framework: null
+  robotframework_browser: null
+  python: null
+  node: null
+  rfbrowser_initialized: false
+layout:
+  tests_dir: "tests/"
+  resources_dir: "resources/"
+  variables_file: null
+  output_dir: "results/"
+runtime:
+  runner_config: "none"
+  strict_mode: true
+  auto_closing_level: "SUITE"
+  run_on_failure: null
+  listeners: []
+  default_timeout: "10s"
+conventions:
+  locator_style: "get_element_by_role_first"
+  resource_pattern: "none"
+  auth_strategy: "none"
+  test_data_strategy: "none"
+  tag_vocabulary: []
+parallel:
+  enabled: false
+  mode: "disabled"
+base_url:
+  source: "hardcoded"
+observations:
+  generated_at: "2026-04-11T00:00:00Z"
+  generated_by: "scaffold-robot-project"
+  notes:
+    - "greenfield scaffold"

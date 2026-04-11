@@ -18,6 +18,7 @@ Plan what Robot Framework E2E tests to write for a feature by analyzing existing
 1. **Parse input** — extract the target URL and feature area from: $ARGUMENTS
 
 2. **Check existing test coverage**:
+   - Read `e2e-plan/conventions.yaml` if it exists so the plan reflects the project locator style, tag vocabulary, and parallel mode instead of inventing defaults
    - Search for existing suites related to the feature:
      ```
      Grep for feature keywords in tests/**/*.robot, resources/**/*.resource

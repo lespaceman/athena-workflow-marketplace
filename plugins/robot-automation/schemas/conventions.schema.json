@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lespaceman/athena-workflow-marketplace/plugins/robot-automation/schemas/conventions.schema.json",
+  "title": "Robot Automation Conventions Contract",
+  "description": "Typed contract between analyze-test-codebase / scaffold-robot-project (writers) and all downstream skills (readers). The artifact is written to e2e-plan/conventions.yaml at project root.",
+  "type": "object",
+  "required": [
+    "version",
+    "framework",
+    "layout",
+    "runtime",
+    "conventions",
+    "parallel",
+    "base_url",
+    "observations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1,
+      "description": "Schema version. Readers fail loudly if this does not match their expected version."
+    },
+    "framework": {
+      "type": "object",
+      "required": [
+        "robot_framework",
+        "robotframework_browser",
+        "python",
+        "rfbrowser_initialized"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "robot_framework": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "robotframework_browser": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "python": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "node": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "null when using BrowserBatteries install path"
+        },
+        "rfbrowser_initialized": {
+          "type": "boolean"
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "required": [
+        "tests_dir",
+        "resources_dir",
+        "output_dir"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tests_dir": {
+          "type": "string"
+        },
+        "resources_dir": {
+          "type": "string"
+        },
+        "variables_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "output_dir": {
+          "type": "string"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": [
+        "runner_config",
+        "strict_mode",
+        "auto_closing_level",
+        "run_on_failure",
+        "listeners",
+        "default_timeout"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "runner_config": {
+          "enum": [
+            "robot.toml",
+            "__init__.robot",
+            "none"
+          ]
+        },
+        "strict_mode": {
+          "type": "boolean"
+        },
+        "auto_closing_level": {
+          "enum": [
+            "TEST",
+            "SUITE",
+            "MANUAL",
+            "KEEP"
+          ]
+        },
+        "run_on_failure": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "listeners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "default_timeout": {
+          "type": "string"
+        }
+      }
+    },
+    "conventions": {
+      "type": "object",
+      "required": [
+        "locator_style",
+        "resource_pattern",
+        "auth_strategy",
+        "test_data_strategy",
+        "tag_vocabulary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "locator_style": {
+          "enum": [
+            "get_element_by_role_first",
+            "css_first",
+            "legacy_mixed"
+          ]
+        },
+        "resource_pattern": {
+          "enum": [
+            "common+feature",
+            "monolithic",
+            "none"
+          ]
+        },
+        "auth_strategy": {
+          "enum": [
+            "persisted_storage_state",
+            "per_test",
+            "api_token",
+            "none"
+          ]
+        },
+        "test_data_strategy": {
+          "enum": [
+            "requests_library_api",
+            "ui_setup",
+            "fixtures",
+            "none"
+          ]
+        },
+        "tag_vocabulary": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parallel": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "mode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "mode": {
+          "enum": [
+            "suite",
+            "test",
+            "disabled"
+          ]
+        },
+        "pabotlib": {
+          "type": "boolean"
+        },
+        "resource_file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "base_url": {
+      "type": "object",
+      "required": [
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "enum": [
+            "variables.py",
+            "env",
+            "hardcoded",
+            "robot.toml"
+          ]
+        },
+        "value_example": {
+          "type": "string"
+        }
+      }
+    },
+    "observations": {
+      "type": "object",
+      "required": [
+        "generated_at",
+        "generated_by",
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generated_by": {
+          "enum": [
+            "analyze-test-codebase",
+            "scaffold-robot-project"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

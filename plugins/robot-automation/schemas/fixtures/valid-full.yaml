@@ -1,0 +1,41 @@
+version: 1
+framework:
+  robot_framework: "7.2.1"
+  robotframework_browser: "19.12.5"
+  python: "3.11"
+  node: "22"
+  rfbrowser_initialized: true
+layout:
+  tests_dir: "tests/"
+  resources_dir: "resources/"
+  variables_file: "variables.py"
+  output_dir: "results/"
+runtime:
+  runner_config: "robot.toml"
+  strict_mode: true
+  auto_closing_level: "SUITE"
+  run_on_failure: "Take Screenshot failure-{index} fullPage=True"
+  listeners:
+    - "RetryFailed:1:True"
+  default_timeout: "10s"
+conventions:
+  locator_style: "get_element_by_role_first"
+  resource_pattern: "common+feature"
+  auth_strategy: "persisted_storage_state"
+  test_data_strategy: "requests_library_api"
+  tag_vocabulary:
+    - "smoke"
+    - "critical"
+    - "TC-*"
+parallel:
+  enabled: true
+  mode: "suite"
+  pabotlib: true
+  resource_file: "users.dat"
+base_url:
+  source: "variables.py"
+  value_example: "https://staging.example.com"
+observations:
+  generated_at: "2026-04-11T12:00:00Z"
+  generated_by: "analyze-test-codebase"
+  notes: []
