@@ -80,13 +80,19 @@ Launch another subagent, or continue in the main thread if the flow is small, to
 
 ### Step 4: Reason About Additional Scenarios
 
-After exploration, reason about scenarios that could not be directly triggered but must be covered:
+After exploration, reason about scenarios that could not be directly triggered but may still need coverage:
 
 - **Network & Performance** — failure modes, slow responses, large data sets, offline behavior
 - **Accessibility (WCAG 2.1 AA)** — keyboard navigation, screen reader support, focus management, contrast
 - **Visual Consistency** — layout stability, responsive breakpoints, dark mode
 - **Cross-browser** — Safari/Firefox/mobile-specific behavioral differences
 - **Concurrent & Session** — session expiry, multi-tab conflicts, race conditions
+
+For scenarios that were not directly observed:
+- label them clearly as inferred, mock-required, or environment-dependent in the spec notes
+- avoid inventing exact UI text, validation copy, or server behavior you did not observe
+- phrase expected results at the right confidence level (for example, "shows an error state" rather than exact copy if the exact message was not seen)
+- prefer these scenarios when they are strongly implied by the architecture or are standard negative paths the implementation will need to simulate
 
 See [references/scenario-categories.md](references/scenario-categories.md) for detailed checklists within each category.
 
@@ -162,7 +168,7 @@ When generating specs that span multiple roles or test categories, recommend rol
 - Steps must be **concrete and unambiguous** — "click the Submit button" not "submit the form"
 - Expected results must be **observable and verifiable** — include actual error messages observed
 - Priority must be **justified** — Critical = blocks core journey, High = significant, Medium = secondary, Low = cosmetic
-- Every feature spec MUST include at minimum: one network error scenario (500/timeout), one empty state scenario, and one session/auth edge case (if the feature requires auth). These are non-negotiable — omitting them is a BLOCKER in the review-test-cases quality gate.
+- Include at minimum one network/server failure scenario, one empty state scenario, and one session/auth edge case when those scenarios meaningfully apply to the feature. If a category is not applicable, say so explicitly in the spec rather than inventing coverage.
 - **Test case count guidance:** Aim for 15-30 test cases per feature area as a baseline. Fewer than 10 suggests missing error paths or edge cases. More than 40 suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
 
 ## Blocking Conditions

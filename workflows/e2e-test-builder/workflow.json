@@ -1,6 +1,6 @@
 {
   "name": "e2e-test-builder",
-  "description": "Adds Playwright E2E tests end to end \u2014 analyzes existing setup, explores the live product in a browser, plans coverage, generates specs, writes tests, and stabilizes them across multiple sessions",
+  "description": "Athena CLI runs this authored Playwright E2E workflow across sessions \u2014 analyze setup, explore the live product, plan coverage, generate and review specs, write and review tests, then execute and stabilize them",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
   "loop": {
@@ -14,8 +14,14 @@
   ],
   "isolation": "minimal",
   "plugins": [
-    "agent-web-interface@lespaceman/athena-workflow-marketplace",
-    "e2e-test-builder@lespaceman/athena-workflow-marketplace"
+    {
+      "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
+      "version": "1.0.6"
+    },
+    {
+      "ref": "e2e-test-builder@lespaceman/athena-workflow-marketplace",
+      "version": "2.0.10"
+    }
   ],
-  "version": "0.0.1"
+  "version": "0.0.2"
 }

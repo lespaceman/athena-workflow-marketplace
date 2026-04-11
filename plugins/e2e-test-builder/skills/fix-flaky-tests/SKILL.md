@@ -56,7 +56,7 @@ Investigate based on the classification:
 - Check if the test asserts before an API response arrives — search for missing `waitForResponse`
 - Look for animations/transitions that affect element state (CSS transitions, skeleton screens)
 - Check for `waitForTimeout` being used as a "fix" — this is a symptom, not a cure
-- Check if `networkidle` or `load` waitUntil would help for navigation
+- Check whether the test needs a more specific readiness signal: targeted `waitForResponse`, a URL/assertion change, a loading indicator disappearing, or a hydration marker becoming ready
 
 **State leakage:**
 - Run the failing test alone: `npx playwright test --grep "<test name>"`

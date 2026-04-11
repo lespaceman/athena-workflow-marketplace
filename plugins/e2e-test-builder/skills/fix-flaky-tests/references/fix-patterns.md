@@ -17,8 +17,9 @@ await expect(element).toBeVisible();
 await expect(page.getByRole('progressbar')).toBeHidden();
 await expect(element).toBeVisible();
 
-// GOOD: wait for navigation to complete
-await page.goto('/page', { waitUntil: 'networkidle' });
+// GOOD: wait for a specific readiness signal after navigation
+await page.goto('/page');
+await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
 
 // GOOD: use auto-retrying assertion (retries until timeout)
 await expect(page.getByText(/loaded/i)).toBeVisible({ timeout: 10000 });

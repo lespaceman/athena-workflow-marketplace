@@ -45,11 +45,11 @@ Evaluate every test case against each criterion. Track findings by severity:
 | Check | What to Look For |
 |-------|-----------------|
 | Happy path present | At least one Critical-priority test covers the primary success flow end-to-end |
-| Error paths covered (MINIMUM) | Every spec MUST have at least: (1) one server error test (500), (2) one network failure test (timeout/offline), (3) one empty state test. If auth is involved: (4) one session expiry test. Missing any of these is a BLOCKER, not a suggestion |
+| Error paths covered (when applicable) | For features that depend on backend retrieval/submission, expect coverage for meaningful server/network failures. For collection/data-driven UIs, expect empty-state coverage. For auth-gated features, expect session/auth edge cases. Missing an applicable category is a BLOCKER; a clearly documented non-applicable category is acceptable |
 | Boundary conditions | Min/max values, empty inputs, special characters, long strings |
 | Authentication edge cases | Session expiry, unauthorized access, role-based differences (if applicable) |
 | Navigation edge cases | Back/forward, direct URL access, refresh mid-flow |
-| Missing user actions | Every interactive element on the page should appear in at least one test case |
+| Missing critical user actions | Every user-critical action in scope should appear in at least one test case. Ancillary controls may be omitted if they are not material to the target journey |
 
 #### 2b. Specification Quality
 
@@ -58,7 +58,7 @@ Evaluate every test case against each criterion. Track findings by severity:
 | Steps are concrete | "Click the Submit button" not "submit the form"; "Enter 'test@example.com' in Email field" not "enter email" |
 | Expected results are observable | Specific text, URL change, element state — not "page updates" or "works correctly" |
 | Preconditions are explicit | Auth state, test data, feature flags, starting URL — nothing assumed |
-| TC-IDs are sequential | No gaps, no duplicates, correct feature prefix |
+| TC-IDs are sequential | No gaps, no duplicates, and use the canonical `TC-<FEATURE>-<NNN>` format |
 | Priority is justified | Critical = blocks core journey; not everything is Critical |
 | Categories are accurate | Happy Path vs Validation vs Edge Case — correctly classified |
 

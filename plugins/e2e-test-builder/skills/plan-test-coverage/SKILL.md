@@ -20,6 +20,7 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
      ```
    - Identify what's already covered and what's missing
    - Note existing TC-IDs for the feature area to avoid conflicts
+   - Use the canonical TC-ID format `TC-<FEATURE>-<NNN>` for every planned test, regardless of category. Category belongs in the plan metadata, not the ID.
 
 3. **Quick site inspection** (lightweight, not full exploration, optional if browser tooling is unavailable):
    - If the current context has browser tools, follow the `agent-web-interface-guide` skill's browsing patterns (orient before acting, use `list_pages` for session awareness, close only pages you opened)
@@ -66,28 +67,28 @@ Plan what E2E tests to write for a feature by analyzing existing test coverage a
 #### P0 — Critical Path
 | TC-ID | Description | Why Critical |
 |-------|-------------|-------------|
-| TC-FEATURE-010 | Happy path: user completes full flow | Core revenue path |
+| TC-FEATURE-001 | Happy path: user completes full flow | Core revenue path |
 
 #### P1 — Validation & Errors
 | TC-ID | Description | Why Important |
 |-------|-------------|--------------|
-| TC-FEATURE-020 | Submit with empty required fields | Common user error |
+| TC-FEATURE-002 | Submit with empty required fields | Common user error |
 
 #### P2 — Edge Cases
 | TC-ID | Description | Notes |
 |-------|-------------|-------|
-| TC-FEATURE-030 | Special characters in search input | Unicode handling |
+| TC-FEATURE-003 | Special characters in search input | Unicode handling |
 
 #### Accessibility (include if project has accessibility requirements or WCAG compliance goals)
 | TC-ID | Description | WCAG Criterion |
 |-------|-------------|----------------|
-| TC-FEATURE-A01 | Keyboard-only navigation through flow | 2.1.1 Keyboard |
-| TC-FEATURE-A02 | Form errors announced to screen readers | 1.3.1 Info and Relationships |
+| TC-FEATURE-004 | Keyboard-only navigation through flow | 2.1.1 Keyboard |
+| TC-FEATURE-005 | Form errors announced to screen readers | 1.3.1 Info and Relationships |
 
 #### Visual Regression (if project has visual testing setup)
 | TC-ID | Description | Viewport |
 |-------|-------------|----------|
-| TC-FEATURE-V01 | Layout consistency at mobile width | 375x812 |
+| TC-FEATURE-006 | Layout consistency at mobile width | 375x812 |
 
 #### Cross-Browser Matrix (include if project runs tests across multiple browsers)
 | Browser | Priority | Reason |

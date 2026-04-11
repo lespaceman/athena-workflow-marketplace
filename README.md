@@ -181,7 +181,18 @@ Skills for building Playwright E2E tests for existing codebases.
 | `plan-test-coverage` | Build prioritized coverage plan. Claude: `/plan-test-coverage`, Codex: `$plan-test-coverage` |
 | `agent-web-interface-guide` | Extract selectors and behavior via browser interaction. Claude: `/agent-web-interface-guide`, Codex: `$agent-web-interface-guide` |
 | `generate-test-cases` | Generate TC-ID based structured specs. Claude: `/generate-test-cases`, Codex: `$generate-test-cases` |
+| `review-test-cases` | Review TC-ID specs for gaps, duplication, and invented behavior before implementation. Claude: `/review-test-cases`, Codex: `$review-test-cases` |
 | `write-test-code` | Implement executable Playwright tests. Claude: `/write-test-code`, Codex: `$write-test-code` |
+| `review-test-code` | Review Playwright test code for stability, convention alignment, and traceability before execution. Claude: `/review-test-code`, Codex: `$review-test-code` |
+| `fix-flaky-tests` | Diagnose flaky or failing Playwright tests and fix root causes. Claude: `/fix-flaky-tests`, Codex: `$fix-flaky-tests` |
+
+Workflow rules:
+
+- The intended sequence is analyze -> explore -> plan -> spec -> review specs -> write -> review code -> run.
+- Browser exploration is required when the flow, selectors, validation, or error behavior depend on real product evidence.
+- The spec-review and code-review gates are mandatory in the authored workflow.
+- Test execution must happen in the main agent, not a delegated subagent.
+- Athena CLI owns the stateless session protocol, tracker loop, and harness/plugin installation; this workflow supplies the authored E2E sequence and guardrails Athena runs.
 
 ### site-knowledge
 
@@ -204,7 +215,7 @@ Workflows are registered in `.athena-workflow/marketplace.json` and implemented 
 
 Workflow intent:
 
-- Orchestrate long-running multi-session execution
+- Let Athena CLI orchestrate long-running multi-session execution using this workflow's authored sequence
 - Reuse existing Claude plugin capabilities
 - Keep workflow semantics portable across runtimes
 

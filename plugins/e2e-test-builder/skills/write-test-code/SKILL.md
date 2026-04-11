@@ -95,7 +95,7 @@ Avoid `.first()` / `.nth()` unless a strong, documented reason exists — scope 
 - If explicit waiting needed, wait for meaningful state: visibility, enabled, URL, specific network response, spinner gone
 
 ### Test Case IDs
-- Every test MUST have a unique TC-ID: `TC-<FEATURE>-<NUMBER>`
+- Every test MUST have a unique TC-ID: `TC-<FEATURE>-<NNN>`
 - Include in test title: `test('TC-LOGIN-001: User can log in with valid credentials', ...)`
 - Sequential within feature area, never reused
 - When adding to existing file, check existing IDs and continue the sequence
@@ -143,8 +143,9 @@ See [references/api-setup-teardown.md](references/api-setup-teardown.md) for ful
 
 ### Network Interception and Error Paths
 Use `page.route()` to mock server errors, patch responses, assert backend calls, or block
-heavy resources. Every feature needs error path tests: server error (500), network timeout,
-and empty state at minimum.
+heavy resources. Add error path tests when they meaningfully apply to the feature: for example,
+server/network failures for backend-driven flows, empty states for collection/data-driven UIs,
+and session/auth cases for gated features. If a category is not applicable, do not invent it.
 
 See [references/network-interception.md](references/network-interception.md) for full patterns with code examples.
 
