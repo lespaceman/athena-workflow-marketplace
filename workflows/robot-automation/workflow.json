@@ -16,11 +16,11 @@
   "plugins": [
     {
       "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
-      "version": "1.0.6"
+      "version": "1.0.7"
     },
     {
       "ref": "robot-automation@lespaceman/athena-workflow-marketplace",
-      "version": "0.2.0"
+      "version": "0.2.1"
     }
   ],
   "version": "0.0.3"

@@ -3,6 +3,11 @@
   "version": "1.0.3",
   "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/site-knowledge"
+  },
   "publishConfig": {
     "access": "public"
   },

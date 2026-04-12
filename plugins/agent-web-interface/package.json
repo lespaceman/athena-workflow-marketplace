@@ -3,6 +3,11 @@
   "version": "1.0.7",
   "description": "Open live web pages, click through real flows, fill forms, add items to cart, and inspect page state or selectors",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/agent-web-interface"
+  },
   "publishConfig": {
     "access": "public"
   },

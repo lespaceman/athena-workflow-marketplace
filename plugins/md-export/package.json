@@ -4,6 +4,11 @@
   "description": "Export markdown files to clean, dark-themed PDFs",
   "license": "MIT",
   "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/md-export"
+  },
   "publishConfig": {
     "access": "public"
   },

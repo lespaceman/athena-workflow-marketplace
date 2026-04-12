@@ -3,6 +3,11 @@
   "version": "0.2.1",
   "description": "Full-pipeline Robot Framework (Browser library) test generation \u2014 explores your live site via browser, detects existing .robot conventions, plans coverage gaps, produces reviewed TC-ID specs, writes production-grade .robot test suites with quality gates, and stabilizes flaky tests",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/robot-automation"
+  },
   "publishConfig": {
     "access": "public"
   },

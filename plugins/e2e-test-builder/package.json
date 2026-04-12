@@ -3,6 +3,11 @@
   "version": "2.0.11",
   "description": "Full-pipeline Playwright E2E test generation \u2014 explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/e2e-test-builder"
+  },
   "publishConfig": {
     "access": "public"
   },
