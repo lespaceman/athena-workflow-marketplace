@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-agent-web-interface",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Open live web pages, click through real flows, fill forms, add items to cart, and inspect page state or selectors",
   "license": "MIT",
   "repository": {

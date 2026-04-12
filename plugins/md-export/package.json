@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-md-export",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Export markdown files to clean, dark-themed PDFs",
   "license": "MIT",
   "type": "commonjs",

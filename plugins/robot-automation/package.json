@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-robot-automation",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Full-pipeline Robot Framework (Browser library) test generation \u2014 explores your live site via browser, detects existing .robot conventions, plans coverage gaps, produces reviewed TC-ID specs, writes production-grade .robot test suites with quality gates, and stabilizes flaky tests",
   "license": "MIT",
   "repository": {

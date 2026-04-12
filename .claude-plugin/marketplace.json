@@ -13,7 +13,7 @@
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
       "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "keywords": [
         "browser",
         "mcp",
@@ -30,7 +30,7 @@
       "name": "e2e-test-builder",
       "source": "./plugins/e2e-test-builder",
       "description": "Full-pipeline Playwright E2E test generation \u2014 explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
-      "version": "2.0.11",
+      "version": "2.0.12",
       "keywords": [
         "playwright",
         "e2e",
@@ -48,7 +48,7 @@
       "name": "robot-automation",
       "source": "./plugins/robot-automation",
       "description": "Full-pipeline Robot Framework (Browser library) test generation \u2014 explores your live site via browser, detects existing .robot conventions, plans coverage gaps, produces reviewed TC-ID specs, writes production-grade .robot test suites with quality gates, and stabilizes flaky tests",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "keywords": [
         "robotframework",
         "robot",
@@ -68,7 +68,7 @@
       "name": "site-knowledge",
       "source": "./plugins/site-knowledge",
       "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "keywords": [
         "site-patterns",
         "airbnb",
@@ -82,7 +82,7 @@
       "name": "md-export",
       "source": "./plugins/md-export",
       "description": "Export markdown files to clean, dark-themed PDFs",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": {
         "name": "lespaceman"
       },
@@ -98,7 +98,7 @@
       "name": "web-bench",
       "source": "./plugins/web-bench",
       "description": "WebBench benchmark runner \u2014 executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "keywords": [
         "benchmark",
         "evaluation",
