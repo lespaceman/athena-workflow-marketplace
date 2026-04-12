@@ -12,19 +12,19 @@
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
       "description": "Autonomous Playwright E2E pipeline \u2014 explores your live site, plans coverage from real page structure, generates and reviews test specs, writes production-grade tests with quality gates at each stage, then executes and stabilizes",
-      "version": "0.0.3"
+      "version": "0.0.4"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
       "description": "Autonomous Robot Framework (Browser library) E2E pipeline \u2014 explores your live site, plans coverage from real page structure, generates and reviews TC-ID specs, writes production-grade .robot suites with quality gates at each stage, then executes and stabilizes",
-      "version": "0.0.4"
+      "version": "0.0.5"
     },
     {
       "name": "web-bench",
       "source": "./workflows/web-bench/workflow.json",
       "description": "Benchmark runner for WebBench \u2014 executes real-world browser tasks and produces evaluation reports with timing and token usage",
-      "version": "0.0.3"
+      "version": "0.0.4"
     },
     {
       "name": "loop-test",
