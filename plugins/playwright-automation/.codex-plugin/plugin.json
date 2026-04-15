@@ -1,0 +1,15 @@
+{
+  "name": "playwright-automation",
+  "version": "0.1.0",
+  "description": "Playwright-specific analysis, authoring, review, and flake repair built on shared exploration and planning layers",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Playwright Automation",
+    "shortDescription": "Analyze, author, review, and stabilize Playwright tests using shared test artifacts",
+    "developerName": "Athenaflow",
+    "category": "Testing"
+  }
+}

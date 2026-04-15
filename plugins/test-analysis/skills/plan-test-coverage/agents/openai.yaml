@@ -1,0 +1,10 @@
+interface:
+  display_name: "Plan Coverage Priorities"
+  short_description: "Turn exploration evidence into a prioritized coverage plan"
+  default_prompt: "Review the available exploration evidence and existing coverage, then produce a prioritized E2E coverage plan without writing specs or code."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Optional browser automation MCP used only for bounded evidence spot-checks when shared exploration artifacts are incomplete"

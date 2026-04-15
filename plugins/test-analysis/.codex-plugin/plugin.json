@@ -1,0 +1,15 @@
+{
+  "name": "test-analysis",
+  "version": "0.2.0",
+  "description": "Shared test planning, specification, and review skills grounded in exploration evidence",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Test Analysis",
+    "shortDescription": "Plan coverage, generate test specs, and review them against real evidence",
+    "developerName": "Athenaflow",
+    "category": "Testing"
+  }
+}

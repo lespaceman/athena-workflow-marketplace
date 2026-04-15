@@ -4,7 +4,7 @@
     "name": "Athenaflow"
   },
   "metadata": {
-    "description": "Claude Code plugins for browser automation, Playwright E2E testing, and developer tooling",
+    "description": "Claude Code plugins for browser automation, layered E2E testing, and developer tooling",
     "version": "1.0.0",
     "pluginRoot": "./plugins"
   },
@@ -12,7 +12,7 @@
     {
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
-      "description": "Semantic browser interface for LLM agents \u2014 token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
+      "description": "Semantic browser interface for LLM agents - token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
       "version": "1.0.8",
       "keywords": [
         "browser",
@@ -27,27 +27,52 @@
       "license": "MIT"
     },
     {
-      "name": "e2e-test-builder",
-      "source": "./plugins/e2e-test-builder",
-      "description": "Full-pipeline Playwright E2E test generation \u2014 explores your live site via browser, detects existing test conventions, plans coverage gaps, produces reviewed test specs, writes production-grade test code with quality gates, and stabilizes flaky tests",
-      "version": "2.0.12",
+      "name": "app-exploration",
+      "source": "./plugins/app-exploration",
+      "description": "Shared live product exploration and evidence capture for downstream testing workflows",
+      "version": "0.1.0",
+      "keywords": [
+        "testing",
+        "exploration",
+        "browser",
+        "evidence",
+        "product-understanding"
+      ],
+      "category": "testing"
+    },
+    {
+      "name": "test-analysis",
+      "source": "./plugins/test-analysis",
+      "description": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
+      "version": "0.2.0",
+      "keywords": [
+        "testing",
+        "analysis",
+        "coverage-planning",
+        "test-cases",
+        "spec-review"
+      ],
+      "category": "testing"
+    },
+    {
+      "name": "playwright-automation",
+      "source": "./plugins/playwright-automation",
+      "description": "Canonical Playwright execution layer for analysis, authoring, review, and flake repair",
+      "version": "0.1.0",
       "keywords": [
         "playwright",
         "e2e",
         "testing",
-        "test-generation",
         "test-automation",
-        "browser-exploration",
-        "quality-gates",
-        "coverage-planning",
-        "flaky-test-fix"
+        "flake-repair",
+        "code-review"
       ],
       "category": "testing"
     },
     {
       "name": "robot-automation",
       "source": "./plugins/robot-automation",
-      "description": "Full-pipeline Robot Framework (Browser library) test generation \u2014 explores your live site via browser, detects existing .robot conventions, plans coverage gaps, produces reviewed TC-ID specs, writes production-grade .robot test suites with quality gates, and stabilizes flaky tests",
+      "description": "Robot Framework execution layer built on shared exploration and test-analysis plugins",
       "version": "0.2.2",
       "keywords": [
         "robotframework",
@@ -55,12 +80,9 @@
         "browser-library",
         "e2e",
         "testing",
-        "test-generation",
         "test-automation",
-        "browser-exploration",
-        "quality-gates",
-        "coverage-planning",
-        "flaky-test-fix"
+        "flake-repair",
+        "code-review"
       ],
       "category": "testing"
     },
@@ -97,7 +119,7 @@
     {
       "name": "web-bench",
       "source": "./plugins/web-bench",
-      "description": "WebBench benchmark runner \u2014 executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
+      "description": "WebBench benchmark runner - executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
       "version": "1.0.7",
       "keywords": [
         "benchmark",

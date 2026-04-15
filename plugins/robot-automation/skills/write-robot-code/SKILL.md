@@ -9,9 +9,9 @@ description: >
   Triggers: "write a Robot test for", "add a Robot test case", "refactor this locator",
   "add error path tests", "convert specs to .robot code", "add network mocking in Robot",
   "set up auth for Robot tests".
-  NOT for: full pipeline from scratch (use add-robot-tests), exploring live sites (use
-  agent-web-interface-guide), generating specs without code (use plan-test-coverage or
-  generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
+  NOT for: full pipeline from scratch (use add-robot-tests), shared live-site exploration (use
+  explore-app), generating specs without code (use plan-test-coverage or generate-test-cases),
+  diagnosing flaky tests (use fix-flaky-tests).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
@@ -39,9 +39,10 @@ Parse the test description or spec file path from: $ARGUMENTS
 - Check for `variables.py`, stored browser state, RequestsLibrary session helpers, and existing auth/resource patterns
 - Follow the project's existing style unless it clearly causes flakiness or conflicts with the validated conventions contract
 
-### 3. Verify Key Selectors Against the Live Site
+### 3. Verify Key Selectors Against Shared Evidence
 - If a test case spec file includes **Selectors observed**, use those as your starting point
-- If no spec or selectors are available, browse the target page using `agent-web-interface-guide` to discover the actual selectors before writing code
+- Read `e2e-plan/exploration-report.md` when selector evidence or observed flow behavior matters
+- If no spec or exploration artifact is available, stop and run `explore-app` before writing code
 - Spot-check critical selectors with `find` or `get_element` to confirm they resolve to the intended elements
 - Record canonical Browser-library locators in one of these forms:
   - `Get Element By Role    button    name=Submit`

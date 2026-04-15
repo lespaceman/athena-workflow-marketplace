@@ -126,7 +126,7 @@ This skill only reads and reports on the codebase. For related tasks, use the ap
 
 | Task | Skill |
 |------|-------|
-| Browsing a live site, interacting with UI elements | `agent-web-interface-guide` |
+| Shared live-site exploration and evidence capture | `explore-app` |
 | Deciding what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Writing or modifying executable `.robot` code | `write-robot-code` |
 | Diagnosing flaky or failing tests | `fix-flaky-tests` |

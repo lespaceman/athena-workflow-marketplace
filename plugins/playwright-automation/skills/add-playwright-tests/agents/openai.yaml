@@ -1,0 +1,10 @@
+interface:
+  display_name: "Run Full Playwright Workflow"
+  short_description: "Orchestrate Playwright work from analysis through verified execution"
+  default_prompt: "Run the full Playwright workflow for this feature: analyze the codebase, use shared exploration and planning artifacts, implement the tests, review them, and verify them with real execution."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used indirectly through shared exploration and evidence verification"

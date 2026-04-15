@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<url> <feature or journey>"
+  user-invocable: true

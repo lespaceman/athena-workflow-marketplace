@@ -1,0 +1,17 @@
+{
+  "name": "playwright-automation",
+  "description": "Playwright-specific analysis, authoring, review, and flake repair built on shared exploration and planning layers",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "playwright",
+    "e2e",
+    "testing",
+    "test-automation",
+    "flake-repair",
+    "code-review"
+  ],
+  "category": "testing"
+}

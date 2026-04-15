@@ -105,10 +105,15 @@ Example:
 ```json
 {
   "name": "e2e-test-builder",
-  "description": "Iterative E2E workflow for multi-session execution",
+  "description": "Iterative Playwright workflow for multi-session execution with shared exploration and analysis layers",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
-  "plugins": ["e2e-test-builder@lespaceman/athena-workflow-marketplace"],
+  "plugins": [
+    "agent-web-interface@lespaceman/athena-workflow-marketplace",
+    "app-exploration@lespaceman/athena-workflow-marketplace",
+    "test-analysis@lespaceman/athena-workflow-marketplace",
+    "playwright-automation@lespaceman/athena-workflow-marketplace"
+  ],
   "loop": {
     "enabled": true,
     "maxIterations": 15

@@ -1,12 +1,12 @@
 {
-  "name": "@athenaflow/plugin-robot-automation",
-  "version": "0.2.2",
-  "description": "Robot Framework execution layer for codebase analysis, .robot authoring, review, and flake repair built on shared exploration and test-analysis plugins",
+  "name": "@athenaflow/plugin-test-analysis",
+  "version": "0.2.0",
+  "description": "Shared test planning, specification, and review skills grounded in exploration evidence",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
-    "directory": "plugins/robot-automation"
+    "directory": "plugins/test-analysis"
   },
   "publishConfig": {
     "access": "public"
@@ -14,7 +14,6 @@
   "files": [
     ".claude-plugin/",
     ".codex-plugin/",
-    "schemas/",
     "skills/",
     "dist/"
   ],
