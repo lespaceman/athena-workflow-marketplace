@@ -1,16 +1,7 @@
 ---
 name: review-test-code
 description: >
-  Quality review of Playwright test code before final execution signoff. This skill should be used
-  when implementation review of executable Playwright tests is needed, not for diagnosis of runtime flakiness.
-  Triggers: "review test code", "review Playwright tests", "check test quality",
-  "audit test implementation", "review my tests before merging", "check test code for issues",
-  "review e2e tests", "code review Playwright", "are my tests stable",
-  "check for brittle selectors", "review before running tests". Quality gate
-  after write-test-code — catches brittle selectors, force:true misuse, networkidle overuse, Tailwind
-  utility class selectors, exact numeric assertions, missing teardown, parallel-unsafe mutations,
-  hardcoded data, missing assertions, test coupling, and convention divergence. Review-only — does NOT
-  rewrite tests, does NOT run tests. Use fix-flaky-tests for fixing, write-test-code for rewriting.
+  Quality review of Playwright test code before final execution signoff. This skill should be used when implementation review of executable Playwright tests is needed, not for diagnosis of runtime flakiness. Triggers: "review test code", "review Playwright tests", "check test quality", "audit test implementation", "review my tests before merging", "check test code for issues", "review e2e tests", "code review Playwright", "are my tests stable", "check for brittle selectors", "review before running tests". Quality gate after write-test-code — catches brittle selectors, force:true misuse, networkidle overuse, Tailwind utility class selectors, exact numeric assertions, missing teardown, parallel-unsafe mutations, hardcoded data, missing assertions, test coupling, and convention divergence. Review-only — does NOT rewrite tests, does NOT run tests. Use fix-flaky-tests for fixing, write-test-code for rewriting.
 allowed-tools: Read Glob Grep Task
 ---
 

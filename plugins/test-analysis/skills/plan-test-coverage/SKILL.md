@@ -1,11 +1,7 @@
 ---
 name: plan-test-coverage
 description: >
-  Use before writing specs or executable tests to decide what coverage is needed first. This
-  shared planning skill consumes exploration evidence, existing tests, and related artifacts to
-  produce `e2e-plan/coverage-plan.md` with prioritized P0/P1/P2 coverage and TC-IDs. Use it for
-  requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It plans;
-  it does not perform the canonical exploration step and it does not write executable tests.
+  Use before writing specs or executable tests to decide what coverage is needed first. This shared planning skill consumes exploration evidence, existing tests, and related artifacts to produce `e2e-plan/coverage-plan.md` with prioritized P0/P1/P2 coverage and TC-IDs. Use it for requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It plans; it does not perform the canonical exploration step and it does not write executable tests.
 allowed-tools: Read Write Glob Grep Task
 ---
 

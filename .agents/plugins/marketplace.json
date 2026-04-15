@@ -6,6 +6,8 @@
   "plugins": [
     {
       "name": "agent-web-interface",
+      "description": "Semantic browser interface for LLM agents - token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
+      "version": "1.0.8",
       "source": {
         "source": "local",
         "path": "./plugins/agent-web-interface"
@@ -14,10 +16,12 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Browser Automation"
+      "category": "browser-automation"
     },
     {
       "name": "app-exploration",
+      "description": "Shared live product exploration and evidence capture for downstream testing workflows",
+      "version": "0.1.0",
       "source": {
         "source": "local",
         "path": "./plugins/app-exploration"
@@ -26,10 +30,12 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Testing"
+      "category": "testing"
     },
     {
       "name": "test-analysis",
+      "description": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
+      "version": "0.2.0",
       "source": {
         "source": "local",
         "path": "./plugins/test-analysis"
@@ -38,10 +44,12 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Testing"
+      "category": "testing"
     },
     {
       "name": "playwright-automation",
+      "description": "Canonical Playwright execution layer for analysis, authoring, review, and flake repair",
+      "version": "0.1.0",
       "source": {
         "source": "local",
         "path": "./plugins/playwright-automation"
@@ -50,10 +58,12 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Testing"
+      "category": "testing"
     },
     {
       "name": "robot-automation",
+      "description": "Robot Framework execution layer built on shared exploration and test-analysis plugins",
+      "version": "0.2.2",
       "source": {
         "source": "local",
         "path": "./plugins/robot-automation"
@@ -62,10 +72,12 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Testing"
+      "category": "testing"
     },
     {
       "name": "site-knowledge",
+      "description": "Site-specific automation patterns and knowledge for popular websites (Airbnb, Amazon, Apple Store)",
+      "version": "1.0.4",
       "source": {
         "source": "local",
         "path": "./plugins/site-knowledge"
@@ -74,10 +86,12 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Browser Automation"
+      "category": "browser-automation"
     },
     {
       "name": "md-export",
+      "description": "Export markdown files to clean, dark-themed PDFs",
+      "version": "1.0.6",
       "source": {
         "source": "local",
         "path": "./plugins/md-export"
@@ -86,10 +100,12 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Developer Tools"
+      "category": "developer-tools"
     },
     {
       "name": "web-bench",
+      "description": "WebBench benchmark runner - executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
+      "version": "1.0.7",
       "source": {
         "source": "local",
         "path": "./plugins/web-bench"
@@ -98,7 +114,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Evaluation"
+      "category": "evaluation"
     }
   ]
 }

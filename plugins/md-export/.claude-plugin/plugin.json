@@ -11,5 +11,6 @@
     "export",
     "dark-theme"
   ],
-  "category": "developer-tools"
+  "category": "developer-tools",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

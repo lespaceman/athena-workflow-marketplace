@@ -1,18 +1,7 @@
 ---
 name: review-test-code
 description: >
-  Quality review of Robot Framework test code before final execution signoff. This skill
-  should be used when implementation review of executable `.robot` files is needed, not for
-  diagnosis of runtime flakiness.
-  Triggers: "review test code", "review Robot tests", "check test quality",
-  "audit test implementation", "review my Robot tests before merging", "check .robot for issues",
-  "review e2e tests", "code review Robot Framework", "are my tests stable",
-  "check for brittle locators", "review before running tests". Quality gate
-  after write-robot-code — catches wrong Browser-library dialect, brittle locators,
-  post-action response waits, `force=True` misuse, `Sleep`, utility-class selectors,
-  exact numeric assertions, missing teardown, parallel-unsafe mutations, hardcoded data,
-  missing assertions, test coupling, and convention divergence. Review-only — does NOT
-  rewrite tests, does NOT run tests. Use fix-flaky-tests for fixing, write-robot-code for rewriting.
+  Quality review of Robot Framework test code before final execution signoff. This skill should be used when implementation review of executable `.robot` files is needed, not for diagnosis of runtime flakiness. Triggers: "review test code", "review Robot tests", "check test quality", "audit test implementation", "review my Robot tests before merging", "check .robot for issues", "review e2e tests", "code review Robot Framework", "are my tests stable", "check for brittle locators", "review before running tests". Quality gate after write-robot-code — catches wrong Browser-library dialect, brittle locators, post-action response waits, `force=True` misuse, `Sleep`, utility-class selectors, exact numeric assertions, missing teardown, parallel-unsafe mutations, hardcoded data, missing assertions, test coupling, and convention divergence. Review-only — does NOT rewrite tests, does NOT run tests. Use fix-flaky-tests for fixing, write-robot-code for rewriting.
 allowed-tools: Read Glob Grep Task
 ---
 

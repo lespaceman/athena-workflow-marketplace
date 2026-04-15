@@ -1,11 +1,7 @@
 ---
 name: generate-test-cases
 description: >
-  Use when the user wants detailed TC-ID test case specifications for a web app feature, not
-  executable code. This shared skill consumes `e2e-plan/exploration-report.md`,
-  `e2e-plan/coverage-plan.md`, and existing coverage artifacts to write structured specs under
-  `test-cases/`. Use it after coverage planning or when the user explicitly asks for test cases or
-  TC-IDs. It does not write framework-specific test code.
+  Use when the user wants detailed TC-ID test case specifications for a web app feature, not executable code. This shared skill consumes `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and existing coverage artifacts to write structured specs under `test-cases/`. Use it after coverage planning or when the user explicitly asks for test cases or TC-IDs. It does not write framework-specific test code.
 allowed-tools: Read Write Bash Glob Grep Task
 ---
 

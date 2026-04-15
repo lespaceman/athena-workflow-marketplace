@@ -1,16 +1,7 @@
 ---
 name: write-test-code
 description: >
-  This skill should be used when writing, refactoring, or modifying Playwright E2E test code.
-  It covers creating test files from TC-ID specs, converting browser exploration results to
-  executable tests, refactoring locators or fixtures, adding API mocking, test data
-  setup/teardown, and parallel-safe isolation. Includes locator strategy hierarchy, auth setup
-  patterns, fixture design, teardown strategies, and network interception recipes.
-  Triggers: "write a test for", "add a test case", "refactor this locator", "add error path
-  tests", "convert specs to code", "add API mocking", "set up auth for tests".
-  NOT for: full pipeline from scratch (use add-playwright-tests), exploring live sites (use
-  agent-web-interface-guide), generating specs without code (use plan-test-coverage or
-  generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
+  This skill should be used when writing, refactoring, or modifying Playwright E2E test code. It covers creating test files from TC-ID specs, converting browser exploration results to executable tests, refactoring locators or fixtures, adding API mocking, test data setup/teardown, and parallel-safe isolation. Includes locator strategy hierarchy, auth setup patterns, fixture design, teardown strategies, and network interception recipes. Triggers: "write a test for", "add a test case", "refactor this locator", "add error path tests", "convert specs to code", "add API mocking", "set up auth for tests". NOT for: full pipeline from scratch (use add-playwright-tests), exploring live sites (use agent-web-interface-guide), generating specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 

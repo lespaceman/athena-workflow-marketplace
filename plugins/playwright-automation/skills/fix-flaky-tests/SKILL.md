@@ -1,15 +1,7 @@
 ---
 name: fix-flaky-tests
 description: >
-  This skill should be used when a Playwright test is failing, flaky, timing out, or behaving
-  inconsistently. It provides structured root cause analysis for: stabilizing intermittent tests,
-  debugging timeouts ("Test timeout of 30000ms exceeded"), fixing race conditions, investigating
-  local-vs-CI divergence, running repeated stability checks (--repeat-each).
-  IMPORTANT: If running tests with --repeat-each, --retries, or multiple times to check stability,
-  STOP and load this skill first — it has structured root cause analysis that prevents brute-force
-  approaches. Triggers: "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI",
-  "timeout on", "race condition", "run N times to check stability", "verify tests are stable".
-  NOT for writing new tests (use write-test-code) or analyzing setup (use analyze-test-codebase).
+  This skill should be used when a Playwright test is failing, flaky, timing out, or behaving inconsistently. It provides structured root cause analysis for: stabilizing intermittent tests, debugging timeouts ("Test timeout of 30000ms exceeded"), fixing race conditions, investigating local-vs-CI divergence, running repeated stability checks (--repeat-each). IMPORTANT: If running tests with --repeat-each, --retries, or multiple times to check stability, STOP and load this skill first — it has structured root cause analysis that prevents brute-force approaches. Triggers: "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI", "timeout on", "race condition", "run N times to check stability", "verify tests are stable". NOT for writing new tests (use write-test-code) or analyzing setup (use analyze-test-codebase).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 

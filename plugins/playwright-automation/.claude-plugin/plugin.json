@@ -13,5 +13,6 @@
     "flake-repair",
     "code-review"
   ],
-  "category": "testing"
+  "category": "testing",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

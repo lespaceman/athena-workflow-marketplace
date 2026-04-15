@@ -1,10 +1,8 @@
 ---
 name: airbnb
 description: >
-  Use when automating airbnb.com, searching for stays, browsing experiences, creating wishlists,
-  completing bookings, or writing tests for Airbnb flows. Covers site structure, search and booking
-  heuristics, and common Airbnb interaction patterns. Load live selectors from the browser; use the
-  bundled reference only for flow guidance and modal caveats.
+  Use when automating airbnb.com, searching for stays, browsing experiences, creating wishlists, completing bookings, or writing tests for Airbnb flows. Covers site structure, search and booking heuristics, and common Airbnb interaction patterns. Load live selectors from the browser; use the bundled reference only for flow guidance and modal caveats.
+allowed-tools: 
 ---
 
 # Airbnb Automation Skill

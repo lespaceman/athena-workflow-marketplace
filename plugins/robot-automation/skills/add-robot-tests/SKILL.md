@@ -1,15 +1,7 @@
 ---
 name: add-robot-tests
 description: >
-  THE DEFAULT ENTRY POINT for the Robot Framework execution layer in the split testing suite.
-  Use this skill whenever Codex needs to add, create, or set up Robot Framework end-to-end tests
-  for a feature, page, or application. It orchestrates the Robot-specific workflow after shared
-  exploration and planning: analyze the `.robot` codebase, consume
-  `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and `test-cases/*.md`, write
-  production-grade `.robot` suites, review them, and verify them with real execution. Delegates
-  to `analyze-test-codebase`, `write-robot-code`, `review-test-code`, and `fix-flaky-tests`,
-  while relying on shared `explore-app`, `plan-test-coverage`, `generate-test-cases`, and
-  `review-test-cases`.
+  THE DEFAULT ENTRY POINT for the Robot Framework execution layer in the split testing suite. Use this skill whenever Codex needs to add, create, or set up Robot Framework end-to-end tests for a feature, page, or application. It orchestrates the Robot-specific workflow after shared exploration and planning: analyze the `.robot` codebase, consume `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and `test-cases/*.md`, write production-grade `.robot` suites, review them, and verify them with real execution. Delegates to `analyze-test-codebase`, `write-robot-code`, `review-test-code`, and `fix-flaky-tests`, while relying on shared `explore-app`, `plan-test-coverage`, `generate-test-cases`, and `review-test-cases`.
 allowed-tools: Read Write Edit Glob Grep Bash Task
 ---
 

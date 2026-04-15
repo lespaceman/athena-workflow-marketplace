@@ -12,5 +12,6 @@
     "evidence",
     "product-understanding"
   ],
-  "category": "testing"
+  "category": "testing",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

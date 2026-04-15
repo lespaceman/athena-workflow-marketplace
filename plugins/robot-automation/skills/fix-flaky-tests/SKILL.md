@@ -1,17 +1,7 @@
 ---
 name: fix-flaky-tests
 description: >
-  This skill should be used when a Robot Framework test (Browser library) is failing, flaky,
-  timing out, or behaving inconsistently. It provides structured root cause analysis for:
-  stabilizing intermittent tests, debugging timeouts, fixing race conditions, investigating
-  local-vs-CI divergence, config drift, strict-mode ambiguity, and running repeated stability
-  checks.
-  IMPORTANT: If running tests with repeated runs, retries, or pabot loops to check stability,
-  STOP and load this skill first — it has structured root cause analysis that prevents
-  brute-force approaches. Triggers: "stabilize", "intermittent", "flaky", "keeps failing",
-  "fails in CI", "timeout on", "race condition", "run N times to check stability",
-  "verify Robot tests are stable".
-  NOT for writing new tests (use write-robot-code) or analyzing setup (use analyze-test-codebase).
+  This skill should be used when a Robot Framework test (Browser library) is failing, flaky, timing out, or behaving inconsistently. It provides structured root cause analysis for: stabilizing intermittent tests, debugging timeouts, fixing race conditions, investigating local-vs-CI divergence, config drift, strict-mode ambiguity, and running repeated stability checks. IMPORTANT: If running tests with repeated runs, retries, or pabot loops to check stability, STOP and load this skill first — it has structured root cause analysis that prevents brute-force approaches. Triggers: "stabilize", "intermittent", "flaky", "keeps failing", "fails in CI", "timeout on", "race condition", "run N times to check stability", "verify Robot tests are stable". NOT for writing new tests (use write-robot-code) or analyzing setup (use analyze-test-codebase).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 

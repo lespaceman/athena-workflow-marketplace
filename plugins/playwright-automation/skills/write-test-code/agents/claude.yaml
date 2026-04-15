@@ -1,3 +1,4 @@
 frontmatter:
-  argument-hint: "<test description or path to test case spec file>"
   user-invocable: true
+  argument-hint: "<test-description> \u2014 e.g. 'Login form validation' or path to\
+    \ spec file"

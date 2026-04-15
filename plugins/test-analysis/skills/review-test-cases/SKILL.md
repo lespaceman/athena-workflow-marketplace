@@ -1,14 +1,7 @@
 ---
 name: review-test-cases
 description: >
-  This skill should be used when a quality review of TC-ID test case specifications is needed
-  before any framework-specific implementation begins. It reviews the spec artifact only; it does
-  not implement or rewrite tests. Triggers: "review test cases", "check test specs",
-  "review TC-IDs", "audit test coverage", "are my test cases good", "validate test specs",
-  "review test-cases/*.md", "check for gaps in test cases", "review before writing tests", and
-  "quality check test specs". Inserted as the shared quality gate between `generate-test-cases`
-  and execution-layer authoring — catches gaps, duplication, weak assertions, missing error paths,
-  and invented scenarios before they get encoded into framework-specific code.
+  This skill should be used when a quality review of TC-ID test case specifications is needed before any framework-specific implementation begins. It reviews the spec artifact only; it does not implement or rewrite tests. Triggers: "review test cases", "check test specs", "review TC-IDs", "audit test coverage", "are my test cases good", "validate test specs", "review test-cases/*.md", "check for gaps in test cases", "review before writing tests", and "quality check test specs". Inserted as the shared quality gate between `generate-test-cases` and execution-layer authoring — catches gaps, duplication, weak assertions, missing error paths, and invented scenarios before they get encoded into framework-specific code.
 allowed-tools: Read Glob Grep Task
 ---
 

@@ -1,3 +1,4 @@
 frontmatter:
-  argument-hint: "<url> <feature or area to test>"
   user-invocable: true
+  argument-hint: "<url> <feature> \u2014 e.g. https://example.com 'Authentication\
+    \ flows'"

@@ -1,16 +1,7 @@
 ---
 name: analyze-test-codebase
 description: >
-  Scans and reports on an existing Playwright test codebase. This skill should be used to inspect
-  the current Playwright setup before writing, reviewing, or fixing tests, and should be loaded
-  early when working in a new project to understand existing patterns. Covers: Playwright config,
-  page objects, fixtures, helpers, auth/globalSetup patterns, test conventions, and directory
-  structure. Triggers: "understand", "check", "show me", "inspect", or "analyze"
-  the current test setup, config, infrastructure, patterns, or conventions. In the full add-tests
-  workflow, this skill serves as an early read-only analysis sub-step before planning detailed
-  coverage or writing code. This skill examines existing files and outputs a structured report.
-  It does NOT write or fix tests, install Playwright, or explore live websites — for live site
-  exploration, use agent-web-interface-guide instead.
+  Scans and reports on an existing Playwright test codebase. This skill should be used to inspect the current Playwright setup before writing, reviewing, or fixing tests, and should be loaded early when working in a new project to understand existing patterns. Covers: Playwright config, page objects, fixtures, helpers, auth/globalSetup patterns, test conventions, and directory structure. Triggers: "understand", "check", "show me", "inspect", or "analyze" the current test setup, config, infrastructure, patterns, or conventions. In the full add-tests workflow, this skill serves as an early read-only analysis sub-step before planning detailed coverage or writing code. This skill examines existing files and outputs a structured report. It does NOT write or fix tests, install Playwright, or explore live websites — for live site exploration, use agent-web-interface-guide instead.
 allowed-tools: Read Glob Grep Bash
 ---
 

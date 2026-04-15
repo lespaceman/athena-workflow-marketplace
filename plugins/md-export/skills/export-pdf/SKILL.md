@@ -1,6 +1,7 @@
 ---
 name: export-pdf
-description: Export markdown file(s) to styled dark-theme PDF. Use when the user asks to "export to PDF", "convert markdown to PDF", "generate PDF", "make a PDF from markdown", or "export md".
+description: >
+  Export markdown file(s) to styled dark-theme PDF. Use when the user asks to "export to PDF", "convert markdown to PDF", "generate PDF", "make a PDF from markdown", or "export md".
 allowed-tools: Bash(node:*) Read Glob
 ---
 

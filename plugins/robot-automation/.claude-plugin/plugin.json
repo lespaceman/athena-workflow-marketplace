@@ -17,5 +17,6 @@
     "code-review",
     "flaky-test-fix"
   ],
-  "category": "testing"
+  "category": "testing",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

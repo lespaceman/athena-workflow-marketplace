@@ -1,12 +1,8 @@
 ---
 name: explore-app
 description: >
-  Explore a live app and capture grounded evidence in `e2e-plan/exploration-report.md`. Use when
-  downstream planning, test-case generation, or test implementation needs real product
-  understanding before specs or code are written: mapping journeys, capturing selectors and form
-  fields, recording validation or error states, checking auth gates, or documenting blockers that
-  prevent confident planning. This skill owns product exploration; it should be used before
-  `plan-test-coverage` when real product evidence matters.
+  Explore a live app and capture grounded evidence in `e2e-plan/exploration-report.md`. Use when downstream planning, test-case generation, or test implementation needs real product understanding before specs or code are written: mapping journeys, capturing selectors and form fields, recording validation or error states, checking auth gates, or documenting blockers that prevent confident planning. This skill owns product exploration; it should be used before `plan-test-coverage` when real product evidence matters.
+allowed-tools: Read Write Edit Glob Grep Task
 ---
 
 # Explore App

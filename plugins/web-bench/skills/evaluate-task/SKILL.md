@@ -1,11 +1,7 @@
 ---
 name: evaluate-task
 description: >
-  Evaluate whether a WebBench task was successfully completed using LLM-as-judge scoring.
-  Triggers: "evaluate task", "score task", "judge result", "grade benchmark task".
-  Examines the execution trace, final page state, and extracted data against the original
-  task description. Produces a structured verdict (PASS/PARTIAL/FAIL) with reasoning.
-  Does NOT execute browser actions — use execute-task for that.
+  Evaluate whether a WebBench task was successfully completed using LLM-as-judge scoring. Triggers: "evaluate task", "score task", "judge result", "grade benchmark task". Examines the execution trace, final page state, and extracted data against the original task description. Produces a structured verdict (PASS/PARTIAL/FAIL) with reasoning. Does NOT execute browser actions — use execute-task for that.
 allowed-tools: Read Write Edit
 ---
 

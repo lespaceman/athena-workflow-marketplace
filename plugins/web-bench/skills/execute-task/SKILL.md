@@ -1,12 +1,7 @@
 ---
 name: execute-task
 description: >
-  Methodology for executing a single WebBench benchmark task via browser automation.
-  Triggers: "execute task", "run task", "perform benchmark task", "browser task".
-  Interprets the natural-language task description, defines the required browser actions,
-  and specifies what final evidence to capture (for example screenshot + snapshot).
-  Records an execution trace with actions taken and errors encountered.
-  Does NOT evaluate success — use evaluate-task for that.
+  Methodology for executing a single WebBench benchmark task via browser automation. Triggers: "execute task", "run task", "perform benchmark task", "browser task". Interprets the natural-language task description, defines the required browser actions, and specifies what final evidence to capture (for example screenshot + snapshot). Records an execution trace with actions taken and errors encountered. Does NOT evaluate success — use evaluate-task for that.
 allowed-tools: Read Write Edit Bash
 ---
 

@@ -1,17 +1,7 @@
 ---
 name: write-robot-code
 description: >
-  Use when writing, refactoring, or modifying Robot Framework E2E test code with the Browser
-  library. Covers creating `.robot` suites from TC-ID specs, converting browser exploration
-  results to executable keywords, refactoring locators or resources, adding network mocking
-  via `Route`, test data setup with RequestsLibrary, `e2e-plan/conventions.yaml` adherence,
-  smoke-first implementation, auth patterns, and parallel-safe isolation for `pabot`.
-  Triggers: "write a Robot test for", "add a Robot test case", "refactor this locator",
-  "add error path tests", "convert specs to .robot code", "add network mocking in Robot",
-  "set up auth for Robot tests".
-  NOT for: full pipeline from scratch (use add-robot-tests), shared live-site exploration (use
-  explore-app), generating specs without code (use plan-test-coverage or generate-test-cases),
-  diagnosing flaky tests (use fix-flaky-tests).
+  Use when writing, refactoring, or modifying Robot Framework E2E test code with the Browser library. Covers creating `.robot` suites from TC-ID specs, converting browser exploration results to executable keywords, refactoring locators or resources, adding network mocking via `Route`, test data setup with RequestsLibrary, `e2e-plan/conventions.yaml` adherence, smoke-first implementation, auth patterns, and parallel-safe isolation for `pabot`. Triggers: "write a Robot test for", "add a Robot test case", "refactor this locator", "add error path tests", "convert specs to .robot code", "add network mocking in Robot", "set up auth for Robot tests". NOT for: full pipeline from scratch (use add-robot-tests), shared live-site exploration (use explore-app), generating specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
