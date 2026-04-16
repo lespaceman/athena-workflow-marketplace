@@ -1,10 +1,10 @@
 interface:
-  display_name: "Run Full Robot Framework Workflow"
-  short_description: "Orchestrate browser-led Robot Framework E2E work from exploration to verified tests"
-  default_prompt: "Run the full Robot Framework E2E workflow for this feature: explore the live product first, then plan, spec, review, implement, and verify the .robot tests."
+  display_name: "Run Robot Execution Layer"
+  short_description: "Implement and verify Robot Framework tests after shared exploration and planning are ready"
+  default_prompt: "Run the Robot Framework execution layer for this feature: verify the shared app-exploration and test-analysis artifacts, then analyze the codebase, implement the tests, review them, and verify them with real execution."
 
 dependencies:
   tools:
     - type: "mcp"
       value: "agent-web-interface"
-      description: "Browser automation MCP used to explore the site and verify flows"
+      description: "Browser automation MCP used by shared exploration and selector-verification flows"

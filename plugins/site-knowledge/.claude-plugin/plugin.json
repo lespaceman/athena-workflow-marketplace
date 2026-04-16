@@ -12,5 +12,6 @@
     "apple",
     "automation-knowledge"
   ],
-  "category": "browser-automation"
+  "category": "browser-automation",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

@@ -1,0 +1,3 @@
+frontmatter:
+  user-invocable: true
+  argument-hint: "<url> <feature> \u2014 e.g. https://example.com 'Checkout flow'"

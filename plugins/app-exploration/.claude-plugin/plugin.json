@@ -1,0 +1,17 @@
+{
+  "name": "app-exploration",
+  "description": "Live product exploration and evidence capture for downstream testing workflows",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "exploration",
+    "testing",
+    "browser",
+    "evidence",
+    "product-understanding"
+  ],
+  "category": "testing",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
+}

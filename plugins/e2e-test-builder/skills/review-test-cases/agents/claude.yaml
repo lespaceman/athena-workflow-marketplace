@@ -1,3 +1,0 @@
-frontmatter:
-  argument-hint: "<path to test-cases/*.md spec file>"
-  user-invocable: true

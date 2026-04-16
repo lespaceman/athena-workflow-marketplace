@@ -29,7 +29,10 @@ patterns).
 │       ├── workflow.json
 │       └── workflow.md
 └── plugins/
-    ├── e2e-test-builder/
+    ├── app-exploration/
+    ├── playwright-automation/
+    ├── test-analysis/
+    ├── robot-automation/
     ├── md-export/
     └── site-knowledge/
 ```
@@ -110,7 +113,19 @@ scripts/validate-skills-repo.sh
 Run the lightweight local validator on a single skill:
 
 ```shell
-scripts/quick-validate-skill.sh plugins/e2e-test-builder/skills/write-test-code
+scripts/quick-validate-skill.sh plugins/playwright-automation/skills/write-test-code
+```
+
+Run the layered Playwright suite validator:
+
+```shell
+node scripts/validate-playwright-suite.mjs
+```
+
+Run the layered Robot suite validator:
+
+```shell
+node scripts/validate-robot-suite.mjs
 ```
 
 ### Authoring Commands
@@ -154,45 +169,54 @@ claude plugin marketplace add lespaceman/athena-workflow-marketplace
 claude plugin marketplace add ./athena-workflow-marketplace
 ```
 
-## Install a Plugin
+## Install the Layered Testing Stack
 
 ```shell
-claude plugin install e2e-test-builder@athena-workflow-marketplace
+# Playwright stack
+claude plugin install app-exploration@athena-workflow-marketplace
+claude plugin install test-analysis@athena-workflow-marketplace
+claude plugin install playwright-automation@athena-workflow-marketplace
+
+# Robot stack
+claude plugin install app-exploration@athena-workflow-marketplace
+claude plugin install test-analysis@athena-workflow-marketplace
+claude plugin install robot-automation@athena-workflow-marketplace
 ```
 
-### Installation Scopes
+Apply `--scope user`, `--scope project`, or `--scope local` to each command as needed.
 
-```shell
-claude plugin install e2e-test-builder@athena-workflow-marketplace --scope user
-claude plugin install e2e-test-builder@athena-workflow-marketplace --scope project
-claude plugin install e2e-test-builder@athena-workflow-marketplace --scope local
-```
+Installing only `playwright-automation` or `robot-automation` does not install the shared
+`app-exploration` and `test-analysis` layers.
 
 ## Available Plugins
 
-### e2e-test-builder
+### Phase-1 Testing Suite
 
-Skills for building Playwright E2E tests for existing codebases.
+The testing plugins now split shared responsibilities from framework execution:
 
-| Skill | Description |
+| Plugin | Canonical responsibility |
 |-------|-------------|
-| `add-e2e-tests` | Full pipeline orchestrator. Claude: `/add-e2e-tests`, Codex: `$add-e2e-tests` |
-| `analyze-test-codebase` | Detect Playwright config and conventions. Claude: `/analyze-test-codebase`, Codex: `$analyze-test-codebase` |
-| `plan-test-coverage` | Build prioritized coverage plan. Claude: `/plan-test-coverage`, Codex: `$plan-test-coverage` |
-| `agent-web-interface-guide` | Extract selectors and behavior via browser interaction. Claude: `/agent-web-interface-guide`, Codex: `$agent-web-interface-guide` |
-| `generate-test-cases` | Generate TC-ID based structured specs. Claude: `/generate-test-cases`, Codex: `$generate-test-cases` |
-| `review-test-cases` | Review TC-ID specs for gaps, duplication, and invented behavior before implementation. Claude: `/review-test-cases`, Codex: `$review-test-cases` |
-| `write-test-code` | Implement executable Playwright tests. Claude: `/write-test-code`, Codex: `$write-test-code` |
-| `review-test-code` | Review Playwright test code for stability, convention alignment, and traceability before execution. Claude: `/review-test-code`, Codex: `$review-test-code` |
-| `fix-flaky-tests` | Diagnose flaky or failing Playwright tests and fix root causes. Claude: `/fix-flaky-tests`, Codex: `$fix-flaky-tests` |
+| `app-exploration` | Explore the live product and write `e2e-plan/exploration-report.md` |
+| `test-analysis` | Plan coverage, generate TC-ID specs, and review those specs |
+| `playwright-automation` | Playwright execution layer: analyze codebases, write tests, review them, and fix flake after the shared layers are ready |
+| `robot-automation` | Robot execution layer: analyze codebases, write `.robot` suites, review them, and fix flake after the shared layers are ready |
 
-Workflow rules:
+Shared artifact contract:
 
-- The intended sequence is analyze -> explore -> plan -> spec -> review specs -> write -> review code -> run.
-- Browser exploration is required when the flow, selectors, validation, or error behavior depend on real product evidence.
-- The spec-review and code-review gates are mandatory in the authored workflow.
-- Test execution must happen in the main agent, not a delegated subagent.
-- Athena CLI owns the stateless session protocol, tracker loop, and harness/plugin installation; this workflow supplies the authored E2E sequence and guardrails Athena runs.
+- `e2e-plan/exploration-report.md`
+- `e2e-plan/coverage-plan.md`
+- `test-cases/<feature>.md`
+
+Canonical entry skills:
+
+- `explore-app` in `app-exploration`
+- `add-playwright-tests` in `playwright-automation`
+- `add-robot-tests` in `robot-automation`
+
+Workflow continuity note:
+
+- `e2e-test-builder` survives only as a workflow name; it is no longer an installable plugin surface.
+- The full orchestration surface remains the workflow pair `e2e-test-builder` and `robot-automation`; the execution plugins own only their framework-specific layer.
 
 ### site-knowledge
 
@@ -212,6 +236,7 @@ Workflows are registered in `.athena-workflow/marketplace.json` and implemented 
 | Workflow | Source |
 |----------|--------|
 | `e2e-test-builder` | `workflows/e2e-test-builder/workflow.json` |
+| `robot-automation` | `workflows/robot-automation/workflow.json` |
 
 Workflow intent:
 
@@ -267,9 +292,9 @@ claude plugin marketplace list
 claude plugin marketplace update athena-workflow-marketplace
 claude plugin marketplace remove athena-workflow-marketplace
 claude plugin list
-claude plugin disable e2e-test-builder@athena-workflow-marketplace
-claude plugin enable e2e-test-builder@athena-workflow-marketplace
-claude plugin update e2e-test-builder@athena-workflow-marketplace
-claude plugin uninstall e2e-test-builder@athena-workflow-marketplace
+claude plugin disable playwright-automation@athena-workflow-marketplace
+claude plugin enable playwright-automation@athena-workflow-marketplace
+claude plugin update playwright-automation@athena-workflow-marketplace
+claude plugin uninstall playwright-automation@athena-workflow-marketplace
 claude plugin validate ./plugins/my-plugin
 ```

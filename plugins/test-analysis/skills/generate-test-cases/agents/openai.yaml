@@ -1,0 +1,10 @@
+interface:
+  display_name: "Write TC-ID Specs"
+  short_description: "Turn shared evidence into detailed TC-ID test case specs"
+  default_prompt: "Use the exploration report and coverage plan to generate detailed TC-ID test case specifications."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Optional browser automation MCP used for bounded evidence spot-checks when a spec claim still needs confirmation"

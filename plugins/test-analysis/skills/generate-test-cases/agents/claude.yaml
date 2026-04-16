@@ -1,0 +1,4 @@
+frontmatter:
+  user-invocable: true
+  argument-hint: "<url> <user-journey> \u2014 e.g. https://example.com 'Checkout with\
+    \ coupon'"

@@ -1,12 +1,7 @@
 ---
 name: load-dataset
 description: >
-  Download and prepare the Halluminate/WebBench dataset from HuggingFace for benchmarking.
-  Triggers: "load dataset", "download WebBench", "prepare benchmark data", "fetch tasks".
-  Downloads the CSV dataset via curl, converts to JSONL with Node.js, applies optional filters
-  (category, sample size, website allowlist/blocklist), and writes web-bench-tasks.jsonl to the
-  working directory. Zero Python dependencies — uses only curl and Node.js.
-  Does NOT execute tasks — use execute-task for that.
+  Download and prepare the Halluminate/WebBench dataset from HuggingFace for benchmarking. Triggers: "load dataset", "download WebBench", "prepare benchmark data", "fetch tasks". Downloads the CSV dataset via curl, converts to JSONL with Node.js, applies optional filters (category, sample size, website allowlist/blocklist), and writes web-bench-tasks.jsonl to the working directory. Zero Python dependencies — uses only curl and Node.js. Does NOT execute tasks — use execute-task for that.
 allowed-tools: Bash Read Write Edit Glob
 ---
 

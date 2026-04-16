@@ -1,0 +1,17 @@
+{
+  "name": "test-analysis",
+  "description": "Shared test planning, specification, and review skills grounded in exploration evidence",
+  "version": "0.2.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "testing",
+    "analysis",
+    "coverage-planning",
+    "test-cases",
+    "spec-review"
+  ],
+  "category": "testing",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
+}

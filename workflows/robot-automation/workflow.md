@@ -10,9 +10,9 @@ Load the relevant skill before each activity. Skills carry the implementation kn
 |----------|-------|
 | Full workflow entry point and orchestration | `add-robot-tests` |
 | Analyze Robot setup, config, conventions | `analyze-test-codebase` |
+| Explore the product and capture evidence | `explore-app` |
 | Decide what to test, coverage gaps, priorities | `plan-test-coverage` |
-| Open a URL, browse, interact with live pages | `agent-web-interface-guide` |
-| Create TC-ID specs from site exploration | `generate-test-cases` |
+| Create TC-ID specs from shared evidence | `generate-test-cases` |
 | Review TC-ID specs before implementation | `review-test-cases` |
 | Write, edit, or refactor `.robot` test code | `write-robot-code` |
 | Review `.robot` code before execution signoff | `review-test-code` |
@@ -28,33 +28,41 @@ Load `analyze-test-codebase` and follow its methodology. Key questions: is Robot
 
 ### Understand the product
 
-Load `agent-web-interface-guide` and browse the feature under test. Interact as a user would: fill forms, click buttons, trigger validation, navigate across steps, inspect loading and error states. This isn't optional discovery — it's the foundation everything else builds on. Agents that skip exploration write tests for imaginary behavior: locators that don't exist, flows that work differently than assumed, validation messages that say something else entirely.
+Load `explore-app` and capture `e2e-plan/exploration-report.md` before planning or implementation
+when real product evidence is required. The shared exploration artifact is the canonical handoff
+into the Robot execution layer.
 
 ### Plan coverage
 
-Load `plan-test-coverage` before generating specs or writing code. Refine tasks into granular checkpoints: not "Write tests" but "Write TC-LOGIN-001: happy path login." Include verification steps (running tests, checking locators), not just implementation.
+Load `plan-test-coverage` after exploration. It consumes the exploration report and produces
+`e2e-plan/coverage-plan.md`; it is not the exploration step.
 
 ### Observations
 
-After orientation, preserve the concrete product evidence you gathered: pages visited, major flows exercised, validation messages seen, error states triggered, locators or element strategies learned, and any behaviors that were assumed but not yet verified. When downstream work depends on real product behavior, this evidence gates the next phases. If browser exploration is required for the feature and cannot be completed, stop rather than guessing.
+After orientation, preserve the concrete product evidence in `e2e-plan/exploration-report.md`.
+When downstream work depends on real product behavior, this artifact gates the next phases. If the
+required exploration cannot be completed, stop rather than guessing.
 
 ## Workflow Sequence
 
 The typical progression is:
 
-**analyze codebase → explore site → plan coverage → generate specs → review specs → write `.robot` → review code → run tests**
+**analyze codebase → explore app → plan coverage → generate specs → review specs → write `.robot` → review code → run tests**
 
 Each step has prerequisites. The important gating relationships:
 
 | Before you can... | You must have... |
 |---|---|
-| Generate specs (`generate-test-cases`) | Concrete browser observations when the spec depends on real product behavior; if those observations are required but browser exploration is blocked, stop |
+| Generate specs (`generate-test-cases`) | `e2e-plan/exploration-report.md` when the feature depends on real product behavior; if that evidence is required but missing, stop |
 | Write test code (`write-robot-code`) | Specs that passed review (Gate 1) |
 | Run tests | Code that passed review (Gate 2) |
 
 Use `analyze-test-codebase` before `write-robot-code` if conventions are still unclear. If tests fail or are unstable, load `fix-flaky-tests` before retrying.
 
-Browser exploration is mandatory whenever the agent needs real product evidence to understand the flow, locators, validation, navigation, or error behavior. If the browser is unavailable or the target cannot be explored and that evidence is required to proceed safely, do not continue with spec generation or test writing from assumptions.
+Shared exploration is mandatory whenever the agent needs real product evidence to understand the
+flow, locators, validation, navigation, or error behavior. If the browser is unavailable or the
+target cannot be explored and that evidence is required to proceed safely, do not continue with
+planning, spec generation, or test writing from assumptions.
 
 ## Quality Gates
 
@@ -80,7 +88,8 @@ Run `robot -d results tests/<feature>.robot 2>&1` directly in the main agent. In
 
 ## Delegation Constraints
 
-Delegate browser exploration and test writing to subagents via the Task tool to save context. Pass file paths, conventions, and concrete output expectations. Instruct subagents to load the appropriate skill.
+Delegate implementation work to subagents via the Task tool to save context. Pass file paths,
+conventions, and concrete output expectations. Instruct subagents to load the appropriate skill.
 
 **Never delegate test execution.** Test output is the proof artifact — the main agent needs to run `robot` directly so it can verify the output is real and interpret failures in context. A subagent's summary of test results isn't trustworthy enough to gate completion.
 

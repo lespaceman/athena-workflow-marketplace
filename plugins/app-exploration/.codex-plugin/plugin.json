@@ -1,0 +1,15 @@
+{
+  "name": "app-exploration",
+  "version": "0.1.0",
+  "description": "Live product exploration and evidence capture for downstream testing workflows",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "App Exploration",
+    "shortDescription": "Explore live products, capture evidence, and record blockers for test planning",
+    "developerName": "Athenaflow",
+    "category": "Testing"
+  }
+}

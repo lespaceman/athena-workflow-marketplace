@@ -1,5 +1,6 @@
 {
   "name": "loop-test",
+  "version": "0.0.1",
   "description": "Minimal loop test — agent does a small thing each run, then finishes after a few iterations",
   "promptTemplate": "{input}",
   "plugins": [],

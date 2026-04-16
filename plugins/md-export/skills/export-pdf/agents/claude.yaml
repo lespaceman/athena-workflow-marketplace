@@ -1,3 +1,3 @@
 frontmatter:
-  argument-hint: "<path-to-md-file-or-glob>"
   user-invocable: true
+  argument-hint: "<file-or-glob> \u2014 e.g. docs/report.md or 'docs/**/*.md'"

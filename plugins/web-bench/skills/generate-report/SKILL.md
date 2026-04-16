@@ -1,12 +1,7 @@
 ---
 name: generate-report
 description: >
-  Aggregate WebBench benchmark results into a comprehensive evaluation report.
-  Triggers: "generate report", "create benchmark report", "summarize results",
-  "aggregate scores", "produce evaluation report".
-  Reads web-bench-results.jsonl, computes statistics by category/website/failure mode,
-  and writes web-bench-report.md with pass rates, timing, token usage, and analysis.
-  Does NOT execute or evaluate tasks — only aggregates existing results.
+  Aggregate WebBench benchmark results into a comprehensive evaluation report. Triggers: "generate report", "create benchmark report", "summarize results", "aggregate scores", "produce evaluation report". Reads web-bench-results.jsonl, computes statistics by category/website/failure mode, and writes web-bench-report.md with pass rates, timing, token usage, and analysis. Does NOT execute or evaluate tasks — only aggregates existing results.
 allowed-tools: Read Write Edit Bash Glob Grep
 ---
 

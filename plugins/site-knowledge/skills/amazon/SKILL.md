@@ -1,10 +1,8 @@
 ---
 name: amazon
 description: >
-  Use when automating amazon.com, searching for products, adding items to cart, browsing deals,
-  navigating product pages, or writing tests for Amazon shopping flows. Covers site structure,
-  search/buying heuristics, and common Amazon interaction patterns. Load live selectors from the
-  browser; use the bundled reference only for flow guidance and site-specific caveats.
+  Use when automating amazon.com, searching for products, adding items to cart, browsing deals, navigating product pages, or writing tests for Amazon shopping flows. Covers site structure, search/buying heuristics, and common Amazon interaction patterns. Load live selectors from the browser; use the bundled reference only for flow guidance and site-specific caveats.
+allowed-tools: 
 ---
 
 # Amazon Automation Skill

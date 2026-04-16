@@ -1,0 +1,3 @@
+frontmatter:
+  user-invocable: true
+  argument-hint: "<spec-file> \u2014 e.g. test-cases/login.md"

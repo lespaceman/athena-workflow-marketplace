@@ -1,0 +1,10 @@
+interface:
+  display_name: "Run Playwright Execution Layer"
+  short_description: "Implement and verify Playwright tests after shared exploration and planning are ready"
+  default_prompt: "Run the Playwright execution layer for this feature: verify the shared app-exploration and test-analysis artifacts, then analyze the codebase, implement the tests, review them, and verify them with real execution."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used by shared exploration and selector-verification flows"

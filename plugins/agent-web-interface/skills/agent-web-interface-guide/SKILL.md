@@ -1,10 +1,7 @@
 ---
 name: agent-web-interface-guide
 description: >
-  Use this skill to act on live web pages in a browser. It can open a page, click through flows,
-  type into fields, submit forms, add products to cart, review page state, and capture Playwright
-  selectors for important elements. Use it whenever the task includes a URL or page reference and
-  you need to check, verify, inspect, extract selectors from, or actively interact with that page.
+  Use this skill to act on live web pages in a browser. It can open a page, click through flows, type into fields, submit forms, add products to cart, review page state, and capture Playwright selectors for important elements. Use it whenever the task includes a URL or page reference and you need to check, verify, inspect, extract selectors from, or actively interact with that page.
 allowed-tools: mcp__plugin_agent-web-interface_browser__navigate mcp__plugin_agent-web-interface_browser__snapshot mcp__plugin_agent-web-interface_browser__find mcp__plugin_agent-web-interface_browser__get_element mcp__plugin_agent-web-interface_browser__scroll_to mcp__plugin_agent-web-interface_browser__scroll mcp__plugin_agent-web-interface_browser__click mcp__plugin_agent-web-interface_browser__type mcp__plugin_agent-web-interface_browser__press mcp__plugin_agent-web-interface_browser__select mcp__plugin_agent-web-interface_browser__hover mcp__plugin_agent-web-interface_browser__get_form mcp__plugin_agent-web-interface_browser__get_field mcp__plugin_agent-web-interface_browser__list_pages mcp__plugin_agent-web-interface_browser__drag
 ---
 

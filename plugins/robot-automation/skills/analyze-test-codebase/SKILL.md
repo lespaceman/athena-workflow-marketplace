@@ -1,13 +1,7 @@
 ---
 name: analyze-test-codebase
 description: >
-  Use to inspect an existing Robot Framework + Browser library codebase before writing,
-  reviewing, or fixing tests. Covers robot.toml or pyproject config, resource files, keyword
-  libraries, listeners, auth keywords, suite init (`__init__.robot`), tag conventions,
-  directory structure, and emits the typed `e2e-plan/conventions.yaml` contract used by
-  downstream skills. Triggers: "understand", "check", "show me", "inspect", or "analyze"
-  the current Robot Framework test setup, config, infrastructure, patterns, or conventions.
-  Does NOT write or fix tests, install Robot Framework, or explore live websites.
+  Use to inspect an existing Robot Framework + Browser library codebase before writing, reviewing, or fixing tests. Covers robot.toml or pyproject config, resource files, keyword libraries, listeners, auth keywords, suite init (`__init__.robot`), tag conventions, directory structure, and emits the typed `e2e-plan/conventions.yaml` contract used by downstream skills. Triggers: "understand", "check", "show me", "inspect", or "analyze" the current Robot Framework test setup, config, infrastructure, patterns, or conventions. Does NOT write or fix tests, install Robot Framework, or explore live websites.
 allowed-tools: Read Glob Grep Bash
 ---
 
@@ -126,7 +120,7 @@ This skill only reads and reports on the codebase. For related tasks, use the ap
 
 | Task | Skill |
 |------|-------|
-| Browsing a live site, interacting with UI elements | `agent-web-interface-guide` |
+| Shared live-site exploration and evidence capture | `explore-app` |
 | Deciding what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Writing or modifying executable `.robot` code | `write-robot-code` |
 | Diagnosing flaky or failing tests | `fix-flaky-tests` |

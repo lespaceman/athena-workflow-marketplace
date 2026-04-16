@@ -1,0 +1,15 @@
+{
+  "name": "playwright-automation",
+  "version": "0.1.0",
+  "description": "Playwright execution layer for codebase analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Playwright Automation",
+    "shortDescription": "Framework-specific Playwright layer built on shared exploration and planning artifacts",
+    "developerName": "Athenaflow",
+    "category": "Testing"
+  }
+}

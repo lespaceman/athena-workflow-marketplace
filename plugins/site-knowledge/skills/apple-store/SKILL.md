@@ -1,10 +1,8 @@
 ---
 name: apple-store
 description: >
-  Use when automating apple.com, configuring iPhones or other Apple products, navigating the Apple
-  Store, adding items to bag, or writing tests for Apple Store flows. Covers site structure, purchase
-  flows, bag behavior, and Apple-specific interaction patterns. Load live selectors from the browser;
-  use the bundled reference only for site heuristics and flow guidance.
+  Use when automating apple.com, configuring iPhones or other Apple products, navigating the Apple Store, adding items to bag, or writing tests for Apple Store flows. Covers site structure, purchase flows, bag behavior, and Apple-specific interaction patterns. Load live selectors from the browser; use the bundled reference only for site heuristics and flow guidance.
+allowed-tools: 
 ---
 
 # Apple Store Automation Skill
