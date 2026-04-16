@@ -24,19 +24,19 @@
       "name": "exploratory-testing",
       "source": "./workflows/exploratory-testing/workflow.json",
       "description": "Intent-layer exploratory workflow - gathers evidence, frames risk hypotheses, and hands off cleanly into shared planning when needed",
-      "version": "0.0.1"
+      "version": "0.0.2"
     },
     {
       "name": "smoke-testing",
       "source": "./workflows/smoke-testing/workflow.json",
       "description": "Intent-layer smoke workflow - defines the minimum critical-path confidence scope before execution workflows are chosen",
-      "version": "0.0.1"
+      "version": "0.0.2"
     },
     {
       "name": "regression-testing",
       "source": "./workflows/regression-testing/workflow.json",
       "description": "Intent-layer regression workflow - defines rerunnable confidence scope across changed and high-risk areas before execution workflows are chosen",
-      "version": "0.0.1"
+      "version": "0.0.2"
     },
     {
       "name": "web-bench",

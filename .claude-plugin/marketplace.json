@@ -30,7 +30,7 @@
       "name": "app-exploration",
       "source": "./plugins/app-exploration",
       "description": "Shared live product exploration and evidence capture for downstream testing workflows",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "keywords": [
         "testing",
         "exploration",
@@ -44,7 +44,7 @@
       "name": "test-analysis",
       "source": "./plugins/test-analysis",
       "description": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "keywords": [
         "testing",
         "analysis",
@@ -57,8 +57,8 @@
     {
       "name": "exploratory-testing",
       "source": "./plugins/exploratory-testing",
-      "description": "Exploratory testing charters — frame risk hypotheses and investigation focus before coverage planning begins",
-      "version": "0.2.0",
+      "description": "Exploratory testing charters \u2014 frame risk hypotheses and investigation focus before coverage planning begins",
+      "version": "0.2.1",
       "keywords": [
         "testing",
         "exploratory-testing",
@@ -71,8 +71,8 @@
     {
       "name": "smoke-testing",
       "source": "./plugins/smoke-testing",
-      "description": "Smoke testing scopes — define the minimum critical-path confidence checks before selecting runnable automation",
-      "version": "0.1.0",
+      "description": "Smoke testing scopes \u2014 define the minimum critical-path confidence checks before selecting runnable automation",
+      "version": "0.1.1",
       "keywords": [
         "testing",
         "smoke-testing",
@@ -85,8 +85,8 @@
     {
       "name": "regression-testing",
       "source": "./plugins/regression-testing",
-      "description": "Regression testing scopes — define rerunnable confidence across changed and high-risk areas before automation selection",
-      "version": "0.1.0",
+      "description": "Regression testing scopes \u2014 define rerunnable confidence across changed and high-risk areas before automation selection",
+      "version": "0.1.1",
       "keywords": [
         "testing",
         "regression-testing",
