@@ -1,7 +1,7 @@
 {
   "name": "loop-test",
-  "version": "0.0.1",
-  "description": "Minimal loop test — agent does a small thing each run, then finishes after a few iterations",
+  "version": "0.0.2",
+  "description": "Minimal loop test \u2014 agent does a small thing each run, then finishes after a few iterations",
   "promptTemplate": "{input}",
   "plugins": [],
   "workflowFile": "workflow.md",

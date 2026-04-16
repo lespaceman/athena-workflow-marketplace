@@ -12,13 +12,13 @@
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
       "description": "Autonomous Playwright E2E pipeline - uses shared app exploration and test-analysis layers before Playwright-specific authoring, review, execution, and stabilization",
-      "version": "0.0.6"
+      "version": "0.0.7"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
       "description": "Autonomous Robot Framework (Browser library) E2E pipeline - uses shared app exploration and test-analysis layers before Robot-specific authoring, review, execution, and stabilization",
-      "version": "0.0.7"
+      "version": "0.0.8"
     },
     {
       "name": "web-bench",
@@ -30,7 +30,7 @@
       "name": "loop-test",
       "source": "./workflows/loop-test/workflow.json",
       "description": "Minimal loop test - agent does a small thing each run, then finishes after a few iterations",
-      "version": "0.0.1"
+      "version": "0.0.2"
     }
   ]
 }
