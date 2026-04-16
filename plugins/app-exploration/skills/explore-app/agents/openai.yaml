@@ -1,7 +1,7 @@
 interface:
   display_name: "Explore App"
-  short_description: "Explore a live app and capture reusable testing evidence"
-  default_prompt: "Explore this app, record grounded evidence for the target journey, and write a reusable exploration report for downstream planning and implementation."
+  short_description: "Capture grounded product evidence and blockers from a live app"
+  default_prompt: "Explore this app, capture directly observed behavior for the target journey, and write an exploration report with evidence, blockers, and unresolved questions."
 
 dependencies:
   tools:

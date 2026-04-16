@@ -1,4 +1,4 @@
 interface:
   display_name: "Define Exploratory Charter"
-  short_description: "Frame risk hypotheses and investigation focus for exploratory testing"
-  default_prompt: "Define an exploratory testing charter for this product: frame the key risks, hypotheses, and where deeper investigation is needed."
+  short_description: "Turn product context into risk hypotheses and evidence-driven exploration gaps"
+  default_prompt: "Define an exploratory testing charter for this product: frame the key risks, cite the basis for each hypothesis, decide what to investigate first, and turn missing evidence into concrete `explore-app` follow-ups. Do not produce a final coverage plan."

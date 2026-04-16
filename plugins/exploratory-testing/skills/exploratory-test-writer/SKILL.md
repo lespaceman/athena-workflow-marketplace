@@ -6,8 +6,9 @@ description: >
   include "exploratory testing for...", "what should I investigate in this app", "help me think
   about what could go wrong", "risk hypotheses for...", "testing charter for...", "where should I
   probe deeper", or any request that needs structured thinking about test intent before coverage
-  planning begins. This skill owns exploratory intent and risk framing; it does NOT own exploration
-  evidence (explore-app), coverage plans (plan-test-coverage), or test case specs
+  planning begins. This skill owns exploratory intent, risk framing, investigation order, and
+  concrete follow-up asks for missing evidence; it does NOT own exploration evidence
+  (explore-app), final coverage prioritization (plan-test-coverage), or test case specs
   (generate-test-cases).
 ---
 
@@ -21,6 +22,10 @@ needs to decide *what to investigate and why*. This skill owns that decision.
 It produces an **exploratory charter** — a structured document that frames the risks, hypotheses,
 and investigation focus areas for a product or feature. The charter feeds into the shared testing
 workflow but does not replace any part of it.
+
+This skill is the owner of exploratory risk framing and investigation order. It turns evidence,
+interviews, and repo context into investigation intent; it does not collect the canonical live-app
+evidence itself, and it does not assign the final P0/P1/P2 coverage plan.
 
 **This skill does NOT:**
 - Explore live apps (use `explore-app` from app-exploration)
@@ -38,8 +43,8 @@ This skill **consumes**:
   behavior rather than speculation
 
 This skill **produces**:
-- `e2e-plan/exploratory-charter.md` — an optional artifact owned by this plugin. It is not part of
-  the core shared artifact contract (`exploration-report.md`, `coverage-plan.md`,
+- `e2e-plan/exploratory-charter.md` — an artifact owned by this plugin. It complements, rather than
+  replaces, the core shared artifact chain (`exploration-report.md`, `coverage-plan.md`,
   `test-cases/*.md`). Downstream skills may consume it for context but do not depend on it.
 
 Before doing anything, check whether these artifacts already exist. Prior exploration work is
@@ -71,6 +76,20 @@ area?"
 - If no exploration report exists and the user hasn't provided product context, note this as a gap
   and recommend running `explore-app` first. You can still produce a preliminary charter from what
   the user tells you, but label ungrounded hypotheses clearly.
+- If grounded product behavior is required for confident prioritization, stop and request
+  `explore-app` before presenting a high-confidence charter.
+
+### Evidence sufficiency rule
+
+- Treat code reading, old test specs, and user descriptions as supporting context, not as a
+  substitute for observed product behavior.
+- If selector choices, validation behavior, redirects, auth walls, conditional UI, or error states
+  materially affect prioritization, require fresh or clearly relevant `explore-app` evidence.
+- If the available exploration report is missing, stale, or incomplete for the decision you need to
+  make, do one of two things only:
+  - run `explore-app` to close the gap, or
+  - produce a clearly labeled preliminary charter with explicit evidence gaps
+- Do not present a high-confidence charter when those gaps remain open.
 
 ### 2. Interview the user
 
@@ -89,19 +108,23 @@ A 2-minute exchange often surfaces risks that no amount of code reading would re
 
 For each area of the product, frame a testable hypothesis:
 
-| Area | Hypothesis | Basis | Priority |
-|------|-----------|-------|----------|
-| Login validation | Server-side validation may be missing — client-only checks were observed | Exploration report: empty name/message submitted successfully | P0 |
-| Payment flow | Concurrent submissions may create duplicate charges | User interview: "this happened once in staging" | P0 |
-| Settings page | Config changes may not persist across sessions | Inference — no exploration evidence yet | P1 |
+| Area | Hypothesis | Basis | Investigate when |
+|------|-----------|-------|------------------|
+| Login validation | Server-side validation may be missing — client-only checks were observed | Exploration report: empty name/message submitted successfully | First |
+| Payment flow | Concurrent submissions may create duplicate charges | User interview: "this happened once in staging" | First |
+| Settings page | Config changes may not persist across sessions | Inference — no exploration evidence yet | Next |
 
 **Basis** must cite its source: exploration report, user interview, codebase search, or inference.
 Inferences are valid but must be labeled as such.
 
-**Priority** uses the suite convention:
-- **P0** — High impact x high likelihood. Investigate first.
-- **P1** — High impact x low likelihood, or low impact x high likelihood.
-- **P2** — Low impact x low likelihood. Investigate if time allows.
+**Investigation order** uses exploratory language:
+- **First** — highest-risk or highest-uncertainty area to probe before planning coverage
+- **Next** — important area to investigate after the first-pass risks are clarified
+- **Later** — worthwhile if time remains or if later evidence makes it more urgent
+
+This skill owns that exploratory ordering. Final P0/P1/P2 coverage priority belongs to
+`plan-test-coverage`. Do not restate raw UI inventory here unless it directly supports a
+hypothesis.
 
 ### 4. Identify exploration gaps
 
@@ -113,6 +136,12 @@ Based on your hypotheses, identify where evidence is missing:
 
 For each gap, recommend what `explore-app` should focus on. Be specific: "Explore the password
 reset flow — we have no evidence of its validation behavior" is useful. "Explore more" is not.
+
+Each gap should be directly handoff-ready and include:
+- the area or flow that needs evidence
+- the exact behavior that needs confirmation
+- why that evidence changes what should be investigated first
+- a concrete starting point when known (entry URL, role, precondition, or state)
 
 ### 5. Write the charter
 
@@ -131,14 +160,15 @@ Write `e2e-plan/exploratory-charter.md`:
 
 ## Risk Hypotheses
 
-| # | Area | Hypothesis | Basis | Priority |
-|---|------|-----------|-------|----------|
-| 1 | ... | ... | ... | P0 |
-| 2 | ... | ... | ... | P1 |
+| # | Area | Hypothesis | Basis | Investigate when |
+|---|------|-----------|-------|------------------|
+| 1 | ... | ... | ... | First |
+| 2 | ... | ... | ... | Next |
 
 ## Exploration Gaps
 
-- <gap>: recommend `explore-app` focus on <specific area>
+- <gap title> — Need evidence for <specific behavior>. Ask `explore-app` to start at <entry point
+  or URL>, exercise <path or state>, and confirm <unknown behavior>.
 - ...
 
 ## Out of Scope
@@ -164,10 +194,14 @@ reviewed, questioned, and refined before downstream skills consume it.
 ## Quality bar
 
 - Every hypothesis cites its basis (observed, interviewed, inferred).
-- Priorities trace to impact and likelihood, not gut feeling.
-- Exploration gaps are specific and actionable.
+- Investigation order traces to impact, uncertainty, and user concern, not gut feel.
+- Exploration gaps are specific enough to hand directly to `explore-app` without reinterpretation.
 - The charter is honest about what's unknown and what's assumed.
 - The mission statement would make sense to someone who hasn't seen the app.
+- The charter does not duplicate the exploration report's UI inventory or selector detail.
+- The charter does not assign final P0/P1/P2 coverage priority; that handoff belongs to
+  `plan-test-coverage`.
+- The charter does not treat repo context or prior specs as proof of current live behavior.
 
 ## What to avoid
 
@@ -175,5 +209,8 @@ reviewed, questioned, and refined before downstream skills consume it.
 - Producing a coverage plan — that's `plan-test-coverage`'s job.
 - Exploring the live app — that's `explore-app`'s job.
 - Orchestrating the full workflow — that's `workflow.md`'s job.
+- Assigning final P0/P1/P2 coverage priority — that's `plan-test-coverage`'s job.
 - Presenting inferences as confirmed risks.
+- Presenting a repo-only charter as high-confidence when live evidence is required.
 - Ignoring existing artifacts and starting from zero.
+- Rewriting raw exploration notes instead of converting them into hypotheses and follow-up asks.

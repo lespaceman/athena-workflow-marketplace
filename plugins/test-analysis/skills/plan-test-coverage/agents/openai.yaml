@@ -1,7 +1,7 @@
 interface:
   display_name: "Plan Coverage Priorities"
-  short_description: "Turn exploration evidence into a prioritized coverage plan"
-  default_prompt: "Review the available exploration evidence and existing coverage, then produce a prioritized E2E coverage plan without writing specs or code."
+  short_description: "Turn exploration evidence and optional charter context into final coverage priorities"
+  default_prompt: "Review the available exploration evidence, reuse `exploratory-charter.md` when present for mission and risk context, and produce the final prioritized E2E coverage plan without writing specs or code."
 
 dependencies:
   tools:

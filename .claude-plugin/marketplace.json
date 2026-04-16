@@ -30,7 +30,7 @@
       "name": "app-exploration",
       "source": "./plugins/app-exploration",
       "description": "Shared live product exploration and evidence capture for downstream testing workflows",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "keywords": [
         "testing",
         "exploration",
@@ -44,7 +44,7 @@
       "name": "test-analysis",
       "source": "./plugins/test-analysis",
       "description": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
-      "version": "0.2.2",
+      "version": "0.2.4",
       "keywords": [
         "testing",
         "analysis",
@@ -58,7 +58,7 @@
       "name": "exploratory-testing",
       "source": "./plugins/exploratory-testing",
       "description": "Exploratory testing charters \u2014 frame risk hypotheses and investigation focus before coverage planning begins",
-      "version": "0.2.1",
+      "version": "0.2.3",
       "keywords": [
         "testing",
         "exploratory-testing",

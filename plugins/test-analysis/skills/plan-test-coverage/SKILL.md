@@ -1,13 +1,17 @@
 ---
 name: plan-test-coverage
 description: >
-  Use before writing specs or executable tests to decide what coverage is needed first. This shared planning skill consumes exploration evidence, existing tests, and related artifacts to produce `e2e-plan/coverage-plan.md` with prioritized P0/P1/P2 coverage and TC-IDs. Use it for requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It plans; it does not perform the canonical exploration step and it does not write executable tests.
+  Use before writing specs or executable tests to decide what coverage is needed first. This shared planning skill consumes exploration evidence, existing tests, and related artifacts to produce `e2e-plan/coverage-plan.md` with prioritized P0/P1/P2 coverage and TC-IDs. When `e2e-plan/exploratory-charter.md` exists, use it as optional risk-framing context; do not require it and do not let it replace grounded exploration evidence. Use it for requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It plans; it does not perform the canonical exploration step and it does not write executable tests.
 allowed-tools: Read Write Glob Grep Task
 ---
 
 # Plan Test Coverage
 
 Plan what to test by consuming shared exploration evidence and existing coverage.
+
+This skill may consume `e2e-plan/exploratory-charter.md` when it exists, but that file is optional
+context. `e2e-plan/exploration-report.md` remains the canonical grounded-evidence artifact whenever
+real product behavior is required.
 
 ## Calibrating planning depth
 
@@ -31,9 +35,16 @@ area, or is this level right?"
 2. **Load the evidence base**:
    - Read `e2e-plan/exploration-report.md` when real product evidence is required for the target
      feature
+   - Read `e2e-plan/exploratory-charter.md` when it exists and the feature came through the
+     exploratory workflow
    - Read existing `test-cases/*.md` specs for the same feature
    - Search for existing automated coverage related to the feature
    - Note any missing artifact that blocks confident planning
+
+   Treat the evidence sources differently:
+   - `exploration-report.md` supplies observed behavior, selectors, copy, and blockers
+   - `exploratory-charter.md` supplies mission, risk framing, and investigation focus
+   - if they conflict, observed evidence wins over inferred or interview-based framing
 
 3. **Check existing test coverage**:
    - Search for existing test files related to the feature:
@@ -48,6 +59,8 @@ area, or is this level right?"
    - If the target flow depends on real product behavior, validation copy, selector shape, or
      conditional UI and `e2e-plan/exploration-report.md` is missing or clearly stale, stop and run
      `explore-app`
+   - Do not treat `e2e-plan/exploratory-charter.md` as a substitute for missing exploration
+     evidence
    - Do not replace missing exploration with lightweight pseudo-exploration
    - If you can still produce a partial plan from repo evidence alone, label the plan as partial and
      list the exact unknowns
@@ -70,6 +83,11 @@ area, or is this level right?"
    - **P1 (Should have)**: Input validation, common error paths, accessibility basics (keyboard navigation, form labels)
    - **P2 (Nice to have)**: Edge cases, visual regression, performance scenarios, cross-browser specifics, rare error paths
 
+   If an exploratory charter is available, use it to sharpen final prioritization and ordering:
+   - pull candidate focus areas from the charter's risk hypotheses and investigation order
+   - convert charter exploration gaps into explicit coverage gaps or blockers
+   - keep the final test descriptions anchored in observed behavior from the exploration report
+
 7. **Write `e2e-plan/coverage-plan.md`**:
 
 ```markdown
@@ -77,7 +95,7 @@ area, or is this level right?"
 
 **URL:** <url>
 **Date:** <date>
-**Evidence basis:** exploration-report | repo-only | mixed
+**Evidence basis:** exploration-report | exploration-report + exploratory-charter | repo-only | mixed
 **Existing coverage:** <N tests already exist / none>
 **Status:** COMPLETE | PARTIAL | BLOCKED
 
@@ -123,6 +141,10 @@ area, or is this level right?"
 ### Evidence Gaps / Blockers
 - <missing exploration detail or blocker, or "None">
 
+### Exploratory Inputs Applied (include only when `e2e-plan/exploratory-charter.md` was used)
+- <risk hypothesis or mission statement that changed prioritization>
+- <exploration gap that remains open and constrains planning>
+
 ### Recommended Order
 1. Write P0 tests first (N tests)
 2. Then P1 validation + accessibility basics (N tests)
@@ -132,6 +154,15 @@ area, or is this level right?"
 - Invoke `generate-test-cases` with this plan and the exploration report
 - Hand off the reviewed spec to the execution-layer plugin
 ```
+
+## Quality bar
+
+- Treat `exploratory-charter.md` as optional amplification, not a prerequisite.
+- Keep observed evidence and inferred risk framing distinguishable in the plan.
+- Own the final P0/P1/P2 prioritization here, even when the exploratory charter provided earlier
+  investigation ordering.
+- If a charter exists, let it improve priority ordering rather than duplicate the whole document.
+- Do not silently promote interview-only or inferred concerns over contradictory observed evidence.
 
 ## Example Usage
 

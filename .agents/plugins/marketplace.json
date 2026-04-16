@@ -21,7 +21,7 @@
     {
       "name": "app-exploration",
       "description": "Shared live product exploration and evidence capture for downstream testing workflows",
-      "version": "0.1.0",
+      "version": "0.1.3",
       "source": {
         "source": "local",
         "path": "./plugins/app-exploration"
@@ -35,7 +35,7 @@
     {
       "name": "test-analysis",
       "description": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
-      "version": "0.2.0",
+      "version": "0.2.4",
       "source": {
         "source": "local",
         "path": "./plugins/test-analysis"
@@ -48,6 +48,7 @@
     },
     {
       "name": "exploratory-testing",
+      "version": "0.2.3",
       "source": {
         "source": "local",
         "path": "./plugins/exploratory-testing"

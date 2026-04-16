@@ -1,7 +1,7 @@
 ---
 name: explore-app
 description: >
-  Explore a live app and capture grounded evidence in `e2e-plan/exploration-report.md`. Use when downstream planning, test-case generation, or test implementation needs real product understanding before specs or code are written: mapping journeys, capturing selectors and form fields, recording validation or error states, checking auth gates, or documenting blockers that prevent confident planning. This skill owns product exploration; it should be used before `plan-test-coverage` when real product evidence matters.
+  Explore a live app and capture grounded evidence in `e2e-plan/exploration-report.md`. Use when downstream planning, test-case generation, or test implementation needs real product understanding before specs or code are written: mapping journeys, capturing selectors and form fields, recording validation or error states, checking auth gates, or documenting blockers that prevent confident planning. This skill owns observed product evidence and blockers; it does not frame exploratory charters, prioritize risks, or write coverage plans.
 allowed-tools: Read Write Edit Glob Grep Task
 ---
 
@@ -9,6 +9,9 @@ allowed-tools: Read Write Edit Glob Grep Task
 
 Capture real product evidence for the target journey and hand it off in a stable artifact that the
 rest of the testing suite can consume.
+
+This skill owns observed product evidence and blockers. It does not own risk prioritization,
+exploratory charters, smoke/regression scope, or coverage planning.
 
 ## Input
 
@@ -66,24 +69,25 @@ The tours:
 - **Configuration Tour** — settings, toggles, permissions, roles. Each config option is a
   test-matrix multiplier, so it matters to know what's configurable.
 - **Money Tour** — what does the business actually make money from? What's the "crown jewel" path?
-  This sets priorities.
+  This helps downstream prioritization later; do not prioritize it here.
 
 #### Exploration notes
 
 As you explore, maintain a running working document using this four-column format:
 
-| Observation | Question | Risk | Test Idea |
+| Observation | Open question | Evidence gap | Notes |
 |---|---|---|---|
-| Login accepts email only, no username | What about SSO? Is there a password reset? | Medium — password reset is often buggy | Test reset flow with valid/invalid/expired tokens |
-| Form has no character limit on "name" field | What's the DB column size? | High — could cause truncation or crash | Boundary test: 1 char, 255 chars, 1000 chars, emoji, RTL |
+| Login accepts email only, no username | Is there also an SSO path? | Password reset and SSO entry points were not explored yet | Email field label and submit button were directly observed |
+| Form has no visible character limit on "name" field | Is the limit enforced server-side or only omitted from the UI? | Boundary behavior past 255 chars is still unknown | HTML/UI did not show a maxlength or helper copy |
 
-Capture fast, don't polish. This table feeds directly into downstream coverage planning.
+Capture fast, don't polish. This table preserves factual loose ends for downstream chartering and
+planning.
 
 #### Interview the user
 
-If the user is present, ask them questions as you explore: "What part of this scares you most?"
-"Who are the users?" "What's gone wrong before?" "What's the worst case if this breaks?" A
-2-minute exchange often saves an hour of guessing.
+If the user is present, ask clarifying questions that improve factual exploration: "Which
+environment is safe to explore?" "Are there seeded accounts, roles, or data states I should use?"
+"Which paths are in scope for this session?" A 2-minute exchange often saves an hour of guessing.
 
 Return browser findings in a structure like:
 
@@ -143,7 +147,8 @@ Use this structure:
 - <only include if something remains unverified>
 
 ## Recommended Next Step
-- Run `plan-test-coverage` using this report
+- <choose the next consumer of this evidence: `exploratory-test-writer`, `define-smoke-scope`,
+  `define-regression-scope`, or `plan-test-coverage`>
 ```
 
 ### 4. Stop cleanly when evidence is missing
@@ -168,6 +173,8 @@ The exploration is valuable, but not valuable enough to break the user's actual 
 - Record exact validation or error copy only when it was directly observed.
 - Do not silently replace blocked exploration with assumptions.
 - Keep the report reusable by future planning and execution skills.
+- Do not turn observations into prioritized risks, charters, or coverage decisions inside this
+  artifact.
 - Cases reference specific things actually observed in the app (real field names, real error
   messages, real API endpoints, real selectors).
 - The exploration summary is honest about what wasn't covered and what's still unknown.
@@ -178,3 +185,4 @@ The exploration is valuable, but not valuable enough to break the user's actual 
 - Skipping exploration and hallucinating features that don't exist.
 - Burying the exploration notes so the user can't see what was or wasn't looked at.
 - Ignoring existing exploration artifacts and starting from zero.
+- Turning raw observations into a prioritized test charter or coverage plan inside this skill.

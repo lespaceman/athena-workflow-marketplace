@@ -6,28 +6,35 @@ You define exploratory testing intent before the suite moves into detailed plann
 
 | Activity | Skill |
 |----------|-------|
-| Define exploratory charter, risk hypotheses, and exploration gaps | `exploratory-test-writer` |
+| Define exploratory charter, risk hypotheses, investigation order, and exploration gaps | `exploratory-test-writer` |
 | Gather grounded product evidence | `explore-app` |
-| Turn confirmed risks into shared coverage planning | `plan-test-coverage` |
+| Turn confirmed risks into shared coverage planning and final P0/P1/P2 prioritization | `plan-test-coverage` |
 | Turn shared plans into detailed specs | `generate-test-cases` |
 
 ## Workflow Sequence
 
 The default progression is:
 
-**explore app when needed → write exploratory charter → optionally plan coverage → optionally generate specs**
+**write exploratory charter → run explore app when needed to close evidence gaps → finalize charter → optionally plan coverage → optionally generate specs**
 
 ### Orientation
 
 - Load `exploratory-test-writer` as the intent-layer entry point.
-- If grounded product evidence is required and `e2e-plan/exploration-report.md` is missing or stale,
-  load `explore-app` first.
-- Use the exploratory charter to identify what still needs deeper probing and what should be handed
-  to shared planning next.
+- Use the first charter pass to decide whether grounded product evidence is missing, stale, or too
+  thin to support confident risk framing.
+- If the charter depends on grounded product behavior and `e2e-plan/exploration-report.md` is
+  missing or stale, run `explore-app`, then return to `exploratory-test-writer` to finalize the
+  charter.
+- Use the completed charter to identify what still needs deeper probing and what should be handed to
+  shared planning next.
 
 ## Handoff Rules
 
-- `exploratory-test-writer` owns `e2e-plan/exploratory-charter.md`, not the shared artifact chain.
+- `exploratory-test-writer` owns `e2e-plan/exploratory-charter.md`, including mission, risk
+  hypotheses, exploratory ordering, and evidence gaps.
+- `plan-test-coverage` may consume that charter as optional context, but it owns the final
+  P0/P1/P2 coverage priority and it does not let the charter replace the required grounded evidence
+  in `e2e-plan/exploration-report.md`.
 - `explore-app` owns `e2e-plan/exploration-report.md`.
 - `plan-test-coverage` owns `e2e-plan/coverage-plan.md`.
 - `generate-test-cases` owns `test-cases/<feature>.md`.
