@@ -48,7 +48,7 @@
     },
     {
       "name": "playwright-automation",
-      "description": "Canonical Playwright execution layer for analysis, authoring, review, and flake repair",
+      "description": "Playwright execution layer for analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
       "version": "0.1.0",
       "source": {
         "source": "local",
@@ -62,7 +62,7 @@
     },
     {
       "name": "robot-automation",
-      "description": "Robot Framework execution layer built on shared exploration and test-analysis plugins",
+      "description": "Robot Framework execution layer for analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
       "version": "0.2.2",
       "source": {
         "source": "local",

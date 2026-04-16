@@ -24,6 +24,7 @@ function main() {
   const workflowJson = JSON.parse(read('workflows/e2e-test-builder/workflow.json'));
   const readme = read('README.md');
   const workflowMd = read('workflows/e2e-test-builder/workflow.md');
+  const analyzeTestCodebase = read('plugins/playwright-automation/skills/analyze-test-codebase/SKILL.md');
   const writeTestCode = read('plugins/playwright-automation/skills/write-test-code/SKILL.md');
   const addPlaywrightTests = read('plugins/playwright-automation/skills/add-playwright-tests/SKILL.md');
   const coveragePlan = read('plugins/test-analysis/skills/plan-test-coverage/SKILL.md');
@@ -67,8 +68,25 @@ function main() {
   );
 
   assert(
+    readme.includes('claude plugin install app-exploration@athena-workflow-marketplace'),
+    'README must document app-exploration as a shared prerequisite for the Playwright stack',
+  );
+  assert(
+    readme.includes('claude plugin install test-analysis@athena-workflow-marketplace'),
+    'README must document test-analysis as a shared prerequisite for the Playwright stack',
+  );
+  assert(
     readme.includes('claude plugin install playwright-automation@athena-workflow-marketplace'),
-    'README must point install guidance at playwright-automation',
+    'README must document playwright-automation as the Playwright execution layer install step',
+  );
+  assert(
+    readme.includes('does not install the shared') &&
+      readme.includes('`app-exploration` and `test-analysis` layers'),
+    'README must explain that installing an execution plugin alone does not install the shared layers',
+  );
+  assert(
+    readme.includes('The full orchestration surface remains the workflow pair `e2e-test-builder` and `robot-automation`'),
+    'README must preserve the workflow-first orchestration note',
   );
   assert(
     readme.includes('e2e-test-builder` survives only as a workflow name'),
@@ -85,6 +103,7 @@ function main() {
 
   for (const [content, label] of [
     [workflowMd, 'workflow.md'],
+    [analyzeTestCodebase, 'analyze-test-codebase'],
     [writeTestCode, 'write-test-code'],
     [addPlaywrightTests, 'add-playwright-tests'],
   ]) {
@@ -93,6 +112,24 @@ function main() {
       `${label} must not reference add-e2e-tests`,
     );
   }
+
+  for (const [content, label] of [
+    [analyzeTestCodebase, 'analyze-test-codebase'],
+    [writeTestCode, 'write-test-code'],
+  ]) {
+    assert(
+      !content.includes('agent-web-interface-guide'),
+      `${label} must not present agent-web-interface-guide as the canonical Playwright exploration path`,
+    );
+  }
+  assert(
+    analyzeTestCodebase.includes('explore-app'),
+    'analyze-test-codebase must route live-site exploration through explore-app',
+  );
+  assert(
+    writeTestCode.includes('explore-app'),
+    'write-test-code must route missing product evidence through explore-app',
+  );
 
   for (const [label, content] of [
     ['plan-test-coverage', coveragePlan],

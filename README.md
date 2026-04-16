@@ -169,19 +169,24 @@ claude plugin marketplace add lespaceman/athena-workflow-marketplace
 claude plugin marketplace add ./athena-workflow-marketplace
 ```
 
-## Install a Plugin
+## Install the Layered Testing Stack
 
 ```shell
+# Playwright stack
+claude plugin install app-exploration@athena-workflow-marketplace
+claude plugin install test-analysis@athena-workflow-marketplace
 claude plugin install playwright-automation@athena-workflow-marketplace
+
+# Robot stack
+claude plugin install app-exploration@athena-workflow-marketplace
+claude plugin install test-analysis@athena-workflow-marketplace
+claude plugin install robot-automation@athena-workflow-marketplace
 ```
 
-### Installation Scopes
+Apply `--scope user`, `--scope project`, or `--scope local` to each command as needed.
 
-```shell
-claude plugin install playwright-automation@athena-workflow-marketplace --scope user
-claude plugin install playwright-automation@athena-workflow-marketplace --scope project
-claude plugin install playwright-automation@athena-workflow-marketplace --scope local
-```
+Installing only `playwright-automation` or `robot-automation` does not install the shared
+`app-exploration` and `test-analysis` layers.
 
 ## Available Plugins
 
@@ -193,8 +198,8 @@ The testing plugins now split shared responsibilities from framework execution:
 |-------|-------------|
 | `app-exploration` | Explore the live product and write `e2e-plan/exploration-report.md` |
 | `test-analysis` | Plan coverage, generate TC-ID specs, and review those specs |
-| `playwright-automation` | Analyze Playwright codebases, write Playwright tests, review them, and fix flake |
-| `robot-automation` | Analyze Robot Framework codebases, write `.robot` suites, review them, and fix flake |
+| `playwright-automation` | Playwright execution layer: analyze codebases, write tests, review them, and fix flake after the shared layers are ready |
+| `robot-automation` | Robot execution layer: analyze codebases, write `.robot` suites, review them, and fix flake after the shared layers are ready |
 
 Shared artifact contract:
 
@@ -211,6 +216,7 @@ Canonical entry skills:
 Workflow continuity note:
 
 - `e2e-test-builder` survives only as a workflow name; it is no longer an installable plugin surface.
+- The full orchestration surface remains the workflow pair `e2e-test-builder` and `robot-automation`; the execution plugins own only their framework-specific layer.
 
 ### site-knowledge
 

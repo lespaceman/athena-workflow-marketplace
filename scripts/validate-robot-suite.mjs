@@ -62,7 +62,28 @@ function main() {
     'README must document the Robot suite validator',
   );
   assert(
-    readme.includes('`robot-automation` | Analyze Robot Framework codebases, write `.robot` suites, review them, and fix flake'),
+    readme.includes('claude plugin install app-exploration@athena-workflow-marketplace'),
+    'README must document app-exploration as a shared prerequisite for the Robot stack',
+  );
+  assert(
+    readme.includes('claude plugin install test-analysis@athena-workflow-marketplace'),
+    'README must document test-analysis as a shared prerequisite for the Robot stack',
+  );
+  assert(
+    readme.includes('claude plugin install robot-automation@athena-workflow-marketplace'),
+    'README must document robot-automation as the Robot execution layer install step',
+  );
+  assert(
+    readme.includes('does not install the shared') &&
+      readme.includes('`app-exploration` and `test-analysis` layers'),
+    'README must explain that installing an execution plugin alone does not install the shared layers',
+  );
+  assert(
+    readme.includes('The full orchestration surface remains the workflow pair `e2e-test-builder` and `robot-automation`'),
+    'README must preserve the workflow-first orchestration note',
+  );
+  assert(
+    readme.includes('`robot-automation` | Robot execution layer: analyze codebases, write `.robot` suites, review them, and fix flake after the shared layers are ready'),
     'README must describe robot-automation as the Robot execution layer',
   );
 
