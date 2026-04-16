@@ -1,0 +1,24 @@
+{
+  "name": "@athenaflow/plugin-exploratory-testing",
+  "version": "0.2.0",
+  "description": "Exploratory testing charters — frame risk hypotheses and investigation focus before coverage planning begins",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/exploratory-testing"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "skills/",
+    "dist/"
+  ],
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

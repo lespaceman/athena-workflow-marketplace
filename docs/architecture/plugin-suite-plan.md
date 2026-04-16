@@ -1,6 +1,6 @@
 # Plugin Suite Plan
 
-This document is the maintainers' source of truth for the testing-plugin split. It explains why the current layout is too coupled, what the new layered architecture should be, and how the immediate migration differs from the longer-term marketplace shape.
+This document is the maintainers' source of truth for the testing-plugin suite. It explains why the current layout is too coupled, what the layered end-state should be, and what backlog remains to reach that end-state.
 
 See also:
 - [Immediate Split Plan](plugin-suite-immediate-split.md)
@@ -29,7 +29,7 @@ The target state is a layered testing suite:
 - tooling plugins that provide browser or platform control
 - shared plugins that capture product evidence and define what should be tested
 - framework/platform plugins that implement and stabilize executable tests
-- future testing-intent plugins that express confidence goals such as smoke or regression
+- intent plugins that express confidence goals such as exploratory, smoke, or regression testing
 
 ## Why The Current Split Is Wrong
 
@@ -88,7 +88,7 @@ The target layered architecture is:
 | Shared product understanding | `app-exploration` | Product exploration, evidence capture, blocker reporting |
 | Shared test thinking | `test-analysis` | Coverage planning, test-case generation, test-case review |
 | Framework execution | `playwright-automation`, `robot-automation` | Codebase analysis, executable test authoring, code review, flake repair |
-| Future intent families | See [Future Suite Catalog](plugin-suite-future-suite.md) | Confidence-oriented layers such as smoke, regression, and exploratory testing |
+| Intent families | `exploratory-testing`, `smoke-testing`, `regression-testing` | Confidence-oriented layers such as exploratory, smoke, and regression testing |
 
 ### Design rules
 
@@ -99,7 +99,7 @@ These rules govern the split:
 3. Shared skills have a single canonical owner. They are not duplicated per framework.
 4. Framework plugins own framework-specific analysis, authoring, code review, and runtime debugging only.
 5. Workflows compose shared plugins plus one execution plugin.
-6. Future testing-intent plugins express confidence goals, not framework behavior.
+6. Intent plugins express confidence goals, not framework behavior.
 
 ## Naming And Ownership Rules
 
@@ -108,7 +108,7 @@ The canonical shared plugin names are:
 - `app-exploration`
 - `test-analysis`
 
-The phase-1 execution plugin names are:
+The active execution plugin names are:
 
 - `playwright-automation`
 - `robot-automation`
@@ -131,41 +131,34 @@ Each testing skill must have exactly one canonical owner:
 
 No shared planning/spec skill should remain canonically owned by both Playwright and Robot plugins after the split.
 
-## Immediate vs Future Plan
+## Active End-State
 
-The split happens in two layers of change.
+The repository is now working toward the full core suite directly rather than treating intent
+families as a later phase. The active target set is:
 
-### Immediate plan
-
-Phase 1 introduces only:
-
+- `agent-web-interface`
 - `app-exploration`
 - `test-analysis`
-- `playwright-automation`
-- a slimmer `robot-automation`
-
-`agent-web-interface` remains unchanged.
-
-No testing-intent plugins are created yet. The goal of phase 1 is to remove duplicated shared skills and establish a clean layering model without expanding the plugin catalog more than necessary.
-
-The implementation details for phase 1 live in [Immediate Split Plan](plugin-suite-immediate-split.md).
-
-### Future plan
-
-After the shared/framework split is stable, the marketplace can add testing-intent families such as:
-
 - `exploratory-testing`
 - `smoke-testing`
 - `regression-testing`
+- `playwright-automation`
+- `robot-automation`
 
-and more execution families such as:
+The implementation details for the current execution backlog live in
+[Immediate Split Plan](plugin-suite-immediate-split.md).
+
+## Later Expansion
+
+After the core suite above is stable, the marketplace can add more execution families such as:
 
 - `cypress-automation`
 - `appium-automation`
 - `api-test-automation`
 - `performance-automation`
 
-The long-term portfolio and dependency rules live in [Future Suite Catalog](plugin-suite-future-suite.md).
+Additional expansion ideas and dependency rules live in
+[Future Suite Catalog](plugin-suite-future-suite.md).
 
 ## Compatibility And Deprecation
 
@@ -197,3 +190,24 @@ Those artifacts let workflows and plugins hand off work cleanly across layers:
 - execution plugins consume plans/specs and produce executable tests
 
 That contract is mandatory for future framework additions and should remain stable across the suite.
+
+## Implementation Backlog
+
+The remaining work to reach the active end-state is:
+
+1. Make all active docs describe the same core plugin set:
+   `agent-web-interface`, `app-exploration`, `test-analysis`, `exploratory-testing`,
+   `smoke-testing`, `regression-testing`, `playwright-automation`, and `robot-automation`.
+2. Keep canonical artifact ownership explicit and stable:
+   `app-exploration` owns `e2e-plan/exploration-report.md`, and `test-analysis` owns
+   `e2e-plan/coverage-plan.md` plus `test-cases/<feature>.md`.
+3. Narrow every intent plugin so it adds intent-specific value without re-owning shared
+   exploration or test-analysis artifacts.
+4. Add workflow families for intent plugins where cross-plugin orchestration is required, and keep
+   workflow sequencing in `workflow.md` rather than encoding the full sequence inside plugin skills.
+5. Keep framework plugins focused on framework-local concerns only:
+   codebase analysis, executable authoring, code review, and flake repair.
+6. Add validator coverage for the full suite shape, including marketplace registration, workflow
+   dependencies, artifact ownership, and stale legacy-surface detection.
+7. Treat later execution families such as Cypress, Appium, API, and performance as expansion work
+   after the core suite above is internally consistent.

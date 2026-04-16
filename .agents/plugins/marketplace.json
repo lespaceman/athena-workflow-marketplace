@@ -47,6 +47,42 @@
       "category": "testing"
     },
     {
+      "name": "exploratory-testing",
+      "source": {
+        "source": "local",
+        "path": "./plugins/exploratory-testing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Testing"
+    },
+    {
+      "name": "smoke-testing",
+      "source": {
+        "source": "local",
+        "path": "./plugins/smoke-testing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Testing"
+    },
+    {
+      "name": "regression-testing",
+      "source": {
+        "source": "local",
+        "path": "./plugins/regression-testing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Testing"
+    },
+    {
       "name": "playwright-automation",
       "description": "Playwright execution layer for analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
       "version": "0.1.0",

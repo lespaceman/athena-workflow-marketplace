@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<app URL, product, feature, or release context>"
+  user-invocable: true

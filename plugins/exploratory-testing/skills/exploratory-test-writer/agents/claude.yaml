@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<app URL, product, or feature to investigate>"
+  user-invocable: true

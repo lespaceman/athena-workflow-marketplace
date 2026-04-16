@@ -1,0 +1,16 @@
+{
+  "name": "regression-testing",
+  "description": "Regression testing scopes — define rerunnable confidence across changed and high-risk areas before automation selection",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "testing",
+    "regression-testing",
+    "qa",
+    "risk-based-testing",
+    "scope"
+  ],
+  "category": "testing"
+}

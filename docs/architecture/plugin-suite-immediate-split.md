@@ -1,37 +1,43 @@
 # Plugin Suite Immediate Split
 
-This document is the decision-complete phase-1 migration plan for splitting the current testing plugins into shared layers plus framework execution layers.
+This document is the decision-complete execution plan for moving the marketplace from the old
+framework-centric testing layout to the layered end-state plugin suite.
 
 See also:
 - [Plugin Suite Plan](plugin-suite-plan.md)
 - [Future Suite Catalog](plugin-suite-future-suite.md)
 
-## Phase 1 Goal
+## Current Program Goal
 
-Phase 1 creates a clean shared/framework split without introducing testing-intent plugins yet.
+The current program creates the clean shared/framework split and introduces the intent layer now.
 
-Phase 1 must:
+The current program must:
 
 - introduce `app-exploration`
 - introduce `test-analysis`
+- introduce `exploratory-testing`
+- introduce `smoke-testing`
+- introduce `regression-testing`
 - introduce `playwright-automation`
 - retain and slim `robot-automation`
 - keep `agent-web-interface` unchanged
 - preserve workflow continuity where practical
 
-Phase 1 must not:
+The current program must not:
 
-- create concrete `exploratory-testing`, `smoke-testing`, or `regression-testing` plugins
 - redesign unrelated plugins such as `site-knowledge`, `md-export`, or `web-bench`
 - rename the `robot-automation` workflow
 
-## Exact Plugin Layout After Split
+## Exact Plugin Layout For The Active End-State
 
-The target plugin set after phase 1 is:
+The target plugin set for the active end-state is:
 
 - `agent-web-interface`
 - `app-exploration`
 - `test-analysis`
+- `exploratory-testing`
+- `smoke-testing`
+- `regression-testing`
 - `playwright-automation`
 - `robot-automation`
 
@@ -44,6 +50,9 @@ The legacy `e2e-test-builder` name survives only as a workflow identifier for co
 | `agent-web-interface` | Browser tooling only |
 | `app-exploration` | Live product exploration and evidence capture |
 | `test-analysis` | Shared planning/specification/review |
+| `exploratory-testing` | Exploratory charters — risk hypotheses and investigation focus |
+| `smoke-testing` | Minimum critical-path confidence selection and smoke-scope governance |
+| `regression-testing` | Broader rerunnable confidence planning and regression-scope governance |
 | `playwright-automation` | Playwright-specific analysis, authoring, review, and flake repair |
 | `robot-automation` | Robot-specific analysis, authoring, review, and flake repair |
 
@@ -68,12 +77,24 @@ Ownership of those artifacts:
 This section records the ownership map used to move skills into their canonical homes. It includes
 the historical `plugins/e2e-test-builder/skills/` source paths that were removed during cleanup.
 
-### New skills introduced in phase 1
+### New skills introduced in the active end-state program
 
-| Future plugin | Skill | Purpose |
+| Plugin | Skill | Purpose |
 |---|---|---|
 | `app-exploration` | `explore-app` | Explore the live app, capture evidence, record blockers, and write `e2e-plan/exploration-report.md` |
+| `exploratory-testing` | `exploratory-test-writer` | Frame risk hypotheses and investigation focus via exploratory charters |
+| `smoke-testing` | `define-smoke-scope` | Define the minimum critical-path confidence scope and write `e2e-plan/smoke-charter.md` |
+| `regression-testing` | `define-regression-scope` | Define rerunnable regression scope and write `e2e-plan/regression-charter.md` |
 | `playwright-automation` | `add-playwright-tests` | Canonical Playwright workflow entry skill |
+
+Optional plugin-owned intent artifacts:
+
+- `e2e-plan/exploratory-charter.md`
+- `e2e-plan/smoke-charter.md`
+- `e2e-plan/regression-charter.md`
+
+These are not part of the core shared artifact contract. They are intent-layer planning aids owned
+by their respective plugins.
 
 ### Historical `e2e-test-builder` skill mapping
 
@@ -142,20 +163,23 @@ This section names the exact repo touchpoints that later implementation must upd
 
 ### New plugin directories
 
-Later implementation must introduce:
+The repository now includes or is completing:
 
 - `plugins/app-exploration/`
 - `plugins/test-analysis/`
+- `plugins/exploratory-testing/`
+- `plugins/smoke-testing/`
+- `plugins/regression-testing/`
 - `plugins/playwright-automation/`
 
-Later implementation must keep:
+The repository continues to keep:
 
 - `plugins/agent-web-interface/`
 - `plugins/robot-automation/`
 
 ### Marketplace manifests
 
-Later implementation must update these marketplace registries:
+The implementation updates these marketplace registries:
 
 - `.claude-plugin/marketplace.json`
 - `.agents/plugins/marketplace.json`
@@ -164,18 +188,24 @@ Later implementation must update these marketplace registries:
 Required outcomes:
 
 - register the new shared plugins
+- register `exploratory-testing`
+- register `smoke-testing`
+- register `regression-testing`
 - register `playwright-automation`
 - preserve `robot-automation`
 - remove the installable `e2e-test-builder` plugin surface
 
 ### Workflow dependency refs
 
-Later implementation must update these workflow manifests:
+The implementation now includes these workflow manifests:
 
 - `workflows/e2e-test-builder/workflow.json`
 - `workflows/robot-automation/workflow.json`
+- `workflows/exploratory-testing/workflow.json`
+- `workflows/smoke-testing/workflow.json`
+- `workflows/regression-testing/workflow.json`
 
-#### Phase-1 workflow behavior
+#### Current workflow behavior
 
 The `e2e-test-builder` workflow keeps its current workflow name for continuity, but its plugin dependencies change to:
 
@@ -190,6 +220,29 @@ The `robot-automation` workflow keeps its current workflow name and changes its 
 - `app-exploration`
 - `test-analysis`
 - `robot-automation`
+
+Intent workflows own sequencing for the intent layer and hand off to the appropriate execution
+workflow when runnable automation is requested.
+
+## Implementation Checklist
+
+The current execution backlog to reach the active end-state is:
+
+1. Finish aligning active docs and inventories to the same plugin set:
+   `agent-web-interface`, `app-exploration`, `test-analysis`, `exploratory-testing`,
+   `smoke-testing`, `regression-testing`, `playwright-automation`, and `robot-automation`.
+2. Keep the shared artifact contract stable and enforce it in skills, workflows, and validators:
+   `app-exploration` owns `e2e-plan/exploration-report.md`, and `test-analysis` owns
+   `e2e-plan/coverage-plan.md` plus `test-cases/<feature>.md`.
+3. Narrow `exploratory-testing` so it contributes exploratory intent, risk framing, and
+   hypothesis-driven guidance without replacing `explore-app` or `test-analysis`.
+4. Keep `smoke-testing` and `regression-testing` plugin ownership narrow and free of framework
+   authoring duplication.
+5. Keep workflow sequencing in `workflow.md` and plugin skills capability-local.
+6. Keep Playwright and Robot plugins limited to framework-local analysis, authoring, review, and
+   flake repair.
+7. Extend suite validators so they catch stale ownership drift, registry mismatches, workflow
+   dependency mistakes, and legacy-surface regressions.
 
 ### Top-level docs and inventories
 
@@ -224,9 +277,8 @@ That means:
 
 ## Non-Goals
 
-Phase 1 does not include:
+The current program does not include:
 
-- creation of `exploratory-testing`, `smoke-testing`, or `regression-testing` plugins
 - introduction of Cypress, Appium, API, or performance execution plugins
 - restructuring unrelated plugins such as `site-knowledge`, `md-export`, or `web-bench`
 - renaming the `robot-automation` plugin or workflow

@@ -30,6 +30,9 @@ patterns).
 │       └── workflow.md
 └── plugins/
     ├── app-exploration/
+    ├── exploratory-testing/
+    ├── smoke-testing/
+    ├── regression-testing/
     ├── playwright-automation/
     ├── test-analysis/
     ├── robot-automation/
@@ -128,6 +131,12 @@ Run the layered Robot suite validator:
 node scripts/validate-robot-suite.mjs
 ```
 
+Run the intent suite validator:
+
+```shell
+node scripts/validate-intent-suite.mjs
+```
+
 ### Authoring Commands
 
 Create a new repo-compatible skill scaffold:
@@ -190,7 +199,7 @@ Installing only `playwright-automation` or `robot-automation` does not install t
 
 ## Available Plugins
 
-### Phase-1 Testing Suite
+### Core Testing Suite
 
 The testing plugins now split shared responsibilities from framework execution:
 
@@ -201,15 +210,34 @@ The testing plugins now split shared responsibilities from framework execution:
 | `playwright-automation` | Playwright execution layer: analyze codebases, write tests, review them, and fix flake after the shared layers are ready |
 | `robot-automation` | Robot execution layer: analyze codebases, write `.robot` suites, review them, and fix flake after the shared layers are ready |
 
+### Intent Plugins
+
+Plugins that express testing intent while leaving execution ownership to the framework workflows:
+
+| Plugin | Canonical responsibility |
+|-------|-------------|
+| `exploratory-testing` | Frame risk hypotheses and investigation focus via exploratory charters |
+| `smoke-testing` | Define the minimum critical-path confidence scope before runnable automation is selected |
+| `regression-testing` | Define rerunnable regression scope across changed and high-risk areas before runnable automation is selected |
+
 Shared artifact contract:
 
 - `e2e-plan/exploration-report.md`
 - `e2e-plan/coverage-plan.md`
 - `test-cases/<feature>.md`
 
+Optional plugin-owned intent artifacts:
+
+- `e2e-plan/exploratory-charter.md`
+- `e2e-plan/smoke-charter.md`
+- `e2e-plan/regression-charter.md`
+
 Canonical entry skills:
 
 - `explore-app` in `app-exploration`
+- `exploratory-test-writer` in `exploratory-testing`
+- `define-smoke-scope` in `smoke-testing`
+- `define-regression-scope` in `regression-testing`
 - `add-playwright-tests` in `playwright-automation`
 - `add-robot-tests` in `robot-automation`
 
@@ -237,6 +265,9 @@ Workflows are registered in `.athena-workflow/marketplace.json` and implemented 
 |----------|--------|
 | `e2e-test-builder` | `workflows/e2e-test-builder/workflow.json` |
 | `robot-automation` | `workflows/robot-automation/workflow.json` |
+| `exploratory-testing` | `workflows/exploratory-testing/workflow.json` |
+| `smoke-testing` | `workflows/smoke-testing/workflow.json` |
+| `regression-testing` | `workflows/regression-testing/workflow.json` |
 
 Workflow intent:
 

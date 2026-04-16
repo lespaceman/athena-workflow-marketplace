@@ -55,6 +55,48 @@
       "category": "testing"
     },
     {
+      "name": "exploratory-testing",
+      "source": "./plugins/exploratory-testing",
+      "description": "Exploratory testing charters — frame risk hypotheses and investigation focus before coverage planning begins",
+      "version": "0.2.0",
+      "keywords": [
+        "testing",
+        "exploratory-testing",
+        "qa",
+        "risk-discovery",
+        "charter"
+      ],
+      "category": "testing"
+    },
+    {
+      "name": "smoke-testing",
+      "source": "./plugins/smoke-testing",
+      "description": "Smoke testing scopes — define the minimum critical-path confidence checks before selecting runnable automation",
+      "version": "0.1.0",
+      "keywords": [
+        "testing",
+        "smoke-testing",
+        "qa",
+        "critical-path",
+        "scope"
+      ],
+      "category": "testing"
+    },
+    {
+      "name": "regression-testing",
+      "source": "./plugins/regression-testing",
+      "description": "Regression testing scopes — define rerunnable confidence across changed and high-risk areas before automation selection",
+      "version": "0.1.0",
+      "keywords": [
+        "testing",
+        "regression-testing",
+        "qa",
+        "risk-based-testing",
+        "scope"
+      ],
+      "category": "testing"
+    },
+    {
       "name": "playwright-automation",
       "source": "./plugins/playwright-automation",
       "description": "Playwright execution layer for analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",

@@ -1,0 +1,16 @@
+{
+  "name": "exploratory-testing",
+  "description": "Exploratory testing charters — frame risk hypotheses and investigation focus before coverage planning begins",
+  "version": "0.2.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "testing",
+    "exploratory-testing",
+    "qa",
+    "risk-discovery",
+    "charter"
+  ],
+  "category": "testing"
+}

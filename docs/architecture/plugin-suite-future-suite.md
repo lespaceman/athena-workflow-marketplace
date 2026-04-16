@@ -1,14 +1,16 @@
 # Plugin Suite Future Suite
 
-This document defines the long-term testing-plugin catalog for the marketplace after the shared/framework split is complete.
+This document defines the broader testing-plugin catalog beyond the current core suite. The core
+end-state now includes the shared layers, intent layers, and Playwright/Robot execution plugins;
+this catalog records their boundaries and the later expansion families that may follow.
 
 See also:
 - [Plugin Suite Plan](plugin-suite-plan.md)
 - [Immediate Split Plan](plugin-suite-immediate-split.md)
 
-## Future Plugin Families
+## Plugin Family Catalog
 
-The future suite is organized by responsibility, not only by framework.
+The catalog is organized by responsibility, not only by framework.
 
 ### Tooling
 
@@ -71,18 +73,23 @@ Must not own:
 - framework-specific flake repair
 - live app exploration as its primary mode
 
-### Testing-intent plugins
+### Testing-intent plugins in the active core suite
 
 #### `exploratory-testing`
 
 Responsibility boundary:
-- intent-driven exploratory sessions
-- structured observation, risk discovery, and hypothesis-driven probing
+- exploratory charter definition — framing what to investigate and why
+- risk hypothesis formulation and prioritization
+- investigation focus guidance (where to probe deeper)
+
+Does NOT own:
+- live product exploration (owned by `explore-app` in `app-exploration`)
+- coverage planning (owned by `plan-test-coverage` in `test-analysis`)
+- test case generation (owned by `generate-test-cases` in `test-analysis`)
 
 Owns skills such as:
-- future exploratory session runners
-- risk-focused exploratory probes
-- observation summarization helpers
+- `exploratory-test-writer` — produces `e2e-plan/exploratory-charter.md` (optional, plugin-owned artifact)
+- future risk-focused exploratory probes
 
 Depends on:
 - `agent-web-interface`
@@ -99,9 +106,9 @@ Responsibility boundary:
 - optimizing for fast, high-signal validation
 
 Owns skills such as:
-- smoke-suite definition
-- smoke coverage review
-- candidate smoke selection
+- `define-smoke-scope` — produces `e2e-plan/smoke-charter.md` (optional, plugin-owned artifact)
+- future smoke coverage review helpers
+- future candidate smoke selection helpers
 
 Depends on:
 - `test-analysis`
@@ -118,9 +125,9 @@ Responsibility boundary:
 - selecting and maintaining rerunnable regression scope
 
 Owns skills such as:
-- regression-scope selection
-- regression-suite planning
-- regression gap review
+- `define-regression-scope` — produces `e2e-plan/regression-charter.md` (optional, plugin-owned artifact)
+- future regression gap review helpers
+- future rerun recommendation helpers
 
 Depends on:
 - `test-analysis`
@@ -256,7 +263,7 @@ Must not own:
 - generic framework authoring for Playwright/Robot/Cypress/Appium
 - shared planning/specification as a canonical home
 
-### Out of scope for this split
+### Out of scope for the current program
 
 These existing plugins remain outside this architecture change:
 
@@ -273,14 +280,14 @@ They can coexist with the suite, but they are not part of the testing-plugin spl
 | `agent-web-interface` | No | Tooling only | No | No | No |
 | `app-exploration` | No | Yes | No | No | No |
 | `test-analysis` | Yes | No, except evidence consumption | No | No | No |
-| `exploratory-testing` | Intent only | Yes | No | No | No |
+| `exploratory-testing` | Intent only | No, consumes evidence | No | No | No |
 | `smoke-testing` | Yes, smoke scope | No | No | No | No |
 | `regression-testing` | Yes, regression scope | No | No | No | No |
 | execution plugins | No, except framework feasibility feedback | Only when validating implementation assumptions | Yes | Yes | Yes |
 
 ## Dependency Rules
 
-The future suite follows these dependency rules.
+The full catalog follows these dependency rules.
 
 1. Tooling plugins provide control surfaces; they do not define test strategy.
 2. `app-exploration` depends on tooling when live interaction is required.
@@ -296,7 +303,7 @@ The future suite follows these dependency rules.
 
 ## Workflow Composition Rules
 
-Future workflows should be composed from layers instead of being owned by one large plugin.
+Workflows should be composed from layers instead of being owned by one large plugin.
 
 ### Standard composition model
 
@@ -332,9 +339,10 @@ Smoke validation workflow:
 - `smoke-testing`
 - one execution plugin when runnable assets are required
 
-## Candidate Future Workflows
+## Candidate Expansion Workflows
 
-These are candidate workflow families, not immediate implementation commitments.
+These are candidate workflow families beyond the current core suite, not immediate implementation
+commitments.
 
 - `playwright-automation` workflow family
   - shared analysis + Playwright execution

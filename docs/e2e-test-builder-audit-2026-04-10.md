@@ -1,4 +1,13 @@
-# E2E Test Builder Audit
+# Historical E2E Test Builder Audit
+
+> Historical note:
+> This document reflects the pre-split architecture from April 10, 2026, when
+> `e2e-test-builder` still existed as an installable plugin surface in this repository.
+> It is preserved for background only. The current source of truth for the split suite is
+> [docs/architecture/plugin-suite-plan.md](docs/architecture/plugin-suite-plan.md) and
+> [docs/architecture/plugin-suite-immediate-split.md](docs/architecture/plugin-suite-immediate-split.md).
+> References here to `plugins/e2e-test-builder/` are historical and no longer describe the
+> current repo layout.
 
 Date: 2026-04-10
 Scope: `plugins/e2e-test-builder/`, `workflows/e2e-test-builder/`, marketplace metadata, packaging/docs references

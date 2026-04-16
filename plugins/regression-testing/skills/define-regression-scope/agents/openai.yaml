@@ -1,0 +1,4 @@
+interface:
+  display_name: "Define Regression Scope"
+  short_description: "Define rerunnable regression scope across changed and high-risk areas"
+  default_prompt: "Define a regression-testing scope for this release: identify the areas that should be rerun based on change, risk, and criticality."

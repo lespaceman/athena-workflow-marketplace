@@ -39,6 +39,52 @@ Derive a short feature slug from the journey so the evidence is easy to referenc
 - Capture only grounded observations. If an outcome was inferred rather than observed, label it as
   an inference.
 
+#### Recon pass
+
+Before systematic touring, use the app with no agenda. Visit at minimum: the main user flow
+end-to-end, one settings/config page, and one error state (bad input, empty state, or a 404). The
+goal is intuition for what the app *is* before structured touring.
+
+#### Structured touring
+
+Look at the app through specific lenses. Pick tours based on complexity:
+
+**Simple apps** (one main flow, < 5 pages): Feature + Data + Error tours are sufficient.
+**Medium apps** (multiple features, user roles, settings): Add Interaction + Configuration tours.
+**Complex apps** (many integrations, money involved, multi-role): Do all six.
+
+The tours:
+
+- **Feature Tour** — enumerate every button, menu, page, setting. Inventory, not depth. Tells you
+  what features exist for downstream planning.
+- **Data Tour** — what data goes in? Where does it come from? Where does it go? What are the limits
+  (length, type, format)? This one catches the most bugs.
+- **Error/Interrupt Tour** — close the tab mid-save, lose network, paste unicode, enter `<script>`,
+  hit back button, refresh, log out from another session. Finds the bugs nobody wrote tests for.
+- **Interaction Tour** — when feature A changes data, does feature B reflect it correctly? Important
+  when features share state.
+- **Configuration Tour** — settings, toggles, permissions, roles. Each config option is a
+  test-matrix multiplier, so it matters to know what's configurable.
+- **Money Tour** — what does the business actually make money from? What's the "crown jewel" path?
+  This sets priorities.
+
+#### Exploration notes
+
+As you explore, maintain a running working document using this four-column format:
+
+| Observation | Question | Risk | Test Idea |
+|---|---|---|---|
+| Login accepts email only, no username | What about SSO? Is there a password reset? | Medium — password reset is often buggy | Test reset flow with valid/invalid/expired tokens |
+| Form has no character limit on "name" field | What's the DB column size? | High — could cause truncation or crash | Boundary test: 1 char, 255 chars, 1000 chars, emoji, RTL |
+
+Capture fast, don't polish. This table feeds directly into downstream coverage planning.
+
+#### Interview the user
+
+If the user is present, ask them questions as you explore: "What part of this scares you most?"
+"Who are the users?" "What's gone wrong before?" "What's the worst case if this breaks?" A
+2-minute exchange often saves an hour of guessing.
+
 Return browser findings in a structure like:
 
 ```text
@@ -108,6 +154,13 @@ If you cannot gather the evidence needed for safe planning:
 - record the exact blocker
 - tell downstream skills to stop instead of inventing behavior
 
+## Destructive actions
+
+When exploring, avoid actions that would damage real data: don't delete anything, don't send
+emails/messages to real contacts, don't submit payments. If the app is a production system (not a
+sandbox), pause and ask the user which actions are safe before touring the error/interrupt cases.
+The exploration is valuable, but not valuable enough to break the user's actual data.
+
 ## Quality Bar
 
 - Prefer semantic selector candidates such as role, accessible name, label, placeholder, or test id
@@ -115,3 +168,13 @@ If you cannot gather the evidence needed for safe planning:
 - Record exact validation or error copy only when it was directly observed.
 - Do not silently replace blocked exploration with assumptions.
 - Keep the report reusable by future planning and execution skills.
+- Cases reference specific things actually observed in the app (real field names, real error
+  messages, real API endpoints, real selectors).
+- The exploration summary is honest about what wasn't covered and what's still unknown.
+- Artifacts are written to the shared locations (`e2e-plan/`) so downstream skills can consume them.
+
+## What to avoid
+
+- Skipping exploration and hallucinating features that don't exist.
+- Burying the exploration notes so the user can't see what was or wasn't looked at.
+- Ignoring existing exploration artifacts and starting from zero.

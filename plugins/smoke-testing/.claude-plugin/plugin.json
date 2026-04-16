@@ -1,0 +1,16 @@
+{
+  "name": "smoke-testing",
+  "description": "Smoke testing scopes — define the minimum critical-path confidence checks before selecting runnable automation",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "testing",
+    "smoke-testing",
+    "qa",
+    "critical-path",
+    "scope"
+  ],
+  "category": "testing"
+}

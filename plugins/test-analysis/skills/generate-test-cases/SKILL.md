@@ -52,6 +52,20 @@ Observed controls:
 Observed result: <what actually happened>
 ```
 
+### Test-design techniques
+
+Apply standard techniques, choosing based on what each feature needs:
+
+- **Equivalence partitioning + boundary values** for inputs (0, -1, max, max+1, empty, very long,
+  unicode, `'`, `"`, `\`, emoji, RTL). Use on every input field found in the exploration report.
+- **Decision tables** for multi-condition features (e.g., "refund allowed if order < 30 days AND
+  item unused AND receipt uploaded").
+- **State transitions** for workflows (signup -> verify -> login -> 2FA -> logout). Map these from
+  the observed journey.
+- **Use cases / user journeys** for end-to-end flows per persona. These cross feature boundaries
+  and belong in their own "Integration / E2E" section.
+- **Negative testing** — explicitly cover what happens when things go wrong within each feature.
+
 ### Step 3: Expand To Alternative And Failure Paths
 
 Use the coverage plan to make sure you cover more than the happy path:
@@ -174,6 +188,9 @@ When generating specs that span multiple roles or test categories, recommend rol
 - Distinguish clearly between **observed** and **inferred** behavior
 - Priority must be **justified** — Critical = blocks core journey, High = significant, Medium = secondary, Low = cosmetic
 - Include at minimum one network/server failure scenario, one empty state scenario, and one session/auth edge case when those scenarios meaningfully apply to the feature. If a category is not applicable, say so explicitly in the spec rather than inventing coverage.
+- **Non-happy-path ratio:** Aim for at least 30% of cases within each feature to be non-happy-path.
+  Include: invalid inputs, permission errors, network failures, concurrent actions, session
+  timeouts, back-button/refresh mid-action, empty states, maximum limits, and interrupt cases.
 - **Test case count guidance:** Aim for 15-30 test cases per feature area as a baseline. Fewer than 10 suggests missing error paths or edge cases. More than 40 suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
 
 ## Blocking Conditions
@@ -183,6 +200,74 @@ Report and work around:
 - **CAPTCHA**: Report, skip, note in preconditions
 - **Payment gateways**: Don't enter real data, document flow up to that point
 - **Rate limiting**: Slow down, note rate limit behavior as a test case
+
+## Worked Example
+
+Here's a compressed example showing evidence-to-spec flow for a simple contact form:
+
+**Exploration evidence** (from `e2e-plan/exploration-report.md`):
+Visited the contact page. Found: name field (text, no visible limit), email field (validates format
+client-side), message textarea (maxlength=500 in HTML), submit button, success toast, no CAPTCHA.
+Network traffic shows POST to `/api/contact` returning 200 with `{"status":"queued"}`. Console
+clean. Tried empty submit -> client-side validation fires on email only, name and message submit
+empty.
+
+**Coverage plan** (from `e2e-plan/coverage-plan.md`):
+
+| Area | Impact | Likelihood | Priority |
+|------|--------|------------|----------|
+| Input validation (name, message) | Medium (junk submissions) | High (no validation observed) | P0 |
+| Email validation | High (spam vector) | Medium (client-only check) | P0 |
+| Input security (XSS) | High (security) | Medium | P0 |
+| Message length limits | Low (truncation) | Medium (server limit unknown) | P1 |
+| Rate limiting / abuse | Medium (abuse) | Unknown | P1 |
+
+**Generated test cases** (written to `test-cases/contact-form.md`):
+
+### Input Validation
+**TC-CONTACT-001** — Submit with empty name and message (P0)
+*Category:* Validation
+*Preconditions:* On contact page
+*Steps:* Clear all fields, enter valid email, click Submit
+*Expected:* Validation error; form should not submit. (Currently fails — this is a bug.)
+*Observed controls:* `input[name="name"]`, `input[name="email"]`, `textarea[name="message"]`,
+`button[type="submit"]`
+
+### Email Validation
+**TC-CONTACT-002** — Email validation bypass via direct API call (P0)
+*Category:* Security
+*Preconditions:* None
+*Steps:* POST to /api/contact with body `{"name":"test","email":"not-an-email","message":"hi"}`
+*Expected:* 400 error with validation message. If 200, server-side validation is missing.
+
+### Input Security
+**TC-CONTACT-003** — XSS in name field (P0)
+*Category:* Security
+*Preconditions:* On contact page
+*Steps:* Enter `<script>alert(1)</script>` in name, valid email, any message, submit
+*Expected:* Input sanitized or escaped; no script execution anywhere the name is displayed.
+
+Notice how every test traces to a specific observation and risk, and TC-IDs follow the
+`TC-<FEATURE>-<NNN>` convention.
+
+## What good looks like
+
+- Test cases are grouped by feature, with each group's size proportional to its risk.
+- Cases reference specific things actually observed in the app (real field names, real error
+  messages, real API endpoints, real selectors).
+- Priorities are tied to the risk map, not picked at random.
+- Non-happy-path and boundary cases are at least 30% of the suite within each feature.
+- Cross-feature E2E journeys are tested separately from individual features.
+- The user can read the top 5 tests and say "yes, those are the things that scare me too."
+
+## What to avoid
+
+- Generic cases like "TC-01: User can log in" with no reference to the actual login mechanism.
+- A flat list of cases with no feature grouping or structure.
+- All-happy-path, no negative cases.
+- No risk ranking, or ranking that doesn't correspond to anything observed.
+- Producing 50 tests for a simple form, or 5 tests for a complex multi-role app. Match the scale.
+- Ignoring existing exploration or coverage artifacts and starting from zero.
 
 ## Example Usage
 

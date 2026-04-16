@@ -1,0 +1,24 @@
+{
+  "name": "@athenaflow/plugin-smoke-testing",
+  "version": "0.1.0",
+  "description": "Smoke testing scopes — define the minimum critical-path confidence checks before selecting runnable automation",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/smoke-testing"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "skills/",
+    "dist/"
+  ],
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Define Smoke Scope"
+  short_description: "Define the minimum critical-path confidence scope"
+  default_prompt: "Define a smoke-testing scope for this product: identify the smallest set of critical-path checks that should never break."

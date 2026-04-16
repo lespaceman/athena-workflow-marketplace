@@ -9,6 +9,21 @@ allowed-tools: Read Write Glob Grep Task
 
 Plan what to test by consuming shared exploration evidence and existing coverage.
 
+## Calibrating planning depth
+
+Match the planning effort to what the user is asking for:
+
+- **"What tests do I need for X?"** — Light plan. Focus on the top 2-3 risk areas, produce 8-15
+  TC-IDs across P0 and P1 only. Skip P2 and optional categories.
+- **"Design test coverage for X"** — Standard plan. Cover all relevant risk areas, produce 20-40
+  TC-IDs with full P0/P1/P2 prioritization. Include accessibility and visual sections only when
+  the project has explicit requirements for them.
+- **"Comprehensive coverage for X"** — Deep plan. Cover every applicable category, produce 40+
+  TC-IDs with full prioritization, cross-feature coverage, and explicit gap analysis.
+
+When in doubt, start standard and ask: "I've drafted a coverage plan — want me to go deeper on any
+area, or is this level right?"
+
 ## Workflow
 
 1. **Parse input** — extract the target URL and feature area from: $ARGUMENTS
