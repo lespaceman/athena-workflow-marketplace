@@ -1,83 +1,136 @@
 ---
 name: define-regression-scope
 description: >
-  Use when the user wants to define rerunnable regression confidence across changed, fragile, or
-  business-critical areas. Triggers include "regression scope for...", "what should be in
-  regression", "what do we need to rerun before release", "changed-area test scope", or "high-risk
-  regression plan". This skill owns regression intent and scope definition; it does NOT own
-  exploration evidence, shared coverage planning, detailed TC-ID specs, or framework-specific
-  automation.
+  Use when Codex needs to define impact-based regression scope for a release, hotfix, changed area,
+  or risky feature: decide what should be rerun beyond smoke, why it belongs in regression, and how
+  deep each area should go. Triggers include "regression scope for...", "what should we rerun after
+  this change", "what belongs in release regression", "impact-based rerun plan", "high-risk
+  regression plan", "what's beyond smoke", or "pre-release regression checklist". This skill owns
+  regression intent, included areas, and rerun depth; it does NOT own live exploration, shared
+  coverage planning, detailed TC-ID specs, or framework-specific automation.
 ---
 
 # Define Regression Scope
 
-## What this skill is for
+Define a practical rerunnable regression charter from change, risk, and business criticality.
 
-Regression testing is about choosing the broader set of checks that should be rerun because change
-or risk makes them worth the time. This skill defines that scope and explains why each area
-belongs in it.
+Regression is broader than smoke. Use this skill to answer: "What do we need to rerun now, and how
+deep should each area go?" Prefer a justified rerun list over a blanket "run everything" answer.
 
-It produces a **regression charter** that ties changed areas, historical fragility, and business
-criticality into a practical rerun scope.
+## Calibrate scope depth
 
-**This skill does NOT:**
-- Explore live apps (use `explore-app` from app-exploration)
-- Write coverage plans (use `plan-test-coverage` from test-analysis)
-- Generate test case specs (use `generate-test-cases` from test-analysis)
-- Write Playwright or Robot code
-- Orchestrate the full cross-plugin workflow (workflow sequencing lives in `workflow.md`)
+Match the output to the ask:
+
+- **"What should we rerun after X?"** — Produce a light charter. Focus on changed areas plus the
+  highest-risk adjacent fallout.
+- **"Define regression scope for this release"** — Produce a standard charter. Include the
+  always-rerun baseline plus change-triggered additions.
+- **"Comprehensive pre-release regression"** — Produce a deep charter. Expand shared dependencies,
+  integration points, and historically fragile flows, but still justify every area.
+
+If the user wants the smallest release gate, switch to `define-smoke-scope` instead of shrinking
+regression until it becomes smoke.
+
+## Boundaries
+
+This skill does:
+
+- define rerunnable regression areas
+- explain why each area is included
+- recommend rerun depth
+- identify evidence gaps and downstream targets
+
+This skill does not:
+
+- explore live apps (use `explore-app` from app-exploration)
+- write coverage plans (use `plan-test-coverage` from test-analysis)
+- generate test case specs (use `generate-test-cases` from test-analysis)
+- write Playwright or Robot code
+- orchestrate the full cross-plugin workflow (workflow sequencing lives in `workflow.md`)
 
 ## Integration with shared artifacts
 
-This skill **consumes**:
+This skill consumes:
+
 - `e2e-plan/exploration-report.md` when available
 - `e2e-plan/coverage-plan.md` when available
 - existing `test-cases/*.md` specs when available
 - existing automated coverage and repo evidence about changed areas
 
-This skill **produces**:
+This skill produces:
+
 - `e2e-plan/regression-charter.md` — an optional plugin-owned artifact. It is not part of the core
   shared artifact contract.
 
 ## Workflow
 
-### 1. Build the risk picture
+### 1. Load the evidence base
 
 - Read the exploration report, coverage plan, and existing test specs first.
-- Search the codebase for changed modules, routes, shared dependencies, and existing automated
-  coverage.
+- Search the codebase for changed modules, routes, shared dependencies, feature flags,
+  integrations, and existing automated coverage.
 - Note fragile or recently changed areas surfaced by the user, repo history, or code structure.
-- If critical product evidence is missing, recommend `explore-app` before locking scope.
+- Mark which signals are observed versus inferred.
 
-### 2. Group the candidates
+### Evidence sufficiency rule
 
-Organize regression candidates into buckets such as:
+- Treat repo diffs, old specs, and existing automation as change signals and supporting context, not
+  as proof of current live behavior.
+- If rerun depth depends on current validation behavior, redirects, auth walls, conditional UI,
+  cross-feature interaction, or end-to-end path shape, require fresh or clearly relevant
+  `explore-app` evidence.
+- If `e2e-plan/exploration-report.md` is missing, stale, or incomplete for an included area, do one
+  of two things only:
+  - run `explore-app` to close the gap, or
+  - publish a clearly labeled preliminary regression charter with explicit evidence gaps
+- Do not present a high-confidence final charter when key included areas still rely on inference.
+
+### 2. Build candidate buckets
+
+Organize candidates into buckets such as:
 
 - changed features
-- adjacent/shared dependency features
-- historically fragile flows
-- business-critical paths
+- adjacent or shared dependency features
+- business-critical baseline flows
+- historically fragile or recently repaired flows
 - cross-feature integration points
+- role-specific or configuration-specific paths touched by the change
 
-Not every bucket needs equal depth. The point is to justify why a flow is being rerun.
+Not every bucket needs equal depth. The point is to justify why a flow is worth rerunning.
 
-### 3. Classify each area
+### 3. Decide inclusion and rerun depth
 
-For every area, capture:
+Capture each candidate in a working table:
 
 | Area | Why rerun it | Evidence basis | Suggested depth | Include? |
 |---|---|---|---|---|
-| Checkout totals | Shared pricing helper changed | Repo diff + existing coverage | Full end-to-end + edge validation | Yes |
+| Checkout totals | Shared pricing helper changed | Repo diff + existing coverage | Deep rerun | Yes |
 
-Suggested depth can be: smoke-only, standard rerun, or deep rerun.
+Use these depth labels:
 
-### 4. Keep the scope practical
+- `smoke-only` — a narrow sanity check is enough because the blast radius is small
+- `standard rerun` — rerun the full happy path plus common validation or error handling
+- `deep rerun` — cover multiple states, roles, or edge conditions because risk is high
 
-Regression is broader than smoke, but it still needs discipline. Explicitly call out:
+Promote depth when one or more of these are true:
 
-- what must be rerun on every release
-- what is only needed because of the current change or risk
+- a shared dependency or cross-cutting helper changed
+- the area is revenue-critical, trust-critical, or release-blocking
+- the area has recent incidents, flaky coverage, or weak existing automation
+- the change touches multi-step integration behavior
+
+Reduce depth only when the change is clearly isolated, the blast radius is low, and existing
+coverage is strong enough to justify a narrower rerun.
+
+### 4. Separate baseline from change-triggered scope
+
+Explicitly distinguish:
+
+- what should rerun on every release as the baseline regression layer
+- what is added only because of the current change or risk profile
 - what remains out of scope for this cycle
+
+If everything lands in one bucket, the charter is usually too vague to be actionable.
 
 ### 5. Write the charter
 
@@ -88,6 +141,7 @@ Write `e2e-plan/regression-charter.md`:
 
 **Date:** <date>
 **Evidence basis:** exploration-report | coverage-plan | existing-specs | repo-change-analysis | mixed
+**Status:** FINAL | PRELIMINARY
 
 ## Change / Risk Summary
 
@@ -95,9 +149,10 @@ Write `e2e-plan/regression-charter.md`:
 
 ## Included Regression Areas
 
-| # | Area | Why Included | Evidence Basis | Suggested Depth | Suggested Downstream Target |
-|---|------|--------------|----------------|-----------------|-----------------------------|
-| 1 | ... | ... | ... | ... | Playwright / Robot / manual |
+| # | Scope Lane | Area | Why Included | Evidence Basis | Suggested Depth | Suggested Downstream Target |
+|---|------------|------|--------------|----------------|-----------------|-----------------------------|
+| 1 | Always rerun | Login/session establishment | Core release confidence | Exploration report + existing automation | Standard rerun | Playwright / Robot / manual |
+| 2 | Change-triggered | Checkout totals | Shared pricing helper changed | Repo diff + coverage plan | Deep rerun | Playwright / Robot / manual |
 
 ## Out Of Scope This Cycle
 
@@ -111,19 +166,25 @@ Write `e2e-plan/regression-charter.md`:
 
 - Run `explore-app` if evidence gaps block confident prioritization
 - Run `plan-test-coverage` if shared prioritization still needs to be updated
+- Expand or refresh `test-cases/*.md` if deeper shared specs are still missing
 - Hand the included regression areas to the execution workflow if runnable automation is requested
 ```
 
 ## Quality bar
 
-- Every included area has a concrete reason tied to change, fragility, or business impact.
-- The scope distinguishes always-rerun checks from change-triggered checks.
+- Every included area has a concrete reason tied to change, fragility, business impact, or
+  baseline release confidence.
+- The charter separates always-rerun baseline checks from current-change additions.
 - Depth recommendations are proportional to risk.
 - The charter is practical enough that a team could actually execute it.
+- The charter does not treat repo change analysis as proof that the current live flow behaves the
+  same way.
 
 ## What to avoid
 
 - Treating regression as "run everything."
 - Pulling in low-signal areas without a reason.
+- Collapsing regression and smoke into the same artifact.
 - Writing framework-specific automation here.
 - Claiming ownership of `coverage-plan.md` or `test-cases/*.md`.
+- Presenting inferred rerun depth as confirmed when live evidence is still missing.
