@@ -20,7 +20,7 @@
     },
     {
       "ref": "app-exploration@lespaceman/athena-workflow-marketplace",
-      "version": "0.1.0"
+      "version": "0.1.1"
     },
     {
       "ref": "test-analysis@lespaceman/athena-workflow-marketplace",
