@@ -125,9 +125,7 @@ This skill only reads and reports on the codebase. For related tasks, use the ap
 ## Example Usage
 
 ```
-Claude Code: /analyze-test-codebase
-Codex: $analyze-test-codebase
+/analyze-test-codebase
 
-Claude Code: /analyze-test-codebase ./my-app
-Codex: $analyze-test-codebase ./my-app
+/analyze-test-codebase ./my-app
 ```

@@ -31,7 +31,7 @@ Parse the target URL and exploration goal from: $ARGUMENTS
    - Use `get_element` for a chosen target, offsets, or selector extraction
 4. **Act one step at a time** — click, type, select, scroll, or drag only as needed to advance the task
 5. **Reacquire state after meaningful changes** — after navigation, overlays, search expansion, dialog opening, or large DOM updates, refresh your understanding before reusing old `eid`s
-6. **Inspect forms or extract selectors only when relevant** — do this when the user asks for them or when they materially help complete the task
+6. **Inspect forms or extract selectors only when relevant** — do this when asked for them or when they materially help complete the task
 7. **Report** what you did, what happened, and any selectors or form details that matter
 
 ## Output Format
@@ -286,15 +286,11 @@ When this happens:
 ## Example Usage
 
 ```
-Claude Code: /agent-web-interface-guide https://airbnb.com Walk through the search and booking flow for stays in Tokyo
-Codex: $agent-web-interface-guide https://airbnb.com Walk through the search and booking flow for stays in Tokyo
+/agent-web-interface-guide https://airbnb.com Walk through the search and booking flow for stays in Tokyo
 
-Claude Code: /agent-web-interface-guide https://apple.com/store Configure an iPhone and add it to the bag, then summarize the steps
-Codex: $agent-web-interface-guide https://apple.com/store Configure an iPhone and add it to the bag, then summarize the steps
+/agent-web-interface-guide https://apple.com/store Configure an iPhone and add it to the bag, then summarize the steps
 
-Claude Code: /agent-web-interface-guide https://developer.mozilla.org Find the Fetch API docs and note how the search flow behaves
-Codex: $agent-web-interface-guide https://developer.mozilla.org Find the Fetch API docs and note how the search flow behaves
+/agent-web-interface-guide https://developer.mozilla.org Find the Fetch API docs and note how the search flow behaves
 
-Claude Code: /agent-web-interface-guide https://example.com/login Extract the login form selectors and field purposes
-Codex: $agent-web-interface-guide https://example.com/login Extract the login form selectors and field purposes
+/agent-web-interface-guide https://example.com/login Extract the login form selectors and field purposes
 ```

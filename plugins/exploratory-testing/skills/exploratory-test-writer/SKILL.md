@@ -1,11 +1,11 @@
 ---
 name: exploratory-test-writer
 description: >
-  Use when the user wants to define an exploratory testing charter — framing what to investigate,
-  why, and what risk hypotheses to test — before or alongside the shared testing workflow. Triggers
-  include "exploratory testing for...", "what should I investigate in this app", "help me think
-  about what could go wrong", "risk hypotheses for...", "testing charter for...", "where should I
-  probe deeper", or any request that needs structured thinking about test intent before coverage
+  Define an exploratory testing charter: frame what to investigate, why it matters, and which risk
+  hypotheses to test before or alongside the shared testing workflow. Triggers include
+  "exploratory testing for...", "what should I investigate in this app", "help me think about what
+  could go wrong", "risk hypotheses for...", "testing charter for...", "where should I probe
+  deeper", or any request that needs structured thinking about test intent before coverage
   planning begins. This skill owns exploratory intent, risk framing, investigation order, and
   concrete follow-up asks for missing evidence; it does NOT own exploration evidence
   (explore-app), final coverage prioritization (plan-test-coverage), or test case specs
@@ -57,7 +57,8 @@ Match your effort to the ask:
 - **"What should I look at in X?"** — Quick charter. Identify the top 3-5 risk areas, frame one
   hypothesis per area. 10-minute exercise.
 - **"Exploratory testing plan for X"** — Standard charter. Map risk areas systematically, frame
-  hypotheses with rationale, identify where deeper exploration is needed. Interview the user.
+  hypotheses with rationale, identify where deeper exploration is needed. Ask targeted questions
+  when context is missing.
 - **"Comprehensive risk analysis for X"** — Deep charter. Full risk inventory, integration-point
   analysis, persona-based risk framing, explicit assumptions and unknowns.
 
@@ -73,9 +74,9 @@ area?"
 - Read `e2e-plan/coverage-plan.md` and `test-cases/*.md` if they exist, so you don't duplicate
   existing coverage thinking.
 - Search the codebase for feature keywords, route names, and existing test files.
-- If no exploration report exists and the user hasn't provided product context, note this as a gap
-  and recommend running `explore-app` first. You can still produce a preliminary charter from what
-  the user tells you, but label ungrounded hypotheses clearly.
+- If no exploration report exists and product context is still missing, note this as a gap and
+  recommend running `explore-app` first. You can still produce a preliminary charter from the
+  available request context, but label ungrounded hypotheses clearly.
 - If grounded product behavior is required for confident prioritization, stop and request
   `explore-app` before presenting a high-confidence charter.
 
@@ -91,12 +92,12 @@ area?"
   - produce a clearly labeled preliminary charter with explicit evidence gaps
 - Do not present a high-confidence charter when those gaps remain open.
 
-### 2. Interview the user
+### 2. Gather missing context
 
 Ask questions to understand test intent:
 
 - "What part of this scares you most?"
-- "Who are the users, and what's their most critical path?"
+- "Which personas matter most, and what's the most critical path for each?"
 - "What's gone wrong before?"
 - "What's the worst case if this breaks?"
 - "Are there areas you know are fragile or recently changed?"
@@ -188,8 +189,8 @@ Write `e2e-plan/exploratory-charter.md`:
 
 ### 6. Present and iterate
 
-Share the charter with the user. The charter is a conversation artifact — it's meant to be
-reviewed, questioned, and refined before downstream skills consume it.
+Share the charter for review. The charter is a conversation artifact — it's meant to be reviewed,
+questioned, and refined before downstream skills consume it.
 
 ## Quality bar
 

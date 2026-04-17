@@ -15,4 +15,4 @@ This skill is a thin router. Use it together with `agent-web-interface-guide` fo
 2. Read [references/airbnb.md](references/airbnb.md) for Airbnb search, listing, filter, and modal heuristics.
 3. Treat all selectors in the reference as patterns, not guarantees. Derive the current `eid` and live selector from the page with `find`, `get_form`, and `get_element`.
 4. Re-check page state after search, filter changes, or modal dismissal because Airbnb frequently re-renders key controls.
-5. Before any booking or sign-in step, confirm dates, guest counts, listing identity, and total price with the user.
+5. Before any booking or sign-in step, confirm dates, guest counts, listing identity, and total price.

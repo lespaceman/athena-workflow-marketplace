@@ -112,7 +112,7 @@ Scan and analyze an existing Robot Framework test codebase to understand its con
 - Auth: reuse existing persisted state setup
 ```
 
-7. **Emit `e2e-plan/conventions.yaml`** — in addition to the human-readable report, produce a strict, versioned conventions artifact for downstream skills to read. Validate it against `plugins/robot-automation/schemas/conventions.schema.json`. If no Robot project is present, stop and note that analysis could not infer conventions from history; only suggest the optional external scaffold repository if the user wants a greenfield bootstrap.
+7. **Emit `e2e-plan/conventions.yaml`** — in addition to the human-readable report, produce a strict, versioned conventions artifact for downstream skills to read. Validate it against `plugins/robot-automation/schemas/conventions.schema.json`. If no Robot project is present, stop and note that analysis could not infer conventions from history; only suggest the optional external scaffold repository if a greenfield bootstrap is requested.
 
 ## Out of Scope
 
@@ -128,9 +128,7 @@ This skill only reads and reports on the codebase. For related tasks, use the ap
 ## Example Usage
 
 ```
-Claude Code: /analyze-test-codebase
-Codex: $analyze-test-codebase
+/analyze-test-codebase
 
-Claude Code: /analyze-test-codebase ./my-app
-Codex: $analyze-test-codebase ./my-app
+/analyze-test-codebase ./my-app
 ```

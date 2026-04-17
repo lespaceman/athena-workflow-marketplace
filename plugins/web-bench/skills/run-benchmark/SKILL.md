@@ -1,7 +1,7 @@
 ---
 name: run-benchmark
 description: >
-  Run the WebBench browser agent benchmark — main entry point and orchestrator. Triggers: "run benchmark", "run WebBench", "start benchmark", "benchmark browser agent", "web bench", "execute WebBench", "run web-bench". Parses user configuration (category filter, sample size, resume), delegates to load-dataset, execute-task, evaluate-task, and generate-report skills. This is the user-invocable orchestrator that ties the full benchmark pipeline together.
+  Run the WebBench browser agent benchmark — main entry point and orchestrator. Triggers: "run benchmark", "run WebBench", "start benchmark", "benchmark browser agent", "web bench", "execute WebBench", "run web-bench". Parses the requested configuration (category filter, sample size, resume), delegates to load-dataset, execute-task, evaluate-task, and generate-report skills. This is the interactive orchestrator that ties the full benchmark pipeline together.
 allowed-tools: Read Write Edit Glob Grep Bash Task
 ---
 

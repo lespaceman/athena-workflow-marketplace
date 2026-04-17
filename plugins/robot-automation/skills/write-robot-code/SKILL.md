@@ -16,7 +16,7 @@ Parse the test description or spec file path from: $ARGUMENTS
 ## Workflow
 
 ### 1. Understand the Request
-- Identify the user journey to test and success criteria
+- Identify the target journey to test and success criteria
 - Identify preconditions (auth, seeded data, feature flags, env)
 - If a test case spec file path is provided, read it for TC-IDs and expected behaviors
 
@@ -74,7 +74,7 @@ Return:
 ## Operating Principles
 
 ### Test User Outcomes
-Assert what the user sees: visible text, URL changes, enabled or disabled states, presence or absence, counts, and successful backend-driven state changes. Do not assert CSS classes or component internals.
+Assert what appears on the page: visible text, URL changes, enabled or disabled states, presence or absence, counts, and successful backend-driven state changes. Do not assert CSS classes or component internals.
 
 ### No `Sleep`
 Avoid `Sleep` except as a temporary debug aid that is removed before completion.

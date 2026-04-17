@@ -1,7 +1,10 @@
 ---
 name: generate-test-cases
 description: >
-  Use when the user wants detailed TC-ID test case specifications for a web app feature, not executable code. This shared skill consumes `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and existing coverage artifacts to write structured specs under `test-cases/`. Use it after coverage planning or when the user explicitly asks for test cases or TC-IDs. It does not write framework-specific test code.
+  Use to write detailed TC-ID test case specifications for a web app feature, not executable code.
+  This shared skill consumes `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and
+  existing coverage artifacts to write structured specs under `test-cases/`. Use it after coverage
+  planning or when asked for test cases or TC-IDs. It does not write framework-specific test code.
 allowed-tools: Read Write Bash Glob Grep Task
 ---
 
@@ -272,9 +275,7 @@ Notice how every test traces to a specific observation and risk, and TC-IDs foll
 ## Example Usage
 
 ```
-Claude Code: /generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
-Codex: $generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
+/generate-test-cases https://example.com/login User logs in with email and password, sees dashboard
 
-Claude Code: /generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
-Codex: $generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
+/generate-test-cases https://shop.example.com User searches for product, adds to cart, proceeds to checkout
 ```

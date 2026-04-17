@@ -1,7 +1,14 @@
 ---
 name: add-robot-tests
 description: >
-  THE DEFAULT ENTRY POINT for the Robot Framework execution layer in the split testing suite. Use this skill whenever Codex needs to add, create, or set up Robot Framework end-to-end tests for a feature, page, or application. It orchestrates the Robot-specific workflow after shared exploration and planning: analyze the `.robot` codebase, consume `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and `test-cases/*.md`, write production-grade `.robot` suites, review them, and verify them with real execution. Delegates to `analyze-test-codebase`, `write-robot-code`, `review-test-code`, and `fix-flaky-tests`, while relying on shared `explore-app`, `plan-test-coverage`, `generate-test-cases`, and `review-test-cases`.
+  THE DEFAULT ENTRY POINT for the Robot Framework execution layer in the split testing suite. Use
+  to add, create, or set up Robot Framework end-to-end tests for a feature, page, or application.
+  It orchestrates the Robot-specific workflow after shared exploration and planning: analyze the
+  `.robot` codebase, consume `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and
+  `test-cases/*.md`, write production-grade `.robot` suites, review them, and verify them with
+  real execution. Delegates to `analyze-test-codebase`, `write-robot-code`, `review-test-code`,
+  and `fix-flaky-tests`, while relying on shared `explore-app`, `plan-test-coverage`,
+  `generate-test-cases`, and `review-test-cases`.
 allowed-tools: Read Write Edit Glob Grep Bash Task
 ---
 
@@ -32,8 +39,8 @@ constraints.
   setup.
 - Are there existing suites, shared resources, auth helpers, or tag conventions to reuse?
 - Load `analyze-test-codebase` and follow its workflow.
-- If no Robot project exists at all, only suggest the optional external scaffold repository when
-  the user wants a greenfield bootstrap.
+- If no Robot project exists at all, only suggest the optional external scaffold repository when a
+  greenfield bootstrap is requested.
 
 ### Understand the product through shared evidence
 
@@ -73,8 +80,8 @@ If any required artifact is missing:
 3. Run `generate-test-cases` to produce TC-ID specs
 4. Run `review-test-cases` and stop if the verdict is `NEEDS REVISION`
 
-Do not jump straight to `write-robot-code` from a user request when the shared artifacts are still
-missing.
+Do not jump straight to `write-robot-code` from a direct request when the shared artifacts are
+still missing.
 
 ## 3. Plan
 
@@ -135,9 +142,9 @@ robot -d results tests/<feature>.robot 2>&1
 
 If Robot Framework + Browser library is not set up in the target project, you have two paths:
 
-- If the user wants an all-at-once bootstrap, clone the optional external scaffold repository and
-  use it to create the starting Robot project.
-- If the user already has a Robot codebase, or wants changes made directly in an existing
+- If an all-at-once bootstrap is requested, clone the optional external scaffold repository and use
+  it to create the starting Robot project.
+- If a Robot codebase already exists, or changes should be made directly in an existing
   repository, do not scaffold. Use the shipped skills to analyze the current setup and write the
   best possible `.robot` automation in place.
 
@@ -157,6 +164,5 @@ Never hardcode credentials.
 ## Example Usage
 
 ```text
-Claude Code: /add-robot-tests https://myapp.com/checkout Checkout flow with cart, shipping, and payment
-Codex: $add-robot-tests https://myapp.com/checkout Checkout flow with cart, shipping, and payment
+/add-robot-tests https://myapp.com/checkout Checkout flow with cart, shipping, and payment
 ```

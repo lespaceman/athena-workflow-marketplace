@@ -16,7 +16,7 @@ Parse the test description or spec file path from: $ARGUMENTS
 ## Workflow
 
 ### 1. Understand the Request
-- Identify the user journey to test and success criteria
+- Identify the target journey to test and success criteria
 - Identify preconditions (auth, seeded data, feature flags, env)
 - If a test case spec file path is provided, read it for TC-IDs and expected behaviors
 
@@ -63,7 +63,7 @@ Return:
 ## Operating Principles (Non-Negotiable)
 
 ### Test User Outcomes
-Assert what the user sees — visible text, URL changes, enabled/disabled states — not internal state, CSS classes, or component hierarchy.
+Assert what appears on the page — visible text, URL changes, enabled/disabled states — not internal state, CSS classes, or component hierarchy.
 
 ### No Arbitrary Sleeps
 Avoid `page.waitForTimeout()` except as a last-resort debug aid — remove before finishing.

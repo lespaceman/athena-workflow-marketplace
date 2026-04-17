@@ -83,11 +83,12 @@ As you explore, maintain a running working document using this four-column forma
 Capture fast, don't polish. This table preserves factual loose ends for downstream chartering and
 planning.
 
-#### Interview the user
+#### Clarify scope when needed
 
-If the user is present, ask clarifying questions that improve factual exploration: "Which
-environment is safe to explore?" "Are there seeded accounts, roles, or data states I should use?"
-"Which paths are in scope for this session?" A 2-minute exchange often saves an hour of guessing.
+If additional context can be requested, ask clarifying questions that improve factual exploration:
+"Which environment is safe to explore?" "Are there seeded accounts, roles, or data states I
+should use?" "Which paths are in scope for this session?" A 2-minute exchange often saves an hour
+of guessing.
 
 Return browser findings in a structure like:
 
@@ -163,8 +164,8 @@ If you cannot gather the evidence needed for safe planning:
 
 When exploring, avoid actions that would damage real data: don't delete anything, don't send
 emails/messages to real contacts, don't submit payments. If the app is a production system (not a
-sandbox), pause and ask the user which actions are safe before touring the error/interrupt cases.
-The exploration is valuable, but not valuable enough to break the user's actual data.
+sandbox), pause and ask which actions are safe before touring the error/interrupt cases. The
+exploration is valuable, but not valuable enough to break live data.
 
 ## Quality Bar
 
@@ -183,6 +184,6 @@ The exploration is valuable, but not valuable enough to break the user's actual 
 ## What to avoid
 
 - Skipping exploration and hallucinating features that don't exist.
-- Burying the exploration notes so the user can't see what was or wasn't looked at.
+- Burying the exploration notes so it is unclear what was or wasn't looked at.
 - Ignoring existing exploration artifacts and starting from zero.
 - Turning raw observations into a prioritized test charter or coverage plan inside this skill.

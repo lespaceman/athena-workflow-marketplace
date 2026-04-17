@@ -172,9 +172,7 @@ Output a structured review with this format:
 ## Example Usage
 
 ```
-Claude Code: /review-test-code tests/e2e/login.spec.ts
-Codex: $review-test-code tests/e2e/login.spec.ts
+/review-test-code tests/e2e/login.spec.ts
 
-Claude Code: /review-test-code tests/e2e/
-Codex: $review-test-code tests/e2e/
+/review-test-code tests/e2e/
 ```

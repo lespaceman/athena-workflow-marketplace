@@ -15,7 +15,7 @@ real product behavior is required.
 
 ## Calibrating planning depth
 
-Match the planning effort to what the user is asking for:
+Match the planning effort to the request:
 
 - **"What tests do I need for X?"** — Light plan. Focus on the top 2-3 risk areas, produce 8-15
   TC-IDs across P0 and P1 only. Skip P2 and optional categories.
@@ -167,9 +167,7 @@ area, or is this level right?"
 ## Example Usage
 
 ```
-Claude Code: /plan-test-coverage https://myapp.com/checkout Checkout flow
-Codex: $plan-test-coverage https://myapp.com/checkout Checkout flow
+/plan-test-coverage https://myapp.com/checkout Checkout flow
 
-Claude Code: /plan-test-coverage https://myapp.com/login Authentication
-Codex: $plan-test-coverage https://myapp.com/login Authentication
+/plan-test-coverage https://myapp.com/login Authentication
 ```

@@ -101,7 +101,7 @@ Use the right fix pattern for the diagnosed root cause. **Never apply a fix with
    npx playwright test --reporter=list 2>&1
    ```
 3. If still flaky → return to Step 2 with the new failure output. The initial classification may have been wrong.
-4. **Maximum 3 fix-and-rerun cycles.** If the test is still flaky after 3 attempts, stop and report the diagnostic findings (root cause hypothesis, fixes attempted, remaining failure output) so the user can decide next steps. Do not continue looping.
+4. **Maximum 3 fix-and-rerun cycles.** If the test is still flaky after 3 attempts, stop and report the diagnostic findings (root cause hypothesis, fixes attempted, remaining failure output) so the next step can be chosen explicitly. Do not continue looping.
 
 ### Step 5: Summarize
 

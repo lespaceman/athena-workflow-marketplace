@@ -1,7 +1,14 @@
 ---
 name: add-playwright-tests
 description: >
-  THE DEFAULT ENTRY POINT for the Playwright execution layer in the split testing suite. Use this skill whenever Codex needs to add, create, or set up Playwright end-to-end tests for a feature, page, or application. It orchestrates the full Playwright workflow after shared exploration and planning: analyze the Playwright codebase, consume `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and `test-cases/*.md`, write production-grade test code, review it, and verify it with real execution. Delegates to `analyze-test-codebase`, `write-test-code`, `review-test-code`, and `fix-flaky-tests`, while relying on shared `explore-app`, `plan-test-coverage`, `generate-test-cases`, and `review-test-cases`.
+  THE DEFAULT ENTRY POINT for the Playwright execution layer in the split testing suite. Use to
+  add, create, or set up Playwright end-to-end tests for a feature, page, or application. It
+  orchestrates the full Playwright workflow after shared exploration and planning: analyze the
+  Playwright codebase, consume `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and
+  `test-cases/*.md`, write production-grade test code, review it, and verify it with real
+  execution. Delegates to `analyze-test-codebase`, `write-test-code`, `review-test-code`, and
+  `fix-flaky-tests`, while relying on shared `explore-app`, `plan-test-coverage`,
+  `generate-test-cases`, and `review-test-cases`.
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
@@ -69,7 +76,7 @@ If any required artifact is missing:
 3. Run `generate-test-cases` to produce TC-ID specs
 4. Run `review-test-cases` and stop if the verdict is `NEEDS REVISION`
 
-Do not jump straight to `write-test-code` from a user request when the shared artifacts are still
+Do not jump straight to `write-test-code` from a direct request when the shared artifacts are still
 missing.
 
 ## 3. Implement The Playwright Layer
@@ -128,6 +135,5 @@ Never hardcode credentials.
 ## Example Usage
 
 ```text
-Claude Code: /add-playwright-tests https://myapp.com/checkout Checkout flow with cart, shipping, and payment
-Codex: $add-playwright-tests https://myapp.com/checkout Checkout flow with cart, shipping, and payment
+/add-playwright-tests https://myapp.com/checkout Checkout flow with cart, shipping, and payment
 ```

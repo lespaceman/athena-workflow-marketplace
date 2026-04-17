@@ -135,9 +135,7 @@ Example: 0 blockers + 2 warnings = PASS. 0 blockers + 3 warnings = PASS WITH WAR
 ## Example Usage
 
 ```
-Claude Code: /review-test-cases test-cases/login.md
-Codex: $review-test-cases test-cases/login.md
+/review-test-cases test-cases/login.md
 
-Claude Code: /review-test-cases test-cases/checkout.md
-Codex: $review-test-cases test-cases/checkout.md
+/review-test-cases test-cases/checkout.md
 ```

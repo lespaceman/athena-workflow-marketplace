@@ -15,4 +15,4 @@ This skill is a thin router. Use it together with `agent-web-interface-guide` fo
 2. Read [references/apple-store.md](references/apple-store.md) for Apple Store navigation, flow order, and bag heuristics.
 3. Treat selectors in the reference as patterns, not guarantees. Derive the current `eid` and best live selector from the page with `find`, `get_form`, and `get_element`.
 4. Re-check the page after each configuration step because Apple often enables downstream options only after prerequisites are selected.
-5. Before any checkout or order placement step, confirm the final configuration and total with the user.
+5. Before any checkout or order placement step, confirm the final configuration and total.

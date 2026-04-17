@@ -1,9 +1,9 @@
 ---
 name: define-regression-scope
 description: >
-  Use when Codex needs to define impact-based regression scope for a release, hotfix, changed area,
-  or risky feature: decide what should be rerun beyond smoke, why it belongs in regression, and how
-  deep each area should go. Triggers include "regression scope for...", "what should we rerun after
+  Use to define impact-based regression scope for a release, hotfix, changed area, or risky
+  feature: decide what should be rerun beyond smoke, why it belongs in regression, and how deep
+  each area should go. Triggers include "regression scope for...", "what should we rerun after
   this change", "what belongs in release regression", "impact-based rerun plan", "high-risk
   regression plan", "what's beyond smoke", or "pre-release regression checklist". This skill owns
   regression intent, included areas, and rerun depth; it does NOT own live exploration, shared
@@ -28,8 +28,8 @@ Match the output to the ask:
 - **"Comprehensive pre-release regression"** — Produce a deep charter. Expand shared dependencies,
   integration points, and historically fragile flows, but still justify every area.
 
-If the user wants the smallest release gate, switch to `define-smoke-scope` instead of shrinking
-regression until it becomes smoke.
+If the request is for the smallest release gate, switch to `define-smoke-scope` instead of
+shrinking regression until it becomes smoke.
 
 ## Boundaries
 
@@ -69,7 +69,7 @@ This skill produces:
 - Read the exploration report, coverage plan, and existing test specs first.
 - Search the codebase for changed modules, routes, shared dependencies, feature flags,
   integrations, and existing automated coverage.
-- Note fragile or recently changed areas surfaced by the user, repo history, or code structure.
+- Note fragile or recently changed areas surfaced in the request, repo history, or code structure.
 - Mark which signals are observed versus inferred.
 
 ### Evidence sufficiency rule

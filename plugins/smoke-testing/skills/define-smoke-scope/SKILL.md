@@ -1,11 +1,11 @@
 ---
 name: define-smoke-scope
 description: >
-  Use when the user wants to define the smallest high-signal confidence slice for a product,
-  feature, or release. Triggers include "what should be in smoke", "define the minimum checks",
-  "smoke scope for...", "critical-path confidence for...", or "what must never break before
-  release". This skill owns smoke intent and prioritization; it does NOT own exploration evidence,
-  shared coverage planning, detailed TC-ID specs, or framework-specific automation.
+  Use to define the smallest high-signal confidence slice for a product, feature, or release.
+  Triggers include "what should be in smoke", "define the minimum checks", "smoke scope for...",
+  "critical-path confidence for...", or "what must never break before release". This skill owns
+  smoke intent and prioritization; it does NOT own exploration evidence, shared coverage planning,
+  detailed TC-ID specs, or framework-specific automation.
 ---
 
 # Define Smoke Scope
@@ -46,6 +46,19 @@ This skill **produces**:
   runnable.
 - If evidence is missing for a risky critical path, call that out and recommend `explore-app`
   rather than guessing.
+
+### Evidence sufficiency rule
+
+- Treat repo context, existing specs, and prior automation as supporting evidence, not as proof of
+  current live behavior.
+- If the smoke decision depends on current validation behavior, redirects, auth walls, conditional
+  UI, or the actual entry/completion path, require fresh or clearly relevant `explore-app`
+  evidence.
+- If `e2e-plan/exploration-report.md` is missing, stale, or incomplete for a must-not-break flow,
+  do one of two things only:
+  - run `explore-app` before finalizing the scope, or
+  - publish a clearly labeled preliminary smoke charter with explicit evidence gaps
+- Do not present a high-confidence smoke scope when critical-path evidence is still inferred.
 
 ### 2. Identify the must-not-break paths
 
@@ -122,6 +135,8 @@ Write `e2e-plan/smoke-charter.md`:
 - Every included flow has a concrete reason tied to release confidence.
 - Exclusions are explicit, not accidental.
 - The charter uses evidence where available and labels inferences honestly.
+- The charter does not treat old specs or existing automation as proof that the live path still
+  works.
 
 ## What to avoid
 
@@ -129,3 +144,4 @@ Write `e2e-plan/smoke-charter.md`:
 - Including every validation rule just because it exists.
 - Writing framework-specific automation steps here.
 - Claiming ownership of `coverage-plan.md` or `test-cases/*.md`.
+- Presenting an inferred critical path as confirmed when live evidence is missing.

@@ -15,4 +15,4 @@ This skill is a thin router. Use it together with `agent-web-interface-guide` fo
 2. Read [references/amazon.md](references/amazon.md) for Amazon search, product, cart, and modal heuristics.
 3. Treat all selectors in the reference as starting patterns only. Derive the current `eid` and live selector from the page with `find`, `get_form`, and `get_element`.
 4. Expect Amazon to vary by seller, region, stock state, and experiment bucket. Re-evaluate the flow after every navigation or modal open.
-5. Before checkout or sign-in, confirm the intended product, seller, quantity, and total with the user.
+5. Before checkout or sign-in, confirm the intended product, seller, quantity, and total.
