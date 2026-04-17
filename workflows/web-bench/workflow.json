@@ -16,7 +16,7 @@
   "plugins": [
     {
       "ref": "web-bench@lespaceman/athena-workflow-marketplace",
-      "version": "1.0.7"
+      "version": "1.0.9"
     }
   ],
   "version": "0.0.4"
