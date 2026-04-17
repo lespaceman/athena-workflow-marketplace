@@ -1,6 +1,6 @@
 {
   "name": "agent-web-interface",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Open live web pages, click through real flows, fill forms, add items to cart, and inspect page state or selectors",
   "author": {
     "name": "Athenaflow"

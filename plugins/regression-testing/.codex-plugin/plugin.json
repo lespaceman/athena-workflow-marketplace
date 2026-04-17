@@ -1,6 +1,6 @@
 {
   "name": "regression-testing",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Regression testing scopes \u2014 define rerunnable confidence across changed and high-risk areas before automation selection",
   "author": {
     "name": "Athenaflow"

@@ -1,7 +1,7 @@
 {
   "name": "playwright-automation",
   "description": "Playwright execution layer for codebase analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "Athenaflow"
   },

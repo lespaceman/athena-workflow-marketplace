@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-exploratory-testing",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Exploratory testing charters \u2014 frame risk hypotheses and investigation focus before coverage planning begins",
   "license": "MIT",
   "repository": {
