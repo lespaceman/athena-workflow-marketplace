@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-playwright-automation",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Playwright-specific analysis, authoring, review, and flake repair built on shared exploration and planning layers",
   "license": "MIT",
   "repository": {

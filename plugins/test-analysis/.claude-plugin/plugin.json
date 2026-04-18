@@ -1,7 +1,7 @@
 {
   "name": "test-analysis",
   "description": "Shared test planning, specification, and review skills grounded in exploration evidence",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": {
     "name": "Athenaflow"
   },
