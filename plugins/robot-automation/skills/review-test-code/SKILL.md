@@ -9,6 +9,8 @@ allowed-tools: Read Glob Grep Task
 
 Review Robot Framework test code for stability, correctness, and adherence to project conventions before final execution signoff.
 
+**Execution context:** this review must run in a fresh subagent, not the agent that authored the `.robot` code. The orchestrator enforces this via the Task tool; the skill documents the contract so a drifting caller can see they're breaking it. Self-review reliably misses the gaps the author anchored on — passing only the file path (not the authoring transcript) into a new Task call is the cheapest way to get an independent read.
+
 ## Input
 
 Parse the test file path or directory from: $ARGUMENTS
@@ -60,10 +62,11 @@ When a locator appears suspicious, delegate a live-site spot-check to a subagent
 |-------|-----------------|
 | Every test has assertions | No action-only tests |
 | Assertions test user outcomes | Visible text, URL, element states, expected errors |
-| Assertions are specific | Concrete expected outcome, not just “visible” when richer verification is available |
+| Assertions are specific | Concrete expected outcome, not just "visible" when richer verification is available |
 | Error paths have assertions | Error tests verify the error UI |
 | No exact server-computed values | Use patterns, ranges, or seeded data |
 | No swallowed assertions | `Run Keyword And Ignore Error` around assertions is a BLOCKER |
+| **Action-vs-assertion balance** | For each TC that claims to verify behavior, verify the test actually triggers the action (`Click`, `Type Text`, `Go To`, form submit) AND asserts the resulting state. A test that only calls `Get Element Count` or `Get Text` on an element the test never clicked or interacted with is visibility coverage masquerading as functional coverage — **BLOCKER**. Example pattern to flag: `Get Element    role=button[name="Save"]` with no preceding `Click` in the same test. |
 
 #### 2d. Isolation and Structure
 | Check | What to Look For |
@@ -112,6 +115,7 @@ Flag any instances of:
 15. Custom network-idle helpers
 16. Utility-class selectors
 17. Exact server-computed value assertions without seeded data
+18. **Visibility masquerading as functional coverage** — `Get Element`, `Get Element Count`, or `Get Text` on elements the test never interacted with. A render check is not a behavior check. Either add the action (`Click`, `Type Text`, `Submit Form`) that the test claims to verify, or recategorize the test honestly as a smoke check and cap its count.
 
 ### Step 3: Produce the Review Report
 
@@ -151,8 +155,9 @@ Flag any instances of:
 - NEEDS REVISION: 1 or more blockers
 
 ## Principles
+- **Fresh context** — this review itself runs in a subagent that did not author the code. If the caller is the same agent that wrote the `.robot` suite, they're using the skill wrong — the orchestrator should dispatch this via the Task tool with only the test-file path and the spec path.
 - Review-only
 - Evidence over opinion
 - Convention-first
-- Spot-check suspicious locators against the live site
+- **Live-site locator spot-check** — when specific locators look suspicious, delegate a bounded check to a *second* subagent with browser access. This is sub-delegation for evidence; it does not replace the fresh-subagent-reviewer itself.
 - Keep output bounded and actionable

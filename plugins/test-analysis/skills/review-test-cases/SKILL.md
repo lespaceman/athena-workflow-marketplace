@@ -11,6 +11,8 @@ Review TC-ID test case specifications for completeness, accuracy, and quality be
 implemented in any execution framework. This is a quality gate — catch problems in the spec, not in
 the code.
 
+**Execution context:** this review must run in a fresh subagent, not the agent that authored the spec. The orchestrator enforces this via the Task tool; the skill documents the contract so a drifting caller can see they're breaking it. Self-review reliably misses the gaps the author anchored on — an independent read-only context is the cheapest way to catch them.
+
 ## Input
 
 Parse the spec file path from: $ARGUMENTS
@@ -45,6 +47,10 @@ Evaluate every test case against each criterion. Track findings by severity:
 | Authentication edge cases | Session expiry, unauthorized access, role-based differences (if applicable) |
 | Navigation edge cases | Back/forward, direct URL access, refresh mid-flow |
 | Missing critical user actions | Every user-critical action in scope should appear in at least one test case. Ancillary controls may be omitted if they are not material to the target journey |
+| **TC-ID floor** | Non-trivial features (more than two routes or more than one primary interactive surface per the exploration report) require ≥15 TCs. Fewer = BLOCKER "exploration too shallow — return to explore-app" |
+| **Functional-to-visibility ratio** | Count TCs that assert a state change (URL transition, data mutation, observable side effect, element value change after an action) vs TCs that assert render existence only. State-change TCs must be ≥60% of the total. Below 60% = BLOCKER "visibility coverage masquerading as functional coverage" |
+| **Deferred cap** | Count TCs marked deferred / total. >20% = BLOCKER "scope too narrow, revisit exploration". Each deferred TC must carry blocker + un-defer plan + scope fields — missing fields = BLOCKER on that item |
+| **Inventory coverage** | Compare TC count to the Element Inventory in `e2e-plan/exploration-report.md`. If fewer than 50% of inventory rows have at least one TC that exercises them functionally, BLOCKER "coverage not proportional to observed surface area" |
 
 #### 2b. Specification Quality
 
@@ -126,9 +132,10 @@ Example: 0 blockers + 2 warnings = PASS. 0 blockers + 3 warnings = PASS WITH WAR
 
 ## Principles
 
+- **Fresh context** — this review itself runs in a subagent that did not author the spec. Self-review misses the gaps the author anchored on. If the caller is the same agent that wrote the spec, they're using the skill wrong — the orchestrator should dispatch this via the Task tool with only the artifact path.
 - **Review-only** — never modify the spec file; report findings for the author to act on
 - **Evidence over opinion** — cite specific TC-IDs and quote specific steps/assertions when flagging issues
-- **Spot-check against live site** — delegate to a subagent with browser access to verify 2-3 suspicious claims rather than trusting all text at face value
+- **Live-site spot-check** — when specific claims look suspicious, delegate a bounded check to a *second* subagent with browser access to verify 2-3 claims. This is a sub-delegation for evidence; it does not replace the fresh-subagent-reviewer itself.
 - **Bounded output** — the review report should be actionable and finite, not an exhaustive rewrite
 - **Severity matters** — distinguish blockers from suggestions; not every imperfection is worth fixing before implementation
 

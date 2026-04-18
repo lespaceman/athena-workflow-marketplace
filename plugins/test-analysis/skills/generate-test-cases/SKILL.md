@@ -191,10 +191,25 @@ When generating specs that span multiple roles or test categories, recommend rol
 - Distinguish clearly between **observed** and **inferred** behavior
 - Priority must be **justified** — Critical = blocks core journey, High = significant, Medium = secondary, Low = cosmetic
 - Include at minimum one network/server failure scenario, one empty state scenario, and one session/auth edge case when those scenarios meaningfully apply to the feature. If a category is not applicable, say so explicitly in the spec rather than inventing coverage.
-- **Non-happy-path ratio:** Aim for at least 30% of cases within each feature to be non-happy-path.
+- **Non-happy-path ratio:** at least 30% of cases within each feature must be non-happy-path.
   Include: invalid inputs, permission errors, network failures, concurrent actions, session
   timeouts, back-button/refresh mid-action, empty states, maximum limits, and interrupt cases.
-- **Test case count guidance:** Aim for 15-30 test cases per feature area as a baseline. Fewer than 10 suggests missing error paths or edge cases. More than 40 suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
+- **Test-case count (hard floor):** non-trivial features (more than two routes, or more than one primary interactive surface) require **≥15 TCs**. If you cannot reach 15 without inventing scenarios, the exploration was shallow — stop and return control to `explore-app` rather than padding the spec with cosmetic or duplicate cases. The Gate 1 reviewer will reject specs under 15 with the feedback "exploration too shallow."
+- **Functional-to-visibility ratio:** **≥60% of TCs must assert a state change** — URL transition, data mutation, observable side effect, or element value change after an action. Render-existence assertions (e.g., "button is visible", "menu renders with N items") count toward the remaining ≤40% visibility bucket. A TC that only asserts `toBeVisible()` on an element the test never interacted with is a visibility check, not functional coverage. Gate 1 rejects specs where visibility exceeds 40%.
+- **Upper bound:** more than 40 TCs suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
+
+### Deferred Items
+
+"Deferred" is a scope boundary, not an escape valve. If a TC cannot be automated in this pass, declare it in a dedicated `## Deferred` section at the bottom of the spec with this structure per item:
+
+```markdown
+### TC-<FEATURE>-<NUMBER>: <Title> (DEFERRED)
+**Blocker:** <concrete reason automation is not possible now — e.g. "third-party iframe with no test hook", "requires seeded fixture not yet available", "production-only payment gateway">
+**Un-defer plan:** <what would change to make this testable — e.g. "add fixture once APM-412 lands", "mock /api/payment response once mock infrastructure is set up">
+**Scope:** this-sprint | out-of-scope
+```
+
+**Cap:** at most **20% of TCs** in a spec may be deferred. Above that, the spec fails Gate 1 with "scope too narrow — revisit exploration"; the fix is richer evidence, not more deferrals. Deferred items still count toward the ≥15 TC floor only if they are genuinely this-sprint — out-of-scope items do not count toward the floor.
 
 ## Blocking Conditions
 
@@ -260,7 +275,9 @@ Notice how every test traces to a specific observation and risk, and TC-IDs foll
   messages, real API endpoints, real selectors).
 - Priorities are tied to the risk map, not picked at random.
 - Non-happy-path and boundary cases are at least 30% of the suite within each feature.
+- **At least 60% of TCs assert a state change rather than render existence.**
 - Cross-feature E2E journeys are tested separately from individual features.
+- Deferred items each carry a blocker, un-defer plan, and scope classification; deferrals stay under 20%.
 - The user can read the top 5 tests and say "yes, those are the things that scare me too."
 
 ## What to avoid
@@ -268,6 +285,8 @@ Notice how every test traces to a specific observation and risk, and TC-IDs foll
 - Generic cases like "TC-01: User can log in" with no reference to the actual login mechanism.
 - A flat list of cases with no feature grouping or structure.
 - All-happy-path, no negative cases.
+- **Visibility-only tests masquerading as functional coverage** — `toBeVisible()` assertions on elements the test never interacted with. These are render checks, not behavior checks.
+- **Blanket deferrals** without a blocker, un-defer plan, and scope classification. If a capability is hard to test, that's a flag to explore more, not a reason to skip it.
 - No risk ranking, or ranking that doesn't correspond to anything observed.
 - Producing 50 tests for a simple form, or 5 tests for a complex multi-role app. Match the scale.
 - Ignoring existing exploration or coverage artifacts and starting from zero.

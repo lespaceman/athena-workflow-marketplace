@@ -67,9 +67,31 @@ flow, selectors, validation, navigation, or error behavior. If the browser is un
 target cannot be explored and that evidence is required to proceed safely, do not continue with
 planning, spec generation, or test writing from assumptions.
 
+## Depth Targets
+
+Concrete floors downstream gates enforce. These exist because prior runs delivered 12-test specs that were 70% visibility checks — the suite passed, and the feature was still uncovered.
+
+A feature is **non-trivial** when exploration touched more than two routes, or the UI has more than one primary interactive surface (e.g., a timeline + playback controls + an overlay menu all count as one feature).
+
+- **Exploration inventory** — non-trivial features require ≥20 distinct interactive elements recorded with selector candidates; ≥3 meaningful error, validation, or empty states deliberately triggered; and a labeled "elements not yet reached" list so downstream skills know the scope limits.
+- **TC-ID count** — non-trivial features require ≥15 TCs. If the author cannot reach 15, the spec has out-run the exploration; return to `explore-app` rather than padding.
+- **Functional-to-visibility ratio** — ≥60% of TCs in a spec must assert a state change (URL transition, data mutation, observable side effect, element value change after action). Render-existence assertions count toward the remaining ≤40%. A test that only checks `toBeVisible()` on an element the test never interacted with is visibility, not functional coverage.
+
+These targets are not soft suggestions. Gate 1 rejects specs that violate them with feedback pointing back at the gap.
+
+## Deferred Governance
+
+"Deferred" is a scope boundary, not an escape valve. Every deferred TC must carry three fields in the spec:
+
+- **blocker** — the concrete thing preventing automation (e.g., "requires seeded data", "third-party iframe with no test hook", "production-only API")
+- **un-defer plan** — what changes to make this testable (e.g., "add fixture once backend ticket APM-412 lands")
+- **scope** — `this-sprint` or `out-of-scope`
+
+Cap: at most **20% of TCs** in a spec may be deferred. Over that, the spec fails Gate 1 with "scope too narrow — revisit exploration"; the fix is more evidence, not more deferrals.
+
 ## Quality Gates
 
-Three gates are mandatory. The first two are review-only — they produce findings but do not modify files. These gates exist because prior experience showed that skipping review leads to cascading rework: bad specs produce bad tests, bad tests produce confusing failures, and debugging confusing failures wastes entire sessions.
+Four gates are mandatory. The first two are review-only — they produce findings but do not modify files. Gate 4 runs after tests pass and audits coverage against exploration. These gates exist because prior experience showed that skipping review leads to cascading rework: bad specs produce bad tests, bad tests produce confusing failures, and "12 tests passed" can still mean the feature is uncovered.
 
 ### Gate 1: Review specs
 
@@ -89,17 +111,44 @@ Run `npx playwright test <file> --reporter=list 2>&1` directly in the main agent
 
 **Retry limit:** maximum 3 fix-and-rerun cycles per test file per session. Beyond that, the failure usually signals a deeper issue (wrong selector strategy, misunderstood flow, missing test infrastructure) that another retry won't fix.
 
+### Gate 4: Coverage gap audit
+
+After Gate 3 passes, dispatch a fresh subagent to run a coverage audit. It receives the exploration report's element inventory and the executed test suite as inputs, and classifies each observed element as one of:
+
+- `covered-functional` — at least one test triggers the action and asserts a state change
+- `covered-visibility-only` — a test references the element but does not exercise it functionally
+- `uncovered` — no test touches it
+
+The audit writes `e2e-plan/coverage-audit.md` and returns a verdict:
+
+- **GREEN** — every inventory element is `covered-functional`, or gaps are explicitly classified as deferred-with-justification
+- **YELLOW** — gaps exist but each is explicitly accepted by the operator with reasoning
+- **RED** — uncovered or visibility-only elements without justification; work is not done
+
+"Tests passed" does not mean done. Gate 4 decides done.
+
 ## Delegation Constraints
 
-Delegate implementation work to subagents via the Task tool to save context. Pass file paths,
-conventions, and concrete output expectations. Instruct subagents to load the appropriate skill.
+Three delegation rules are mandatory. Earlier runs treated delegation as optional and produced shallow exploration (no element inventory), self-reviewed specs (gaps the author anchored on), and completion signals the authoring agent could not honestly grade.
 
-**Never delegate test execution.** Test output is the proof artifact — the main agent needs to run `npx playwright test` directly so it can verify the output is real and interpret failures in context. A subagent's summary of test results isn't trustworthy enough to gate completion.
+**1. Exploration runs in a subagent.** The main agent does not browse. Dispatch `explore-app` work via the Task tool and invoke the subagent with access to the `mcp__plugin_agent-web-interface_browser__*` tools — its companion browsing-interface skill auto-loads when those tools come into scope, teaching the selector-capture patterns and structured-report format the exploration report depends on. The subagent's output is the structured exploration report with a populated element inventory, not a narrative summary. The main agent preserves the artifact; it does not reinterpret it.
+
+**2. Each review gate runs in a fresh subagent.** The agent that wrote the spec does not run `review-test-cases`. The agent that wrote the code does not run `review-test-code`. Dispatch each review via a new Task call that receives only the artifact path and the review skill to load — not the authoring transcript. Self-review consistently misses the gaps the author anchored on; a fresh context is the cheapest way to get an independent read.
+
+**3. Test execution stays in the main agent.** Test output is the proof artifact — the main agent runs `npx playwright test` directly so it can verify the output is real and interpret failures in context. A subagent's summary of test results isn't trustworthy enough to gate completion.
+
+Gate 4 (coverage audit) follows rule 2: dispatch a fresh subagent, feed it the exploration report and test suite, let it produce `coverage-audit.md`.
+
+Pass file paths, conventions, and concrete output expectations into every Task call. Instruct each subagent to load the appropriate skill before acting.
 
 ## Guardrails
 
 Quick-reference checklist — in addition to the session protocol's guardrails:
 
 - Browse the product before writing specs or tests
+- **Delegate exploration to a subagent** — the main agent does not call browser tools directly
 - Record observed behavior before turning exploration into specs or code
+- **Each review gate runs in a fresh subagent**, not the artifact's author
+- Spec meets depth targets: ≥15 TCs for non-trivial features, ≥60% functional assertions, ≤20% deferred
 - Run tests before marking test work as done
+- **Run the Gate 4 coverage audit after tests pass** — tests passing is necessary but not sufficient

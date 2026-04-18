@@ -1,7 +1,7 @@
 ---
 name: agent-web-interface-guide
 description: >
-  Use this skill to act on live web pages in a browser. It can open a page, click through flows, type into fields, submit forms, add products to cart, review page state, and capture Playwright selectors for important elements. Use it whenever the task includes a URL or page reference and you need to check, verify, inspect, extract selectors from, or actively interact with that page.
+  This skill should be used whenever any `mcp__plugin_agent-web-interface_browser__*` tool is about to be invoked — navigate, snapshot, click, type, find, get_element, get_form, get_field, press, select, hover, scroll, scroll_to, drag, or list_pages. It teaches the selector-capture patterns, state-observation discipline, structured-report format, and multi-page recovery flows that turn raw browser MCP calls into reliable evidence. Specific triggers: opening a live page, clicking through a flow, typing into fields, submitting forms, inspecting form validation states, adding products to cart, capturing Playwright or Robot Framework selector candidates, extracting an element inventory for exploration reports, coordinating across multiple tabs or pages, recovering from a stuck or ambiguous session, or any time the task references a live URL with intent to act on it.
 allowed-tools: mcp__plugin_agent-web-interface_browser__navigate mcp__plugin_agent-web-interface_browser__snapshot mcp__plugin_agent-web-interface_browser__find mcp__plugin_agent-web-interface_browser__get_element mcp__plugin_agent-web-interface_browser__scroll_to mcp__plugin_agent-web-interface_browser__scroll mcp__plugin_agent-web-interface_browser__click mcp__plugin_agent-web-interface_browser__type mcp__plugin_agent-web-interface_browser__press mcp__plugin_agent-web-interface_browser__select mcp__plugin_agent-web-interface_browser__hover mcp__plugin_agent-web-interface_browser__get_form mcp__plugin_agent-web-interface_browser__get_field mcp__plugin_agent-web-interface_browser__list_pages mcp__plugin_agent-web-interface_browser__drag
 ---
 
@@ -15,6 +15,10 @@ Common uses:
 - Fill, submit, or inspect forms and validation states
 - Add products to cart or complete other in-page actions
 - Capture reliable Playwright selectors for key elements
+
+**Why this skill must load before browser MCP calls:** without it, browser work reliably produces brittle CSS selectors, narrative prose instead of structured observations, missed state transitions, and shallow page coverage. The selector-capture and state-observation patterns below are what the downstream exploration report, spec generation, and test-writing skills depend on.
+
+**Subagent dispatch:** when a subagent is dispatched with browser MCP access, this is the first skill it should load — the exploration upstream of spec generation and test writing depends on the patterns below.
 
 ## Input
 
