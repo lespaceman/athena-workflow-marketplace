@@ -70,14 +70,14 @@ Before you write Playwright code, make sure the shared handoff artifacts exist a
 - `e2e-plan/coverage-plan.md`
 - `test-cases/<feature>.md`
 
-If any required artifact is missing:
-1. Run `explore-app` when product evidence is missing
-2. Run `plan-test-coverage` to produce the coverage plan
-3. Run `generate-test-cases` to produce TC-ID specs
-4. Run `review-test-cases` and stop if the verdict is `NEEDS REVISION`
+If any required artifact is missing, dispatch each shared skill via a Task-tool subagent — the orchestrator coordinates, subagents produce:
 
-Do not jump straight to `write-test-code` from a direct request when the shared artifacts are still
-missing.
+1. **Run `explore-app` in a subagent** when product evidence is missing. Invoke the subagent with browser MCP access — its companion browsing-interface skill auto-loads when those tools come into scope. The subagent returns a structured report with a ≥20-row element inventory for non-trivial features. The main agent does not browse.
+2. Run `plan-test-coverage` to produce the coverage plan (delegate if heavy).
+3. Run `generate-test-cases` to produce TC-ID specs (delegate if heavy).
+4. **Run `review-test-cases` in a fresh subagent** — not the agent that authored the spec. Stop if the verdict is `NEEDS REVISION`.
+
+Do not jump straight to `write-test-code` from a direct request when the shared artifacts are still missing. Do not browse or review-your-own-spec inline in the main agent — those are the exact shortcuts that have produced shallow 12-TC specs dominated by visibility checks.
 
 ## 3. Implement The Playwright Layer
 
@@ -88,7 +88,8 @@ Once the shared artifacts are ready:
 - Reuse the project's existing fixtures, auth setup, page objects, and helper utilities
 - Keep selectors aligned with the evidence gathered during exploration
 
-Delegate heavy writing to subagents when that saves context, but pass the relevant artifacts:
+Delegate writing to subagents when the test suite is large — the main orchestrator coordinates review gates and the coverage audit; the code-writing subagent focuses on translating specs to Playwright tests. Pass the relevant artifacts into each writing call:
+
 - `e2e-plan/exploration-report.md`
 - `e2e-plan/coverage-plan.md`
 - `test-cases/<feature>.md`
@@ -98,11 +99,11 @@ Delegate heavy writing to subagents when that saves context, but pass the releva
 
 ### Gate 1: Spec review
 
-If spec review has not happened yet, run `review-test-cases` before implementation proceeds.
+If spec review has not happened yet, dispatch `review-test-cases` **in a fresh subagent** (not the agent that authored the spec). Pass only the spec path and the exploration report path; do not pass the authoring transcript.
 
 ### Gate 2: Code review
 
-After `write-test-code`, run `review-test-code`.
+After `write-test-code`, dispatch `review-test-code` **in a fresh subagent** (not the agent that authored the code).
 
 - If the verdict is `NEEDS REVISION`, fix blockers before execution.
 - If the verdict is `PASS WITH WARNINGS`, fix stability-critical warnings before execution.
@@ -115,9 +116,29 @@ Run the tests directly in the main agent:
 npx playwright test <file> --reporter=list 2>&1
 ```
 
-- Treat green Playwright output as the proof artifact.
 - If tests fail, load `fix-flaky-tests` and follow its structured workflow.
-- Do not delegate Playwright execution or coverage checks to subagents.
+- Do not delegate Playwright execution to subagents — the main agent needs the raw output to interpret failures in context.
+
+### Gate 4: Coverage gap audit
+
+Green test output is necessary but not sufficient. Dispatch a fresh subagent with the following inputs:
+
+- `e2e-plan/exploration-report.md` (specifically the Element Inventory and Elements Not Yet Reached sections)
+- the executed test file(s)
+
+The subagent's job is to classify each inventory element as one of:
+
+- `covered-functional` — a test triggers the action and asserts a state change
+- `covered-visibility-only` — a test references the element but does not exercise it functionally
+- `uncovered` — no test touches the element
+
+Output: `e2e-plan/coverage-audit.md` with the classification table and one of three verdicts:
+
+- **GREEN** — every inventory element is `covered-functional`, or gaps are explicitly deferred with justification
+- **YELLOW** — gaps exist but each is explicitly accepted with reasoning the operator has seen
+- **RED** — uncovered or visibility-only elements without justification; work is not done
+
+The Playwright workflow is complete only when Gate 4 returns GREEN or YELLOW-with-acknowledgment. "Tests passed" is not the completion signal — the coverage audit is.
 
 ## Authentication
 

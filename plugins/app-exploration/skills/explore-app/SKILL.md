@@ -31,16 +31,23 @@ Derive a short feature slug from the journey so the evidence is easy to referenc
 
 ### 2. Explore the live product via browser tooling
 
-- Delegate browser work to a subagent when that saves context. Instruct it to use
-  `agent-web-interface-guide` and return structured observations rather than a narrative summary.
-- Walk the target journey as a real user would:
-  - visit the starting URL
-  - identify the main entry points
-  - click through the happy path
-  - deliberately trigger meaningful validation, empty, and error states
-  - note redirects, auth walls, and conditional UI
-- Capture only grounded observations. If an outcome was inferred rather than observed, label it as
-  an inference.
+Dispatch the browsing to a subagent via the Task tool. The main agent coordinates and preserves artifacts; the subagent does the actual exploration. This is not a cost-saving suggestion — self-driven exploration by the main agent consistently produces shallow element inventories because browser tool output eats the context the main agent needs for synthesis, and the main agent ends up triaging noise instead of reasoning about coverage.
+
+The subagent's contract:
+
+- **Browser MCP access required:** invoke the subagent with access to the `mcp__plugin_agent-web-interface_browser__*` tools. Its companion skill (selector-capture patterns, state-observation discipline, structured-report format, multi-page recovery) auto-loads whenever those tools come into scope. The element inventory the downstream pipeline depends on comes from following those patterns — if the subagent's inventory comes back as raw CSS or narrative prose, the skill didn't load and Gate 4 will fail.
+- **Output format:** a structured report (template in §3 below), not a narrative summary. If the subagent returns prose, reject and retry with explicit format instructions.
+- **Return control cleanly:** the subagent writes the artifact and reports back with the path plus a short status note; the main agent reads the artifact, never the raw browser transcript.
+
+Walk the target journey as a real user would:
+
+- visit the starting URL
+- identify the main entry points
+- click through the happy path
+- deliberately trigger meaningful validation, empty, and error states — **≥3 distinct error/validation/empty states are required for non-trivial features** (features that touch more than two routes or have more than one primary interactive surface). If you cannot reach 3, either the app is genuinely simple — say so explicitly in the report — or the exploration stopped too early
+- note redirects, auth walls, and conditional UI
+
+Capture only grounded observations. If an outcome was inferred rather than observed, label it as an inference.
 
 #### Recon pass
 
@@ -136,10 +143,31 @@ Use this structure:
 |---|---|---|---|---|
 | ... | ... | ... | ... | ... |
 
+## Element Inventory
+
+A flat, element-centric list of every interactive element observed. This feeds the Gate 4 coverage audit — each entry becomes a row the audit classifies as covered-functional, covered-visibility-only, or uncovered. Non-trivial features (more than two routes, or more than one primary interactive surface) require **≥20 entries**. If fewer feels right, the exploration stopped too early.
+
+| Route | Element | Selector candidate | Observed behavior | Functional-test-possible |
+|---|---|---|---|---|
+| /login | Email field | `role=textbox, label=Email` | accepts input; empty submit triggers "Email is required" | y |
+| /login | Submit button | `role=button, name=/sign in/i` | disabled until fields populated | y |
+| /history | Timeline scrubber | `role=slider, aria-label=Timeline` | clicking anywhere seeks playhead to that time | y |
+| ... | ... | ... | ... | ... |
+
+## Elements Not Yet Reached
+
+Elements seen referenced (in menus, tooltips, help text, or outbound links) but not opened during this exploration. These are the explicit scope boundaries — downstream skills need them to know what's in-scope-but-uncovered vs out-of-scope.
+
+- /settings/privacy — referenced from footer menu, not visited
+- "Advanced filters" overlay — closed control visible on listing page, not opened
+- ...
+
 ## Validation And Error Evidence
 - <empty-state behavior>
 - <invalid-input behavior>
 - <server/network/error-state observations or note that they were not reachable>
+
+Minimum 3 entries for non-trivial features.
 
 ## Blockers
 - <auth wall, CAPTCHA, missing environment, unavailable path, or "None">
@@ -169,6 +197,7 @@ exploration is valuable, but not valuable enough to break live data.
 
 ## Quality Bar
 
+- **Depth floors for non-trivial features:** ≥20 rows in the Element Inventory, ≥3 distinct error/validation/empty states triggered and documented. If the app is genuinely simple, state that explicitly with a one-line justification — otherwise the exploration is incomplete and downstream gates will reject.
 - Prefer semantic selector candidates such as role, accessible name, label, placeholder, or test id
   over raw CSS when recording controls.
 - Record exact validation or error copy only when it was directly observed.
@@ -178,7 +207,7 @@ exploration is valuable, but not valuable enough to break live data.
   artifact.
 - Cases reference specific things actually observed in the app (real field names, real error
   messages, real API endpoints, real selectors).
-- The exploration summary is honest about what wasn't covered and what's still unknown.
+- The exploration summary is honest about what wasn't covered and what's still unknown — the "Elements Not Yet Reached" section is required, not decorative.
 - Artifacts are written to the shared locations (`e2e-plan/`) so downstream skills can consume them.
 
 ## What to avoid

@@ -9,6 +9,8 @@ allowed-tools: Read Glob Grep Task
 
 Review Playwright test code for stability, correctness, and adherence to project conventions before final execution signoff. This is a quality gate — catch structural issues in code before running tests, not after flaky failures.
 
+**Execution context:** this review must run in a fresh subagent, not the agent that authored the code. The orchestrator enforces this via the Task tool; the skill documents the contract so a drifting caller can see they're breaking it. Self-review reliably misses the gaps the author anchored on — passing only the file path (not the authoring transcript) into a new Task call is the cheapest way to get an independent read.
+
 ## Input
 
 Parse the test file path or directory from: $ARGUMENTS
@@ -68,6 +70,7 @@ When a locator appears suspicious, delegate verification to a subagent (Task too
 | Error paths have assertions | Error scenario tests verify the error message, not just that "something happened" |
 | No exact server-computed values | Dashboard counters, totals, and aggregates must not assert exact numbers — use patterns, ranges, or seed data first |
 | No `toBeTruthy()` on locators | Use Playwright-specific matchers (`toBeVisible`, `toBeEnabled`, `toHaveText`) |
+| **Action-vs-assertion balance** | For each TC that claims to verify behavior, verify the test actually triggers the action (click, type, navigate, submit) AND asserts the resulting state. A test that only asserts `toBeVisible()` on an element the test never clicked or interacted with is visibility coverage masquerading as functional coverage — **BLOCKER**. Example pattern to flag: `await expect(page.getByRole('button', { name: /save/i })).toBeVisible()` with no preceding `click()` or `fill()` in the same test. |
 
 #### 2d. Test Isolation and Structure
 
@@ -119,6 +122,7 @@ Flag any instances of these known anti-patterns:
 13. `waitForLoadState('networkidle')` as default wait strategy — breaks on long-polling, WebSockets, analytics beacons; use specific `waitForResponse` or UI assertions instead
 14. CSS utility class selectors (Tailwind `rounded-lg`, `flex`, Bootstrap `btn-primary`, `col-md-*`) — styling classes are volatile, never use as selectors
 15. Asserting exact server-computed values (`toHaveText('12450')`) — use pattern matchers, ranges, or seed data to control expected values
+16. **Visibility masquerading as functional coverage** — `toBeVisible()` or `toHaveCount()` on elements the test never interacted with. A render check is not a behavior check. Either add the action (click, type, submit) that the test claims to verify, or recategorize the test honestly as a smoke/render check and cap its count.
 
 ### Step 3: Produce the Review Report
 
@@ -162,9 +166,10 @@ Output a structured review with this format:
 
 ## Principles
 
+- **Fresh context** — this review itself runs in a subagent that did not author the code. If the caller is the same agent that wrote the tests, they're using the skill wrong — the orchestrator should dispatch this via the Task tool with only the test-file path and the spec path.
 - **Review-only** — never modify test files; report findings for the author to act on
 - **Evidence over opinion** — cite specific file paths, line numbers, and code snippets when flagging issues
-- **Spot-check selectors** — delegate to a subagent with browser access to verify 2-3 suspicious locators against the live site
+- **Live-site selector spot-check** — when specific locators look suspicious, delegate a bounded check to a *second* subagent with browser access. This is sub-delegation for evidence; it does not replace the fresh-subagent-reviewer itself.
 - **Convention-first** — compare against the project's existing test patterns, not an abstract ideal
 - **Bounded output** — the review should be actionable and finite, not a full rewrite specification
 - **Severity matters** — a missing `await` is a blocker; a naming style preference is a suggestion
