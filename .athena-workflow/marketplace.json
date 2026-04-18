@@ -12,31 +12,31 @@
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
       "description": "Autonomous Playwright E2E pipeline - uses shared app exploration and test-analysis layers before Playwright-specific authoring, review, execution, and stabilization",
-      "version": "0.0.13"
+      "version": "0.0.14"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
       "description": "Autonomous Robot Framework (Browser library) E2E pipeline - uses shared app exploration and test-analysis layers before Robot-specific authoring, review, execution, and stabilization",
-      "version": "0.0.14"
+      "version": "0.0.15"
     },
     {
       "name": "exploratory-testing",
       "source": "./workflows/exploratory-testing/workflow.json",
       "description": "Intent-layer exploratory workflow - gathers evidence, frames risk hypotheses, and hands off cleanly into shared planning when needed",
-      "version": "0.0.7"
+      "version": "0.0.8"
     },
     {
       "name": "smoke-testing",
       "source": "./workflows/smoke-testing/workflow.json",
       "description": "Intent-layer smoke workflow - defines the minimum critical-path confidence scope before execution workflows are chosen",
-      "version": "0.0.7"
+      "version": "0.0.8"
     },
     {
       "name": "regression-testing",
       "source": "./workflows/regression-testing/workflow.json",
       "description": "Intent-layer regression workflow - defines rerunnable confidence scope across changed and high-risk areas before execution workflows are chosen",
-      "version": "0.0.7"
+      "version": "0.0.8"
     },
     {
       "name": "web-bench",
