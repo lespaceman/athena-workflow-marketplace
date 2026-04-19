@@ -11,43 +11,43 @@
     {
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
-      "description": "Autonomous Playwright E2E pipeline - uses shared app exploration and test-analysis layers before Playwright-specific authoring, review, execution, and stabilization",
+      "description": "Build and run Playwright E2E tests — explores the app, plans coverage, writes tests, and fixes flakes",
       "version": "0.0.15"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
-      "description": "Autonomous Robot Framework (Browser library) E2E pipeline - uses shared app exploration and test-analysis layers before Robot-specific authoring, review, execution, and stabilization",
+      "description": "Build and run Robot Framework E2E tests (Browser library) — explores, plans, writes, and fixes flakes",
       "version": "0.0.16"
     },
     {
       "name": "exploratory-testing",
       "source": "./workflows/exploratory-testing/workflow.json",
-      "description": "Intent-layer exploratory workflow - gathers evidence, frames risk hypotheses, and hands off cleanly into shared planning when needed",
+      "description": "Explore an app to surface risks and unknowns, then hand findings to a planning workflow",
       "version": "0.0.9"
     },
     {
       "name": "smoke-testing",
       "source": "./workflows/smoke-testing/workflow.json",
-      "description": "Intent-layer smoke workflow - defines the minimum critical-path confidence scope before execution workflows are chosen",
+      "description": "Scope the minimum critical-path checks that confirm a build is healthy",
       "version": "0.0.9"
     },
     {
       "name": "regression-testing",
       "source": "./workflows/regression-testing/workflow.json",
-      "description": "Intent-layer regression workflow - defines rerunnable confidence scope across changed and high-risk areas before execution workflows are chosen",
+      "description": "Scope rerunnable checks across changed and high-risk areas",
       "version": "0.0.9"
     },
     {
       "name": "web-bench",
       "source": "./workflows/web-bench/workflow.json",
-      "description": "Benchmark runner for WebBench - executes real-world browser tasks and produces evaluation reports with timing and token usage",
+      "description": "Run WebBench benchmarks on real-world browser tasks and report timing and token usage",
       "version": "0.0.5"
     },
     {
       "name": "loop-test",
       "source": "./workflows/loop-test/workflow.json",
-      "description": "Minimal loop test - agent does a small thing each run, then finishes after a few iterations",
+      "description": "Dev-only loop check — agent does a tiny thing each run and stops",
       "version": "0.0.2"
     }
   ]
