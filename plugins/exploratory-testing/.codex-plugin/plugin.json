@@ -1,6 +1,6 @@
 {
   "name": "exploratory-testing",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Exploratory testing charters \u2014 frame risk hypotheses and investigation focus before coverage planning begins",
   "author": {
     "name": "Athenaflow"

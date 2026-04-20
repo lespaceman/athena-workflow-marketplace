@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-smoke-testing",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Smoke testing scopes \u2014 define the minimum critical-path confidence checks before selecting runnable automation",
   "license": "MIT",
   "repository": {
