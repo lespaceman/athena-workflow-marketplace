@@ -43,7 +43,7 @@ This skill **consumes**:
   behavior rather than speculation
 
 This skill **produces**:
-- `e2e-plan/exploratory-charter.md` — an artifact owned by this plugin. It complements, rather than
+- `e2e-plan/exploratory-charter.md` — an optional artifact owned by this plugin. It complements, rather than
   replaces, the core shared artifact chain (`exploration-report.md`, `coverage-plan.md`,
   `test-cases/*.md`). Downstream skills may consume it for context but do not depend on it.
 

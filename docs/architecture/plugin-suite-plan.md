@@ -10,7 +10,7 @@ See also:
 
 The current marketplace grew around two framework-specific testing plugins:
 
-- `e2e-test-builder` for Playwright
+- `playwright-automation` for Playwright
 - `robot-automation` for Robot Framework
 
 Those plugins currently mix multiple responsibilities:
@@ -35,8 +35,8 @@ The target state is a layered testing suite:
 
 ### Duplicated shared skills
 
-Before the plugin cleanup, the same planning/spec-review responsibilities lived in both
-`plugins/e2e-test-builder/skills/` and `plugins/robot-automation/skills/`:
+Before the plugin cleanup, the same planning/spec-review responsibilities lived in the historical
+Playwright framework surface and in `plugins/robot-automation/skills/`:
 
 - `plan-test-coverage`
 - `generate-test-cases`
@@ -113,12 +113,13 @@ The active execution plugin names are:
 - `playwright-automation`
 - `robot-automation`
 
-The legacy Playwright name:
+The Playwright workflow and execution plugin now intentionally share the same canonical name:
 
-- `e2e-test-builder`
+- `playwright-automation`
 
-now survives only as a workflow identifier for continuity. The installable plugin surface has been
-removed, and canonical ownership centers on `playwright-automation`.
+Canonical ownership still centers on the plugin layers: shared skills live in
+`app-exploration` and `test-analysis`, and framework-local skills live in
+`playwright-automation`.
 
 ### Skill ownership rule
 
@@ -165,15 +166,15 @@ Additional expansion ideas and dependency rules live in
 The compatibility policy for this split is:
 
 1. Preserve workflow continuity where practical.
-2. Keep the `e2e-test-builder` workflow name initially.
+2. Rename the Playwright workflow to `playwright-automation`.
 3. Introduce `playwright-automation` as the canonical Playwright execution plugin.
-4. Remove the `e2e-test-builder` plugin surface rather than keeping an installable compatibility alias.
-5. Treat `e2e-test-builder` as workflow continuity only, not as a second plugin home for shared skills.
+4. Do not reintroduce an `e2e-test-builder` alias once the workflow rename lands.
+5. Keep `playwright-automation` free of shared planning/spec ownership even though the workflow and plugin now share the same name.
 
 ### Compatibility consequences
 
-- New architecture docs, ownership maps, and future plugin additions should use `playwright-automation`, not `e2e-test-builder`, as the canonical Playwright name.
-- Workflows may preserve old names longer than plugins if that improves user continuity.
+- New architecture docs, ownership maps, and future plugin additions should use `playwright-automation` as the canonical Playwright workflow and plugin name.
+- Shared-skill ownership still belongs to `app-exploration` and `test-analysis`, not to the Playwright execution layer.
 
 ### Shared contracts
 

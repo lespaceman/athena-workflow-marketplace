@@ -46,7 +46,7 @@ plugin skill itself.
 If runnable automation is requested after the exploratory charter is finalized, stop with an
 explicit recommendation to move into the appropriate execution workflow:
 
-- `e2e-test-builder` for Playwright
+- `playwright-automation` for Playwright
 - `robot-automation` for Robot Framework
 
 This workflow does not load execution-layer plugins itself, so it must not claim to implement or

@@ -21,7 +21,7 @@ The current program must:
 - introduce `playwright-automation`
 - retain and slim `robot-automation`
 - keep `agent-web-interface` unchanged
-- preserve workflow continuity where practical
+- preserve workflow continuity where practical while converging on canonical workflow names
 
 The current program must not:
 
@@ -41,7 +41,7 @@ The target plugin set for the active end-state is:
 - `playwright-automation`
 - `robot-automation`
 
-The legacy `e2e-test-builder` name survives only as a workflow identifier for continuity.
+The Playwright workflow and execution plugin now intentionally share the same canonical name.
 
 ### Canonical ownership by plugin
 
@@ -96,7 +96,7 @@ Optional plugin-owned intent artifacts:
 These are not part of the core shared artifact contract. They are intent-layer planning aids owned
 by their respective plugins.
 
-### Historical `e2e-test-builder` skill mapping
+### Historical `playwright-automation` skill mapping
 
 | Current skill path | Future canonical owner | Future canonical skill |
 |---|---|---|
@@ -193,13 +193,13 @@ Required outcomes:
 - register `regression-testing`
 - register `playwright-automation`
 - preserve `robot-automation`
-- remove the installable `e2e-test-builder` plugin surface
+- remove the legacy `e2e-test-builder` workflow label
 
 ### Workflow dependency refs
 
 The implementation now includes these workflow manifests:
 
-- `workflows/e2e-test-builder/workflow.json`
+- `workflows/playwright-automation/workflow.json`
 - `workflows/robot-automation/workflow.json`
 - `workflows/exploratory-testing/workflow.json`
 - `workflows/smoke-testing/workflow.json`
@@ -207,7 +207,7 @@ The implementation now includes these workflow manifests:
 
 #### Current workflow behavior
 
-The `e2e-test-builder` workflow keeps its current workflow name for continuity, but its plugin dependencies change to:
+The `playwright-automation` workflow now matches the execution-layer plugin name. Its plugin dependencies are:
 
 - `agent-web-interface`
 - `app-exploration`
@@ -250,30 +250,28 @@ Later implementation must update any docs that enumerate plugins, workflows, or 
 
 - `README.md`
 - `docs/skills-compatibility.md`
-- any future skill inventory, architecture, or migration docs that still describe `e2e-test-builder` as the canonical Playwright owner of shared planning/spec skills
+- any future skill inventory, architecture, or migration docs that still describe `playwright-automation` as the canonical Playwright owner of shared planning/spec skills
 
 ## Compatibility Shape
 
-`e2e-test-builder` no longer exists as an installable plugin. Phase 1 preserves continuity through
-the workflow name, not through a plugin alias.
+The old `e2e-test-builder` workflow label no longer defines the active Playwright workflow surface.
 
 ### Phase-1 compatibility policy
 
 - `playwright-automation` is the canonical Playwright execution plugin.
-- `e2e-test-builder` is not an installable plugin surface.
-- New architecture docs must treat `e2e-test-builder` as a workflow-only legacy name.
-- The `e2e-test-builder` workflow name stays in place initially.
+- New architecture docs must treat `playwright-automation` as the canonical Playwright workflow and plugin name.
+- The old `e2e-test-builder` label remains historical only.
 
 ### Expected role of the legacy name
 
-During this phase, `e2e-test-builder` should behave as a workflow continuity label rather than a
-plugin alias or a second canonical home for the architecture.
+During this phase, `playwright-automation` should behave as one canonical workflow/plugin name
+rather than as two separate naming concepts.
 
 That means:
 
 - it should not remain the authoritative owner of shared planning/spec skills
 - it should not exist as an installable plugin surface
-- it may remain only as a workflow name while users move to `playwright-automation`
+- historical `e2e-test-builder` references should be called out as historical when retained
 
 ## Non-Goals
 

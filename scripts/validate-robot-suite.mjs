@@ -79,7 +79,7 @@ function main() {
     'README must explain that installing an execution plugin alone does not install the shared layers',
   );
   assert(
-    readme.includes('The full orchestration surface remains the workflow pair `e2e-test-builder` and `robot-automation`'),
+    readme.includes('The full orchestration surface remains the workflow pair `playwright-automation` and `robot-automation`'),
     'README must preserve the workflow-first orchestration note',
   );
   assert(

@@ -25,7 +25,7 @@ patterns).
 ├── .athena-workflow/
 │   └── marketplace.json            # Workflow catalog
 ├── workflows/
-│   └── e2e-test-builder/
+│   └── playwright-automation/
 │       ├── workflow.json
 │       └── workflow.md
 └── plugins/
@@ -241,10 +241,9 @@ Canonical entry skills:
 - `add-playwright-tests` in `playwright-automation`
 - `add-robot-tests` in `robot-automation`
 
-Workflow continuity note:
+Workflow naming note:
 
-- `e2e-test-builder` survives only as a workflow name; it is no longer an installable plugin surface.
-- The full orchestration surface remains the workflow pair `e2e-test-builder` and `robot-automation`; the execution plugins own only their framework-specific layer.
+- The full orchestration surface remains the workflow pair `playwright-automation` and `robot-automation`; the execution plugins own only their framework-specific layer.
 
 ### site-knowledge
 
@@ -263,7 +262,7 @@ Workflows are registered in `.athena-workflow/marketplace.json` and implemented 
 
 | Workflow | Source |
 |----------|--------|
-| `e2e-test-builder` | `workflows/e2e-test-builder/workflow.json` |
+| `playwright-automation` | `workflows/playwright-automation/workflow.json` |
 | `robot-automation` | `workflows/robot-automation/workflow.json` |
 | `exploratory-testing` | `workflows/exploratory-testing/workflow.json` |
 | `smoke-testing` | `workflows/smoke-testing/workflow.json` |

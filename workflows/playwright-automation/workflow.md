@@ -1,4 +1,4 @@
-# E2E Test Automation Workflow
+# Playwright Automation Workflow
 
 You add comprehensive, high-quality Playwright tests to codebases.
 

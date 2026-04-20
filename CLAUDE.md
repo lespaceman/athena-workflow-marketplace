@@ -59,9 +59,11 @@ The canonical testing pipeline is layered: `app-exploration` → `test-analysis`
 
 ### Workflows
 
-`workflows/<name>/` contains a `workflow.json` (RFC 0001 contract) and a `workflow.md` that is appended to the runtime's workflow prompt. `workflow.json` references plugins as `<plugin-name>@<owner>/<repo>` with a pinned version. `e2e-test-builder` and `robot-automation` are the primary long-running workflows; `exploratory-testing` / `smoke-testing` / `regression-testing` are intent workflows that hand off to execution workflows; `loop-test` and `web-bench` are specialized.
+`workflows/<name>/` contains a `workflow.json` (RFC 0001 contract) and a `workflow.md` that is appended to the runtime's workflow prompt. `workflow.json` references plugins as `<plugin-name>@<owner>/<repo>` with a pinned version. `playwright-automation` and `robot-automation` are the primary long-running workflows; `exploratory-testing` / `smoke-testing` / `regression-testing` are intent workflows that hand off to execution workflows; `loop-test` and `web-bench` are specialized.
 
-Note: `e2e-test-builder` exists only as a workflow name — there is no longer a plugin of that name. The execution plugins are `playwright-automation` and `robot-automation`.
+The naming is now symmetric: the long-running Playwright and Robot workflows share their names with
+their execution-layer plugins, while still depending on the shared `app-exploration` and
+`test-analysis` layers.
 
 ## Build and validation
 
@@ -104,6 +106,6 @@ cd plugins/<plugin> && npm run build:artifacts           # emits dist/<version>/
 - **Playwright locators:** semantic (`getByRole`, `getByLabel`) > `data-testid` > text > CSS. No arbitrary `waitForTimeout` — use event-driven waits.
 - **Skill `allowed-tools`** must explicitly enumerate every tool (no wildcards). MCP tool names must match `mcp__plugin_<plugin-name>_<server-name>__<tool>` exactly.
 - **Skills delegate heavy work to subagents via the Task tool** to protect main context. Browser tools live only in `agent-web-interface`; other plugins' skills reach them through subagents.
-- **Test execution is never delegated.** In the `e2e-test-builder` / `robot-automation` workflows, the main agent must run `npx playwright test` (or `robot ...`) directly and keep the output as proof.
+- **Test execution is never delegated.** In the `playwright-automation` / `robot-automation` workflows, the main agent must run `npx playwright test` (or `robot ...`) directly and keep the output as proof.
 - **Skill descriptions** must include exhaustive trigger phrases and state what the skill does vs. does not do — skill dispatch depends on matching trigger language.
 - `dist/` artifacts and `.venv/` are generated; do not commit hand edits to them.

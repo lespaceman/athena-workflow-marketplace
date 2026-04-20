@@ -181,7 +181,6 @@ function main() {
   assertIncludes(readme, '`exploratory-testing` | Frame risk hypotheses and investigation focus via exploratory charters', 'README must describe exploratory-testing as charter-focused');
   assertIncludes(readme, '`smoke-testing` | Define the minimum critical-path confidence scope before runnable automation is selected', 'README must describe smoke-testing as an intent-layer plugin');
   assertIncludes(readme, '`regression-testing` | Define rerunnable regression scope across changed and high-risk areas before runnable automation is selected', 'README must describe regression-testing as an intent-layer plugin');
-  assertIncludes(readme, '`e2e-test-builder` survives only as a workflow name', 'README must preserve workflow continuity note');
   assertNotIncludes(readme, 'exploratory-testing` is currently available as a plugin without a dedicated workflow family', 'README must not claim exploratory-testing lacks a workflow family');
 
   for (const [label, content] of [

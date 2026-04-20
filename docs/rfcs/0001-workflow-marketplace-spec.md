@@ -104,7 +104,7 @@ Example:
 
 ```json
 {
-  "name": "e2e-test-builder",
+  "name": "playwright-automation",
   "description": "Iterative Playwright workflow for multi-session execution with shared exploration and analysis layers",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",

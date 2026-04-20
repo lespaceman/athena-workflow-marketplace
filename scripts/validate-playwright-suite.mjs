@@ -21,9 +21,9 @@ function main() {
   const agentsMarketplace = JSON.parse(read('.agents/plugins/marketplace.json'));
   const claudeMarketplace = JSON.parse(read('.claude-plugin/marketplace.json'));
   const workflowMarketplace = JSON.parse(read('.athena-workflow/marketplace.json'));
-  const workflowJson = JSON.parse(read('workflows/e2e-test-builder/workflow.json'));
+  const workflowJson = JSON.parse(read('workflows/playwright-automation/workflow.json'));
   const readme = read('README.md');
-  const workflowMd = read('workflows/e2e-test-builder/workflow.md');
+  const workflowMd = read('workflows/playwright-automation/workflow.md');
   const analyzeTestCodebase = read('plugins/playwright-automation/skills/analyze-test-codebase/SKILL.md');
   const writeTestCode = read('plugins/playwright-automation/skills/write-test-code/SKILL.md');
   const addPlaywrightTests = read('plugins/playwright-automation/skills/add-playwright-tests/SKILL.md');
@@ -39,20 +39,20 @@ function main() {
   const agentPlugins = new Set(agentsMarketplace.plugins.map((plugin) => plugin.name));
   const claudePlugins = new Set(claudeMarketplace.plugins.map((plugin) => plugin.name));
   assert(
-    !agentPlugins.has('e2e-test-builder'),
-    '.agents/plugins/marketplace.json must not register e2e-test-builder',
+    agentPlugins.has('playwright-automation'),
+    '.agents/plugins/marketplace.json must register playwright-automation',
   );
   assert(
-    !claudePlugins.has('e2e-test-builder'),
-    '.claude-plugin/marketplace.json must not register e2e-test-builder',
+    claudePlugins.has('playwright-automation'),
+    '.claude-plugin/marketplace.json must register playwright-automation',
   );
 
   const workflowEntry = workflowMarketplace.workflows.find(
-    (workflow) => workflow.name === 'e2e-test-builder',
+    (workflow) => workflow.name === 'playwright-automation',
   );
   assert(
     Boolean(workflowEntry),
-    '.athena-workflow/marketplace.json must retain the e2e-test-builder workflow entry',
+    '.athena-workflow/marketplace.json must retain the playwright-automation workflow entry',
   );
 
   const expectedRefs = [
@@ -64,7 +64,7 @@ function main() {
   const actualRefs = workflowJson.plugins.map((plugin) => plugin.ref);
   assert(
     JSON.stringify(actualRefs) === JSON.stringify(expectedRefs),
-    'workflows/e2e-test-builder/workflow.json must depend on the canonical layered Playwright suite',
+    'workflows/playwright-automation/workflow.json must depend on the canonical layered Playwright suite',
   );
 
   assert(
@@ -85,12 +85,8 @@ function main() {
     'README must explain that installing an execution plugin alone does not install the shared layers',
   );
   assert(
-    readme.includes('The full orchestration surface remains the workflow pair `e2e-test-builder` and `robot-automation`'),
+    readme.includes('The full orchestration surface remains the workflow pair `playwright-automation` and `robot-automation`'),
     'README must preserve the workflow-first orchestration note',
-  );
-  assert(
-    readme.includes('e2e-test-builder` survives only as a workflow name'),
-    'README must clarify that e2e-test-builder survives only as a workflow name',
   );
   assert(
     !readme.includes('e2e-test-builder@athena-workflow-marketplace'),

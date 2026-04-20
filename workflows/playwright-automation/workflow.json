@@ -1,5 +1,5 @@
 {
-  "name": "e2e-test-builder",
+  "name": "playwright-automation",
   "description": "Athena CLI runs this authored Playwright E2E workflow across sessions - analyze setup, map broad features, explore scoped product areas, plan coverage, generate and review specs, write and review tests, then execute and stabilize them",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
