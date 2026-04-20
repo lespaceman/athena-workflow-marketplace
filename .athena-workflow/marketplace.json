@@ -12,31 +12,31 @@
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
       "description": "Build and run Playwright E2E tests \u2014 maps broad features, explores scoped areas, plans coverage, writes tests, and fixes flakes",
-      "version": "0.0.17"
+      "version": "0.0.18"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
       "description": "Build and run Robot Framework E2E tests (Browser library) \u2014 maps broad features, explores scoped areas, plans, writes, and fixes flakes",
-      "version": "0.0.18"
+      "version": "0.0.19"
     },
     {
       "name": "exploratory-testing",
       "source": "./workflows/exploratory-testing/workflow.json",
       "description": "Explore an app to surface risks and unknowns, then hand findings to a planning workflow",
-      "version": "0.0.10"
+      "version": "0.0.11"
     },
     {
       "name": "smoke-testing",
       "source": "./workflows/smoke-testing/workflow.json",
       "description": "Scope the minimum critical-path checks that confirm a build is healthy",
-      "version": "0.0.10"
+      "version": "0.0.11"
     },
     {
       "name": "regression-testing",
       "source": "./workflows/regression-testing/workflow.json",
       "description": "Scope rerunnable checks across changed and high-risk areas",
-      "version": "0.0.10"
+      "version": "0.0.11"
     },
     {
       "name": "web-bench",
