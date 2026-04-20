@@ -58,7 +58,7 @@
       "name": "exploratory-testing",
       "source": "./plugins/exploratory-testing",
       "description": "Exploratory testing charters \u2014 frame risk hypotheses and investigation focus before coverage planning begins",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "keywords": [
         "testing",
         "exploratory-testing",
@@ -86,7 +86,7 @@
       "name": "regression-testing",
       "source": "./plugins/regression-testing",
       "description": "Regression testing scopes \u2014 define rerunnable confidence across changed and high-risk areas before automation selection",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "keywords": [
         "testing",
         "regression-testing",

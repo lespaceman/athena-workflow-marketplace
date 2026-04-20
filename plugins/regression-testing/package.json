@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-regression-testing",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Regression testing scopes \u2014 define rerunnable confidence across changed and high-risk areas before automation selection",
   "license": "MIT",
   "repository": {
