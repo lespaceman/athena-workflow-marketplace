@@ -103,7 +103,7 @@ Use this structure:
 - <what the orchestrator must merge into `e2e-plan/exploration-report.md` later>
 
 ## Recommended Next Step
-- `explore-app` for each required sub-feature
+- `capture-feature-evidence` for each required sub-feature
 ```
 
 ### 5. Stop cleanly when decomposition is blocked

@@ -7,7 +7,7 @@ You define exploratory testing intent before the suite moves into detailed plann
 | Activity | Skill |
 |----------|-------|
 | Define exploratory charter, risk hypotheses, investigation order, and exploration gaps | `exploratory-test-writer` |
-| Gather grounded product evidence | `explore-app` |
+| Gather grounded product evidence | `capture-feature-evidence` |
 | Turn confirmed risks into shared coverage planning and final P0/P1/P2 prioritization | `plan-test-coverage` |
 | Turn shared plans into detailed specs | `generate-test-cases` |
 
@@ -23,7 +23,7 @@ The default progression is:
 - Use the first charter pass to decide whether grounded product evidence is missing, stale, or too
   thin to support confident risk framing.
 - If the charter depends on grounded product behavior and `e2e-plan/exploration-report.md` is
-  missing or stale, run `explore-app`, then return to `exploratory-test-writer` to finalize the
+  missing or stale, run `capture-feature-evidence`, then return to `exploratory-test-writer` to finalize the
   charter.
 - Use the completed charter to identify what still needs deeper probing and what should be handed to
   shared planning next.
@@ -35,7 +35,7 @@ The default progression is:
 - `plan-test-coverage` may consume that charter as optional context, but it owns the final
   P0/P1/P2 coverage priority and it does not let the charter replace the required grounded evidence
   in `e2e-plan/exploration-report.md`.
-- `explore-app` owns `e2e-plan/exploration-report.md`.
+- `capture-feature-evidence` owns `e2e-plan/exploration-report.md`.
 - `plan-test-coverage` owns `e2e-plan/coverage-plan.md`.
 - `generate-test-cases` owns `test-cases/<feature>.md`.
 

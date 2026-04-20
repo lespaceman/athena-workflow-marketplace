@@ -8,7 +8,7 @@ areas.
 | Activity | Skill |
 |----------|-------|
 | Define rerunnable regression scope and depth | `define-regression-scope` |
-| Gather grounded product evidence | `explore-app` |
+| Gather grounded product evidence | `capture-feature-evidence` |
 | Update shared prioritization when needed | `plan-test-coverage` |
 | Expand shared specs when required | `generate-test-cases` |
 
@@ -22,14 +22,14 @@ The default progression is:
 
 - Load `define-regression-scope` as the workflow entry skill.
 - If the regression decision depends on real product behavior and
-  `e2e-plan/exploration-report.md` is missing or stale, load `explore-app` first.
+  `e2e-plan/exploration-report.md` is missing or stale, load `capture-feature-evidence` first.
 - If the regression decision exposes coverage gaps or changed-area work that needs updated shared
   planning, load `plan-test-coverage` and `generate-test-cases` after the charter is drafted.
 
 ## Handoff Rules
 
 - `define-regression-scope` owns `e2e-plan/regression-charter.md`, not the shared artifact chain.
-- `explore-app` owns `e2e-plan/exploration-report.md`.
+- `capture-feature-evidence` owns `e2e-plan/exploration-report.md`.
 - `plan-test-coverage` owns `e2e-plan/coverage-plan.md`.
 - `generate-test-cases` owns `test-cases/<feature>.md`.
 

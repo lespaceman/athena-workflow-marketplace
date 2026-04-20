@@ -1,11 +1,11 @@
 ---
-name: explore-app
+name: capture-feature-evidence
 description: >
   Deeply explore a live app feature or a single mapped sub-feature and capture grounded evidence for downstream planning in `e2e-plan/exploration-report.md` or a scoped file under `e2e-plan/exploration/`. Use after the requested scope is already known, especially after `map-feature-scope` has identified bounded sub-features for a large feature. This skill owns observed product evidence and blockers for the scoped area; it does not perform feature decomposition, frame exploratory charters, prioritize risks, or write coverage plans.
 allowed-tools: Read Write Edit Glob Grep Task
 ---
 
-# Explore App
+# Capture Feature Evidence
 
 Capture deep product evidence for one scoped feature area and hand it off in a stable artifact that
 the rest of the testing suite can consume.

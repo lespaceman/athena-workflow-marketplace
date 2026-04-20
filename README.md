@@ -234,7 +234,7 @@ Optional plugin-owned intent artifacts:
 
 Canonical entry skills:
 
-- `explore-app` in `app-exploration`
+- `capture-feature-evidence` in `app-exploration`
 - `exploratory-test-writer` in `exploratory-testing`
 - `define-smoke-scope` in `smoke-testing`
 - `define-regression-scope` in `regression-testing`

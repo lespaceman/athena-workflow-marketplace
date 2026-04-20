@@ -42,7 +42,7 @@ Responsibility boundary:
 - durable observation handoff
 
 Owns skills such as:
-- `explore-app`
+- `capture-feature-evidence`
 - future exploration-oriented support skills if needed
 
 Depends on:
@@ -83,7 +83,7 @@ Responsibility boundary:
 - investigation focus guidance (where to probe deeper)
 
 Does NOT own:
-- live product exploration (owned by `explore-app` in `app-exploration`)
+- live product exploration (owned by `capture-feature-evidence` in `app-exploration`)
 - coverage planning (owned by `plan-test-coverage` in `test-analysis`)
 - test case generation (owned by `generate-test-cases` in `test-analysis`)
 

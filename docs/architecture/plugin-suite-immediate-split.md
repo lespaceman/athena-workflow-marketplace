@@ -81,7 +81,7 @@ the historical `plugins/e2e-test-builder/skills/` source paths that were removed
 
 | Plugin | Skill | Purpose |
 |---|---|---|
-| `app-exploration` | `explore-app` | Explore the live app, capture evidence, record blockers, and write `e2e-plan/exploration-report.md` |
+| `app-exploration` | `capture-feature-evidence` | Explore the live app, capture evidence, record blockers, and write `e2e-plan/exploration-report.md` |
 | `exploratory-testing` | `exploratory-test-writer` | Frame risk hypotheses and investigation focus via exploratory charters |
 | `smoke-testing` | `define-smoke-scope` | Define the minimum critical-path confidence scope and write `e2e-plan/smoke-charter.md` |
 | `regression-testing` | `define-regression-scope` | Define rerunnable regression scope and write `e2e-plan/regression-charter.md` |
@@ -155,7 +155,7 @@ It must not:
 
 - behave as the exploration skill
 - perform only a lightweight pseudo-exploration and then plan from partial assumptions
-- replace `explore-app`
+- replace `capture-feature-evidence`
 
 ## Workflow And Marketplace Changes
 
@@ -235,7 +235,7 @@ The current execution backlog to reach the active end-state is:
    `app-exploration` owns `e2e-plan/exploration-report.md`, and `test-analysis` owns
    `e2e-plan/coverage-plan.md` plus `test-cases/<feature>.md`.
 3. Narrow `exploratory-testing` so it contributes exploratory intent, risk framing, and
-   hypothesis-driven guidance without replacing `explore-app` or `test-analysis`.
+   hypothesis-driven guidance without replacing `capture-feature-evidence` or `test-analysis`.
 4. Keep `smoke-testing` and `regression-testing` plugin ownership narrow and free of framework
    authoring duplication.
 5. Keep workflow sequencing in `workflow.md` and plugin skills capability-local.

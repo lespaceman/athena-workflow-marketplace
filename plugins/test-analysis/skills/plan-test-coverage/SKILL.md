@@ -66,7 +66,7 @@ area, or is this level right?"
 4. **Block when required exploration evidence is missing**:
    - If the target flow depends on real product behavior, validation copy, selector shape, or
      conditional UI and `e2e-plan/exploration-report.md` is missing or clearly stale, stop and run
-     `explore-app`
+     `capture-feature-evidence`
    - Do not treat `e2e-plan/exploratory-charter.md` as a substitute for missing exploration
      evidence
    - Do not replace missing exploration with lightweight pseudo-exploration

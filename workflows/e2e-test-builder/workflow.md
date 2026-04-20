@@ -10,7 +10,7 @@ unless the pinned versions change:
 | Plugin | Pinned Version | Skills Used Here |
 |--------|----------------|------------------|
 | `agent-web-interface` | `1.0.12` | browser MCP companion skill loaded by scoped exploration subagents |
-| `app-exploration` | `0.1.6` | `map-feature-scope`, `explore-app` |
+| `app-exploration` | `0.1.6` | `map-feature-scope`, `capture-feature-evidence` |
 | `test-analysis` | `0.2.7` | `plan-test-coverage`, `generate-test-cases`, `review-test-cases` |
 | `playwright-automation` | `0.1.4` | `add-playwright-tests`, `analyze-test-codebase`, `write-test-code`, `review-test-code`, `fix-flaky-tests` |
 
@@ -23,7 +23,7 @@ Load the relevant skill before each activity. Skills carry the implementation kn
 | Full workflow entry point and orchestration | `add-playwright-tests` |
 | Analyze test setup, config, conventions | `analyze-test-codebase` |
 | Quickly map a broad feature into bounded exploration units | `map-feature-scope` |
-| Explore the product and capture evidence | `explore-app` |
+| Explore the product and capture evidence | `capture-feature-evidence` |
 | Decide what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Create TC-ID specs from shared evidence | `generate-test-cases` |
 | Review TC-ID specs before implementation | `review-test-cases` |
@@ -46,13 +46,13 @@ missing, follow the scaffolding guidance from `add-playwright-tests`.
 
 Choose the lightest safe exploration path for the requested problem:
 
-- If the request is narrow and obviously single-surface, go straight to `explore-app`.
+- If the request is narrow and obviously single-surface, go straight to `capture-feature-evidence`.
 - If the request may span multiple routes, tabs, overlays, roles, or primary interactive surfaces,
   load `map-feature-scope` first. It writes `e2e-plan/feature-map.md`, which tells the
-  orchestrator whether one exploration run is enough or whether multiple scoped `explore-app` runs
+  orchestrator whether one exploration run is enough or whether multiple scoped `capture-feature-evidence` runs
   should follow.
 
-Load `explore-app` after scoping and capture either:
+Load `capture-feature-evidence` after scoping and capture either:
 - `e2e-plan/exploration-report.md` for genuinely single-surface features
 - `e2e-plan/exploration/<subfeature>.md` for mapped multi-surface features
 
@@ -79,8 +79,8 @@ The common progression is:
 
 Treat that as a dependency graph, not a rigid script. The right path depends on the problem:
 
-- Narrow single-surface feature: `analyze codebase → explore-app → plan → specs → review → write → review → run`
-- Broad multi-surface feature: `analyze codebase → map-feature-scope → parallel/serial scoped explore-app runs → rollup → plan → specs → review → write → review → run`
+- Narrow single-surface feature: `analyze codebase → capture-feature-evidence → plan → specs → review → write → review → run`
+- Broad multi-surface feature: `analyze codebase → map-feature-scope → parallel/serial scoped capture-feature-evidence runs → rollup → plan → specs → review → write → review → run`
 - Existing mature codebase with current artifacts: reuse valid `feature-map.md`, exploration, or
   spec artifacts instead of regenerating them
 - Direct debugging request: if tests already exist and the main problem is instability, load
@@ -113,7 +113,7 @@ as one feature). Such features should normally pass through `map-feature-scope` 
 exploration.
 
 - **Exploration inventory** — non-trivial features require ≥20 distinct interactive elements recorded with selector candidates; ≥3 meaningful error, validation, or empty states deliberately triggered; and a labeled "elements not yet reached" list so downstream skills know the scope limits.
-- **TC-ID count** — non-trivial features require ≥15 TCs. If the author cannot reach 15, the spec has out-run the exploration; return to `explore-app` rather than padding.
+- **TC-ID count** — non-trivial features require ≥15 TCs. If the author cannot reach 15, the spec has out-run the exploration; return to `capture-feature-evidence` rather than padding.
 - **Functional-to-visibility ratio** — ≥60% of TCs in a spec must assert a state change (URL transition, data mutation, observable side effect, element value change after action). Render-existence assertions count toward the remaining ≤40%. A test that only checks `toBeVisible()` on an element the test never interacted with is visibility, not functional coverage.
 
 These targets are not soft suggestions. Gate 1 rejects specs that violate them with feedback pointing back at the gap.
@@ -175,11 +175,11 @@ completion signals the authoring agent could not honestly grade.
 **1. Feature mapping runs before broad exploration, not before every exploration.** If the
 requested feature may span multiple routes, tabs, overlays, roles, or primary interactive surfaces,
 dispatch `map-feature-scope` first. For obviously narrow single-surface requests, skip it and go
-straight to `explore-app`. The output of mapping is `e2e-plan/feature-map.md`, not a deep evidence
+straight to `capture-feature-evidence`. The output of mapping is `e2e-plan/feature-map.md`, not a deep evidence
 report.
 
 **2. Deep exploration runs in scoped subagents.** The main agent does not browse. Dispatch
-`explore-app` work via the Task tool and invoke each subagent with access to the
+`capture-feature-evidence` work via the Task tool and invoke each subagent with access to the
 `mcp__plugin_agent-web-interface_browser__*` tools. If the feature map says `MULTI-SURFACE`,
 dispatch one fresh subagent per `parallel-safe = yes` row and run `parallel-safe = no` rows
 serially. Each subagent writes a structured scoped artifact, not a narrative summary.

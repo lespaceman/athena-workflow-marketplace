@@ -8,7 +8,7 @@ description: >
   deeper", or any request that needs structured thinking about test intent before coverage
   planning begins. This skill owns exploratory intent, risk framing, investigation order, and
   concrete follow-up asks for missing evidence; it does NOT own exploration evidence
-  (explore-app), final coverage prioritization (plan-test-coverage), or test case specs
+  (capture-feature-evidence), final coverage prioritization (plan-test-coverage), or test case specs
   (generate-test-cases).
 ---
 
@@ -28,7 +28,7 @@ interviews, and repo context into investigation intent; it does not collect the 
 evidence itself, and it does not assign the final P0/P1/P2 coverage plan.
 
 **This skill does NOT:**
-- Explore live apps (use `explore-app` from app-exploration)
+- Explore live apps (use `capture-feature-evidence` from app-exploration)
 - Write coverage plans (use `plan-test-coverage` from test-analysis)
 - Generate test case specs (use `generate-test-cases` from test-analysis)
 - Orchestrate cross-plugin workflow (workflow orchestration lives in `workflow.md`)
@@ -75,20 +75,20 @@ area?"
   existing coverage thinking.
 - Search the codebase for feature keywords, route names, and existing test files.
 - If no exploration report exists and product context is still missing, note this as a gap and
-  recommend running `explore-app` first. You can still produce a preliminary charter from the
+  recommend running `capture-feature-evidence` first. You can still produce a preliminary charter from the
   available request context, but label ungrounded hypotheses clearly.
 - If grounded product behavior is required for confident prioritization, stop and request
-  `explore-app` before presenting a high-confidence charter.
+  `capture-feature-evidence` before presenting a high-confidence charter.
 
 ### Evidence sufficiency rule
 
 - Treat code reading, old test specs, and user descriptions as supporting context, not as a
   substitute for observed product behavior.
 - If selector choices, validation behavior, redirects, auth walls, conditional UI, or error states
-  materially affect prioritization, require fresh or clearly relevant `explore-app` evidence.
+  materially affect prioritization, require fresh or clearly relevant `capture-feature-evidence` evidence.
 - If the available exploration report is missing, stale, or incomplete for the decision you need to
   make, do one of two things only:
-  - run `explore-app` to close the gap, or
+  - run `capture-feature-evidence` to close the gap, or
   - produce a clearly labeled preliminary charter with explicit evidence gaps
 - Do not present a high-confidence charter when those gaps remain open.
 
@@ -135,7 +135,7 @@ Based on your hypotheses, identify where evidence is missing:
 - Which are inferences that need exploration to confirm?
 - Which areas of the product haven't been explored at all?
 
-For each gap, recommend what `explore-app` should focus on. Be specific: "Explore the password
+For each gap, recommend what `capture-feature-evidence` should focus on. Be specific: "Explore the password
 reset flow — we have no evidence of its validation behavior" is useful. "Explore more" is not.
 
 Each gap should be directly handoff-ready and include:
@@ -168,7 +168,7 @@ Write `e2e-plan/exploratory-charter.md`:
 
 ## Exploration Gaps
 
-- <gap title> — Need evidence for <specific behavior>. Ask `explore-app` to start at <entry point
+- <gap title> — Need evidence for <specific behavior>. Ask `capture-feature-evidence` to start at <entry point
   or URL>, exercise <path or state>, and confirm <unknown behavior>.
 - ...
 
@@ -182,7 +182,7 @@ Write `e2e-plan/exploratory-charter.md`:
 
 ## Recommended Next Steps
 
-- Run `explore-app` to close evidence gaps listed above
+- Run `capture-feature-evidence` to close evidence gaps listed above
 - Run `plan-test-coverage` to turn confirmed risks into a coverage plan
 - Run `generate-test-cases` to produce specs from the coverage plan
 ```
@@ -196,7 +196,7 @@ questioned, and refined before downstream skills consume it.
 
 - Every hypothesis cites its basis (observed, interviewed, inferred).
 - Investigation order traces to impact, uncertainty, and user concern, not gut feel.
-- Exploration gaps are specific enough to hand directly to `explore-app` without reinterpretation.
+- Exploration gaps are specific enough to hand directly to `capture-feature-evidence` without reinterpretation.
 - The charter is honest about what's unknown and what's assumed.
 - The mission statement would make sense to someone who hasn't seen the app.
 - The charter does not duplicate the exploration report's UI inventory or selector detail.
@@ -208,7 +208,7 @@ questioned, and refined before downstream skills consume it.
 
 - Writing test cases directly — that's `generate-test-cases`'s job.
 - Producing a coverage plan — that's `plan-test-coverage`'s job.
-- Exploring the live app — that's `explore-app`'s job.
+- Exploring the live app — that's `capture-feature-evidence`'s job.
 - Orchestrating the full workflow — that's `workflow.md`'s job.
 - Assigning final P0/P1/P2 coverage priority — that's `plan-test-coverage`'s job.
 - Presenting inferences as confirmed risks.

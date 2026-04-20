@@ -63,7 +63,7 @@ That makes plugin names less truthful. A framework plugin should primarily answe
 - planning can proceed without a durable observation artifact
 - workflows do not clearly separate "understand reality" from "design coverage"
 
-The target architecture makes `explore-app` the exploration skill and positions `plan-test-coverage` as an evidence-consuming planning skill.
+The target architecture makes `capture-feature-evidence` the exploration skill and positions `plan-test-coverage` as an evidence-consuming planning skill.
 
 ### Workflow composition does not scale
 

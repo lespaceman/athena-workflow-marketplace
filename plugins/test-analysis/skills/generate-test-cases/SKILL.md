@@ -29,7 +29,7 @@ Read and reconcile:
 - existing automated coverage if needed to avoid duplicate TC-IDs
 
 If the feature clearly needs real product evidence and `e2e-plan/exploration-report.md` is missing,
-stop and run `explore-app` first.
+stop and run `capture-feature-evidence` first.
 
 Parse the journey description to identify:
 - base URL and target feature area
@@ -205,7 +205,7 @@ When generating specs that span multiple roles or test categories, recommend rol
 - **Non-happy-path ratio:** at least 30% of cases within each feature must be non-happy-path.
   Include: invalid inputs, permission errors, network failures, concurrent actions, session
   timeouts, back-button/refresh mid-action, empty states, maximum limits, and interrupt cases.
-- **Test-case count (hard floor):** non-trivial features (more than two routes, or more than one primary interactive surface) require **≥15 TCs**. If you cannot reach 15 without inventing scenarios, the exploration was shallow — stop and return control to `explore-app` rather than padding the spec with cosmetic or duplicate cases. The Gate 1 reviewer will reject specs under 15 with the feedback "exploration too shallow."
+- **Test-case count (hard floor):** non-trivial features (more than two routes, or more than one primary interactive surface) require **≥15 TCs**. If you cannot reach 15 without inventing scenarios, the exploration was shallow — stop and return control to `capture-feature-evidence` rather than padding the spec with cosmetic or duplicate cases. The Gate 1 reviewer will reject specs under 15 with the feedback "exploration too shallow."
 - **Functional-to-visibility ratio:** **≥60% of TCs must assert a state change** — URL transition, data mutation, observable side effect, or element value change after an action. Render-existence assertions (e.g., "button is visible", "menu renders with N items") count toward the remaining ≤40% visibility bucket. A TC that only asserts `toBeVisible()` on an element the test never interacted with is a visibility check, not functional coverage. Gate 1 rejects specs where visibility exceeds 40%.
 - **Upper bound:** more than 40 TCs suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
 - If `feature-map.md` already identified sub-features, treat a single oversized combined spec as a

@@ -1,7 +1,7 @@
 ---
 name: write-test-code
 description: >
-  This skill should be used when writing, refactoring, or modifying Playwright E2E test code. It covers creating test files from TC-ID specs, converting browser exploration results to executable tests, refactoring locators or fixtures, adding API mocking, test data setup/teardown, and parallel-safe isolation. Includes locator strategy hierarchy, auth setup patterns, fixture design, teardown strategies, and network interception recipes. Triggers: "write a test for", "add a test case", "refactor this locator", "add error path tests", "convert specs to code", "add API mocking", "set up auth for tests". NOT for: full pipeline from scratch (use add-playwright-tests), shared live-site exploration (use explore-app), generating specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
+  This skill should be used when writing, refactoring, or modifying Playwright E2E test code. It covers creating test files from TC-ID specs, converting browser exploration results to executable tests, refactoring locators or fixtures, adding API mocking, test data setup/teardown, and parallel-safe isolation. Includes locator strategy hierarchy, auth setup patterns, fixture design, teardown strategies, and network interception recipes. Triggers: "write a test for", "add a test case", "refactor this locator", "add error path tests", "convert specs to code", "add API mocking", "set up auth for tests". NOT for: full pipeline from scratch (use add-playwright-tests), shared live-site exploration (use capture-feature-evidence), generating specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
@@ -30,7 +30,7 @@ Parse the test description or spec file path from: $ARGUMENTS
 ### 3. Verify Key Selectors Against Shared Evidence
 - If a test case spec file includes **Selectors observed**, use those as your starting point
 - Read `e2e-plan/exploration-report.md` when selector evidence or observed flow behavior matters
-- If no spec, selectors, or exploration artifact are available, stop and run `explore-app` to produce or refresh `e2e-plan/exploration-report.md` before writing code — do not guess
+- If no spec, selectors, or exploration artifact are available, stop and run `capture-feature-evidence` to produce or refresh `e2e-plan/exploration-report.md` before writing code — do not guess
 - Use direct browser spot-checks only to verify 2-3 critical selectors already captured in the exploration report or test case spec; do not treat ad hoc browsing as a substitute for the shared exploration artifact
 
 ### 4. Implement Tests

@@ -104,8 +104,8 @@ function main() {
     ['add-robot-tests', addRobotTests],
   ]) {
     assert(
-      content.includes('explore-app'),
-      `${label} must reference explore-app as the shared exploration layer`,
+      content.includes('capture-feature-evidence'),
+      `${label} must reference capture-feature-evidence as the shared exploration layer`,
     );
     assert(
       content.includes('plan-test-coverage'),

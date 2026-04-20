@@ -1,7 +1,7 @@
 ---
 name: analyze-test-codebase
 description: >
-  Scans and reports on an existing Playwright test codebase. This skill should be used to inspect the current Playwright setup before writing, reviewing, or fixing tests, and should be loaded early when working in a new project to understand existing patterns. Covers: Playwright config, page objects, fixtures, helpers, auth/globalSetup patterns, test conventions, and directory structure. Triggers: "understand", "check", "show me", "inspect", or "analyze" the current test setup, config, infrastructure, patterns, or conventions. In the full add-tests workflow, this skill serves as an early read-only analysis sub-step before planning detailed coverage or writing code. This skill examines existing files and outputs a structured report. It does NOT write or fix tests, install Playwright, or explore live websites — for live-site exploration, use `explore-app` so evidence is captured in `e2e-plan/exploration-report.md`.
+  Scans and reports on an existing Playwright test codebase. This skill should be used to inspect the current Playwright setup before writing, reviewing, or fixing tests, and should be loaded early when working in a new project to understand existing patterns. Covers: Playwright config, page objects, fixtures, helpers, auth/globalSetup patterns, test conventions, and directory structure. Triggers: "understand", "check", "show me", "inspect", or "analyze" the current test setup, config, infrastructure, patterns, or conventions. In the full add-tests workflow, this skill serves as an early read-only analysis sub-step before planning detailed coverage or writing code. This skill examines existing files and outputs a structured report. It does NOT write or fix tests, install Playwright, or explore live websites — for live-site exploration, use `capture-feature-evidence` so evidence is captured in `e2e-plan/exploration-report.md`.
 allowed-tools: Read Glob Grep Bash
 ---
 
@@ -117,7 +117,7 @@ This skill only reads and reports on the codebase. For related tasks, use the ap
 
 | Task | Skill |
 |------|-------|
-| Shared live-site exploration and evidence capture | `explore-app` |
+| Shared live-site exploration and evidence capture | `capture-feature-evidence` |
 | Deciding what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Writing or modifying executable test code | `write-test-code` |
 | Diagnosing flaky or failing tests | `fix-flaky-tests` |

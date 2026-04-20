@@ -123,12 +123,12 @@ function main() {
     );
   }
   assert(
-    analyzeTestCodebase.includes('explore-app'),
-    'analyze-test-codebase must route live-site exploration through explore-app',
+    analyzeTestCodebase.includes('capture-feature-evidence'),
+    'analyze-test-codebase must route live-site exploration through capture-feature-evidence',
   );
   assert(
-    writeTestCode.includes('explore-app'),
-    'write-test-code must route missing product evidence through explore-app',
+    writeTestCode.includes('capture-feature-evidence'),
+    'write-test-code must route missing product evidence through capture-feature-evidence',
   );
 
   for (const [label, content] of [

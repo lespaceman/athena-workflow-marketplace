@@ -19,7 +19,7 @@ It produces a **smoke charter** that names the must-not-break flows, what confid
 and what downstream automation should target first.
 
 **This skill does NOT:**
-- Explore live apps (use `explore-app` from app-exploration)
+- Explore live apps (use `capture-feature-evidence` from app-exploration)
 - Write coverage plans (use `plan-test-coverage` from test-analysis)
 - Generate test case specs (use `generate-test-cases` from test-analysis)
 - Write Playwright or Robot code
@@ -44,7 +44,7 @@ This skill **produces**:
 - Read the coverage plan and existing specs to avoid redefining work that is already prioritized.
 - Search the repo for existing automated coverage so the smoke scope reflects what is already
   runnable.
-- If evidence is missing for a risky critical path, call that out and recommend `explore-app`
+- If evidence is missing for a risky critical path, call that out and recommend `capture-feature-evidence`
   rather than guessing.
 
 ### Evidence sufficiency rule
@@ -52,11 +52,11 @@ This skill **produces**:
 - Treat repo context, existing specs, and prior automation as supporting evidence, not as proof of
   current live behavior.
 - If the smoke decision depends on current validation behavior, redirects, auth walls, conditional
-  UI, or the actual entry/completion path, require fresh or clearly relevant `explore-app`
+  UI, or the actual entry/completion path, require fresh or clearly relevant `capture-feature-evidence`
   evidence.
 - If `e2e-plan/exploration-report.md` is missing, stale, or incomplete for a must-not-break flow,
   do one of two things only:
-  - run `explore-app` before finalizing the scope, or
+  - run `capture-feature-evidence` before finalizing the scope, or
   - publish a clearly labeled preliminary smoke charter with explicit evidence gaps
 - Do not present a high-confidence smoke scope when critical-path evidence is still inferred.
 
@@ -124,7 +124,7 @@ Write `e2e-plan/smoke-charter.md`:
 
 ## Recommended Next Steps
 
-- Run `explore-app` if critical evidence gaps remain
+- Run `capture-feature-evidence` if critical evidence gaps remain
 - Run `plan-test-coverage` if the product still needs shared prioritization
 - Hand the included smoke scenarios to the execution workflow if runnable automation is requested
 ```

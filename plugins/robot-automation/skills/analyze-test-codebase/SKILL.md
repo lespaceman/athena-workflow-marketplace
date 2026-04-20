@@ -120,7 +120,7 @@ This skill only reads and reports on the codebase. For related tasks, use the ap
 
 | Task | Skill |
 |------|-------|
-| Shared live-site exploration and evidence capture | `explore-app` |
+| Shared live-site exploration and evidence capture | `capture-feature-evidence` |
 | Deciding what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Writing or modifying executable `.robot` code | `write-robot-code` |
 | Diagnosing flaky or failing tests | `fix-flaky-tests` |

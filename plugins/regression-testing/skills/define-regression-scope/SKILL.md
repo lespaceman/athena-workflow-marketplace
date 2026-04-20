@@ -42,7 +42,7 @@ This skill does:
 
 This skill does not:
 
-- explore live apps (use `explore-app` from app-exploration)
+- explore live apps (use `capture-feature-evidence` from app-exploration)
 - write coverage plans (use `plan-test-coverage` from test-analysis)
 - generate test case specs (use `generate-test-cases` from test-analysis)
 - write Playwright or Robot code
@@ -78,10 +78,10 @@ This skill produces:
   as proof of current live behavior.
 - If rerun depth depends on current validation behavior, redirects, auth walls, conditional UI,
   cross-feature interaction, or end-to-end path shape, require fresh or clearly relevant
-  `explore-app` evidence.
+  `capture-feature-evidence` evidence.
 - If `e2e-plan/exploration-report.md` is missing, stale, or incomplete for an included area, do one
   of two things only:
-  - run `explore-app` to close the gap, or
+  - run `capture-feature-evidence` to close the gap, or
   - publish a clearly labeled preliminary regression charter with explicit evidence gaps
 - Do not present a high-confidence final charter when key included areas still rely on inference.
 
@@ -164,7 +164,7 @@ Write `e2e-plan/regression-charter.md`:
 
 ## Recommended Next Steps
 
-- Run `explore-app` if evidence gaps block confident prioritization
+- Run `capture-feature-evidence` if evidence gaps block confident prioritization
 - Run `plan-test-coverage` if shared prioritization still needs to be updated
 - Expand or refresh `test-cases/*.md` if deeper shared specs are still missing
 - Hand the included regression areas to the execution workflow if runnable automation is requested

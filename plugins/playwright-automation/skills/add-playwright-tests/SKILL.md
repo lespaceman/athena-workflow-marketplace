@@ -8,7 +8,7 @@ description: >
   `e2e-plan/coverage-plan.md`, and `test-cases/*.md`, write production-grade test code, review it,
   and verify it with real execution. Delegates to `analyze-test-codebase`, `write-test-code`,
   `review-test-code`, and `fix-flaky-tests`, while relying on shared `map-feature-scope`,
-  `explore-app`, `plan-test-coverage`,
+  `capture-feature-evidence`, `plan-test-coverage`,
   `generate-test-cases`, and `review-test-cases`.
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
@@ -17,7 +17,7 @@ allowed-tools: Read Write Edit Bash Glob Grep Task
 
 Go from feature request to verified Playwright tests while honoring the new suite layering:
 
-- `explore-app` owns live product exploration and evidence capture
+- `capture-feature-evidence` owns live product exploration and evidence capture
 - `test-analysis` owns coverage planning, spec generation, and spec review
 - `playwright-automation` owns Playwright-specific analysis, authoring, code review, and flake repair
 
@@ -45,7 +45,7 @@ constraints.
 - Read `e2e-plan/exploration-report.md` if it exists.
 - Read `e2e-plan/feature-map.md` and any `e2e-plan/exploration/*.md` files if they exist.
 - If the required product evidence is missing or stale, run `map-feature-scope` first for broad
-  features, then run `explore-app` for each required scoped area before continuing.
+  features, then run `capture-feature-evidence` for each required scoped area before continuing.
 - Read `e2e-plan/coverage-plan.md` and `test-cases/*.md` files for the feature if they exist.
 
 The execution layer should not improvise product behavior that the exploration layer was supposed to
@@ -57,7 +57,7 @@ artifacts first.
 | Activity | Skill |
 |----------|-------|
 | Shared feature decomposition before deep exploration | `map-feature-scope` |
-| Shared exploration and blocker capture | `explore-app` |
+| Shared exploration and blocker capture | `capture-feature-evidence` |
 | Playwright codebase analysis | `analyze-test-codebase` |
 | Shared coverage planning | `plan-test-coverage` |
 | Shared TC-ID spec generation | `generate-test-cases` |
@@ -79,8 +79,8 @@ Before you write Playwright code, make sure the shared handoff artifacts exist a
 If any required artifact is missing, dispatch each shared skill via a Task-tool subagent — the orchestrator coordinates, subagents produce:
 
 1. **Run `map-feature-scope` in a subagent** when the request may span multiple routes, tabs, overlays, roles, or primary interactive surfaces. The subagent writes `e2e-plan/feature-map.md`.
-2. If the feature map says `SINGLE-SURFACE`, run one `explore-app` subagent and let it write `e2e-plan/exploration-report.md`.
-3. If the feature map says `MULTI-SURFACE`, dispatch one fresh `explore-app` subagent per sub-feature marked `parallel-safe = yes`, then run any `parallel-safe = no` rows serially once their prerequisites are satisfied. Each subagent writes `e2e-plan/exploration/<subfeature>.md`.
+2. If the feature map says `SINGLE-SURFACE`, run one `capture-feature-evidence` subagent and let it write `e2e-plan/exploration-report.md`.
+3. If the feature map says `MULTI-SURFACE`, dispatch one fresh `capture-feature-evidence` subagent per sub-feature marked `parallel-safe = yes`, then run any `parallel-safe = no` rows serially once their prerequisites are satisfied. Each subagent writes `e2e-plan/exploration/<subfeature>.md`.
 4. Synthesize or refresh `e2e-plan/exploration-report.md` as a rollup over the mapped exploration artifacts. The rollup is an index and merged summary only; it does not invent observations.
 5. Run `plan-test-coverage` to produce the coverage plan (delegate if heavy).
 6. Run `generate-test-cases` to produce TC-ID specs (delegate if heavy).
