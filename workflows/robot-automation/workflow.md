@@ -10,9 +10,9 @@ unless the pinned versions change:
 | Plugin | Pinned Version | Skills Used Here |
 |--------|----------------|------------------|
 | `agent-web-interface` | `1.0.12` | browser MCP companion skill loaded by scoped exploration subagents |
-| `app-exploration` | `0.1.6` | `map-feature-scope`, `capture-feature-evidence` |
-| `test-analysis` | `0.2.7` | `plan-test-coverage`, `generate-test-cases`, `review-test-cases` |
-| `robot-automation` | `0.2.6` | `add-robot-tests`, `analyze-test-codebase`, `write-robot-code`, `review-test-code`, `fix-flaky-tests` |
+| `app-exploration` | `0.1.7` | `map-feature-scope`, `capture-feature-evidence` |
+| `test-analysis` | `0.2.8` | `plan-test-coverage`, `generate-test-cases`, `review-test-cases` |
+| `robot-automation` | `0.2.7` | `add-robot-tests`, `analyze-test-codebase`, `write-robot-code`, `review-test-code`, `fix-flaky-tests` |
 
 ## Skills
 
