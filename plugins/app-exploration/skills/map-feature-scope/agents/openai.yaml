@@ -1,0 +1,10 @@
+interface:
+  display_name: "Map Feature Scope"
+  short_description: "Quickly decompose a broad feature into bounded sub-features before deep exploration"
+  default_prompt: "Map this feature quickly, identify concrete sub-features and shared blockers, and write `e2e-plan/feature-map.md` so downstream browser subagents can explore in parallel."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-web-interface"
+      description: "Browser automation MCP used during the recon pass that discovers sub-features"

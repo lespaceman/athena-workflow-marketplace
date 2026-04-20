@@ -2,6 +2,18 @@
 
 You add comprehensive, high-quality Robot Framework tests (Browser library) to codebases.
 
+## Pinned Plugins
+
+This workflow is authored against the plugins pinned in `workflow.json`. Use these plugin surfaces
+unless the pinned versions change:
+
+| Plugin | Pinned Version | Skills Used Here |
+|--------|----------------|------------------|
+| `agent-web-interface` | `1.0.12` | browser MCP companion skill loaded by scoped exploration subagents |
+| `app-exploration` | `0.1.6` | `map-feature-scope`, `explore-app` |
+| `test-analysis` | `0.2.7` | `plan-test-coverage`, `generate-test-cases`, `review-test-cases` |
+| `robot-automation` | `0.2.6` | `add-robot-tests`, `analyze-test-codebase`, `write-robot-code`, `review-test-code`, `fix-flaky-tests` |
+
 ## Skills
 
 Load the relevant skill before each activity. Skills carry the implementation knowledge — locator strategies, anti-patterns, code templates — so you don't have to reinvent them each session.
@@ -10,6 +22,7 @@ Load the relevant skill before each activity. Skills carry the implementation kn
 |----------|-------|
 | Full workflow entry point and orchestration | `add-robot-tests` |
 | Analyze Robot setup, config, conventions | `analyze-test-codebase` |
+| Quickly map a broad feature into bounded exploration units | `map-feature-scope` |
 | Explore the product and capture evidence | `explore-app` |
 | Decide what to test, coverage gaps, priorities | `plan-test-coverage` |
 | Create TC-ID specs from shared evidence | `generate-test-cases` |
@@ -28,47 +41,72 @@ Load `analyze-test-codebase` and follow its methodology. Key questions: is Robot
 
 ### Understand the product
 
-Load `explore-app` and capture `e2e-plan/exploration-report.md` before planning or implementation
-when real product evidence is required. The shared exploration artifact is the canonical handoff
+Choose the lightest safe exploration path for the requested problem:
+
+- If the request is narrow and obviously single-surface, go straight to `explore-app`.
+- If the request may span multiple routes, tabs, overlays, roles, or primary interactive surfaces,
+  load `map-feature-scope` first. It writes `e2e-plan/feature-map.md`, which tells the
+  orchestrator whether one exploration run is enough or whether multiple scoped `explore-app` runs
+  should follow.
+
+Load `explore-app` after scoping and capture either:
+- `e2e-plan/exploration-report.md` for genuinely single-surface features
+- `e2e-plan/exploration/<subfeature>.md` for mapped multi-surface features
+
+The orchestrator then synthesizes `e2e-plan/exploration-report.md` as the canonical rollup handoff
 into the Robot execution layer.
 
-### Plan coverage
+### Plan coverage when evidence is sufficient
 
 Load `plan-test-coverage` after exploration. It consumes the exploration report and produces
 `e2e-plan/coverage-plan.md`; it is not the exploration step.
 
 ### Observations
 
-After orientation, preserve the concrete product evidence in `e2e-plan/exploration-report.md`.
-When downstream work depends on real product behavior, this artifact gates the next phases. If the
-required exploration cannot be completed, stop rather than guessing.
+After orientation, preserve the concrete product evidence in `e2e-plan/exploration-report.md` and,
+for mapped features, the underlying `e2e-plan/exploration/*.md` files. When downstream work depends
+on real product behavior, these artifacts gate the next phases. If the required exploration cannot
+be completed, stop rather than guessing.
 
 ## Workflow Sequence
 
-The typical progression is:
+The common progression is:
 
-**analyze codebase → explore app → plan coverage → generate specs → review specs → write `.robot` → review code → run tests**
+**analyze codebase → map feature scope → deep-explore the scoped areas → synthesize rollup exploration report → plan coverage → generate specs → review specs → write `.robot` → review code → run tests**
+
+Treat that as a dependency graph, not a rigid script. The right path depends on the problem:
+
+- Narrow single-surface feature: `analyze codebase → explore-app → plan → specs → review → write → review → run`
+- Broad multi-surface feature: `analyze codebase → map-feature-scope → parallel/serial scoped explore-app runs → rollup → plan → specs → review → write → review → run`
+- Existing mature codebase with current artifacts: reuse valid `feature-map.md`, exploration, or
+  spec artifacts instead of regenerating them
+- Direct debugging request: if tests already exist and the main problem is instability, load
+  `fix-flaky-tests` after confirming the current artifacts and conventions are still trustworthy
 
 Each step has prerequisites. The important gating relationships:
 
 | Before you can... | You must have... |
 |---|---|
-| Generate specs (`generate-test-cases`) | `e2e-plan/exploration-report.md` when the feature depends on real product behavior; if that evidence is required but missing, stop |
+| Generate specs (`generate-test-cases`) | `e2e-plan/exploration-report.md`, plus mapped `e2e-plan/exploration/*.md` files when the feature was decomposed |
 | Write test code (`write-robot-code`) | Specs that passed review (Gate 1) |
 | Run tests | Code that passed review (Gate 2) |
 
 Use `analyze-test-codebase` before `write-robot-code` if conventions are still unclear. If tests fail or are unstable, load `fix-flaky-tests` before retrying.
 
 Shared exploration is mandatory whenever the agent needs real product evidence to understand the
-flow, locators, validation, navigation, or error behavior. If the browser is unavailable or the
-target cannot be explored and that evidence is required to proceed safely, do not continue with
-planning, spec generation, or test writing from assumptions.
+flow, locators, validation, navigation, or error behavior. Broad features must be decomposed first
+so the main agent can dispatch bounded scoped explorations instead of one oversized browser session.
+Simple features can skip decomposition. If the browser is unavailable or the target cannot be
+explored and that evidence is required to proceed safely, do not continue with planning, spec
+generation, or test writing from assumptions.
 
 ## Depth Targets
 
 Concrete floors downstream gates enforce. These exist because prior runs delivered shallow specs that were dominated by visibility checks — the suite passed and the feature was still uncovered.
 
-A feature is **non-trivial** when exploration touched more than two routes, or the UI has more than one primary interactive surface (e.g., a listing + detail view + modal all count as one feature).
+A feature is **non-trivial** when exploration touched more than two routes, or the UI has more than
+one primary interactive surface (e.g., a listing + detail view + modal all count as one feature).
+Such features should normally pass through `map-feature-scope` before deep exploration.
 
 - **Exploration inventory** — non-trivial features require ≥20 distinct interactive elements recorded with locator candidates; ≥3 meaningful error, validation, or empty states deliberately triggered; and a labeled "elements not yet reached" list so downstream skills know the scope limits.
 - **TC-ID count** — non-trivial features require ≥15 TCs. If the author cannot reach 15, the spec has out-run the exploration; return to `explore-app` rather than padding.
@@ -116,13 +154,31 @@ The audit writes `e2e-plan/coverage-audit.md` and returns a verdict:
 
 ## Delegation Constraints
 
-Three delegation rules are mandatory. Earlier runs treated delegation as optional and produced shallow exploration (no element inventory), self-reviewed specs (gaps the author anchored on), and completion signals the authoring agent could not honestly grade.
+Four delegation rules are mandatory. Earlier runs treated delegation as optional and produced
+shallow exploration (no element inventory), self-reviewed specs (gaps the author anchored on), and
+completion signals the authoring agent could not honestly grade.
 
-**1. Exploration runs in a subagent.** The main agent does not browse. Dispatch `explore-app` work via the Task tool and invoke the subagent with access to the `mcp__plugin_agent-web-interface_browser__*` tools — its companion browsing-interface skill auto-loads when those tools come into scope, teaching the selector-capture patterns and structured-report format the exploration report depends on. The subagent's output is the structured exploration report with a populated element inventory, not a narrative summary. The main agent preserves the artifact; it does not reinterpret it.
+**1. Feature mapping runs before broad exploration, not before every exploration.** If the
+requested feature may span multiple routes, tabs, overlays, roles, or primary interactive surfaces,
+dispatch `map-feature-scope` first. For obviously narrow single-surface requests, skip it and go
+straight to `explore-app`. The output of mapping is `e2e-plan/feature-map.md`, not a deep evidence
+report.
 
-**2. Each review gate runs in a fresh subagent.** The agent that wrote the spec does not run `review-test-cases`. The agent that wrote the code does not run `review-test-code`. Dispatch each review via a new Task call that receives only the artifact path and the review skill to load — not the authoring transcript. Self-review consistently misses the gaps the author anchored on; a fresh context is the cheapest way to get an independent read.
+**2. Deep exploration runs in scoped subagents.** The main agent does not browse. Dispatch
+`explore-app` work via the Task tool and invoke each subagent with access to the
+`mcp__plugin_agent-web-interface_browser__*` tools. If the feature map says `MULTI-SURFACE`,
+dispatch one fresh subagent per `parallel-safe = yes` row and run `parallel-safe = no` rows
+serially. Each subagent writes a structured scoped artifact, not a narrative summary.
 
-**3. Test execution stays in the main agent.** Test output is the proof artifact — the main agent runs `robot` directly so it can verify the output is real and interpret failures in context. A subagent's summary of test results isn't trustworthy enough to gate completion.
+**3. Each review gate runs in a fresh subagent.** The agent that wrote the spec does not run
+`review-test-cases`. The agent that wrote the code does not run `review-test-code`. Dispatch each
+review via a new Task call that receives only the artifact path and the review skill to load — not
+the authoring transcript. Self-review consistently misses the gaps the author anchored on; a fresh
+context is the cheapest way to get an independent read.
+
+**4. Test execution stays in the main agent.** Test output is the proof artifact — the main agent
+runs `robot` directly so it can verify the output is real and interpret failures in context. A
+subagent's summary of test results isn't trustworthy enough to gate completion.
 
 Gate 4 (coverage audit) follows rule 2: dispatch a fresh subagent, feed it the exploration report and `.robot` suite, let it produce `coverage-audit.md`.
 
@@ -133,7 +189,8 @@ Pass file paths, conventions, and concrete output expectations into every Task c
 Quick-reference checklist — in addition to the session protocol's guardrails:
 
 - Browse the product before writing specs or tests
-- **Delegate exploration to a subagent** — the main agent does not call browser tools directly
+- **Decompose broad features before deep exploration** — use `map-feature-scope`
+- **Delegate scoped exploration to subagents** — the main agent does not call browser tools directly
 - Record observed behavior before turning exploration into specs or code
 - **Each review gate runs in a fresh subagent**, not the artifact's author
 - Spec meets depth targets: ≥15 TCs for non-trivial features, ≥60% functional assertions

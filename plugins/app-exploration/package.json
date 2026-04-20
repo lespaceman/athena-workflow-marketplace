@@ -1,7 +1,7 @@
 {
   "name": "@athenaflow/plugin-app-exploration",
-  "version": "0.1.5",
-  "description": "Live product exploration and evidence capture for downstream testing workflows",
+  "version": "0.1.6",
+  "description": "Shared feature mapping plus live product exploration and evidence capture for downstream testing workflows",
   "license": "MIT",
   "repository": {
     "type": "git",

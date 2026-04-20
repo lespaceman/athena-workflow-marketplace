@@ -1,14 +1,14 @@
 {
   "name": "app-exploration",
-  "version": "0.1.5",
-  "description": "Live product exploration and evidence capture for downstream testing workflows",
+  "version": "0.1.6",
+  "description": "Shared feature mapping plus live product exploration and evidence capture for downstream testing workflows",
   "author": {
     "name": "Athenaflow"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "App Exploration",
-    "shortDescription": "Explore live products, capture evidence, and record blockers for test planning",
+    "shortDescription": "Map broad features, explore scoped areas, and record grounded evidence for test planning",
     "developerName": "Athenaflow",
     "category": "Testing"
   }

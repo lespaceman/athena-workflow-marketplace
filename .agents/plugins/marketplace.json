@@ -20,8 +20,8 @@
     },
     {
       "name": "app-exploration",
-      "description": "Shared live product exploration and evidence capture for downstream testing workflows",
-      "version": "0.1.3",
+      "description": "Shared feature mapping plus live product exploration and evidence capture for downstream testing workflows",
+      "version": "0.1.6",
       "source": {
         "source": "local",
         "path": "./plugins/app-exploration"
@@ -35,7 +35,7 @@
     {
       "name": "test-analysis",
       "description": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
-      "version": "0.2.4",
+      "version": "0.2.7",
       "source": {
         "source": "local",
         "path": "./plugins/test-analysis"
@@ -86,7 +86,7 @@
     {
       "name": "playwright-automation",
       "description": "Playwright execution layer for analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
-      "version": "0.1.0",
+      "version": "0.1.4",
       "source": {
         "source": "local",
         "path": "./plugins/playwright-automation"
@@ -100,7 +100,7 @@
     {
       "name": "robot-automation",
       "description": "Robot Framework execution layer for analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
-      "version": "0.2.2",
+      "version": "0.2.6",
       "source": {
         "source": "local",
         "path": "./plugins/robot-automation"

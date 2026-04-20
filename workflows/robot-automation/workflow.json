@@ -1,6 +1,6 @@
 {
   "name": "robot-automation",
-  "description": "Athena CLI runs this authored Robot Framework (Browser library) E2E workflow across sessions - analyze setup, explore the live product, plan coverage, generate and review specs, write and review .robot tests, then execute and stabilize them",
+  "description": "Athena CLI runs this authored Robot Framework (Browser library) E2E workflow across sessions - analyze setup, map broad features, explore scoped product areas, plan coverage, generate and review specs, write and review .robot tests, then execute and stabilize them",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
   "loop": {
@@ -20,16 +20,16 @@
     },
     {
       "ref": "app-exploration@lespaceman/athena-workflow-marketplace",
-      "version": "0.1.5"
+      "version": "0.1.6"
     },
     {
       "ref": "test-analysis@lespaceman/athena-workflow-marketplace",
-      "version": "0.2.6"
+      "version": "0.2.7"
     },
     {
       "ref": "robot-automation@lespaceman/athena-workflow-marketplace",
-      "version": "0.2.5"
+      "version": "0.2.6"
     }
   ],
-  "version": "0.0.17"
+  "version": "0.0.18"
 }

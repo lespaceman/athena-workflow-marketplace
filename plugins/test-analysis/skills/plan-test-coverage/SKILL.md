@@ -13,6 +13,9 @@ This skill may consume `e2e-plan/exploratory-charter.md` when it exists, but tha
 context. `e2e-plan/exploration-report.md` remains the canonical grounded-evidence artifact whenever
 real product behavior is required.
 
+When `e2e-plan/feature-map.md` and `e2e-plan/exploration/*.md` exist, plan per sub-feature first
+and then add cross-subfeature journeys on top of that evidence.
+
 ## Calibrating planning depth
 
 Match the planning effort to the request:
@@ -33,8 +36,10 @@ area, or is this level right?"
 1. **Parse input** — extract the target URL and feature area from: $ARGUMENTS
 
 2. **Load the evidence base**:
+   - Read `e2e-plan/feature-map.md` when the feature may have been decomposed
    - Read `e2e-plan/exploration-report.md` when real product evidence is required for the target
      feature
+   - Read relevant `e2e-plan/exploration/*.md` files when the feature map identifies sub-features
    - Read `e2e-plan/exploratory-charter.md` when it exists and the feature came through the
      exploratory workflow
    - Read existing `test-cases/*.md` specs for the same feature
@@ -42,7 +47,10 @@ area, or is this level right?"
    - Note any missing artifact that blocks confident planning
 
    Treat the evidence sources differently:
+   - `feature-map.md` supplies the decomposition, shared dependencies, and the expected exploration
+     units
    - `exploration-report.md` supplies observed behavior, selectors, copy, and blockers
+   - `e2e-plan/exploration/*.md` supplies the deep evidence for each scoped sub-feature
    - `exploratory-charter.md` supplies mission, risk framing, and investigation focus
    - if they conflict, observed evidence wins over inferred or interview-based framing
 
@@ -88,7 +96,14 @@ area, or is this level right?"
    - convert charter exploration gaps into explicit coverage gaps or blockers
    - keep the final test descriptions anchored in observed behavior from the exploration report
 
-7. **Write `e2e-plan/coverage-plan.md`**:
+7. **Plan by sub-feature when mapped**:
+   - if `feature-map.md` says `MULTI-SURFACE`, create coverage sections for each mapped sub-feature
+   - add a separate cross-subfeature journey section for end-to-end flows that span multiple mapped
+     areas
+   - do not collapse multiple mapped surfaces into one undifferentiated list unless the feature map
+     explicitly says the feature is single-surface
+
+8. **Write `e2e-plan/coverage-plan.md`**:
 
 ```markdown
 ## Test Coverage Plan: <Feature>
@@ -99,11 +114,21 @@ area, or is this level right?"
 **Existing coverage:** <N tests already exist / none>
 **Status:** COMPLETE | PARTIAL | BLOCKED
 
+### Feature Map Summary (include when `e2e-plan/feature-map.md` exists)
+- Decomposition verdict: SINGLE-SURFACE | MULTI-SURFACE
+- Sub-features: <list of slugs and names>
+
 ### Already Covered
 - TC-FEATURE-001: <description> (in `tests/feature.spec.ts`)
 - ...
 
 ### Proposed New Tests
+
+#### Sub-Feature Coverage (include once per mapped sub-feature)
+##### <Sub-feature name>
+| TC-ID | Description | Priority | Notes |
+|-------|-------------|----------|-------|
+| TC-FEATURE-001 | ... | P0 | derived from `<subfeature>.md` |
 
 #### P0 — Critical Path
 | TC-ID | Description | Why Critical |
@@ -158,6 +183,8 @@ area, or is this level right?"
 ## Quality bar
 
 - Treat `exploratory-charter.md` as optional amplification, not a prerequisite.
+- Treat `feature-map.md` as the decomposition contract when it exists; do not ignore mapped
+  sub-features and plan everything as one blob.
 - Keep observed evidence and inferred risk framing distinguishable in the plan.
 - Own the final P0/P1/P2 prioritization here, even when the exploratory charter provided earlier
   investigation ordering.

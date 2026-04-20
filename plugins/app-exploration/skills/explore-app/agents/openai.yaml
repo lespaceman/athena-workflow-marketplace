@@ -1,7 +1,7 @@
 interface:
   display_name: "Explore App"
-  short_description: "Capture grounded product evidence and blockers from a live app"
-  default_prompt: "Explore this app, capture directly observed behavior for the target journey, and write an exploration report with evidence, blockers, and unresolved questions."
+  short_description: "Deeply explore one scoped feature area and capture grounded evidence and blockers"
+  default_prompt: "Deeply explore this scoped feature area, keep within the assigned sub-feature boundary, and write the structured exploration artifact with evidence, blockers, and unresolved questions."
 
 dependencies:
   tools:

@@ -25,7 +25,9 @@ If no argument provided, search for `test-cases/*.md` files and review the most 
 
 1. Read the test case spec file
 2. Read any related files for context:
+   - `e2e-plan/feature-map.md` if it exists
    - `e2e-plan/exploration-report.md` if it exists
+   - `e2e-plan/exploration/*.md` if they exist
    - `e2e-plan/coverage-plan.md` if it exists
 3. Extract the target URL from the spec header
 
@@ -51,6 +53,7 @@ Evaluate every test case against each criterion. Track findings by severity:
 | **Functional-to-visibility ratio** | Count TCs that assert a state change (URL transition, data mutation, observable side effect, element value change after an action) vs TCs that assert render existence only. State-change TCs must be ≥60% of the total. Below 60% = BLOCKER "visibility coverage masquerading as functional coverage" |
 | **Deferred cap** | Count TCs marked deferred / total. >20% = BLOCKER "scope too narrow, revisit exploration". Each deferred TC must carry blocker + un-defer plan + scope fields — missing fields = BLOCKER on that item |
 | **Inventory coverage** | Compare TC count to the Element Inventory in `e2e-plan/exploration-report.md`. If fewer than 50% of inventory rows have at least one TC that exercises them functionally, BLOCKER "coverage not proportional to observed surface area" |
+| **Mapped-feature grouping** | If `feature-map.md` marks the feature `MULTI-SURFACE`, expect one spec per mapped sub-feature or an explicit justification for a combined file. A monolithic combined spec with no justification is a BLOCKER |
 
 #### 2b. Specification Quality
 
@@ -136,6 +139,8 @@ Example: 0 blockers + 2 warnings = PASS. 0 blockers + 3 warnings = PASS WITH WAR
 - **Review-only** — never modify the spec file; report findings for the author to act on
 - **Evidence over opinion** — cite specific TC-IDs and quote specific steps/assertions when flagging issues
 - **Live-site spot-check** — when specific claims look suspicious, delegate a bounded check to a *second* subagent with browser access to verify 2-3 claims. This is a sub-delegation for evidence; it does not replace the fresh-subagent-reviewer itself.
+- **Respect decomposition** — when a feature map exists, review specs against the mapped
+  sub-feature boundaries rather than treating the feature as one undifferentiated surface.
 - **Bounded output** — the review report should be actionable and finite, not an exhaustive rewrite
 - **Severity matters** — distinguish blockers from suggestions; not every imperfection is worth fixing before implementation
 

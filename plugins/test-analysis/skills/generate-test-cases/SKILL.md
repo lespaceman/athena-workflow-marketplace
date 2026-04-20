@@ -21,7 +21,9 @@ Parse the target URL and user journey description from: $ARGUMENTS
 ### Step 1: Load The Evidence Base
 
 Read and reconcile:
+- `e2e-plan/feature-map.md` when present
 - `e2e-plan/exploration-report.md`
+- relevant `e2e-plan/exploration/*.md`
 - `e2e-plan/coverage-plan.md`
 - existing `test-cases/*.md` specs for the feature
 - existing automated coverage if needed to avoid duplicate TC-IDs
@@ -41,6 +43,12 @@ Work from the exploration report first:
 - use directly observed flows for happy-path and validation scenarios
 - preserve observed URLs, labels, copy, and control names when they were seen
 - continue TC-ID numbering from the highest existing ID
+
+If `feature-map.md` exists and marks the feature as `MULTI-SURFACE`:
+- generate one spec file per mapped sub-feature by default
+- use the relevant `e2e-plan/exploration/<subfeature>.md` as the primary evidence source for that
+  file
+- add a separate integration spec only for journeys that intentionally cross sub-feature boundaries
 
 When a specific detail remains unclear, you may run a bounded spot-check via a subagent with
 browser access. Ask it to verify only the uncertain claim and return structured evidence like:
@@ -117,7 +125,10 @@ See [references/scenario-categories.md](references/scenario-categories.md) for d
 
 ### Step 5: Generate Test Case Specifications
 
-Write structured test cases to `test-cases/<feature-name>.md`.
+Write structured test cases to:
+- `test-cases/<feature-name>.md` for single-surface features
+- `test-cases/<feature-name>/<subfeature-name>.md` for mapped multi-surface features
+- optionally `test-cases/<feature-name>/integration.md` for cross-subfeature journeys
 
 ## Output Specification
 
@@ -197,6 +208,8 @@ When generating specs that span multiple roles or test categories, recommend rol
 - **Test-case count (hard floor):** non-trivial features (more than two routes, or more than one primary interactive surface) require **≥15 TCs**. If you cannot reach 15 without inventing scenarios, the exploration was shallow — stop and return control to `explore-app` rather than padding the spec with cosmetic or duplicate cases. The Gate 1 reviewer will reject specs under 15 with the feedback "exploration too shallow."
 - **Functional-to-visibility ratio:** **≥60% of TCs must assert a state change** — URL transition, data mutation, observable side effect, or element value change after an action. Render-existence assertions (e.g., "button is visible", "menu renders with N items") count toward the remaining ≤40% visibility bucket. A TC that only asserts `toBeVisible()` on an element the test never interacted with is a visibility check, not functional coverage. Gate 1 rejects specs where visibility exceeds 40%.
 - **Upper bound:** more than 40 TCs suggests the feature should be split into sub-features with separate spec files. Prioritize breadth of category coverage over depth within a single category.
+- If `feature-map.md` already identified sub-features, treat a single oversized combined spec as a
+  design error unless the map explicitly justified `SINGLE-SURFACE`.
 
 ### Deferred Items
 
@@ -271,6 +284,8 @@ Notice how every test traces to a specific observation and risk, and TC-IDs foll
 ## What good looks like
 
 - Test cases are grouped by feature, with each group's size proportional to its risk.
+- Mapped multi-surface features produce one spec per sub-feature by default, plus a separate
+  integration spec when needed.
 - Cases reference specific things actually observed in the app (real field names, real error
   messages, real API endpoints, real selectors).
 - Priorities are tied to the risk map, not picked at random.

@@ -11,14 +11,14 @@
     {
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
-      "description": "Build and run Playwright E2E tests \u2014 explores the app, plans coverage, writes tests, and fixes flakes",
-      "version": "0.0.16"
+      "description": "Build and run Playwright E2E tests \u2014 maps broad features, explores scoped areas, plans coverage, writes tests, and fixes flakes",
+      "version": "0.0.17"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
-      "description": "Build and run Robot Framework E2E tests (Browser library) \u2014 explores, plans, writes, and fixes flakes",
-      "version": "0.0.17"
+      "description": "Build and run Robot Framework E2E tests (Browser library) \u2014 maps broad features, explores scoped areas, plans, writes, and fixes flakes",
+      "version": "0.0.18"
     },
     {
       "name": "exploratory-testing",

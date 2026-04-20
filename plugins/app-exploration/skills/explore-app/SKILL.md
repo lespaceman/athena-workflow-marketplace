@@ -1,14 +1,14 @@
 ---
 name: explore-app
 description: >
-  Explore a live app and capture grounded evidence in `e2e-plan/exploration-report.md`. Use when downstream planning, test-case generation, or test implementation needs real product understanding before specs or code are written: mapping journeys, capturing selectors and form fields, recording validation or error states, checking auth gates, or documenting blockers that prevent confident planning. This skill owns observed product evidence and blockers; it does not frame exploratory charters, prioritize risks, or write coverage plans.
+  Deeply explore a live app feature or a single mapped sub-feature and capture grounded evidence for downstream planning in `e2e-plan/exploration-report.md` or a scoped file under `e2e-plan/exploration/`. Use after the requested scope is already known, especially after `map-feature-scope` has identified bounded sub-features for a large feature. This skill owns observed product evidence and blockers for the scoped area; it does not perform feature decomposition, frame exploratory charters, prioritize risks, or write coverage plans.
 allowed-tools: Read Write Edit Glob Grep Task
 ---
 
 # Explore App
 
-Capture real product evidence for the target journey and hand it off in a stable artifact that the
-rest of the testing suite can consume.
+Capture deep product evidence for one scoped feature area and hand it off in a stable artifact that
+the rest of the testing suite can consume.
 
 This skill owns observed product evidence and blockers. It does not own risk prioritization,
 exploratory charters, smoke/regression scope, or coverage planning.
@@ -17,43 +17,55 @@ exploratory charters, smoke/regression scope, or coverage planning.
 
 Parse the target URL and feature or journey description from: $ARGUMENTS
 
-Derive a short feature slug from the journey so the evidence is easy to reference later.
+Derive a short feature slug from the journey so the evidence is easy to reference later. If
+`e2e-plan/feature-map.md` exists, scope this run to one mapped sub-feature and reuse the slug from
+that artifact.
 
 ## Workflow
 
 ### 1. Build context before browsing
 
-- Read any existing `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and
-  `test-cases/*.md` files for the same feature so you do not duplicate stale assumptions.
+- Read any existing `e2e-plan/feature-map.md`, `e2e-plan/exploration-report.md`,
+  `e2e-plan/exploration/*.md`, `e2e-plan/coverage-plan.md`, and `test-cases/*.md` files for the
+  same feature so you do not duplicate stale assumptions.
 - Search the codebase for feature keywords, route names, and existing test files to understand what
   is already known and where exploration should focus.
 - State the evidence gap you are trying to close.
+- If `e2e-plan/feature-map.md` exists, identify the exact sub-feature row this run owns and do not
+  widen scope beyond that row.
 
 ### 2. Explore the live product via browser tooling
 
-Dispatch the browsing to a subagent via the Task tool. The main agent coordinates and preserves artifacts; the subagent does the actual exploration. This is not a cost-saving suggestion — self-driven exploration by the main agent consistently produces shallow element inventories because browser tool output eats the context the main agent needs for synthesis, and the main agent ends up triaging noise instead of reasoning about coverage.
+Dispatch the browsing to a subagent via the Task tool. The main agent coordinates and preserves
+artifacts; the subagent does the actual exploration. This is not a cost-saving suggestion —
+self-driven exploration by the main agent consistently produces shallow element inventories because
+browser tool output eats the context the main agent needs for synthesis, and the main agent ends up
+triaging noise instead of reasoning about coverage.
 
 The subagent's contract:
 
 - **Browser MCP access required:** invoke the subagent with access to the `mcp__plugin_agent-web-interface_browser__*` tools. Its companion skill (selector-capture patterns, state-observation discipline, structured-report format, multi-page recovery) auto-loads whenever those tools come into scope. The element inventory the downstream pipeline depends on comes from following those patterns — if the subagent's inventory comes back as raw CSS or narrative prose, the skill didn't load and Gate 4 will fail.
 - **Output format:** a structured report (template in §3 below), not a narrative summary. If the subagent returns prose, reject and retry with explicit format instructions.
 - **Return control cleanly:** the subagent writes the artifact and reports back with the path plus a short status note; the main agent reads the artifact, never the raw browser transcript.
+- **Bounded ownership:** the subagent must explore only the assigned feature area or mapped
+  sub-feature. It must not widen scope into sibling surfaces that belong to other exploration
+  tasks.
 
-Walk the target journey as a real user would:
+Walk the scoped journey as a real user would:
 
 - visit the starting URL
-- identify the main entry points
+- identify the main entry points within the assigned scope
 - click through the happy path
 - deliberately trigger meaningful validation, empty, and error states — **≥3 distinct error/validation/empty states are required for non-trivial features** (features that touch more than two routes or have more than one primary interactive surface). If you cannot reach 3, either the app is genuinely simple — say so explicitly in the report — or the exploration stopped too early
 - note redirects, auth walls, and conditional UI
 
 Capture only grounded observations. If an outcome was inferred rather than observed, label it as an inference.
 
-#### Recon pass
+#### Scope lock
 
-Before systematic touring, use the app with no agenda. Visit at minimum: the main user flow
-end-to-end, one settings/config page, and one error state (bad input, empty state, or a 404). The
-goal is intuition for what the app *is* before structured touring.
+Before systematic touring, confirm which route, tab, modal, drawer, or settings area this run owns.
+If the feature map identifies sibling sub-features, do not cross into them except to record a
+handoff dependency.
 
 #### Structured touring
 
@@ -113,7 +125,10 @@ Notes:
 
 ### 3. Distill the evidence
 
-Write or update `e2e-plan/exploration-report.md`.
+Write one artifact for the scoped area:
+- `e2e-plan/exploration/<subfeature-slug>.md` when `e2e-plan/feature-map.md` exists and the feature
+  was decomposed
+- `e2e-plan/exploration-report.md` only when the requested feature is genuinely single-surface
 
 The report must separate:
 - **Observed evidence**: behavior directly seen in the browser or codebase
@@ -123,15 +138,20 @@ The report must separate:
 Use this structure:
 
 ```markdown
-# Exploration Report: <Feature>
+# Exploration Report: <Feature or Sub-Feature>
 
 **URL:** <url>
 **Date:** <date>
-**Scope:** <journey explored>
+**Scope:** <scoped journey explored>
+**Feature map source:** `e2e-plan/feature-map.md` | none
 **Evidence status:** COMPLETE | PARTIAL | BLOCKED
 
 ## Summary
 - <2-4 bullets with the main grounded findings>
+
+## Scope Boundary
+- <what this report owns>
+- <adjacent surfaces intentionally left to sibling reports, or "None">
 
 ## Journey Map
 1. <entry step>
@@ -153,6 +173,10 @@ A flat, element-centric list of every interactive element observed. This feeds t
 | /login | Submit button | `role=button, name=/sign in/i` | disabled until fields populated | y |
 | /history | Timeline scrubber | `role=slider, aria-label=Timeline` | clicking anywhere seeks playhead to that time | y |
 | ... | ... | ... | ... | ... |
+
+## Shared-State Interactions
+- <state created elsewhere that this scoped area depends on>
+- <side effects this scoped area creates for sibling areas>
 
 ## Elements Not Yet Reached
 
@@ -198,6 +222,8 @@ exploration is valuable, but not valuable enough to break live data.
 ## Quality Bar
 
 - **Depth floors for non-trivial features:** ≥20 rows in the Element Inventory, ≥3 distinct error/validation/empty states triggered and documented. If the app is genuinely simple, state that explicitly with a one-line justification — otherwise the exploration is incomplete and downstream gates will reject.
+- For mapped features, one report owns one scoped sub-feature. If a report drifts into multiple
+  mapped surfaces, the orchestrator should reject and rerun with tighter boundaries.
 - Prefer semantic selector candidates such as role, accessible name, label, placeholder, or test id
   over raw CSS when recording controls.
 - Record exact validation or error copy only when it was directly observed.
@@ -205,6 +231,8 @@ exploration is valuable, but not valuable enough to break live data.
 - Keep the report reusable by future planning and execution skills.
 - Do not turn observations into prioritized risks, charters, or coverage decisions inside this
   artifact.
+- Do not perform feature decomposition here when `map-feature-scope` is the missing step; stop and
+  request the map rather than improvising sibling scopes.
 - Cases reference specific things actually observed in the app (real field names, real error
   messages, real API endpoints, real selectors).
 - The exploration summary is honest about what wasn't covered and what's still unknown — the "Elements Not Yet Reached" section is required, not decorative.
