@@ -93,10 +93,11 @@ with open('$MARKETPLACE', 'w') as f:
   echo "$plugin_name: $current_version -> $new_version"
 }
 
-# If a specific plugin is given, bump just that one
+# If a specific plugin is given, bump just that one (pin sync still runs below)
+explicit_plugin=""
 if [[ $# -ge 1 ]]; then
-  update_plugin_version "$1"
-  exit 0
+  explicit_plugin="$1"
+  update_plugin_version "$explicit_plugin"
 fi
 
 # Auto-detect changed plugins from git diff
@@ -111,16 +112,80 @@ while IFS= read -r file; do
   fi
 done < <(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD)
 
-if [[ ${#changed_plugins[@]} -eq 0 ]]; then
-  echo "No plugin changes detected"
-else
-  for plugin in "${changed_plugins[@]}"; do
-    update_plugin_version "$plugin"
-  done
+bumped_plugins=()
+if [[ -n "$explicit_plugin" ]]; then
+  bumped_plugins+=("$explicit_plugin")
 fi
 
+if [[ -z "$explicit_plugin" ]]; then
+  if [[ ${#changed_plugins[@]} -eq 0 ]]; then
+    echo "No plugin changes detected"
+  else
+    for plugin in "${changed_plugins[@]}"; do
+      update_plugin_version "$plugin"
+      bumped_plugins+=("$plugin")
+    done
+  fi
+fi
+
+# --- Workflow plugin pin syncing ---
+# When a plugin version is bumped, sync the pin in every workflow.json that
+# references it. Workflows whose pins change are queued for a patch bump so
+# consumers see a new workflow release.
+
+pin_touched_workflows=()
+
+sync_workflow_pins_for_plugin() {
+  local plugin_name="$1"
+  local plugin_json="$REPO_ROOT/plugins/$plugin_name/.claude-plugin/plugin.json"
+  [[ -f "$plugin_json" ]] || return
+
+  local new_version
+  new_version=$(python3 -c "import json; print(json.load(open('$plugin_json'))['version'])")
+
+  shopt -s nullglob
+  for wf_json in "$REPO_ROOT"/workflows/*/workflow.json; do
+    local wf_name
+    wf_name=$(basename "$(dirname "$wf_json")")
+    local changed
+    changed=$(python3 - "$wf_json" "$plugin_name" "$new_version" <<'PY'
+import json, sys
+wf_path, plugin_name, new_version = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(wf_path) as f:
+    data = json.load(f)
+changed = False
+for p in data.get('plugins', []):
+    ref = p.get('ref', '')
+    # ref format: "<plugin>@<owner>/<repo>"
+    name = ref.split('@', 1)[0] if '@' in ref else ref
+    if name == plugin_name and p.get('version') != new_version:
+        p['version'] = new_version
+        changed = True
+if changed:
+    with open(wf_path, 'w') as f:
+        json.dump(data, f, indent=2)
+        f.write('\n')
+print('1' if changed else '0')
+PY
+)
+    if [[ "$changed" == "1" ]]; then
+      echo "workflow $wf_name: pin $plugin_name -> $new_version"
+      if [[ ! " ${pin_touched_workflows[*]:-} " =~ " $wf_name " ]]; then
+        pin_touched_workflows+=("$wf_name")
+      fi
+    fi
+  done
+  shopt -u nullglob
+}
+
+for plugin in "${bumped_plugins[@]:-}"; do
+  [[ -n "$plugin" ]] || continue
+  sync_workflow_pins_for_plugin "$plugin"
+done
+
 # --- Workflow version bumping ---
-# Any change to a workflow definition triggers a patch version bump.
+# Any change to a workflow definition (including pin sync above) triggers a
+# patch version bump.
 
 WF_MARKETPLACE="$REPO_ROOT/.athena-workflow/marketplace.json"
 
@@ -168,16 +233,26 @@ with open('$WF_MARKETPLACE', 'w') as f:
   echo "workflow $wf_name: $current_version -> $new_version"
 }
 
-# Auto-detect changed workflows from git diff
+# Auto-detect changed workflows from git diff (skipped in explicit-plugin mode)
 changed_workflows=()
-while IFS= read -r file; do
-  if [[ "$file" =~ ^workflows/([^/]+)/ ]]; then
-    wf="${BASH_REMATCH[1]}"
-    if [[ ! " ${changed_workflows[*]:-} " =~ " $wf " ]]; then
-      changed_workflows+=("$wf")
+if [[ -z "$explicit_plugin" ]]; then
+  while IFS= read -r file; do
+    if [[ "$file" =~ ^workflows/([^/]+)/ ]]; then
+      wf="${BASH_REMATCH[1]}"
+      if [[ ! " ${changed_workflows[*]:-} " =~ " $wf " ]]; then
+        changed_workflows+=("$wf")
+      fi
     fi
+  done < <(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD)
+fi
+
+# Merge in workflows whose pins were synced above.
+for wf in "${pin_touched_workflows[@]:-}"; do
+  [[ -n "$wf" ]] || continue
+  if [[ ! " ${changed_workflows[*]:-} " =~ " $wf " ]]; then
+    changed_workflows+=("$wf")
   fi
-done < <(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD)
+done
 
 if [[ ${#changed_workflows[@]} -eq 0 ]]; then
   echo "No workflow changes detected"

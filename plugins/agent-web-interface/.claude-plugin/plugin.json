@@ -15,5 +15,6 @@
     "automation",
     "semantic-snapshot"
   ],
-  "category": "browser-automation"
+  "category": "browser-automation",
+  "hooks": "./hooks/hooks.json"
 }
