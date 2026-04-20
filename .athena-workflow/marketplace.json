@@ -11,32 +11,32 @@
     {
       "name": "e2e-test-builder",
       "source": "./workflows/e2e-test-builder/workflow.json",
-      "description": "Build and run Playwright E2E tests — explores the app, plans coverage, writes tests, and fixes flakes",
-      "version": "0.0.15"
+      "description": "Build and run Playwright E2E tests \u2014 explores the app, plans coverage, writes tests, and fixes flakes",
+      "version": "0.0.16"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
-      "description": "Build and run Robot Framework E2E tests (Browser library) — explores, plans, writes, and fixes flakes",
-      "version": "0.0.16"
+      "description": "Build and run Robot Framework E2E tests (Browser library) \u2014 explores, plans, writes, and fixes flakes",
+      "version": "0.0.17"
     },
     {
       "name": "exploratory-testing",
       "source": "./workflows/exploratory-testing/workflow.json",
       "description": "Explore an app to surface risks and unknowns, then hand findings to a planning workflow",
-      "version": "0.0.9"
+      "version": "0.0.10"
     },
     {
       "name": "smoke-testing",
       "source": "./workflows/smoke-testing/workflow.json",
       "description": "Scope the minimum critical-path checks that confirm a build is healthy",
-      "version": "0.0.9"
+      "version": "0.0.10"
     },
     {
       "name": "regression-testing",
       "source": "./workflows/regression-testing/workflow.json",
       "description": "Scope rerunnable checks across changed and high-risk areas",
-      "version": "0.0.9"
+      "version": "0.0.10"
     },
     {
       "name": "web-bench",
@@ -47,7 +47,7 @@
     {
       "name": "loop-test",
       "source": "./workflows/loop-test/workflow.json",
-      "description": "Dev-only loop check — agent does a tiny thing each run and stops",
+      "description": "Dev-only loop check \u2014 agent does a tiny thing each run and stops",
       "version": "0.0.2"
     }
   ]

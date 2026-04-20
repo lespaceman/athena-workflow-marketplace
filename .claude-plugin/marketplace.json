@@ -13,7 +13,7 @@
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
       "description": "Semantic browser interface for LLM agents - token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
-      "version": "1.0.11",
+      "version": "1.0.12",
       "keywords": [
         "browser",
         "mcp",

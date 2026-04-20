@@ -16,7 +16,7 @@
   "plugins": [
     {
       "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
-      "version": "1.0.11"
+      "version": "1.0.12"
     },
     {
       "ref": "app-exploration@lespaceman/athena-workflow-marketplace",
@@ -31,5 +31,5 @@
       "version": "0.2.5"
     }
   ],
-  "version": "0.0.16"
+  "version": "0.0.17"
 }
