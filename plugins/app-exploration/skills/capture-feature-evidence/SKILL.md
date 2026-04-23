@@ -143,6 +143,7 @@ Use this structure:
 **URL:** <url>
 **Date:** <date>
 **Scope:** <scoped journey explored>
+**Execution-relevant environment notes:** <viewport, browser, auth/role, seeded data assumptions, feature flags, locale/timezone, or "None">
 **Feature map source:** `e2e-plan/feature-map.md` | none
 **Evidence status:** COMPLETE | PARTIAL | BLOCKED
 
@@ -159,20 +160,21 @@ Use this structure:
 3. <completion state>
 
 ## Observed Screens, States, And Controls
-| Step | URL | User action | Observed result | Selector candidates / labels |
+| Step | URL | User action | Observed result | Selector candidates / labels | Execution notes |
 |---|---|---|---|---|
-| ... | ... | ... | ... | ... |
+| ... | ... | ... | ... | ... | viewport-specific overlay; popup left open unless reset |
 
 ## Element Inventory
 
 A flat, element-centric list of every interactive element observed. This feeds the Gate 4 coverage audit — each entry becomes a row the audit classifies as covered-functional, covered-visibility-only, or uncovered. Non-trivial features (more than two routes, or more than one primary interactive surface) require **≥20 entries**. If fewer feels right, the exploration stopped too early.
 
-| Route | Element | Selector candidate | Observed behavior | Functional-test-possible |
-|---|---|---|---|---|
-| /login | Email field | `role=textbox, label=Email` | accepts input; empty submit triggers "Email is required" | y |
-| /login | Submit button | `role=button, name=/sign in/i` | disabled until fields populated | y |
-| /history | Timeline scrubber | `role=slider, aria-label=Timeline` | clicking anywhere seeks playhead to that time | y |
-| ... | ... | ... | ... | ... |
+| Route | Element | Selector candidate | Selector confidence | Observed behavior | Functional-test-possible | Re-explore before automation |
+|---|---|---|---|---|---|---|
+| /login | Email field | `role=textbox, label=Email` | high | accepts input; empty submit triggers "Email is required" | y | n |
+| /login | Submit button | `role=button, name=/sign in/i` | high | disabled until fields populated | y | n |
+| /history | Timeline scrubber | `role=slider, aria-label=Timeline` | medium | clicking anywhere seeks playhead to that time | y | n |
+| /map | Page kebab menu | coordinate click near top-right chrome | low | menu opens only at explored viewport | maybe | y - needs stable selector or viewport-specific proof |
+| ... | ... | ... | ... | ... | ... | ... |
 
 ## Shared-State Interactions
 - <state created elsewhere that this scoped area depends on>
@@ -226,6 +228,15 @@ exploration is valuable, but not valuable enough to break live data.
   mapped surfaces, the orchestrator should reject and rerun with tighter boundaries.
 - Prefer semantic selector candidates such as role, accessible name, label, placeholder, or test id
   over raw CSS when recording controls.
+- Record execution-relevant environment facts that could change automation behavior: viewport,
+  browser, auth role, seeded data assumptions, feature flags, locale/timezone, and any state that
+  made the observed control reachable.
+- Set `Selector confidence` to `high`, `medium`, or `low`. Use `low` for coordinate clicks,
+  overlay-intercepted targets, DOM-shape-dependent XPath/CSS, unstable nth-match selectors, or
+  controls that only worked at one viewport.
+- Set `Re-explore before automation` to `y` whenever the observed interaction depended on a low
+  confidence selector, viewport-specific layout, guessed DOM structure, or a workaround you would
+  not want copied blindly into execution code.
 - Record exact validation or error copy only when it was directly observed.
 - Do not silently replace blocked exploration with assumptions.
 - Keep the report reusable by future planning and execution skills.

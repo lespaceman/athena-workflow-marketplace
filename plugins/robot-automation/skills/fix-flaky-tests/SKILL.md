@@ -32,6 +32,7 @@ Parse the test file path or test name from: $ARGUMENTS
 | Environment | Local vs CI divergence |
 | Config drift | Missing resilience primitives, runtime no longer matches conventions |
 | Strict ambiguity | Strict mode fails because a locator now matches multiple elements |
+| Evidence gap | Current DOM, viewport, or label behavior no longer matches exploration, so the next change would be guesswork |
 
 ### Step 2: Root Cause Analysis
 
@@ -44,6 +45,7 @@ Investigate based on the category:
 - Environment: viewport, locale, timezone, resource constraints, third-party scripts
 - Config drift: missing `run_on_failure`, missing `RetryFailed`, wrong `PABOTQUEUEINDEX`, missing viewport or tracing pins, divergence from `conventions.yaml`
 - Strict ambiguity: more than one match, need tighter scoping with `parent=` or `>>`
+- Evidence gap: stop treating this as flakiness when execution viewport/layout differs from exploration, selector uniqueness no longer holds, labels move outside the explored container, or the next fix would require `force=True`, JS-dispatched clicks, coordinate clicks, page-wide text oracles, or other workaround-heavy guesses. Refresh browser evidence first.
 
 ### Step 3: Apply the Correct Fix
 
@@ -56,12 +58,20 @@ Investigate based on the category:
 | Environment | Pin viewport, locale, timezone, and block interfering third-party scripts |
 | Config drift | Add missing brownfield resilience primitives in place and rewrite `e2e-plan/conventions.yaml` |
 | Strict ambiguity | Keep strict mode on and narrow the locator |
+| Evidence gap | Re-explore the live DOM at the execution conditions before changing the test |
+
+Evidence-sensitive workarounds are not normal fixes. Treat these as last-resort options that require fresh browser evidence or explicit reviewer/operator acceptance:
+- `force=True`
+- JavaScript-dispatched clicks
+- coordinate clicks from guessed bounding boxes
+- page-wide text oracles used as functional proof
+- broad `css=` or `xpath=` fallbacks adopted only because semantic selection failed
 
 ### Step 4: Verify the Fix
 1. Run the test 5 or more times
 2. Run with the full suite if state leakage is possible
 3. If still flaky, reclassify based on new evidence
-4. Stop after 3 fix-and-rerun cycles and report the findings if it still flakes
+4. Use judgment instead of a fixed cap: continue only while each cycle adds a new hypothesis, a concrete fix, or materially new failure evidence; stop when the failure is no longer moving or the blocker is external
 
 ### Step 5: Summarize
 Report:
@@ -91,4 +101,7 @@ Report:
 - `skip` instead of fixing
 - `--rerunfailed` without a root-cause fix
 - `force=True` to hide actionability issues
+- JS-dispatched clicks that bypass Browser actionability
+- coordinate clicks based on guessed geometry instead of fresh evidence
+- page-wide text or count oracles used as a proxy for control state
 - `Run Keyword And Ignore Error` around assertions

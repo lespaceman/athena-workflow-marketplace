@@ -37,6 +37,11 @@ Evaluate the test code against each criterion. Track findings by severity:
 - **WARNING** — will cause flakiness or maintenance burden (brittle selectors, arbitrary waits, poor structure)
 - **SUGGESTION** — style or convention improvement (naming, organization, minor readability)
 
+Treat evidence-sensitive workarounds separately from ordinary style issues:
+- **BLOCKER** when `{ force: true }`, JavaScript-dispatched clicks, guessed coordinate clicks, page-wide text oracles, or broad CSS fallbacks are used without fresh browser evidence at the execution conditions or without explicit reviewer/operator acceptance.
+- **WARNING** only when one of those patterns is present and the file or linked exploration artifact documents fresh evidence or explicit acceptance with rationale.
+- If the real issue is uncertain DOM/viewport evidence rather than code quality, say so directly and recommend re-exploration instead of calling it generic flakiness.
+
 #### 2a. Locator Quality
 
 | Check | What to Look For |
@@ -49,6 +54,14 @@ Evaluate the test code against each criterion. Track findings by severity:
 | No exact long text matches | Use regex with key words instead of full marketing copy |
 
 When a locator appears suspicious, delegate verification to a subagent (Task tool): instruct it to open the target URL, locate the element using the browser MCP tools (`find`, `get_element`), and report back whether the element exists and is unique.
+
+Mandatory re-exploration triggers:
+- execution viewport/layout is materially different from the explored viewport and the interaction is coordinate- or layout-sensitive
+- selector uniqueness observed during exploration no longer holds
+- visible labels or control text are absent, duplicated, or rendered outside the explored container
+- the implementation resorts to `{ force: true }`, JavaScript clicks, coordinate clicks, page-wide text oracles, or broad CSS selectors because semantic selection failed
+
+In those cases, report an evidence gap and require fresh browser evidence before signoff.
 
 #### 2b. Waiting and Timing
 
@@ -123,6 +136,10 @@ Flag any instances of these known anti-patterns:
 14. CSS utility class selectors (Tailwind `rounded-lg`, `flex`, Bootstrap `btn-primary`, `col-md-*`) — styling classes are volatile, never use as selectors
 15. Asserting exact server-computed values (`toHaveText('12450')`) — use pattern matchers, ranges, or seed data to control expected values
 16. **Visibility masquerading as functional coverage** — `toBeVisible()` or `toHaveCount()` on elements the test never interacted with. A render check is not a behavior check. Either add the action (click, type, submit) that the test claims to verify, or recategorize the test honestly as a smoke/render check and cap its count.
+17. JavaScript-dispatched click used to bypass Playwright actionability instead of fixing the UI state or locator
+18. Coordinate click based on guessed geometry or an unexplained bounding-box offset
+19. Page-wide text-presence/count oracle used as proof of a specific control state
+20. Broad CSS selector substituted for a failed semantic locator without fresh browser evidence showing it is unique and stable
 
 ### Step 3: Produce the Review Report
 
@@ -171,6 +188,7 @@ Output a structured review with this format:
 - **Evidence over opinion** — cite specific file paths, line numbers, and code snippets when flagging issues
 - **Live-site selector spot-check** — when specific locators look suspicious, delegate a bounded check to a *second* subagent with browser access. This is sub-delegation for evidence; it does not replace the fresh-subagent-reviewer itself.
 - **Convention-first** — compare against the project's existing test patterns, not an abstract ideal
+- **Evidence-sensitive workarounds** — `{ force: true }`, JS clicks, guessed coordinate clicks, page-wide text/count oracles, and broad CSS fallbacks are blockers unless backed by fresh browser evidence, a documented platform limitation, or explicit acceptance
 - **Bounded output** — the review should be actionable and finite, not a full rewrite specification
 - **Severity matters** — a missing `await` is a blocker; a naming style preference is a suggestion
 

@@ -61,10 +61,11 @@ Evaluate every test case against each criterion. Track findings by severity:
 |-------|-----------------|
 | Steps are concrete | "Click the Submit button" not "submit the form"; "Enter 'test@example.com' in Email field" not "enter email" |
 | Expected results are observable | Specific text, URL change, element state — not "page updates" or "works correctly" |
-| Preconditions are explicit | Auth state, test data, feature flags, starting URL — nothing assumed |
+| Preconditions are explicit | Auth state, test data, feature flags, starting URL, viewport/browser assumptions, locale/timezone, and any execution-relevant environment note from exploration — nothing assumed |
 | TC-IDs are sequential | No gaps, no duplicates, and use the canonical `TC-<FEATURE>-<NNN>` format |
 | Priority is justified | Critical = blocks core journey; not everything is Critical |
 | Categories are accurate | Happy Path vs Validation vs Edge Case — correctly classified |
+| Execution-fragile controls are called out | Promoted TCs that rely on low-confidence selectors, viewport-specific layout, coordinate clicks, overlay interception, nth-match assumptions, or guessed DOM shape must carry a note or blocker; silence here is a WARNING at minimum |
 
 #### 2c. Invented vs Observed
 
@@ -91,6 +92,8 @@ When suspicious: delegate a spot-check to a subagent with browser access (Task t
 - Flag preconditions that require manual setup with no automation path
 - Flag assertions that require visual comparison without specifying tolerance
 - Flag test cases that depend on third-party services (payment processors, OAuth providers) without a mock strategy
+- If the exploration artifact marked the relevant control `Re-explore before automation = y` and the
+  spec promotes it anyway without a note, treat that as a BLOCKER
 
 ### Step 3: Produce the Review Report
 
@@ -130,6 +133,10 @@ Output a structured review with this format:
 - **PASS WITH WARNINGS** — no blockers, 3+ warnings. Can proceed but should address warnings.
 - **NEEDS REVISION** — 1+ blockers. Do not proceed to framework-specific implementation until
   blockers are resolved.
+- If promoted TCs are later deferred during execution and the spec changed materially as a result
+  (TC removed, split, re-scoped, reprioritized, or execution notes/blockers changed in a way that
+  affects implementability), route the updated spec back through this review before execution
+  resumes. Do not treat that as a Gate 3-only fix.
 
 Example: 0 blockers + 2 warnings = PASS. 0 blockers + 3 warnings = PASS WITH WARNINGS. 1+ blockers = NEEDS REVISION regardless of warning count.
 
@@ -143,6 +150,8 @@ Example: 0 blockers + 2 warnings = PASS. 0 blockers + 3 warnings = PASS WITH WAR
   sub-feature boundaries rather than treating the feature as one undifferentiated surface.
 - **Bounded output** — the review report should be actionable and finite, not an exhaustive rewrite
 - **Severity matters** — distinguish blockers from suggestions; not every imperfection is worth fixing before implementation
+- **Spec drift is real** — if execution feedback materially changes the promoted TC set or its
+  implementability assumptions, the spec has changed and must be reviewed again before signoff
 
 ## Example Usage
 

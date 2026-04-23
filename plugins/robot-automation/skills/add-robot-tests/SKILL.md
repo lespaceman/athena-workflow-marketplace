@@ -146,6 +146,13 @@ robot -d results tests/<feature>.robot 2>&1
 - If tests fail, load `fix-flaky-tests` and follow its structured workflow.
 - After the first green run, rerun the same suite two more times before signoff (three consecutive green runs required).
 - Do not delegate Robot execution to subagents — the main agent needs the raw output plus `results/log.html` and `results/report.html` to interpret failures in context.
+- For brownfield suites, run newly added or changed tests in isolation first, then the relevant feature file or suite, then broader regression only after the new coverage is green in isolation.
+- If unrelated pre-existing tests fail, classify them as baseline instability. If shared-state leakage or broken shared infrastructure forces a fix, report that repair separately from the new TC implementation set.
+- If the planned TC set, spec, coverage plan, or executed suite changes after Gate 2 in a way that adds, removes, defers, or materially rewrites covered behavior, reset to the earliest affected gate: rerun Gate 2 for changed `.robot` or resource code, rerun Gate 1 if the spec or deferral set changed, and restart the Gate 3 consecutive-green counter. Do not count pre-change runs toward post-change signoff.
+- Execution-time deferral is exceptional. Only defer when the blocker is concrete and external to the current suite implementation, the spec and coverage plan are updated with blocker, un-defer plan, and scope, and the run returns to the required earlier gate(s) before signoff.
+- Do not defer to avoid re-exploration, locator verification, or code review. If the blocker is locator uncertainty, DOM drift from exploration, viewport/layout mismatch, or "needs browser confirmation", stop execution and refresh exploration evidence first.
+- Mandatory re-exploration triggers include execution viewport/layout drift for coordinate- or layout-sensitive interactions, lost selector uniqueness compared with exploration, labels/control text absent or duplicated, and workaround-heavy fixes such as force-clicks, JavaScript-dispatched clicks, coordinate clicks, or page-wide text/count oracles becoming the only apparent path forward.
+- Maintain a Gate 3 run ledger in the tracker or execution notes. For each counted run record the exact command, exact test set or include filter, scope tag (`new-only`, `feature-suite`, or `regression`), whether the run is eligible for signoff, files changed since the prior run, pass/fail counts, and whether the consecutive-green counter reset.
 
 ### Gate 4: Coverage gap audit
 
@@ -163,11 +170,26 @@ The subagent's job is to classify each inventory element as one of:
 
 Output: `e2e-plan/coverage-audit.md` with the classification table and one of three verdicts:
 
-- **GREEN** — every inventory element is `covered-functional`, or gaps are explicitly deferred with justification
-- **YELLOW** — gaps exist but each is explicitly accepted with reasoning the operator has seen
-- **RED** — uncovered or visibility-only elements without justification; work is not done
+- **GREEN** — every promoted P0/P1 inventory-backed behavior is covered functionally, or any uncovered item is explicitly out of current scope and was never promoted into the accepted spec or coverage plan
+- **YELLOW** — one or more promoted items remain deferred, partially covered, or visibility-only, but the operator has explicitly accepted those gaps with written reasoning
+- **RED** — uncovered, visibility-only, or deferred promoted items remain without explicit acceptance, or the exploration/spec/execution chain is inconsistent
+
+A promoted TC deferred during or after execution cannot end in **GREEN** unless the spec and coverage plan were revised, re-reviewed, and explicitly re-baselined before Gate 4.
 
 The Robot workflow is complete only when Gate 4 returns GREEN or YELLOW-with-acknowledgment. "Suite passed three times" is not the completion signal — the coverage audit is.
+
+## Final Reporting Checklist
+
+The final summary must explicitly separate:
+
+- new tests added or changed
+- pre-existing tests repaired
+- tests deferred
+- files modified in this run
+- which runs counted toward signoff
+- Gate 4 verdict and why
+
+Do not claim `GREEN`, "all accounted for", or "no files modified" unless the artifact chain and worktree state support those statements.
 
 ## Greenfield Bootstrap
 

@@ -38,6 +38,7 @@ If no argument provided, ask: "Which test file or test name is flaky?"
 | **Race condition** | Action fires before page is ready (hydration, animation) |
 | **Selector fragility** | Element found but wrong one, or `.first()` picks different element |
 | **Environment** | Passes locally, fails in CI (viewport, speed, resources) |
+| **Evidence gap** | Current DOM, viewport, or label behavior no longer matches exploration, so the next fix would be guesswork |
 
 ### Step 2: Root Cause Analysis
 
@@ -78,6 +79,13 @@ Investigate based on the classification:
 - Check if CI has slower network/CPU affecting timing
 - Look for third-party scripts (analytics, chat widgets) that load differently in CI
 
+**Evidence gaps:**
+- Treat this as missing evidence, not ordinary flakiness
+- Re-explore before changing code when the execution viewport differs materially from exploration and the interaction is coordinate- or layout-sensitive
+- Re-explore when selector uniqueness no longer holds, labels move outside the explored container, or semantic locators stop matching the observed DOM
+- Re-explore before adopting `{ force: true }`, JavaScript-dispatched clicks, coordinate clicks, page-wide text oracles, or broad CSS fallbacks because semantic selection failed
+- If browser confirmation at the actual execution state is missing, stop rerunning and refresh evidence first
+
 ### Step 3: Apply the Correct Fix
 
 Use the right fix pattern for the diagnosed root cause. **Never apply a fix without understanding the cause.** See [references/fix-patterns.md](references/fix-patterns.md) for full code examples.
@@ -89,6 +97,14 @@ Use the right fix pattern for the diagnosed root cause. **Never apply a fix with
 | **Race condition** | Use `Promise.all` for action + expected response; wait for hydration before interaction |
 | **Selector** | Scope locators to containers with unique content; avoid `.first()` and position-dependent selectors |
 | **Environment** | Explicit viewport, timezone-agnostic assertions, block interfering third-party scripts |
+| **Evidence gap** | Refresh exploration/browser evidence first; do not guess with workaround-heavy code changes |
+
+Evidence-sensitive workarounds are not normal fixes. Treat these as last-resort options that require fresh browser evidence or explicit reviewer/operator acceptance:
+- `{ force: true }`
+- JavaScript-dispatched clicks
+- coordinate clicks from guessed bounding boxes
+- page-wide text-count or text-presence oracles used as functional proof
+- broad CSS selectors adopted only because semantic locators failed
 
 ### Step 4: Verify the Fix
 
@@ -101,7 +117,7 @@ Use the right fix pattern for the diagnosed root cause. **Never apply a fix with
    npx playwright test --reporter=list 2>&1
    ```
 3. If still flaky → return to Step 2 with the new failure output. The initial classification may have been wrong.
-4. **Maximum 3 fix-and-rerun cycles.** If the test is still flaky after 3 attempts, stop and report the diagnostic findings (root cause hypothesis, fixes attempted, remaining failure output) so the next step can be chosen explicitly. Do not continue looping.
+4. **Use judgment, not a fixed cap.** Continue only while each cycle adds something real: a new hypothesis, a concrete fix, or materially different failure evidence. Stop when the failure is not moving, the next rerun would repeat the same experiment, or the blocker is outside the test code and must be surfaced explicitly.
 
 ### Step 5: Summarize
 
@@ -140,6 +156,9 @@ These mask the problem. Never apply them without a real fix:
 | `test.skip()` | Ignoring the problem | Diagnose and fix |
 | `retries: 3` without fix | Masks real failures, wastes CI time | Fix the root cause, then keep retries as safety net |
 | `{ force: true }` | Bypasses actionability checks, hides overlapping elements or disabled state | Find and fix the actionability issue: wait for overlay to disappear, scroll element into view, or wait for enabled state |
+| `locator.evaluate(() => el.click())` / JS click | Bypasses the browser's real interaction model and can hide overlay, timing, or disabled-state issues | Re-explore the live DOM and restore a real user interaction path |
+| Coordinate click from a guessed box | Couples the test to one viewport and guessed geometry | Re-explore at the execution viewport and find a stable selector or justified coordinate contract |
+| Page-wide text oracle | Confuses incidental render text with the intended control state | Scope the assertion to the control/container proved by fresh evidence |
 | `try/catch` swallowing errors | Test passes but doesn't verify anything | Fix the assertion |
 
 ## Multiple Flaky Tests
@@ -149,4 +168,4 @@ When a suite has several flaky tests:
 1. **Triage first.** Run the full suite once and group failures by root cause category (timing, state leakage, etc.). Shared root causes (broken fixture, leaking state) should be fixed once, not per-test.
 2. **Fix shared infrastructure issues first.** A bad `beforeEach`, a leaking `storageState`, or a missing cleanup can cause many tests to fail. One fix resolves many failures.
 3. **Split independent fixes across subagents** when the fix scopes do not overlap (different test files, no shared fixtures). Pass each subagent the test file path, this diagnostic workflow, and the root cause classification table.
-4. The 3 fix-and-rerun cycle limit applies **per test**, not globally.
+4. Judge progress **per test**. One stubborn failure should not block unrelated fixes, but do not keep rerunning the same test unless the next attempt exercises a genuinely new hypothesis.

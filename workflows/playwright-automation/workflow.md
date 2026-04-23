@@ -148,7 +148,36 @@ After `write-test-code`, before running tests:
 
 Run `npx playwright test <file> --reporter=list 2>&1` directly in the main agent. If tests fail, load `fix-flaky-tests`.
 
-**Retry limit:** maximum 3 fix-and-rerun cycles per test file per session. Beyond that, the failure usually signals a deeper issue (wrong selector strategy, misunderstood flow, missing test infrastructure) that another retry won't fix.
+**Retry policy:** no fixed numeric cap. The agent should continue fix-and-rerun cycles only while each cycle produces meaningful progress: a new root-cause hypothesis, a concrete code/config change, or materially new failure evidence. Stop when the issue is no longer moving, the next rerun would repeat the same experiment, or the blocker is external to the test code (missing environment, access, product bug, unclear requirements).
+
+**Execution order for brownfield suites:**
+- Run the newly added or changed tests in isolation until they are stable.
+- Then run the relevant feature file or suite.
+- Only run broader regression after the new coverage is green in isolation.
+- If unrelated pre-existing tests fail, classify them separately as baseline instability. If they must be fixed because of shared-state leakage or broken shared infrastructure, report that work separately from the new TC implementation set.
+
+**Gate reset rule:** if the planned TC set, spec, coverage plan, or executed test file changes after Gate 2 in a way that adds, removes, defers, or materially rewrites covered behavior, reset to the earliest affected gate:
+- rerun Gate 2 for changed test code
+- rerun Gate 1 if the spec or deferral set changed
+- restart the Gate 3 consecutive-green counter
+
+Do not count pre-change runs toward post-change signoff.
+
+**Execution-time deferral policy:** deferral discovered during Gate 3 is exceptional. Only defer when the blocker is concrete and external to the current test implementation, the spec and coverage plan are updated with blocker, un-defer plan, and scope, and the run returns to the required earlier gate(s) before signoff. Do not defer to avoid re-exploration, locator verification, or code review. If the blocker is selector uncertainty, DOM drift from exploration, viewport/layout mismatch, or "needs browser confirmation", stop execution and refresh exploration evidence first.
+
+Mandatory re-exploration triggers include:
+- execution viewport or layout drift for coordinate- or layout-sensitive interactions
+- lost selector uniqueness compared with exploration
+- labels or control text absent, duplicated, or rendered outside the explored container
+- workaround-heavy fixes such as force-clicks, JavaScript-dispatched clicks, coordinate clicks, or page-wide text/count oracles becoming the only apparent path forward
+
+**Gate 3 run ledger:** maintain a ledger in the session tracker or execution notes. For each counted run record:
+- exact command
+- exact test set or filter
+- whether the run is eligible for signoff
+- files changed since the prior run
+- pass/fail counts
+- whether the consecutive-green counter reset
 
 ### Gate 4: Coverage gap audit
 
@@ -160,9 +189,11 @@ After Gate 3 passes, dispatch a fresh subagent to run a coverage audit. It recei
 
 The audit writes `e2e-plan/coverage-audit.md` and returns a verdict:
 
-- **GREEN** — every inventory element is `covered-functional`, or gaps are explicitly classified as deferred-with-justification
-- **YELLOW** — gaps exist but each is explicitly accepted by the operator with reasoning
-- **RED** — uncovered or visibility-only elements without justification; work is not done
+- **GREEN** — every promoted P0/P1 inventory-backed behavior is covered functionally, or any uncovered item is explicitly out of current scope and was never promoted into the accepted spec or coverage plan
+- **YELLOW** — one or more promoted items remain deferred, partially covered, or visibility-only, but the operator has explicitly accepted those gaps with written reasoning
+- **RED** — uncovered, visibility-only, or deferred promoted items remain without explicit acceptance, or the exploration/spec/execution chain is inconsistent
+
+A promoted TC deferred during or after execution cannot end in **GREEN** unless the spec and coverage plan were revised, re-reviewed, and explicitly re-baselined before Gate 4.
 
 "Tests passed" does not mean done. Gate 4 decides done.
 
@@ -208,5 +239,8 @@ Quick-reference checklist — in addition to the session protocol's guardrails:
 - Record observed behavior before turning exploration into specs or code
 - **Each review gate runs in a fresh subagent**, not the artifact's author
 - Spec meets depth targets: ≥15 TCs for non-trivial features, ≥60% functional assertions, ≤20% deferred
+- **Stabilize new or changed tests in isolation before broader regression** in brownfield suites
+- **Reset the affected gates if scope, spec, coverage plan, or executed test set changes after Gate 2**
+- **Keep a Gate 3 run ledger** so signoff runs, resets, and file changes are auditable
 - Run tests before marking test work as done
 - **Run the Gate 4 coverage audit after tests pass** — tests passing is necessary but not sufficient

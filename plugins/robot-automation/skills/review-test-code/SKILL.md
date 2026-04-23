@@ -35,6 +35,11 @@ Track findings by severity:
 - WARNING: likely to cause flakiness or maintenance burden
 - SUGGESTION: useful improvement, not required for correctness
 
+Treat evidence-sensitive workarounds separately from ordinary style issues:
+- BLOCKER when `force=True`, JS-dispatched clicks, guessed coordinate clicks, page-wide text oracles, or broad `css=` / `xpath=` fallbacks are used without fresh browser evidence at the execution conditions or without explicit reviewer/operator acceptance.
+- WARNING only when one of those patterns is present and the file or linked exploration artifact documents fresh evidence or explicit acceptance with rationale.
+- If the problem is uncertain DOM or viewport evidence rather than bad test logic, say so plainly and require re-exploration instead of labeling it generic flakiness.
+
 #### 2a. Locator Quality
 | Check | What to Look For |
 |-------|-----------------|
@@ -47,6 +52,14 @@ Track findings by severity:
 | No exact long text matches | Prefer regex or shorter stable phrases |
 
 When a locator appears suspicious, delegate a live-site spot-check to a subagent with browser access.
+
+Mandatory re-exploration triggers:
+- execution viewport/layout differs materially from the explored viewport and the interaction is coordinate- or layout-sensitive
+- selector uniqueness seen during exploration no longer holds at review time
+- labels or control text are absent, duplicated, or rendered outside the explored container
+- the implementation resorts to `force=True`, JS clicks, coordinate clicks, page-wide text oracles, or broad fallback selectors because semantic selection failed
+
+In those cases, report an evidence gap and require fresh browser evidence before signoff.
 
 #### 2b. Waiting and Timing
 | Check | What to Look For |
@@ -116,6 +129,10 @@ Flag any instances of:
 16. Utility-class selectors
 17. Exact server-computed value assertions without seeded data
 18. **Visibility masquerading as functional coverage** — `Get Element`, `Get Element Count`, or `Get Text` on elements the test never interacted with. A render check is not a behavior check. Either add the action (`Click`, `Type Text`, `Submit Form`) that the test claims to verify, or recategorize the test honestly as a smoke check and cap its count.
+19. JS-dispatched click used to bypass Browser actionability instead of fixing the UI state or locator
+20. Coordinate click based on guessed geometry or an unexplained bounding-box offset
+21. Page-wide text or count oracle used as proof of a specific control state
+22. Broad `css=` or `xpath=` fallback substituted for a failed semantic locator without fresh browser evidence showing it is unique and stable
 
 ### Step 3: Produce the Review Report
 
@@ -160,4 +177,5 @@ Flag any instances of:
 - Evidence over opinion
 - Convention-first
 - **Live-site locator spot-check** — when specific locators look suspicious, delegate a bounded check to a *second* subagent with browser access. This is sub-delegation for evidence; it does not replace the fresh-subagent-reviewer itself.
+- **Evidence-sensitive workarounds** — `force=True`, JS clicks, guessed coordinate clicks, page-wide text/count oracles, and broad fallback selectors are blockers unless backed by fresh browser evidence, a documented platform limitation, or explicit acceptance
 - Keep output bounded and actionable

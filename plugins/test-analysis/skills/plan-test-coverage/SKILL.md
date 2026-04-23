@@ -53,6 +53,8 @@ area, or is this level right?"
    - `e2e-plan/exploration/*.md` supplies the deep evidence for each scoped sub-feature
    - `exploratory-charter.md` supplies mission, risk framing, and investigation focus
    - if they conflict, observed evidence wins over inferred or interview-based framing
+   - carry forward any `Execution-relevant environment notes`, `Selector confidence`, and
+     `Re-explore before automation` fields from the exploration artifacts
 
 3. **Check existing test coverage**:
    - Search for existing test files related to the feature:
@@ -86,7 +88,16 @@ area, or is this level right?"
 
    Not all categories apply to every project. Include Accessibility, Visual Regression, and Cross-Browser sections only when the project has explicit requirements, tooling, or configuration for them. Omit them from the output plan if not relevant — a focused plan is more useful than a padded one.
 
-6. **Prioritize** — rank tests by:
+6. **Flag execution-fragile controls before promoting coverage**:
+   - For any candidate TC that depends on low-confidence selectors, viewport-specific layout,
+     coordinate clicks, overlay-intercepted elements, nth-match assumptions, or guessed DOM shape,
+     add an execution note in the plan.
+   - If the exploration artifact already says `Re-explore before automation = y`, do not promote
+     that TC as ordinary executable coverage without carrying that note forward.
+   - Prefer planning a short re-exploration task over promoting a brittle TC that will likely be
+     deferred during execution.
+
+7. **Prioritize** — rank tests by:
    - **P0 (Must have)**: Core user journey, auth flows, data corruption prevention. Blocks revenue/signups if broken.
    - **P1 (Should have)**: Input validation, common error paths, accessibility basics (keyboard navigation, form labels)
    - **P2 (Nice to have)**: Edge cases, visual regression, performance scenarios, cross-browser specifics, rare error paths
@@ -96,14 +107,14 @@ area, or is this level right?"
    - convert charter exploration gaps into explicit coverage gaps or blockers
    - keep the final test descriptions anchored in observed behavior from the exploration report
 
-7. **Plan by sub-feature when mapped**:
+8. **Plan by sub-feature when mapped**:
    - if `feature-map.md` says `MULTI-SURFACE`, create coverage sections for each mapped sub-feature
    - add a separate cross-subfeature journey section for end-to-end flows that span multiple mapped
      areas
    - do not collapse multiple mapped surfaces into one undifferentiated list unless the feature map
      explicitly says the feature is single-surface
 
-8. **Write `e2e-plan/coverage-plan.md`**:
+9. **Write `e2e-plan/coverage-plan.md`**:
 
 ```markdown
 ## Test Coverage Plan: <Feature>
@@ -128,7 +139,7 @@ area, or is this level right?"
 ##### <Sub-feature name>
 | TC-ID | Description | Priority | Notes |
 |-------|-------------|----------|-------|
-| TC-FEATURE-001 | ... | P0 | derived from `<subfeature>.md` |
+| TC-FEATURE-001 | ... | P0 | derived from `<subfeature>.md`; execution note: none |
 
 #### P0 — Critical Path
 | TC-ID | Description | Why Critical |
@@ -166,6 +177,9 @@ area, or is this level right?"
 ### Evidence Gaps / Blockers
 - <missing exploration detail or blocker, or "None">
 
+### Execution Fragility Notes
+- <TC-ID or control>: <low-confidence selector / viewport dependency / re-explore note, or "None">
+
 ### Exploratory Inputs Applied (include only when `e2e-plan/exploratory-charter.md` was used)
 - <risk hypothesis or mission statement that changed prioritization>
 - <exploration gap that remains open and constrains planning>
@@ -188,6 +202,9 @@ area, or is this level right?"
 - Keep observed evidence and inferred risk framing distinguishable in the plan.
 - Own the final P0/P1/P2 prioritization here, even when the exploratory charter provided earlier
   investigation ordering.
+- Carry forward execution-fragile control notes from exploration instead of dropping them during
+  prioritization. A promoted TC that already needs re-exploration should be visibly marked as such
+  in the plan.
 - If a charter exists, let it improve priority ordering rather than duplicate the whole document.
 - Do not silently promote interview-only or inferred concerns over contradictory observed evidence.
 
