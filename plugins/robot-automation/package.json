@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-robot-automation",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Robot Framework execution layer for codebase analysis, .robot authoring, review, and flake repair built on shared exploration and test-analysis plugins",
   "license": "MIT",
   "repository": {

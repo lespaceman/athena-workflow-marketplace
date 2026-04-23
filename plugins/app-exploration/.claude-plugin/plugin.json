@@ -1,7 +1,7 @@
 {
   "name": "app-exploration",
   "description": "Live product exploration and evidence capture for downstream testing workflows",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "author": {
     "name": "Athenaflow"
   },
