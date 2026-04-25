@@ -13,7 +13,7 @@
       "name": "tanstack-start",
       "source": "./plugins/tanstack-start",
       "description": "TanStack Start guidance for scaffolding examples, routing patterns, full-stack app structure, and agent-friendly implementation workflows",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "keywords": [
         "tanstack",
         "react-start",
@@ -28,7 +28,7 @@
       "name": "superpowers",
       "source": "./plugins/superpowers",
       "description": "Complete software-development methodology for coding agents: TDD, systematic debugging, brainstorming, planning, and subagent-driven development workflows",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "keywords": [
         "skills",
         "tdd",
@@ -196,7 +196,7 @@
       "name": "frontend-design",
       "source": "./plugins/frontend-design",
       "description": "Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Prithvi Rajasekaran",
         "email": "prithvi@anthropic.com"

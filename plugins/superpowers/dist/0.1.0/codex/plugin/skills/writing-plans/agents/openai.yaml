@@ -1,4 +1,0 @@
-interface:
-  display_name: "Writing Plans"
-  short_description: "Use when you have a spec or requirements for a multi-step task, before touching code"
-  default_prompt: "Apply the writing-plans skill to the current task."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Frontend Design"
-  short_description: "Build distinctive, production-grade frontend interfaces with bold aesthetic direction"
-  default_prompt: "Build a frontend interface with a distinctive, production-grade aesthetic — commit to a bold direction and execute it with meticulous detail."

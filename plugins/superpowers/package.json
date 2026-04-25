@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-superpowers",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Complete software-development methodology for coding agents: TDD, systematic debugging, brainstorming, planning, and subagent-driven development workflows",
   "license": "MIT",
   "repository": {
