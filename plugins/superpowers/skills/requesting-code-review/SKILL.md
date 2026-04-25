@@ -1,6 +1,6 @@
 ---
 name: requesting-code-review
-description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+description: "MUST use between tasks during plan execution and before merging — runs a severity-graded code review against the plan and reports critical / major / minor findings, where critical findings block forward progress. Trigger on ANY of: 'review my code', 'review this change', 'check my work', 'is this ready to merge', 'before I commit', 'before opening a PR', 'sanity check this', 'between tasks', 'task is done — what's next', or whenever a task is freshly implemented and tests pass. Use even when you feel confident — confidence is exactly when reviews catch the most. Does NOT respond to review feedback (see receiving-code-review). Does NOT replace the agent-web-interface browser pass for user-visible work."
 ---
 
 # Requesting Code Review

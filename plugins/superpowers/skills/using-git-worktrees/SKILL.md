@@ -1,6 +1,6 @@
 ---
 name: using-git-worktrees
-description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory selection and safety verification
+description: "MUST use before starting any new feature, refactor, migration, or bugfix that will touch source files — creates an isolated git worktree on a fresh branch with a verified clean baseline so the main checkout stays untouched. Trigger on ANY of: 'start a new feature', 'spin up a branch', 'work on this in isolation', 'set up a worktree', 'before I start coding', 'I want to try something without affecting main', 'create a sandbox for this change', or whenever an approved plan/design exists and you're about to begin execution. If the user is about to have you write code and you're still on main / a shared branch / a dirty tree, STOP and use this skill first. Use even for 'small' changes — isolation is what makes the rest of the workflow safe."
 ---
 
 # Using Git Worktrees

@@ -1,6 +1,6 @@
 ---
 name: verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+description: "MUST use before stating that anything is done, fixed, working, passing, deployed, ready, or shipped — evidence before assertions, always. Forces running the actual verification command (tests, build, lint, type-check, dev-server smoke, agent-web-interface browser pass) and confirming the output before claiming success. Trigger on ANY of: 'done', 'fixed', 'works now', 'all green', 'tests pass', 'should be good', 'ready to ship', 'looks complete', 'that should do it', 'I think this is working', 'try it now', 'this is finished', or whenever you're tempted to summarize a task as complete. Use even when 'obviously' done — the gate exists because 'obviously' is where unverified claims hide. Does NOT replace systematic-debugging when something fails."
 ---
 
 # Verification Before Completion

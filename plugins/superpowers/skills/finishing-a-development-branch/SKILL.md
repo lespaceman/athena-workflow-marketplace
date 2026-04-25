@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup
+description: "MUST use once all planned tasks are done and tests are green, before declaring the work shipped — runs a final verification pass (tests, lint, full agent-web-interface browser walkthrough on user-visible work) and presents merge / PR / keep / discard options, then cleans up the worktree once the user picks one. Trigger on ANY of: 'wrap this up', 'we're done', 'ship it', 'merge this', 'open a PR', 'I think we're finished', 'clean up the branch', 'integrate this', 'close out the work', or whenever the plan file shows every task complete. Use even if the user just says 'done' casually — the wrap-up gate exists to catch unverified claims. Does NOT skip the final browser pass; code-green is not feature-green."
 ---
 
 # Finishing a Development Branch

@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
+description: "MUST use to execute a written implementation plan in batches with human checkpoints — for tightly coupled tasks, or when the user wants to stay in the loop between steps. Trigger on ANY of: 'execute the plan', 'work through the plan', 'walk me through the implementation', 'do the next batch', 'continue from where we left off', 'pick up the plan', 'keep going on the plan', or whenever a plan file exists on disk with incomplete tasks and a fresh subagent per task is overkill. Prefer subagent-driven-development when tasks are independent. Does NOT write the plan — use writing-plans first. Does NOT skip TDD or the agent-web-interface browser pass — those still apply per task."
 ---
 
 # Executing Plans

@@ -1,6 +1,6 @@
 ---
 name: dispatching-parallel-agents
-description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
+description: "MUST use whenever 2 or more genuinely independent tasks can be worked on at the same time without sharing files, state, or sequential dependencies — fans them out to parallel subagents instead of serializing them. Trigger on ANY of: 'do these in parallel', 'kick these off at once', 'fan this out', 'run these together', 'work on A and B simultaneously', 'split this across agents', 'parallelize the work', or whenever a plan has multiple disjoint tasks that don't read or write the same files. Use even when serial would 'just work' — wall-clock time matters. Does NOT apply when tasks share state, depend on each other's output, or touch the same files; serialize those instead."
 ---
 
 # Dispatching Parallel Agents

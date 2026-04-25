@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: Use when executing implementation plans with independent tasks in the current session
+description: "MUST use to execute a written implementation plan when tasks are independent enough to dispatch fresh subagents — one subagent per task, with a two-stage review (spec compliance, then code quality) gating each task before the next starts. Trigger on ANY of: 'execute the plan', 'work through the plan', 'implement the tasks', 'start building', 'run through the checklist', 'do the next task', or whenever a plan file exists on disk with incomplete tasks and the user wants forward progress. Prefer this over executing-plans when tasks don't share state. Does NOT write the plan — use writing-plans first. Does NOT skip TDD — every code-producing task still goes through test-driven-development inside the subagent."
 ---
 
 # Subagent-Driven Development

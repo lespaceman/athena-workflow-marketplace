@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: "MUST use before writing or editing code for any multi-step task — produces a written plan file with bite-sized 2–5 minute tasks, exact file paths, full code changes, and verification steps. Trigger on ANY of: 'plan this', 'break this down', 'how should I approach', 'implementation plan', 'figure out the steps', 'make a checklist', 'design the rollout', or whenever you're about to start a feature, refactor, migration, or bugfix that touches more than one file. If you are about to call Edit/Write/MultiEdit on production code and there is no plan file on disk, STOP and use this skill first. Does NOT execute the plan — see executing-plans or subagent-driven-development for that. Use even for tasks that feel small; small tasks are how scope creep starts."
 ---
 
 # Writing Plans

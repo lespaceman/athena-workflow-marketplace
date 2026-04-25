@@ -1,6 +1,6 @@
 ---
 name: writing-skills
-description: Use when creating new skills, editing existing skills, or verifying skills work before deployment
+description: "MUST use when authoring a new skill, editing an existing skill's SKILL.md or frontmatter, refining a skill's description for better triggering, or verifying a skill works before publishing. Trigger on ANY of: 'write a skill', 'create a skill', 'add a new skill', 'improve this skill', 'update the skill description', 'fix the frontmatter', 'make this skill trigger more reliably', 'package this workflow as a skill', 'turn this into a skill', or any task whose output is a SKILL.md file. Use even for 'tiny' skill edits — frontmatter fields drive triggering and a small change can break invocation. Does NOT apply to using a skill (just invoke it via the Skill tool); this skill is specifically for authoring."
 ---
 
 # Writing Skills

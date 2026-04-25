@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.
+description: "MUST load BEFORE designing or implementing ANY user-visible UI — components, pages, layouts, flows, dashboards, marketing sites, settings screens, empty/error/loading states, or visual polish. Drives deliberate hierarchy, typography, spacing, color, motion, responsive behavior, and a11y so output isn't generic AI-default slop. Trigger on ANY of: 'build a page', 'design a screen', 'create a component', 'make a UI for', 'dashboard', 'landing page', 'marketing site', 'pricing page', 'sign-up flow', 'login screen', 'settings page', 'admin panel', 'data table', 'empty state', 'error state', 'loading skeleton', '404 page', 'redesign this', 'polish the UI', 'make it look better', 'hero section', 'navbar', 'sidebar', 'modal', 'responsive layout', 'dark mode', or any task whose output is HTML/JSX/TSX a human looks at. Use even when the user just says 'add a page for X'. Does NOT replace shadcn-ui (primitives) or tanstack-start-guide (routing); pair for the visual layer."
 license: MIT
 ---
 

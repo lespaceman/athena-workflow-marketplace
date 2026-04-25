@@ -1,11 +1,18 @@
 ---
 name: tanstack-start-guide
 description: >
-  Use when building, modifying, scaffolding, or debugging TanStack Start applications. Triggers
-  include "TanStack Start", "React Start", "start-basic", "file-based routes", "authenticated
-  routes", "deferred data", "tRPC with TanStack Start", "React Query with TanStack Start",
-  "location masking", "navigation blocking", "view transitions", or requests to choose or adapt a
-  TanStack Start example scaffold.
+  MUST load BEFORE writing, scaffolding, debugging, or migrating any TanStack Start / Router /
+  React Start app, and BEFORE hand-rolling routing, loaders, server functions, server routes,
+  middleware, SSR, or RSC. Trigger on ANY of: "TanStack Start/Router", "React Start",
+  "@tanstack/start", "@tanstack/react-start", "@tanstack/react-router", "createFileRoute",
+  "createRootRoute", "createServerFn", "createServerRoute", "start-basic", "file-based routes",
+  "virtual file routes", "authenticated route", "route guard/loader", "deferred data",
+  "useLoaderData/useSearch/useParams/useNavigate", "search params validation", "navigation
+  blocking", "view transitions", "location masking", "tRPC/React Query with TanStack",
+  "SSR/RSC in Start", "not-found route", "migrate Next.js to TanStack", "deploy TanStack Start".
+  Also applies when the codebase has `app/routes/` with `createFileRoute` or `@tanstack/*`
+  imports, even if "TanStack" isn't named. Does NOT cover generic React or visual design — pair
+  with frontend-design / shadcn-ui.
 ---
 
 # TanStack Start Guide

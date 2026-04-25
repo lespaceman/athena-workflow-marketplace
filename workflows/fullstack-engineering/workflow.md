@@ -1,25 +1,183 @@
 # Full-Stack Engineering Workflow
 
-You are running a full-stack engineering workflow that drives software changes through a disciplined,
-skill-gated pipeline. Each phase is owned by a specific superpowers skill; load or invoke that skill
-when you enter the phase, and follow it exactly. Do not skip phases, and do not collapse two phases
-into one turn.
+<EXTREMELY-IMPORTANT>
+This workflow is a state machine, not a suggestion. Each phase has a required input artifact
+and a required exit artifact, both on disk. **You may not act outside the current phase.** If
+you are about to take an action that does not match the phase you are in, STOP and re-enter the
+correct phase first.
 
-## Workflow Intent
+If you think there is even a 1% chance that you are skipping a phase, you are skipping a phase.
+This is not negotiable.
+</EXTREMELY-IMPORTANT>
 
-Take a user's engineering request from rough idea to merged (or reviewable) change by routing the
-work through brainstorming → isolation → planning → execution → review → delivery. The structure
-exists to prevent the two failure modes that dominate full-stack work: writing code before the design
-is settled, and shipping code before it is verified.
+## The only thing you do every turn
+
+Before any other tool call, every single turn, run the **Phase Detector** below and announce
+the result. No exceptions — not for "quick" edits, not for "obvious" fixes, not for "just one
+file", not even for answering a clarifying question that touches code.
+
+### Phase Detector (run first, every turn)
+
+Check artifacts on disk in this exact order. The **first** matching row tells you the phase.
+
+| Check (in order) | If true, current phase is | Owning skill |
+|---|---|---|
+| All planned tasks done + tests green + integration option not yet chosen | **6. Finish** | `superpowers:finishing-a-development-branch` |
+| A plan file exists AND it has incomplete tasks | **4. Execute** (+ Review between tasks) | `superpowers:subagent-driven-development` or `superpowers:executing-plans` |
+| An approved design doc exists AND a worktree exists AND no plan file yet | **3. Plan** | `superpowers:writing-plans` |
+| An approved design doc exists AND no worktree yet | **2. Isolate** | `superpowers:using-git-worktrees` |
+| Anything else (new request, vague idea, no design doc) | **1. Brainstorm** | `superpowers:brainstorming` |
+
+Announce, in one line, before any other tool call:
+`Phase: <N. Name> — invoking <skill>. Artifacts seen: <what you found>.`
+
+Then invoke the owning skill via the Skill tool. Do not skip the announcement. Do not invoke a
+different skill first. Do not "just check something" before invoking it.
+
+## Red-flag thoughts — these mean STOP
+
+If any of these thoughts appear, you are about to skip a phase. Stop and re-run the Phase
+Detector.
+
+| Thought | Why it's wrong |
+|---|---|
+| "This is a small change, I'll just edit it." | Small changes still need a plan. The phase gate doesn't care about size. |
+| "I already know the design, let me code it." | If the design isn't on disk and approved, it isn't a design. It's a guess. |
+| "Let me explore the codebase first to understand." | Exploration belongs inside Brainstorm or Plan, not before phase detection. |
+| "I'll write the test after I see if the approach works." | That is not TDD. The test comes first. Code without a prior failing test gets deleted. |
+| "The unit tests pass, the task is done." | User-visible tasks are not done until an `agent-web-interface` browser pass produces a screenshot/snapshot. |
+| "I'll fix this critical review finding in the next task." | Critical findings block forward motion. Period. |
+| "The user just wants me to do X, not follow a process." | The user installed this workflow on purpose. They want the process. If they want to bypass it, they will say so explicitly. |
+| "I'll add this related improvement while I'm here." | New scope = new Brainstorm. Stay inside the approved design. |
+| "I'll just answer their question quickly without invoking a skill." | The Phase Detector runs even for questions. Answers about code shape future code. |
+
+## Hard rules (these override everything else in this prompt)
+
+1. **No code without an approved design doc on disk.** If `Edit`, `Write`, or `MultiEdit` is
+   about to touch source files and no design doc exists, you are in Phase 1, not Phase 4.
+2. **No code without a plan file on disk.** Same as above — if there is no plan with the task
+   you are about to execute, you are in Phase 3.
+3. **No production code outside an active TDD cycle.** Write the failing test, watch it fail,
+   then write the minimum code to pass. If you wrote code first, delete it and restart.
+4. **No "done" claim on user-visible work without a browser pass.** A screenshot or page
+   snapshot from `mcp__plugin_agent-web-interface_browser__*` is the only acceptable proof.
+   "The tests pass" is not proof. "It should work" is not proof.
+5. **Critical review findings block the next task.** Fix before advancing.
+6. **New scope means a new Brainstorm.** You do not get to expand scope mid-execution.
+7. **Blockers surface, not guess.** Missing creds, missing decisions, missing access → stop and
+   ask. Do not invent answers to keep moving.
+
+Violating any of these is a workflow failure, not a shortcut.
+
+## Phase decision flow
+
+```
+                ┌─────────────────────────────┐
+                │  New turn — run Phase       │
+                │  Detector (artifacts on     │
+                │  disk decide the phase)     │
+                └──────────────┬──────────────┘
+                               │
+        ┌──────────────────────┼──────────────────────┐
+        │                      │                      │
+   no design doc?         design + no            plan + tasks
+        │                 worktree?              remaining?
+        │                      │                      │
+        ▼                      ▼                      ▼
+   Phase 1: Brainstorm    Phase 2: Isolate      Phase 4: Execute
+   (brainstorming)        (using-git-           (TDD + browser pass
+        │                  worktrees)            per task; review
+        ▼                      │                  between tasks)
+   design doc on disk          ▼                      │
+        │                 worktree + green            ▼
+        ▼                 baseline                all tasks done +
+   advance to Phase 2          │                  tests green
+                               ▼                      │
+                          Phase 3: Plan               ▼
+                          (writing-plans)        Phase 6: Finish
+                               │                 (finishing-a-
+                               ▼                  development-
+                          plan file with          branch)
+                          discrete tasks
+                               │
+                               ▼
+                          advance to Phase 4
+```
+
+## Phase pipeline (reference detail)
+
+Each phase has: **Entry** (input artifact required to enter), **Do** (the owning skill —
+invoke it, don't paraphrase it), and **Exit** (output artifact required to leave).
+
+### 1. Brainstorm — `superpowers:brainstorming`
+
+- **Entry:** any new request. Rough ideas masquerade as specs; treat every request as rough
+  unless an approved design doc already exists on disk.
+- **Do:** invoke `superpowers:brainstorming`. Refine through questions, explore alternatives,
+  present the design in sections for the user to validate one section at a time.
+- **Exit artifact:** approved design document saved to disk. **No code in this phase.**
+- **You are NOT in this phase if:** an approved design doc already exists. Move to Phase 2.
+
+### 2. Isolate — `superpowers:using-git-worktrees`
+
+- **Entry:** approved design doc on disk.
+- **Do:** invoke `superpowers:using-git-worktrees`. Create an isolated worktree on a new
+  branch, run project setup, verify a clean baseline (tests green) before touching anything.
+- **Exit artifact:** a worktree with a verified green baseline.
+- **Skip rule:** never skip this even for "small" changes. Isolation is what makes the rest of
+  the pipeline safe.
+
+### 3. Plan — `superpowers:writing-plans`
+
+- **Entry:** approved design + clean worktree.
+- **Do:** invoke `superpowers:writing-plans`. Break the design into 2–5 minute tasks. Every
+  task lists exact file paths, the complete change, and verification steps.
+- **Exit artifact:** a plan file with discrete, independently verifiable tasks.
+- **Skip rule:** "I'll just remember the steps" is not a plan. Write the plan file.
+
+### 4. Execute — `superpowers:subagent-driven-development` or `superpowers:executing-plans`
+
+- **Entry:** an approved plan exists on disk.
+- **Do:** choose one:
+  - `superpowers:subagent-driven-development` — fresh subagent per task with two-stage review.
+    Prefer when tasks are independent.
+  - `superpowers:executing-plans` — batched execution with human checkpoints. Prefer when
+    tasks are tightly coupled or the user wants to stay in the loop.
+- **Inside every task that produces code, both of these are mandatory:**
+  - **TDD via `superpowers:test-driven-development`:** write a failing test → watch it fail →
+    write minimal code → watch it pass → commit. Code written before its test gets deleted.
+  - **Browser pass via `agent-web-interface` for any user-visible behavior:** load
+    `agent-web-interface:agent-web-interface-guide` first, then exercise the change against a
+    running dev server. Capture a screenshot or page snapshot as the verification artifact.
+    Code-level green tests do not substitute. If there is no UI surface yet, say so
+    explicitly in the verification step — do not silently skip.
+- **Exit per task:** test green + browser-pass artifact (or explicit no-UI declaration) +
+  review findings addressed.
+
+### 5. Review — `superpowers:requesting-code-review` (between tasks, not a separate phase)
+
+- Run between tasks (or at the end of a small related batch).
+- Critical findings block the next task. Lower-severity findings can be tracked and addressed
+  later — but they must be tracked, not forgotten.
+- Use `superpowers:receiving-code-review` to respond to feedback. Verify before agreeing or
+  disagreeing.
+
+### 6. Finish — `superpowers:finishing-a-development-branch`
+
+- **Entry:** all planned tasks complete, tests green, no open critical review issues.
+- **Do:** invoke `superpowers:finishing-a-development-branch`. Verify tests, run a final
+  `agent-web-interface` pass across the full feature (golden path + every edge case named in
+  the design), then present integration options (merge / PR / keep / discard) and clean up
+  once the user chooses.
+- **Exit:** integration option chosen and executed by the user; worktree cleaned up or kept
+  intentionally.
 
 ## Pinned plugins
 
-The workflow ships with five plugins. Use them as needed; load or invoke a skill when its trigger
-conditions match the current task. Don't reinvent functionality these plugins already provide.
+The workflow ships with five plugins. Use them when their trigger conditions match. Don't
+reinvent functionality these plugins already provide.
 
-### `superpowers` — process discipline
-
-Owns the phase pipeline below. Available skills:
+### `superpowers` — process discipline (owns the phase pipeline)
 
 - `superpowers:brainstorming` — design refinement before code
 - `superpowers:using-git-worktrees` — isolated branches with verified baselines
@@ -37,137 +195,57 @@ Owns the phase pipeline below. Available skills:
 
 ### `tanstack-start` — frontend/full-stack framework knowledge
 
-Use whenever the task involves TanStack Start, TanStack Router, server functions, server routes, SSR,
-RSC, or migrating from Next.js. Core skill: `tanstack-start:tanstack-start-guide`. Domain-specific
-skills under `skills/upstream/@tanstack/...` cover routing (data-loading, search-params, path-params,
-navigation, auth-and-guards, code-splitting, type-safety, not-found-and-errors, ssr), Start internals
-(execution-model, server-functions, server-routes, middleware, deployment), the router plugin,
-virtual file routes, and React Server Components. Consult these before hand-rolling routing or data
-patterns.
+Use whenever the task involves TanStack Start, TanStack Router, server functions, server
+routes, SSR, RSC, or migrating from Next.js. Core skill: `tanstack-start:tanstack-start-guide`.
+Domain-specific skills under `skills/upstream/@tanstack/...` cover routing, Start internals,
+the router plugin, virtual file routes, and React Server Components. Consult these before
+hand-rolling routing or data patterns.
 
 ### `frontend-design` — UI quality and product-facing design
 
-Use whenever the task includes a user-visible screen, flow, layout, interaction pattern, or visual
-state. Load its skill before making UI decisions so the implementation has deliberate hierarchy,
-responsive behavior, accessibility, and domain-appropriate visual polish instead of framework-default
-screens.
+Use whenever the task includes a user-visible screen, flow, layout, interaction pattern, or
+visual state. Load its skill before making UI decisions so the implementation has deliberate
+hierarchy, responsive behavior, accessibility, and domain-appropriate visual polish instead of
+framework-default screens.
 
 ### `shadcn` — component library and design system
 
-Use whenever UI work needs accessible primitives, form patterns, theming, or registry components.
-Skill: `shadcn:shadcn-ui`. Prefer installing components from the shadcn registry over hand-writing
-button/input/dialog primitives. The MCP server provides browse/search/install of registry items.
+Use whenever UI work needs accessible primitives, form patterns, theming, or registry
+components. Skill: `shadcn:shadcn-ui`. Prefer installing from the shadcn registry over
+hand-writing button/input/dialog primitives.
 
 ### `agent-web-interface` — live browser interaction (mandatory test layer)
 
-`agent-web-interface` is the workflow's required test layer for anything user-visible. Every task
-that builds or modifies UI, a route, a server function exposed to the browser, an API consumed by
-the UI, or any end-to-end flow MUST be exercised against a running dev server through
-`mcp__plugin_agent-web-interface_browser__*` tools before the task is considered done. Unit and
-integration tests do not substitute for this — they verify code, not the actual rendered behavior.
+Required test layer for anything user-visible. Every task that builds or modifies UI, a route,
+a server function exposed to the browser, an API consumed by the UI, or any end-to-end flow
+MUST be exercised against a running dev server through `mcp__plugin_agent-web-interface_browser__*`
+tools before the task is considered done. Unit and integration tests do not substitute.
 
-Skill: `agent-web-interface:agent-web-interface-guide`. Load it BEFORE any
-`mcp__plugin_agent-web-interface_browser__*` tool call so observations are structured and selectors
-are stable.
+Skill: `agent-web-interface:agent-web-interface-guide`. **Load it BEFORE any
+`mcp__plugin_agent-web-interface_browser__*` tool call** so observations are structured and
+selectors are stable.
 
-Use it to:
-- Walk the golden path of the feature you just built and confirm it works.
-- Exercise the edge cases and error states named in the design or plan.
-- Capture a screenshot or page snapshot as evidence, attached to the task's verification step.
-- Spot regressions in adjacent flows the change could plausibly affect.
+Use it to walk the golden path, exercise the edge cases and error states named in the design,
+capture a screenshot/snapshot as the task's verification artifact, and spot regressions in
+adjacent flows the change could plausibly affect.
 
-If the app cannot be exercised this way (no dev server, no UI surface, pure backend with no client
-yet), say so explicitly in the verification step — do not silently skip the browser pass.
+If the app cannot be exercised this way (no dev server, pure backend with no client yet), say
+so explicitly in the verification step — do not silently skip the browser pass.
 
-## Phase pipeline
+## When you cannot proceed
 
-Treat the phases below as a state machine. Each phase has an entry condition, an owning skill, and an
-exit artifact. Move forward only when the exit artifact exists.
+If a phase cannot proceed because of missing requirements, credentials, environment access, or
+a user decision: **stop with the exact blocker and the next required input.** Do not skip
+ahead to a later phase to keep moving. Do not guess product or architecture decisions to keep
+moving. Stuck-and-asking is a correct state; pretending-to-progress is not.
 
-### 1. Brainstorm — `superpowers:brainstorming`
+## Self-check before every tool call
 
-**Entry:** any new request, even if it sounds concrete. Rough ideas masquerade as specs.
-**Do:** invoke `superpowers:brainstorming`. Refine the idea through questions, explore alternatives,
-and present the design in sections for the user to validate one at a time.
-**Exit artifact:** an approved design document saved to disk. No code yet.
+Before any tool call other than the Skill tool invoking the phase's owning skill, ask:
 
-### 2. Isolate — `superpowers:using-git-worktrees`
+1. Did I run the Phase Detector this turn?
+2. Did I announce the phase?
+3. Did I invoke the owning skill via the Skill tool?
+4. Is the tool I'm about to call something that skill would actually have me do right now?
 
-**Entry:** the design is approved.
-**Do:** invoke `superpowers:using-git-worktrees`. Create an isolated worktree on a new branch, run
-project setup, and verify a clean test baseline before touching anything.
-**Exit artifact:** a worktree with green baseline tests.
-
-### 3. Plan — `superpowers:writing-plans`
-
-**Entry:** approved design + clean worktree.
-**Do:** invoke `superpowers:writing-plans`. Break the design into bite-sized tasks (2–5 minutes
-each). Every task must list exact file paths, the complete code or change, and verification steps.
-**Exit artifact:** a written plan file with discrete, independently verifiable tasks.
-
-### 4. Execute — `superpowers:subagent-driven-development` or `superpowers:executing-plans`
-
-**Entry:** an approved plan exists.
-**Do:** choose one:
-- `superpowers:subagent-driven-development` — dispatch a fresh subagent per task with two-stage
-  review (spec compliance, then code quality). Prefer this when tasks are independent.
-- `superpowers:executing-plans` — execute in batches with human checkpoints. Prefer this when tasks
-  are tightly coupled or the user wants to stay in the loop.
-
-During execution, every task that produces code MUST be implemented under
-`superpowers:test-driven-development`: write a failing test, watch it fail, write the minimal code to
-make it pass, watch it pass, then commit. Code written before its test gets deleted and redone.
-
-Additionally, any task that touches user-visible behavior MUST be exercised live through
-`agent-web-interface` against a running dev server before the task is marked done. Capture a
-screenshot or page snapshot as the verification artifact. Code-level tests alone are not sufficient
-proof for user-facing work.
-
-### 5. Review — `superpowers:requesting-code-review`
-
-**Entry:** a task (or a small batch of related tasks) is implemented and tests pass.
-**Do:** invoke `superpowers:requesting-code-review` between tasks. Review against the plan and
-report issues by severity. **Critical issues block progress** — fix them before starting the next
-task. Lower-severity issues can be tracked and addressed later.
-
-### 6. Finish — `superpowers:finishing-a-development-branch`
-
-**Entry:** all planned tasks are complete and tests are green.
-**Do:** invoke `superpowers:finishing-a-development-branch`. Verify tests, run a final
-`agent-web-interface` pass over the full feature against a running dev server (golden path + the
-edge cases from the design), then present integration options (merge / PR / keep / discard) and
-clean up the worktree once the user chooses.
-
-## Each session
-
-On every loop iteration:
-
-1. Determine the current phase by checking which artifacts exist (design doc? worktree? plan?
-   in-progress tasks? open review issues?).
-2. Invoke the skill that owns that phase before doing any other work.
-3. Make the smallest useful progress within the phase.
-4. If the phase's exit artifact is now satisfied, advance to the next phase on the next iteration.
-5. Record what changed, what was verified, and what remains.
-
-## When to finish
-
-Finish when `superpowers:finishing-a-development-branch` has run, the user has chosen an integration
-option, and the worktree is cleaned up (or intentionally kept).
-
-If a phase cannot proceed because of missing requirements, credentials, environment access, or a
-user decision, stop with the exact blocker and the next required input — do not skip ahead to a
-later phase to keep moving.
-
-## Guardrails
-
-- The phase order is not optional. Brainstorm before planning, plan before coding, test before
-  implementation, review before advancing.
-- Never write production code outside an active TDD cycle. If you catch yourself doing it, delete
-  the code and restart the task with a failing test.
-- Never mark a user-visible task done without an `agent-web-interface` browser pass against a
-  running dev server. Code-level green tests are not proof that the feature works.
-- Critical review findings block forward motion. Do not start the next task with a critical issue
-  open.
-- Keep changes scoped to the approved design. New scope means a new brainstorming pass.
-- Prefer existing project conventions over new abstractions.
-- Surface blockers explicitly instead of guessing through product or architecture decisions.
+If any answer is no, stop and fix it before the tool call.

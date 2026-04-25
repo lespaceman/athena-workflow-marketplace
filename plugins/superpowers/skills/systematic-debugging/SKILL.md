@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+description: "MUST use the moment any bug, test failure, crash, stack trace, flaky test, regression, or unexpected behavior appears — before proposing or attempting any fix. Drives root-cause analysis (reproduce → isolate → form hypothesis → test hypothesis → fix the cause, not the symptom) instead of guess-and-patch. Trigger on ANY of: 'this is broken', 'doesn't work', 'getting an error', 'test is failing', 'crashes when', 'returns the wrong value', 'flaky test', 'works locally but not in CI', 'why is X happening', 'debug this', 'figure out what's wrong', 'it broke after', or whenever output differs from expected. Use even if the fix seems obvious — obvious fixes that skip RCA cause regressions. Does NOT mark the bug fixed; pair with verification-before-completion for that."
 ---
 
 # Systematic Debugging

@@ -1,6 +1,6 @@
 ---
 name: receiving-code-review
-description: Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation
+description: "MUST use whenever code review feedback arrives — from a human reviewer, an automated reviewer, or another agent — before changing any code in response. Enforces technical rigor over performative agreement: verify each claim against the code, push back on incorrect points, and only act on findings that hold up. Trigger on ANY of: 'address this PR comment', 'respond to the review', 'fix the review feedback', 'someone said X about my code', 'reviewer suggested', 'PR comments came back', 'CR feedback', or whenever a critique of code you wrote needs to be processed. Use even if the feedback sounds authoritative — 'looks plausible' is not the same as 'is correct'. Does NOT request the review (see requesting-code-review)."
 ---
 
 # Code Review Reception

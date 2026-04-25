@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: "You MUST use this before writing or editing any production code, for any feature, bugfix, refactor, or behavior change — enforces strict RED → GREEN → REFACTOR: write a failing test first, watch it fail, write the minimum code to pass, watch it pass, then commit. Trigger on ANY of: 'implement', 'add a function', 'fix this bug', 'make it do X', 'write the code for', 'build the feature', 'change the behavior of', 'handle this case', 'support this input', or whenever Edit/Write/MultiEdit is about to touch source files. If you wrote code without a prior failing test, the code gets deleted and the task restarts. Use even for 'tiny' changes; the discipline is what makes the workflow trustworthy. Does NOT apply to pure docs, configs, or scaffolding with no behavior."
 ---
 
 # Test-Driven Development (TDD)
