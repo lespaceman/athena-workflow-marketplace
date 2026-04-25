@@ -20,20 +20,20 @@
       "version": "1.0.12"
     },
     {
-      "ref": "superpowers@lespaceman/athena-workflow-marketplace",
-      "version": "5.0.7"
+      "ref": "frontend-design@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.0"
     },
     {
       "ref": "shadcn@lespaceman/athena-workflow-marketplace",
       "version": "0.1.0"
     },
     {
-      "ref": "tanstack-start@lespaceman/athena-workflow-marketplace",
-      "version": "0.1.0"
+      "ref": "superpowers@lespaceman/athena-workflow-marketplace",
+      "version": "5.0.7"
     },
     {
-      "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
-      "version": "1.0.12"
+      "ref": "tanstack-start@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.0"
     }
   ]
 }

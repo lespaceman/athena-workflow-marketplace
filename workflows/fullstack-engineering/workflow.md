@@ -14,8 +14,8 @@ is settled, and shipping code before it is verified.
 
 ## Pinned plugins
 
-The workflow ships with three plugins. Use them as needed — load a skill via the `Skill` tool when its
-trigger conditions match the current task. Don't reinvent functionality these plugins already provide.
+The workflow ships with five plugins. Use them as needed; load or invoke a skill when its trigger
+conditions match the current task. Don't reinvent functionality these plugins already provide.
 
 ### `superpowers` — process discipline
 
@@ -44,6 +44,19 @@ navigation, auth-and-guards, code-splitting, type-safety, not-found-and-errors, 
 (execution-model, server-functions, server-routes, middleware, deployment), the router plugin,
 virtual file routes, and React Server Components. Consult these before hand-rolling routing or data
 patterns.
+
+### `frontend-design` — UI quality and product-facing design
+
+Use whenever the task includes a user-visible screen, flow, layout, interaction pattern, or visual
+state. Load its skill before making UI decisions so the implementation has deliberate hierarchy,
+responsive behavior, accessibility, and domain-appropriate visual polish instead of framework-default
+screens.
+
+### `shadcn` — component library and design system
+
+Use whenever UI work needs accessible primitives, form patterns, theming, or registry components.
+Skill: `shadcn:shadcn-ui`. Prefer installing components from the shadcn registry over hand-writing
+button/input/dialog primitives. The MCP server provides browse/search/install of registry items.
 
 ### `agent-web-interface` — live browser interaction (mandatory test layer)
 
