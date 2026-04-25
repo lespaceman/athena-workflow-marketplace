@@ -1,6 +1,6 @@
 # Frontend Design Plugin
 
-Generates distinctive, production-grade frontend interfaces that avoid generic AI aesthetics.
+Generates distinctive, production-grade frontend interfaces that avoid generic AI aesthetics — load before any UI work.
 
 ## What It Does
 
