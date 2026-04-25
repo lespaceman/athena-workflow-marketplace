@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-shadcn",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Browse, search, and install shadcn/ui components via the shadcn MCP server, plus project-aware knowledge of shadcn/ui patterns, theming, and registry authoring",
   "license": "MIT",
   "repository": {

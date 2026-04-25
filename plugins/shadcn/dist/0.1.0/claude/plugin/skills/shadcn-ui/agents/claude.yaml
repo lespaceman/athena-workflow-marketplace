@@ -1,3 +1,0 @@
-frontmatter:
-  user-invocable: true
-  argument-hint: "<intent> — e.g. 'add a login form', 'switch preset solar', 'add @acme/hero'"

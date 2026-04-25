@@ -1,7 +1,7 @@
 {
   "name": "tanstack-start",
   "description": "TanStack Start guidance for scaffolding examples, routing patterns, full-stack app structure, and agent-friendly implementation workflows",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Athenaflow"
   },
