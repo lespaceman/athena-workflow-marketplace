@@ -1,0 +1,39 @@
+{
+  "name": "fullstack-engineering",
+  "version": "0.0.1",
+  "description": "Full-stack engineering workflow scaffold for iterating across codebase understanding, implementation, validation, and delivery",
+  "promptTemplate": "{input}",
+  "workflowFile": "workflow.md",
+  "loop": {
+    "enabled": true,
+    "maxIterations": 12
+  },
+  "examplePrompts": [
+    "Implement a new settings page and backend endpoint",
+    "Fix a production bug across the API and UI",
+    "Add a full-stack feature with tests and delivery notes"
+  ],
+  "isolation": "minimal",
+  "plugins": [
+    {
+      "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
+      "version": "1.0.12"
+    },
+    {
+      "ref": "superpowers@lespaceman/athena-workflow-marketplace",
+      "version": "5.0.7"
+    },
+    {
+      "ref": "shadcn@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.0"
+    },
+    {
+      "ref": "tanstack-start@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.0"
+    },
+    {
+      "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
+      "version": "1.0.12"
+    }
+  ]
+}
