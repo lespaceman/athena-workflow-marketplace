@@ -1,0 +1,29 @@
+{
+  "name": "@athenaflow/plugin-frontend-design",
+  "version": "0.1.0",
+  "description": "Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics.",
+  "license": "MIT",
+  "author": "Prithvi Rajasekaran <prithvi@anthropic.com>",
+  "contributors": [
+    "Alexander Bricken <alexander@anthropic.com>"
+  ],
+  "homepage": "https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/frontend-design"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "skills/",
+    "dist/"
+  ],
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

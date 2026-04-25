@@ -5,6 +5,20 @@
   },
   "plugins": [
     {
+      "name": "tanstack-start",
+      "description": "TanStack Start guidance for scaffolding examples, routing patterns, full-stack app structure, and agent-friendly implementation workflows",
+      "version": "0.1.0",
+      "source": {
+        "source": "local",
+        "path": "./plugins/tanstack-start"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
+    },
+    {
       "name": "superpowers",
       "description": "Complete software-development methodology for coding agents: TDD, systematic debugging, brainstorming, planning, and subagent-driven development workflows",
       "version": "5.0.7",
@@ -152,6 +166,20 @@
         "authentication": "ON_INSTALL"
       },
       "category": "developer-tools"
+    },
+    {
+      "name": "frontend-design",
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics. Original plugin by Prithvi Rajasekaran and Alexander Bricken (Anthropic).",
+      "version": "0.1.0",
+      "source": {
+        "source": "local",
+        "path": "./plugins/frontend-design"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "frontend"
     },
     {
       "name": "web-bench",

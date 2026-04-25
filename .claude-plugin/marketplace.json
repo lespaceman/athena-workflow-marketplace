@@ -10,6 +10,21 @@
   },
   "plugins": [
     {
+      "name": "tanstack-start",
+      "source": "./plugins/tanstack-start",
+      "description": "TanStack Start guidance for scaffolding examples, routing patterns, full-stack app structure, and agent-friendly implementation workflows",
+      "version": "0.1.0",
+      "keywords": [
+        "tanstack",
+        "react-start",
+        "fullstack",
+        "react",
+        "routing",
+        "agent-skills"
+      ],
+      "category": "developer-tools"
+    },
+    {
       "name": "superpowers",
       "source": "./plugins/superpowers",
       "description": "Complete software-development methodology for coding agents: TDD, systematic debugging, brainstorming, planning, and subagent-driven development workflows",
@@ -176,6 +191,28 @@
         "dark-theme"
       ],
       "category": "developer-tools"
+    },
+    {
+      "name": "frontend-design",
+      "source": "./plugins/frontend-design",
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Prithvi Rajasekaran",
+        "email": "prithvi@anthropic.com"
+      },
+      "keywords": [
+        "frontend",
+        "design",
+        "ui",
+        "aesthetics",
+        "css",
+        "react",
+        "html"
+      ],
+      "category": "frontend",
+      "repository": "https://github.com/anthropics/claude-code",
+      "license": "MIT"
     },
     {
       "name": "web-bench",
