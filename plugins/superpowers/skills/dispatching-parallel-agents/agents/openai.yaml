@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dispatching Parallel Agents"
+  short_description: "Use when facing 2+ independent tasks that can be worked on without shared state or"
+  default_prompt: "Apply the dispatching-parallel-agents skill to the current task."

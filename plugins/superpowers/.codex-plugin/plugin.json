@@ -1,0 +1,16 @@
+{
+  "name": "superpowers",
+  "version": "5.0.7",
+  "description": "Complete software-development methodology for coding agents: TDD, systematic debugging, brainstorming, planning, and subagent-driven development workflows",
+  "author": {
+    "name": "Jesse Vincent",
+    "email": "jesse@fsck.com"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Superpowers",
+    "shortDescription": "TDD, debugging, planning, and subagent workflows for coding agents",
+    "developerName": "Jesse Vincent",
+    "category": "Developer Tools"
+  }
+}

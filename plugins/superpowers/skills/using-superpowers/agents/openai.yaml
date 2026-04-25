@@ -1,0 +1,4 @@
+interface:
+  display_name: "Using Superpowers"
+  short_description: "Use when starting any conversation - establishes how to find and use skills, requiring"
+  default_prompt: "Apply the using-superpowers skill to the current task."

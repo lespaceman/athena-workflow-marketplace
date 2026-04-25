@@ -10,6 +10,25 @@
   },
   "plugins": [
     {
+      "name": "superpowers",
+      "source": "./plugins/superpowers",
+      "description": "Complete software-development methodology for coding agents: TDD, systematic debugging, brainstorming, planning, and subagent-driven development workflows",
+      "version": "5.0.7",
+      "keywords": [
+        "skills",
+        "tdd",
+        "debugging",
+        "brainstorming",
+        "planning",
+        "code-review",
+        "workflows",
+        "best-practices"
+      ],
+      "category": "developer-tools",
+      "repository": "https://github.com/obra/superpowers",
+      "license": "MIT"
+    },
+    {
       "name": "agent-web-interface",
       "source": "./plugins/agent-web-interface",
       "description": "Semantic browser interface for LLM agents - token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",

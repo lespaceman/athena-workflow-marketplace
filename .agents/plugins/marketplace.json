@@ -5,6 +5,20 @@
   },
   "plugins": [
     {
+      "name": "superpowers",
+      "description": "Complete software-development methodology for coding agents: TDD, systematic debugging, brainstorming, planning, and subagent-driven development workflows",
+      "version": "5.0.7",
+      "source": {
+        "source": "local",
+        "path": "./plugins/superpowers"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
+    },
+    {
       "name": "agent-web-interface",
       "description": "Semantic browser interface for LLM agents - token-efficient page snapshots via Puppeteer/CDP, with a skill for live page interaction",
       "version": "1.0.8",
