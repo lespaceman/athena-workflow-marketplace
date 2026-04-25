@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-tanstack-start",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "TanStack Start guidance for scaffolding examples, routing patterns, full-stack app structure, and agent-friendly implementation workflows",
   "license": "MIT",
   "repository": {

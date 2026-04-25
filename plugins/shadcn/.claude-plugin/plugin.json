@@ -1,7 +1,7 @@
 {
   "name": "shadcn",
   "description": "Browse, search, and install shadcn/ui components via the shadcn MCP server, plus project-aware knowledge of shadcn/ui patterns, theming, and registry authoring",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "author": {
     "name": "Athenaflow"
   },
