@@ -1,7 +1,7 @@
 {
   "name": "frontend-design",
   "description": "Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "Prithvi Rajasekaran",
     "email": "prithvi@anthropic.com"
