@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brainstorming"
+  short_description: "You MUST use this before any creative work - creating features, building components,"
+  default_prompt: "Apply the brainstorming skill to the current task."

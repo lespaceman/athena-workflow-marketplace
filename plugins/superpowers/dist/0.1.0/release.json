@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pluginRef": "superpowers@athena-workflow-marketplace",
+  "pluginName": "superpowers",
+  "marketplaceName": "athena-workflow-marketplace",
+  "version": "0.1.0",
+  "artifacts": {
+    "claude": {
+      "type": "directory",
+      "path": "./claude/plugin"
+    },
+    "codex": {
+      "type": "marketplace",
+      "marketplacePath": "./.agents/plugins/marketplace.json",
+      "pluginPath": "./codex/plugin"
+    }
+  }
+}

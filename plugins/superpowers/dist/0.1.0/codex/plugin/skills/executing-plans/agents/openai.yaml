@@ -1,0 +1,4 @@
+interface:
+  display_name: "Executing Plans"
+  short_description: "Use when you have a written implementation plan to execute in a separate session with"
+  default_prompt: "Apply the executing-plans skill to the current task."

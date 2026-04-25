@@ -1,0 +1,21 @@
+{
+  "name": "@athenaflow/plugin-shadcn",
+  "version": "0.1.0",
+  "description": "Browse, search, and install shadcn/ui components via the shadcn MCP server, plus project-aware knowledge of shadcn/ui patterns, theming, and registry authoring",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/shadcn"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    ".mcp.json",
+    "skills/",
+    "dist/"
+  ]
+}

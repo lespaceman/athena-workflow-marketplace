@@ -1,0 +1,22 @@
+{
+  "name": "frontend-design",
+  "version": "0.1.0",
+  "description": "Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics.",
+  "author": {
+    "name": "Prithvi Rajasekaran",
+    "email": "prithvi@anthropic.com"
+  },
+  "contributors": [
+    {
+      "name": "Alexander Bricken",
+      "email": "alexander@anthropic.com"
+    }
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Frontend Design",
+    "shortDescription": "Distinctive, production-grade frontend interfaces with bold aesthetic direction",
+    "developerName": "Anthropic (Prithvi Rajasekaran, Alexander Bricken)",
+    "category": "Frontend"
+  }
+}

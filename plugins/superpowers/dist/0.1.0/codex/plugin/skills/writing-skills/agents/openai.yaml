@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing Skills"
+  short_description: "Use when creating new skills, editing existing skills, or verifying skills work"
+  default_prompt: "Apply the writing-skills skill to the current task."

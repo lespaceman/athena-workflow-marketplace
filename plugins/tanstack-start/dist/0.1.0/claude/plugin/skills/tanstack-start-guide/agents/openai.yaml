@@ -1,0 +1,4 @@
+interface:
+  display_name: "TanStack Start Guide"
+  short_description: "Build and adapt TanStack Start apps and examples"
+  default_prompt: "Help implement this TanStack Start task using the closest matching example scaffold and project conventions."

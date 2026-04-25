@@ -1,0 +1,4 @@
+interface:
+  display_name: "Subagent Driven Development"
+  short_description: "Use when executing implementation plans with independent tasks in the current session"
+  default_prompt: "Apply the subagent-driven-development skill to the current task."

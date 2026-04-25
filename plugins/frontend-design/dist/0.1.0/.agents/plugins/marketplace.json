@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "name": "athena-workflow-marketplace",
+  "plugins": [
+    {
+      "name": "frontend-design",
+      "version": "0.1.0",
+      "source": {
+        "source": "local",
+        "path": "./codex/plugin"
+      }
+    }
+  ]
+}

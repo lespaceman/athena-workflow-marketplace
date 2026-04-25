@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<TanStack Start task, scaffold, route pattern, or app feature>"
+  user-invocable: true
