@@ -20,13 +20,22 @@ file", not even for answering a clarifying question that touches code.
 
 Check artifacts on disk in this exact order. The **first** matching row tells you the phase.
 
+For simple, low-risk tasks, a lightweight planning session may satisfy Phase 1. You do not
+have to write a full spec or design doc when the change is small, well-bounded, and does not
+need architecture or product decisions. In that case, record the brief plan in the session and
+move to the appropriate execution path; a separate plan file is not required if the session
+plan already names the task, intended files, and verification. Use a full design doc and plan
+file for anything ambiguous, multi-step, architectural, user-visible, or risky.
+
 | Check (in order) | If true, current phase is | Owning skill |
 |---|---|---|
 | All planned tasks done + tests green + integration option not yet chosen | **6. Finish** | `superpowers:finishing-a-development-branch` |
 | A plan file exists AND it has incomplete tasks | **4. Execute** (+ Review between tasks) | `superpowers:subagent-driven-development` or `superpowers:executing-plans` |
+| An approved lightweight session plan exists AND a worktree exists | **4. Execute** (+ Review between tasks) | `superpowers:executing-plans` |
 | An approved design doc exists AND a worktree exists AND no plan file yet | **3. Plan** | `superpowers:writing-plans` |
 | An approved design doc exists AND no worktree yet | **2. Isolate** | `superpowers:using-git-worktrees` |
-| Anything else (new request, vague idea, no design doc) | **1. Brainstorm** | `superpowers:brainstorming` |
+| An approved lightweight session plan exists AND no worktree yet | **2. Isolate** | `superpowers:using-git-worktrees` |
+| Anything else (new request, vague idea, no approved plan/design) | **1. Brainstorm** | `superpowers:brainstorming` |
 
 Announce, in one line, before any other tool call:
 `Phase: <N. Name> — invoking <skill>. Artifacts seen: <what you found>.`
@@ -41,7 +50,7 @@ Detector.
 
 | Thought | Why it's wrong |
 |---|---|
-| "This is a small change, I'll just edit it." | Small changes still need a plan. The phase gate doesn't care about size. |
+| "This is a small change, I'll just edit it." | Small changes still need a planning session. They may not need a full spec or design doc. |
 | "I already know the design, let me code it." | If the design isn't on disk and approved, it isn't a design. It's a guess. |
 | "Let me explore the codebase first to understand." | Exploration belongs inside Brainstorm or Plan, not before phase detection. |
 | "I'll write the test after I see if the approach works." | That is not TDD. The test comes first. Code without a prior failing test gets deleted. |
@@ -53,10 +62,12 @@ Detector.
 
 ## Hard rules (these override everything else in this prompt)
 
-1. **No code without an approved design doc on disk.** If `Edit`, `Write`, or `MultiEdit` is
-   about to touch source files and no design doc exists, you are in Phase 1, not Phase 4.
-2. **No code without a plan file on disk.** Same as above — if there is no plan with the task
-   you are about to execute, you are in Phase 3.
+1. **No code without an approved design doc or lightweight session plan.** If `Edit`,
+   `Write`, or `MultiEdit` is about to touch source files and neither a design doc nor a brief
+   approved session plan exists, you are in Phase 1, not Phase 4.
+2. **No code without a plan.** For full tasks, the plan is a plan file on disk. For simple
+   tasks, an approved lightweight session plan is enough if it names the task, intended files,
+   and verification.
 3. **No production code outside an active TDD cycle.** Write the failing test, watch it fail,
    then write the minimum code to pass. If you wrote code first, delete it and restart.
 4. **No "done" claim on user-visible work without a browser pass.** A screenshot or page
@@ -80,15 +91,15 @@ Violating any of these is a workflow failure, not a shortcut.
                                │
         ┌──────────────────────┼──────────────────────┐
         │                      │                      │
-   no design doc?         design + no            plan + tasks
-        │                 worktree?              remaining?
+   no approved            design/plan +          plan file or
+   plan/design?           no worktree?           remaining?
         │                      │                      │
         ▼                      ▼                      ▼
    Phase 1: Brainstorm    Phase 2: Isolate      Phase 4: Execute
    (brainstorming)        (using-git-           (TDD + browser pass
         │                  worktrees)            per task; review
         ▼                      │                  between tasks)
-   design doc on disk          ▼                      │
+   approved plan/design        ▼                      │
         │                 worktree + green            ▼
         ▼                 baseline                all tasks done +
    advance to Phase 2          │                  tests green
@@ -112,15 +123,23 @@ invoke it, don't paraphrase it), and **Exit** (output artifact required to leave
 ### 1. Brainstorm — `superpowers:brainstorming`
 
 - **Entry:** any new request. Rough ideas masquerade as specs; treat every request as rough
-  unless an approved design doc already exists on disk.
+  unless an approved design doc exists on disk or an approved lightweight session plan already
+  exists in the current session.
 - **Do:** invoke `superpowers:brainstorming`. Refine through questions, explore alternatives,
   present the design in sections for the user to validate one section at a time.
-- **Exit artifact:** approved design document saved to disk. **No code in this phase.**
-- **You are NOT in this phase if:** an approved design doc already exists. Move to Phase 2.
+- **Simple-task exit:** for small, low-risk, well-bounded tasks, an approved lightweight
+  session plan is enough. It should state the goal, intended files, and verification. A full
+  spec/design doc and separate plan file are not required.
+- **Full-task exit artifact:** approved design document saved to disk. Use this for
+  ambiguous, multi-step, architectural, user-visible, or risky work.
+- **No code in this phase.**
+- **You are NOT in this phase if:** an approved design doc or approved lightweight session
+  plan already exists. Move to Phase 2.
 
 ### 2. Isolate — `superpowers:using-git-worktrees`
 
-- **Entry:** approved design doc on disk.
+- **Entry:** approved design doc on disk, or an approved lightweight session plan for simple
+  low-risk work.
 - **Do:** invoke `superpowers:using-git-worktrees`. Create an isolated worktree on a new
   branch, run project setup, verify a clean baseline (tests green) before touching anything.
 - **Exit artifact:** a worktree with a verified green baseline.
@@ -129,15 +148,18 @@ invoke it, don't paraphrase it), and **Exit** (output artifact required to leave
 
 ### 3. Plan — `superpowers:writing-plans`
 
-- **Entry:** approved design + clean worktree.
+- **Entry:** approved design doc + clean worktree. Simple tasks with an approved lightweight
+  session plan can skip this phase and execute from the session plan.
 - **Do:** invoke `superpowers:writing-plans`. Break the design into 2–5 minute tasks. Every
   task lists exact file paths, the complete change, and verification steps.
 - **Exit artifact:** a plan file with discrete, independently verifiable tasks.
-- **Skip rule:** "I'll just remember the steps" is not a plan. Write the plan file.
+- **Skip rule:** for full tasks, "I'll just remember the steps" is not a plan. Write the plan
+  file. For simple tasks, the approved lightweight session plan is the plan.
 
 ### 4. Execute — `superpowers:subagent-driven-development` or `superpowers:executing-plans`
 
-- **Entry:** an approved plan exists on disk.
+- **Entry:** an approved plan exists on disk, or an approved lightweight session plan exists
+  for a simple task.
 - **Do:** choose one:
   - `superpowers:subagent-driven-development` — fresh subagent per task with two-stage review.
     Prefer when tasks are independent.
@@ -191,7 +213,7 @@ reinvent functionality these plugins already provide.
 - `superpowers:systematic-debugging` — root-cause analysis for any bug or unexpected behavior
 - `superpowers:verification-before-completion` — evidence-before-assertion gate before claiming done
 - `superpowers:dispatching-parallel-agents` — for 2+ truly independent tasks
-- `superpowers:writing-skills` — when the task itself is authoring a skill
+- `superpowers:writing-skills` — Use when authoring new skills, editing SKILL.md/frontmatter, refining triggers, or verifying skills before publishing; not for using skills
 
 ### `tanstack-start` — frontend/full-stack framework knowledge
 
