@@ -5,7 +5,7 @@
   "workflowFile": "workflow.md",
   "loop": {
     "enabled": true,
-    "maxIterations": 15
+    "maxIterations": 100
   },
   "examplePrompts": [
     "Add E2E tests for the login and signup flows at https://myapp.com",

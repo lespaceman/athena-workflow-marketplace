@@ -5,7 +5,7 @@
   "workflowFile": "workflow.md",
   "loop": {
     "enabled": true,
-    "maxIterations": 10
+    "maxIterations": 100
   },
   "examplePrompts": [
     "Define an exploratory charter for the onboarding flow at https://myapp.com",

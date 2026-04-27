@@ -6,7 +6,7 @@
   "workflowFile": "workflow.md",
   "loop": {
     "enabled": true,
-    "maxIterations": 12
+    "maxIterations": 100
   },
   "examplePrompts": [
     "Implement a new settings page and backend endpoint",
