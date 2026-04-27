@@ -1,6 +1,6 @@
 {
   "name": "fullstack-engineering",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Full-stack engineering workflow scaffold for iterating across codebase understanding, implementation, validation, and delivery",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",

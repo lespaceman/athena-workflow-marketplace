@@ -12,37 +12,37 @@
       "name": "fullstack-engineering",
       "source": "./workflows/fullstack-engineering/workflow.json",
       "description": "Iterate on full-stack engineering tasks across codebase understanding, implementation, validation, and delivery",
-      "version": "0.0.7"
+      "version": "0.0.8"
     },
     {
       "name": "playwright-automation",
       "source": "./workflows/playwright-automation/workflow.json",
       "description": "Build and run Playwright E2E tests \u2014 maps broad features, explores scoped areas, plans coverage, writes tests, and fixes flakes",
-      "version": "0.0.21"
+      "version": "0.0.22"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
       "description": "Build and run Robot Framework E2E tests (Browser library) \u2014 maps broad features, explores scoped areas, plans, writes, and fixes flakes",
-      "version": "0.0.21"
+      "version": "0.0.22"
     },
     {
       "name": "exploratory-testing",
       "source": "./workflows/exploratory-testing/workflow.json",
       "description": "Explore an app to surface risks and unknowns, then hand findings to a planning workflow",
-      "version": "0.0.14"
+      "version": "0.0.15"
     },
     {
       "name": "smoke-testing",
       "source": "./workflows/smoke-testing/workflow.json",
       "description": "Scope the minimum critical-path checks that confirm a build is healthy",
-      "version": "0.0.14"
+      "version": "0.0.15"
     },
     {
       "name": "regression-testing",
       "source": "./workflows/regression-testing/workflow.json",
       "description": "Scope rerunnable checks across changed and high-risk areas",
-      "version": "0.0.14"
+      "version": "0.0.15"
     },
     {
       "name": "web-bench",
