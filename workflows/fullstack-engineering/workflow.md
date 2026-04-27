@@ -187,12 +187,14 @@ invoke it, don't paraphrase it), and **Exit** (output artifact required to leave
 ### 6. Finish — `superpowers:finishing-a-development-branch`
 
 - **Entry:** all planned tasks complete, tests green, no open critical review issues.
-- **Do:** invoke `superpowers:finishing-a-development-branch`. Verify tests, run a final
-  `agent-web-interface` pass across the full feature (golden path + every edge case named in
-  the design), then present integration options (merge / PR / keep / discard) and clean up
-  once the user chooses.
-- **Exit:** integration option chosen and executed by the user; worktree cleaned up or kept
-  intentionally.
+- **Do:** invoke `superpowers:finishing-a-development-branch` for its verification steps
+  (tests green + final `agent-web-interface` pass across the full feature: golden path + every
+  edge case named in the design). **Skip the skill's 4-option prompt** — the default action in
+  this repo is **merge locally to `main`** and remove the worktree. Only stop and ask the user
+  if: tests fail, the merge has conflicts, the base branch isn't `main`, or the user has
+  explicitly asked for a PR instead. Destructive fallbacks (discard) still require typed
+  confirmation.
+- **Exit:** branch merged to `main`, worktree cleaned up.
 
 ## Pinned plugins
 
