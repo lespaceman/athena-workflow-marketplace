@@ -12,7 +12,6 @@
     "Build Playwright coverage for the checkout process",
     "Write E2E tests for the dashboard and settings pages"
   ],
-  "isolation": "minimal",
   "plugins": [
     {
       "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",

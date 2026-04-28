@@ -12,7 +12,6 @@
     "Execute all remaining benchmark tasks",
     "Re-run failed tasks from the last batch"
   ],
-  "isolation": "minimal",
   "plugins": [
     {
       "ref": "web-bench@lespaceman/athena-workflow-marketplace",

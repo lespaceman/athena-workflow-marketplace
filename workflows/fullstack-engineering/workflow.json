@@ -13,7 +13,6 @@
     "Fix a production bug across the API and UI",
     "Add a full-stack feature with tests and delivery notes"
   ],
-  "isolation": "minimal",
   "plugins": [
     {
       "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",

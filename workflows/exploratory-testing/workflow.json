@@ -12,7 +12,6 @@
     "What should we investigate first in this new admin dashboard?",
     "Frame the key risk hypotheses for the checkout journey"
   ],
-  "isolation": "minimal",
   "plugins": [
     {
       "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",

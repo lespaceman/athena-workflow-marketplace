@@ -12,7 +12,6 @@
     "What should be in smoke for our login and billing flows?",
     "Pick the minimum critical-path checks for this product launch"
   ],
-  "isolation": "minimal",
   "plugins": [
     {
       "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
