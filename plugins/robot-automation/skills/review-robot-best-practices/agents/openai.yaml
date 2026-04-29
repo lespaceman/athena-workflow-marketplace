@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Robot Best Practices"
+  short_description: "Review Robot and Python test quality"
+  default_prompt: "Use $review-robot-best-practices to review this Robot Framework and Python test automation code for maintainability, stability, and best-practice risks."

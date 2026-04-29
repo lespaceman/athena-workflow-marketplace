@@ -1,0 +1,3 @@
+frontmatter:
+  user-invocable: true
+  argument-hint: "<path-or-scope> — e.g. tests/login.robot or resources/"

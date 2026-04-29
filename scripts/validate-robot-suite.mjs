@@ -87,8 +87,12 @@ function main() {
     'README must describe robot-automation as the Robot execution layer',
   );
 
+  assert(
+    workflowMd.includes('agent-web-interface-guide'),
+    'workflows/robot-automation/workflow.md must explicitly list agent-web-interface-guide for browser-backed exploration and triage',
+  );
+
   for (const [label, content] of [
-    ['workflows/robot-automation/workflow.md', workflowMd],
     ['add-robot-tests', addRobotTests],
     ['write-robot-code', writeRobotCode],
     ['analyze-test-codebase', analyzeRobotCodebase],

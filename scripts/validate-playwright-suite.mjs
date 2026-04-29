@@ -126,6 +126,10 @@ function main() {
     writeTestCode.includes('capture-feature-evidence'),
     'write-test-code must route missing product evidence through capture-feature-evidence',
   );
+  assert(
+    workflowMd.includes('agent-web-interface-guide'),
+    'workflows/playwright-automation/workflow.md must explicitly list agent-web-interface-guide for browser-backed exploration and triage',
+  );
 
   for (const [label, content] of [
     ['plan-test-coverage', coveragePlan],

@@ -28,6 +28,13 @@ Parse the target URL and feature description from: $ARGUMENTS
 Derive a **feature slug** from the feature description (for example, "Login flow" -> `login`).
 Use this slug for file naming throughout (`tests/<slug>.robot`, `resources/<slug>.resource`).
 
+## 0. Track Progress
+
+Follow the workflow or runtime task-tracker protocol when one is present. Keep tasks granular enough
+that each gate, artifact refresh, `.robot` implementation step, failure-triage verdict, and rerun has
+a clear status. If no tracker tool is available, maintain the same information in execution notes
+instead of inventing a tool call.
+
 ## 1. Orient
 
 Before planning or coding, understand the Robot codebase, the shared artifacts, and the execution
@@ -144,8 +151,9 @@ robot -d results tests/<feature>.robot 2>&1
 ```
 
 - If tests fail, load `fix-flaky-tests` and follow its structured workflow.
+- **Triage failures against the live product before fixing.** Dispatch a fresh subagent with `mcp__plugin_agent-web-interface_browser__*` access and the relevant exploration artifact. The subagent reproduces the failing user action in a real browser, compares the current DOM against the recorded evidence, and returns one of: **product regression** (escalate; do not paper over with test changes), **selector / DOM drift** (refresh exploration, then update selectors), **test defect** (fix `.robot` code, keywords, or wait idioms), **environment / data** (Gate 3 deferral candidate). Record the verdict in the run ledger before changing code. Do not patch selectors or insert `Sleep`s without this classification.
 - After the first green run, rerun the same suite two more times before signoff (three consecutive green runs required).
-- Do not delegate Robot execution to subagents — the main agent needs the raw output plus `results/log.html` and `results/report.html` to interpret failures in context.
+- Do not delegate Robot execution to subagents — the main agent needs the raw console output and the run's generated log/report artifacts to interpret failures in context. Resolve artifact locations from the project's configured output directory rather than assuming a fixed path.
 - For brownfield suites, run newly added or changed tests in isolation first, then the relevant feature file or suite, then broader regression only after the new coverage is green in isolation.
 - If unrelated pre-existing tests fail, classify them as baseline instability. If shared-state leakage or broken shared infrastructure forces a fix, report that repair separately from the new TC implementation set.
 - If the planned TC set, spec, coverage plan, or executed suite changes after Gate 2 in a way that adds, removes, defers, or materially rewrites covered behavior, reset to the earliest affected gate: rerun Gate 2 for changed `.robot` or resource code, rerun Gate 1 if the spec or deferral set changed, and restart the Gate 3 consecutive-green counter. Do not count pre-change runs toward post-change signoff.
@@ -193,13 +201,9 @@ Do not claim `GREEN`, "all accounted for", or "no files modified" unless the art
 
 ## Greenfield Bootstrap
 
-If Robot Framework + Browser library is not set up in the target project, you have two paths:
-
-- If an all-at-once bootstrap is requested, clone the optional external scaffold repository and use
-  it to create the starting Robot project.
-- If a Robot codebase already exists, or changes should be made directly in an existing
-  repository, do not scaffold. Use the shipped skills to analyze the current setup and write the
-  best possible `.robot` automation in place.
+If Robot Framework + Browser library is not set up in the target project, see
+[references/scaffolding.md](references/scaffolding.md). Do not scaffold when a Robot codebase
+already exists — analyze the current setup and write `.robot` automation in place.
 
 ## Authentication
 
