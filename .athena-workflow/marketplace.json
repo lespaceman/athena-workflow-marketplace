@@ -18,13 +18,13 @@
       "name": "playwright-automation",
       "source": "./workflows/playwright-automation/workflow.json",
       "description": "Build and run Playwright E2E tests \u2014 maps broad features, explores scoped areas, plans coverage, writes tests, and fixes flakes",
-      "version": "0.0.23"
+      "version": "0.0.24"
     },
     {
       "name": "robot-automation",
       "source": "./workflows/robot-automation/workflow.json",
       "description": "Build and run Robot Framework E2E tests (Browser library) \u2014 maps broad features, explores scoped areas, plans, writes, and fixes flakes",
-      "version": "0.0.23"
+      "version": "0.0.24"
     },
     {
       "name": "exploratory-testing",

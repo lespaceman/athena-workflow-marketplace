@@ -27,8 +27,8 @@
     },
     {
       "ref": "playwright-automation@lespaceman/athena-workflow-marketplace",
-      "version": "0.1.6"
+      "version": "0.1.7"
     }
   ],
-  "version": "0.0.23"
+  "version": "0.0.24"
 }
