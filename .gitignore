@@ -7,3 +7,15 @@ plugins/*/dist/
 plugins/*/*.tgz
 plugins/e2e-test-builder/skills/description-optimization-workspace/
 .claude/skill-creator-workspaces/
+
+# evals subproject
+evals/.venv/
+evals/data/
+evals/runs/
+evals/**/__pycache__/
+evals/.pytest_cache/
+evals/.mypy_cache/
+evals/.ruff_cache/
+*.db
+*.db-wal
+*.db-shm

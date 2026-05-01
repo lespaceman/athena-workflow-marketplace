@@ -1,0 +1,75 @@
+# Seed registries and explicit repos for the discovery phase.
+# Loader emits one skill.discovered event per resolved skill.
+#
+# Categories track the survey themes (Spring Boot, Cloud SQL Postgres, React,
+# Cloud Run, Secret Manager) so the reporter can filter by --filter-category.
+
+registries:
+  - name: voltagent
+    url: https://github.com/VoltAgent/awesome-agent-skills
+    type: index
+  - name: antigravity
+    url: https://github.com/sickn33/antigravity-awesome-skills
+    type: index
+  - name: anthropics
+    url: https://github.com/anthropics/skills
+    type: index
+  - name: fastmcp
+    url: https://fastmcp.me
+    type: index
+
+skills:
+  # --- Java Spring Boot ---
+  - skill_id: piomin/claude-ai-spring-boot#.claude/skills/spring-boot
+    repo_url: https://github.com/piomin/claude-ai-spring-boot
+    skill_path: .claude/skills/spring-boot
+    category: java-spring-boot
+    publisher_type: individual
+  - skill_id: jdubois/dr-jskill#skills/spring-boot
+    repo_url: https://github.com/jdubois/dr-jskill
+    skill_path: skills/spring-boot
+    category: java-spring-boot
+    publisher_type: individual
+  - skill_id: Jeffallan/claude-skills#skills/java-architect
+    repo_url: https://github.com/Jeffallan/claude-skills
+    skill_path: skills/java-architect
+    category: java-spring-boot
+    publisher_type: individual
+
+  # --- GCP Cloud SQL Postgres ---
+  - skill_id: gemini-cli-extensions/cloud-sql-postgresql#skills
+    repo_url: https://github.com/gemini-cli-extensions/cloud-sql-postgresql
+    skill_path: skills
+    category: gcp-cloud-sql-postgres
+    publisher_type: official
+  - skill_id: SpillwaveSolutions/mastering-postgresql-agent-skill#skills/mastering-postgresql
+    repo_url: https://github.com/SpillwaveSolutions/mastering-postgresql-agent-skill
+    skill_path: skills/mastering-postgresql
+    category: gcp-cloud-sql-postgres
+    publisher_type: community
+  - skill_id: timescale/pg-aiguide#skills
+    repo_url: https://github.com/timescale/pg-aiguide
+    skill_path: skills
+    category: gcp-cloud-sql-postgres
+    publisher_type: official
+
+  # --- React ---
+  - skill_id: callstackincubator/agent-skills#skills/react-native-best-practices
+    repo_url: https://github.com/callstackincubator/agent-skills
+    skill_path: skills/react-native-best-practices
+    category: react
+    publisher_type: official
+
+  # --- GCP Cloud Run ---
+  - skill_id: sickn33/antigravity-awesome-skills#skills/gcp-cloud-run
+    repo_url: https://github.com/sickn33/antigravity-awesome-skills
+    skill_path: skills/gcp-cloud-run
+    category: gcp-cloud-run
+    publisher_type: community
+
+  # --- Secret Manager ---
+  - skill_id: sickn33/antigravity-awesome-skills#skills/secrets-management
+    repo_url: https://github.com/sickn33/antigravity-awesome-skills
+    skill_path: skills/secrets-management
+    category: secret-manager
+    publisher_type: community
