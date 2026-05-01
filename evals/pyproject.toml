@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "athena-evals"
+version = "0.1.0"
+description = "Skill reliability evaluation pipeline for athena-workflow-marketplace"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Athena Workflow Marketplace Maintainers" }]
+dependencies = [
+  "httpx==0.27.2",
+  "rich==13.9.4",
+  "PyYAML==6.0.2",
+  "anthropic==0.40.0",
+  "pydantic==2.9.2",
+  "jsonschema==4.23.0",
+  "tenacity==9.0.0",
+  "platformdirs==4.3.6",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.3.3",
+  "pytest-asyncio==0.24.0",
+  "pytest-cov==5.0.0",
+  "respx==0.21.1",
+  "ruff==0.7.4",
+  "black==24.10.0",
+  "mypy==1.13.0",
+  "types-PyYAML==6.0.12.20240917",
+  "types-jsonschema==4.23.0.20240813",
+]
+
+[project.scripts]
+athena-evals = "evals.cli:main"
+
+[project.entry-points."athena_evals.evaluators"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["evals"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B", "UP", "ANN", "SIM", "RUF"]
+ignore = ["ANN401", "ANN101", "ANN102"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN"]
+"evals/tests/*" = ["ANN"]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[tool.pytest.ini_options]
+addopts = "-ra -q --strict-markers --cov=evals --cov-report=term-missing"
+asyncio_mode = "auto"
+testpaths = ["evals/tests"]
