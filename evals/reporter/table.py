@@ -142,11 +142,11 @@ def run_report(
         log.info(
             "[OK] report rendered: skills=%d S=%d A=%d B=%d C=%d D=%d",
             len(rows),
-            summary.get("S", 0),
-            summary.get("A", 0),
-            summary.get("B", 0),
-            summary.get("C", 0),
-            summary.get("D", 0),
+            summary["S"],
+            summary["A"],
+            summary["B"],
+            summary["C"],
+            summary["D"],
         )
         return 0
     finally:
@@ -171,12 +171,16 @@ def _emit(rows: list[ReportRow], formats: tuple[str, ...], run_dir: Path) -> lis
             paths.append(str(target))
         elif fmt == "md":
             target = run_dir / "report.md"
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(render_markdown(rows), encoding="utf-8")
+            _write_text(target, render_markdown(rows))
             paths.append(str(target))
         else:
             raise ValueError(f"Unknown output_format: {fmt}")
     return paths
+
+
+def _write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
 
 
 def _render_rich(rows: list[ReportRow]) -> None:
@@ -206,7 +210,7 @@ def _render_rich(rows: list[ReportRow]) -> None:
 def _composite_summary(rows: list[ReportRow]) -> dict[str, int]:
     summary: dict[str, int] = {name: 0 for name, _ in TIER_THRESHOLDS}
     for row in rows:
-        summary[row.tier] = summary.get(row.tier, 0) + 1
+        summary[row.tier] += 1
     return summary
 
 

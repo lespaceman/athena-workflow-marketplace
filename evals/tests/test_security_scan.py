@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from evals.evaluators.base import EvalContext
 from evals.evaluators.security_scan import SecurityScan
+from evals.extraction.frontmatter import parse
 
 CLEAN_SKILL_MD = """---
 name: clean-skill
@@ -59,20 +60,10 @@ def _ctx(
     overlays: dict[str, str | None] | None = None,
     repo_metadata: dict[str, object] | None = None,
 ) -> EvalContext:
-    import yaml
-
-    from evals.extraction.frontmatter import FRONTMATTER_RE
-
-    match = FRONTMATTER_RE.match(skill_md)
-    fm: dict[str, object] = {}
-    if match:
-        loaded = yaml.safe_load(match.group(1)) or {}
-        if isinstance(loaded, dict):
-            fm = dict(loaded)
     return EvalContext(
         skill_id="acme/example#skills/x",
         skill_md=skill_md,
-        frontmatter=fm,
+        frontmatter=dict(parse(skill_md).frontmatter),
         overlays=overlays or {"claude": None, "openai": None},
         repo_metadata=repo_metadata or {},
         run_id=uuid4(),

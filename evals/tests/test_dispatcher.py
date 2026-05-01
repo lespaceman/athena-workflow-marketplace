@@ -85,19 +85,28 @@ def _events_by_type(settings: Settings) -> dict[str, list]:
         store.close()
 
 
-def test_dispatcher_runs_phase1_evaluators_for_each_skill(settings):
-    _seed(settings)
-
-    rc = run_eval(
+def _run(
+    settings: Settings,
+    *,
+    phase: int | None = 1,
+    evaluator: str | None = None,
+    force: bool = False,
+    strict: bool = False,
+) -> int:
+    return run_eval(
         settings,
-        phase=1,
-        evaluator=None,
+        phase=phase,
+        evaluator=evaluator,
         judge_model="x",
         cost_cap_usd=0.0,
-        force=False,
-        strict=False,
+        force=force,
+        strict=strict,
     )
-    assert rc == 0
+
+
+def test_dispatcher_runs_phase1_evaluators_for_each_skill(settings):
+    _seed(settings)
+    assert _run(settings) == 0
 
     by_type = _events_by_type(settings)
     requested_evaluators = {ev.evaluator for ev in by_type.get("eval.requested", [])}
@@ -115,26 +124,10 @@ def test_dispatcher_runs_phase1_evaluators_for_each_skill(settings):
 
 def test_dispatcher_dedupes_on_rerun_without_force(settings):
     _seed(settings)
-    run_eval(
-        settings,
-        phase=1,
-        evaluator=None,
-        judge_model="x",
-        cost_cap_usd=0.0,
-        force=False,
-        strict=False,
-    )
+    _run(settings)
     before = _events_by_type(settings)
 
-    run_eval(
-        settings,
-        phase=1,
-        evaluator=None,
-        judge_model="x",
-        cost_cap_usd=0.0,
-        force=False,
-        strict=False,
-    )
+    _run(settings)
     after = _events_by_type(settings)
 
     for kind in ("eval.requested", "eval.started", "eval.completed"):
@@ -145,44 +138,19 @@ def test_dispatcher_dedupes_on_rerun_without_force(settings):
 
 def test_dispatcher_force_rerun_emits_new_completed(settings):
     _seed(settings)
-    run_eval(
-        settings,
-        phase=1,
-        evaluator=None,
-        judge_model="x",
-        cost_cap_usd=0.0,
-        force=False,
-        strict=False,
-    )
+    _run(settings)
     before = _events_by_type(settings)
 
-    run_eval(
-        settings,
-        phase=1,
-        evaluator=None,
-        judge_model="x",
-        cost_cap_usd=0.0,
-        force=True,
-        strict=False,
-    )
+    _run(settings, force=True)
     after = _events_by_type(settings)
 
-    # With --force, dispatcher emits a fresh requested+started+completed per task.
+    # --force bypasses dedupe so each task emits a fresh requested+started+completed triple.
     assert len(after["eval.completed"]) > len(before["eval.completed"])
 
 
 def test_dispatcher_filter_to_single_evaluator(settings):
     _seed(settings)
-    rc = run_eval(
-        settings,
-        phase=None,
-        evaluator="compliance-check",
-        judge_model="x",
-        cost_cap_usd=0.0,
-        force=False,
-        strict=False,
-    )
-    assert rc == 0
+    assert _run(settings, phase=None, evaluator="compliance-check") == 0
     by_type = _events_by_type(settings)
     requested_evaluators = {ev.evaluator for ev in by_type.get("eval.requested", [])}
     assert requested_evaluators == {"compliance-check"}
@@ -190,29 +158,13 @@ def test_dispatcher_filter_to_single_evaluator(settings):
 
 def test_dispatcher_strict_unknown_evaluator(settings):
     _seed(settings)
-    rc = run_eval(
-        settings,
-        phase=None,
-        evaluator="not-a-real-evaluator",
-        judge_model="x",
-        cost_cap_usd=0.0,
-        force=False,
-        strict=True,
-    )
+    rc = _run(settings, phase=None, evaluator="not-a-real-evaluator", strict=True)
     assert rc == 1
 
 
 def test_event_payload_shapes(settings):
     _seed(settings)
-    run_eval(
-        settings,
-        phase=1,
-        evaluator="compliance-check",
-        judge_model="x",
-        cost_cap_usd=0.0,
-        force=False,
-        strict=False,
-    )
+    _run(settings, evaluator="compliance-check")
     by_type = _events_by_type(settings)
     assert all(isinstance(ev, EvalRequested) for ev in by_type["eval.requested"])
     assert all(isinstance(ev, EvalStarted) for ev in by_type["eval.started"])

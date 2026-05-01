@@ -4,6 +4,7 @@ import asyncio
 import logging
 import time
 from collections.abc import Iterable
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from hashlib import sha256
 from uuid import UUID, uuid4
@@ -78,14 +79,14 @@ async def _run_async(
     instances: list[Evaluator] = [cls() for cls in selected]
 
     tasks = _build_tasks(skills=skills, evaluators=instances, force=force, store=store)
+    skipped = (len(skills) * len(instances)) - len(tasks)
     runner = BoundedRunner(max_concurrency=MAX_CONCURRENCY)
     outcomes = await runner.run(
-        lambda task: _execute_task(task, run_id=run_id, store=store), list(tasks)
+        lambda task: _execute_task(task, run_id=run_id, store=store), tasks
     )
 
     completed = sum(1 for o in outcomes if o == "completed")
     failed = sum(1 for o in outcomes if o == "failed")
-    skipped = sum(1 for o in outcomes if o == "skipped")
     resolved_phase = phase if phase is not None else DEFAULT_PHASE
     log.info(
         "[OK] phase=%d evaluators=%d skills=%d completed=%d failed=%d skipped=%d",
@@ -117,20 +118,12 @@ def _latest_extracted_per_skill(store: EventStore) -> Iterable[SkillExtracted]:
     return latest.values()
 
 
+@dataclass(frozen=True, slots=True)
 class _Task:
-    __slots__ = ("skill", "evaluator", "inputs_hash", "ddk")
-
-    def __init__(
-        self,
-        skill: SkillExtracted,
-        evaluator: Evaluator,
-        inputs_hash: str,
-        ddk: str,
-    ) -> None:
-        self.skill = skill
-        self.evaluator = evaluator
-        self.inputs_hash = inputs_hash
-        self.ddk = ddk
+    skill: SkillExtracted
+    evaluator: Evaluator
+    inputs_hash: str
+    ddk: str
 
 
 def _build_tasks(

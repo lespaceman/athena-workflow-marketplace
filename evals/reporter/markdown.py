@@ -28,10 +28,11 @@ def render_markdown(rows: list[ReportRow]) -> str:
     parts: list[str] = ["# Skill Reliability Report", ""]
     by_tier: dict[str, list[ReportRow]] = {tier: [] for tier in _TIER_ORDER}
     for row in rows:
+        # Unknown tiers (e.g. from a future schema) are bucketed into a fresh
+        # list so they still appear in the report.
         by_tier.setdefault(row.tier, []).append(row)
 
-    for tier in _TIER_ORDER:
-        tier_rows = by_tier.get(tier) or []
+    for tier, tier_rows in by_tier.items():
         if not tier_rows:
             continue
         parts.append(f"## Tier {tier}")

@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import sys
 from collections.abc import Iterable
 from datetime import UTC, datetime
@@ -12,8 +11,6 @@ from evals.events.models import SkillDiscovered, SkillExtracted, dedupe_key
 from evals.events.store import SQLiteEventStore
 from evals.extraction.frontmatter import parse
 from evals.github.client import GitHubClient, GitHubClientError
-
-log = logging.getLogger(__name__)
 
 _CONCURRENCY = 8
 
@@ -106,22 +103,18 @@ async def _extract_one(
             )
             return "failed"
 
-        claude_bytes = await _try_get_optional(
-            client, owner, repo, f"{skill_path}/agents/claude.yaml"
-        )
-        openai_bytes = await _try_get_optional(
-            client, owner, repo, f"{skill_path}/agents/openai.yaml"
+        claude_bytes, openai_bytes = await asyncio.gather(
+            _try_get_optional(client, owner, repo, f"{skill_path}/agents/claude.yaml"),
+            _try_get_optional(client, owner, repo, f"{skill_path}/agents/openai.yaml"),
         )
 
-        skill_md_text = skill_md_bytes.decode("utf-8", errors="replace")
-        claude_text = claude_bytes.decode("utf-8", errors="replace") if claude_bytes else ""
-        openai_text = openai_bytes.decode("utf-8", errors="replace") if openai_bytes else ""
+        skill_md_text = skill_md_bytes.decode("utf-8")
 
         skill_md_sha = sha256(skill_md_bytes).hexdigest()
         claude_sha = sha256(claude_bytes).hexdigest() if claude_bytes else None
         openai_sha = sha256(openai_bytes).hexdigest() if openai_bytes else None
         content_hash = sha256(
-            (skill_md_text + claude_text + openai_text).encode("utf-8")
+            skill_md_bytes + (claude_bytes or b"") + (openai_bytes or b"")
         ).hexdigest()
 
         key = dedupe_key(candidate.skill_id, "extract", "1", content_hash)
