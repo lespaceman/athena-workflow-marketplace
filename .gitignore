@@ -16,6 +16,7 @@ evals/**/__pycache__/
 evals/.pytest_cache/
 evals/.mypy_cache/
 evals/.ruff_cache/
+.coverage
 *.db
 *.db-wal
 *.db-shm
