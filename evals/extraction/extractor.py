@@ -93,7 +93,7 @@ async def _extract_one(
             return "failed"
 
         try:
-            skill_md_bytes = await client.get_contents(
+            skill_md_bytes = await client.get_raw(
                 owner, repo, f"{skill_path}/SKILL.md"
             )
         except GitHubClientError as exc:
@@ -141,7 +141,7 @@ async def _try_get_optional(
     client: GitHubClient, owner: str, repo: str, path: str
 ) -> bytes | None:
     try:
-        return await client.get_contents(owner, repo, path)
+        return await client.get_raw(owner, repo, path)
     except GitHubClientError as exc:
         if exc.status == 404:
             return None

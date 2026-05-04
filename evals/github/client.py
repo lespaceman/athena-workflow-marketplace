@@ -26,6 +26,8 @@ log = logging.getLogger(__name__)
 
 _LOW_REMAINING_THRESHOLD = 50
 _DEFAULT_TIMEOUT = httpx.Timeout(30.0, connect=10.0)
+_RAW_BASE_URL = "https://raw.githubusercontent.com"
+_RAW_BRANCH_FALLBACKS: tuple[str, ...] = ("HEAD", "main", "master")
 
 
 class GitHubClientError(RuntimeError):
@@ -83,10 +85,20 @@ class GitHubClient:
             timeout=_DEFAULT_TIMEOUT,
             transport=transport,
         )
+        # Separate client for raw.githubusercontent.com — does not consume API
+        # rate limit, needs no auth, and serves the raw bytes directly.
+        self._raw_client = httpx.AsyncClient(
+            base_url=_RAW_BASE_URL,
+            headers={"User-Agent": user_agent},
+            http2=False,
+            timeout=_DEFAULT_TIMEOUT,
+            transport=transport,
+        )
         self._sleep = sleep
 
     async def aclose(self) -> None:
         await self._client.aclose()
+        await self._raw_client.aclose()
 
     async def __aenter__(self) -> "GitHubClient":
         return self
@@ -116,6 +128,20 @@ class GitHubClient:
         if isinstance(content, str):
             return content.encode("utf-8")
         raise GitHubClientError(200, f"contents response missing 'content' for {path}")
+
+    async def get_raw(self, owner: str, repo: str, path: str) -> bytes:
+        # Tries HEAD/main/master in order to handle repos with non-standard
+        # default branches without spending an API call to look it up.
+        clean = path.lstrip("/")
+        last_status = 0
+        for ref in _RAW_BRANCH_FALLBACKS:
+            response = await self._raw_client.get(f"/{owner}/{repo}/{ref}/{clean}")
+            if response.status_code == 200:
+                return response.content
+            last_status = response.status_code
+            if response.status_code != 404:
+                break
+        raise GitHubClientError(last_status, f"raw fetch failed for {owner}/{repo}/{path}")
 
     async def list_releases(self, owner: str, repo: str) -> list[Release]:
         data = await self._get_json(f"/repos/{owner}/{repo}/releases", params={"per_page": 100})

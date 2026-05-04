@@ -1,4 +1,3 @@
-import base64
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -13,24 +12,21 @@ from evals.events.store import SQLiteEventStore
 from evals.extraction.extractor import run_extract
 
 SKILL_MD = (Path(__file__).parent / "fixtures" / "skills" / "good.md").read_text()
+RAW_BASE = "https://raw.githubusercontent.com"
+_BRANCHES = ("HEAD", "main", "master")
 
 
-def _b64(text: str) -> str:
-    return base64.b64encode(text.encode("utf-8")).decode("ascii")
-
-
-def _contents_payload(text: str, path: str) -> dict[str, object]:
-    return {
-        "name": Path(path).name,
-        "path": path,
-        "type": "file",
-        "encoding": "base64",
-        "content": _b64(text),
-    }
-
-
-def _future_reset() -> str:
-    return str(int(datetime.now(UTC).timestamp()) + 3600)
+def _mock_raw(mock: respx.Router, owner: str, repo: str, path: str, *, body: str | None) -> None:
+    # Mocks all three fallback branches. body=None means the file is absent.
+    for branch in _BRANCHES:
+        url = f"/{owner}/{repo}/{branch}/{path}"
+        if body is None:
+            mock.get(url).mock(return_value=httpx.Response(404))
+        elif branch == _BRANCHES[0]:
+            mock.get(url).mock(return_value=httpx.Response(200, content=body.encode("utf-8")))
+        else:
+            # Won't be hit because HEAD already returned 200; mock as 404 anyway.
+            mock.get(url).mock(return_value=httpx.Response(404))
 
 
 def _seed_discovered(store: SQLiteEventStore, skill_id: str, repo_url: str, skill_path: str):
@@ -75,28 +71,10 @@ def test_run_extract_emits_skill_extracted(settings, capsys):
     finally:
         store.close()
 
-    headers = {
-        "X-RateLimit-Remaining": "4999",
-        "X-RateLimit-Reset": _future_reset(),
-    }
-    with respx.mock(base_url="https://api.github.com") as mock:
-        mock.get("/repos/acme/example/contents/skills/foo/SKILL.md").mock(
-            return_value=httpx.Response(
-                200,
-                json=_contents_payload(SKILL_MD, "skills/foo/SKILL.md"),
-                headers=headers,
-            )
-        )
-        mock.get("/repos/acme/example/contents/skills/foo/agents/claude.yaml").mock(
-            return_value=httpx.Response(
-                404, json={"message": "Not Found"}, headers=headers
-            )
-        )
-        mock.get("/repos/acme/example/contents/skills/foo/agents/openai.yaml").mock(
-            return_value=httpx.Response(
-                404, json={"message": "Not Found"}, headers=headers
-            )
-        )
+    with respx.mock(base_url=RAW_BASE, assert_all_called=False) as mock:
+        _mock_raw(mock, "acme", "example", "skills/foo/SKILL.md", body=SKILL_MD)
+        _mock_raw(mock, "acme", "example", "skills/foo/agents/claude.yaml", body=None)
+        _mock_raw(mock, "acme", "example", "skills/foo/agents/openai.yaml", body=None)
         rc = run_extract(settings)
     assert rc == 0
     out = capsys.readouterr().out
@@ -132,28 +110,10 @@ def test_run_extract_is_idempotent(settings, capsys):
     finally:
         store.close()
 
-    headers = {
-        "X-RateLimit-Remaining": "4999",
-        "X-RateLimit-Reset": _future_reset(),
-    }
-    with respx.mock(base_url="https://api.github.com") as mock:
-        mock.get("/repos/acme/example/contents/skills/foo/SKILL.md").mock(
-            return_value=httpx.Response(
-                200,
-                json=_contents_payload(SKILL_MD, "skills/foo/SKILL.md"),
-                headers=headers,
-            )
-        )
-        mock.get("/repos/acme/example/contents/skills/foo/agents/claude.yaml").mock(
-            return_value=httpx.Response(
-                404, json={"message": "Not Found"}, headers=headers
-            )
-        )
-        mock.get("/repos/acme/example/contents/skills/foo/agents/openai.yaml").mock(
-            return_value=httpx.Response(
-                404, json={"message": "Not Found"}, headers=headers
-            )
-        )
+    with respx.mock(base_url=RAW_BASE, assert_all_called=False) as mock:
+        _mock_raw(mock, "acme", "example", "skills/foo/SKILL.md", body=SKILL_MD)
+        _mock_raw(mock, "acme", "example", "skills/foo/agents/claude.yaml", body=None)
+        _mock_raw(mock, "acme", "example", "skills/foo/agents/openai.yaml", body=None)
         assert run_extract(settings) == 0
         capsys.readouterr()
         assert run_extract(settings) == 0
@@ -184,34 +144,12 @@ def test_run_extract_with_overlays_includes_shas(settings, capsys):
     finally:
         store.close()
 
-    headers = {
-        "X-RateLimit-Remaining": "4999",
-        "X-RateLimit-Reset": _future_reset(),
-    }
     claude_yaml = "argument-hint: <release>\nuser-invocable: true\n"
     openai_yaml = "display_name: Foo\nshort_description: bar\n"
-    with respx.mock(base_url="https://api.github.com") as mock:
-        mock.get("/repos/acme/example/contents/skills/foo/SKILL.md").mock(
-            return_value=httpx.Response(
-                200,
-                json=_contents_payload(SKILL_MD, "skills/foo/SKILL.md"),
-                headers=headers,
-            )
-        )
-        mock.get("/repos/acme/example/contents/skills/foo/agents/claude.yaml").mock(
-            return_value=httpx.Response(
-                200,
-                json=_contents_payload(claude_yaml, "skills/foo/agents/claude.yaml"),
-                headers=headers,
-            )
-        )
-        mock.get("/repos/acme/example/contents/skills/foo/agents/openai.yaml").mock(
-            return_value=httpx.Response(
-                200,
-                json=_contents_payload(openai_yaml, "skills/foo/agents/openai.yaml"),
-                headers=headers,
-            )
-        )
+    with respx.mock(base_url=RAW_BASE, assert_all_called=False) as mock:
+        _mock_raw(mock, "acme", "example", "skills/foo/SKILL.md", body=SKILL_MD)
+        _mock_raw(mock, "acme", "example", "skills/foo/agents/claude.yaml", body=claude_yaml)
+        _mock_raw(mock, "acme", "example", "skills/foo/agents/openai.yaml", body=openai_yaml)
         rc = run_extract(settings)
 
     assert rc == 0
