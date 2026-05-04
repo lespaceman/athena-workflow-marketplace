@@ -303,8 +303,8 @@ accompanied by a projection rebuild.
   "evaluator": "compliance-check",
   "evaluator_version": "1.0.0",
   "score": 87.5,
-  "sub_scores": {"frontmatter": 90.0, "tools": 85.0},
-  "findings": ["allowed-tools missing Task"],
+  "sub_scores": {"frontmatter_schema": 1.0, "portable_keys": 0.9, "overlays_present": 0.5, "description_quality": 1.0},
+  "findings": ["overlays present: 1/2 (claude/openai)"],
   "cost_usd": 0.012,
   "duration_ms": 2300
 }

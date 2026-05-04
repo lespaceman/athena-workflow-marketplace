@@ -5,7 +5,6 @@ name: define-regression-scope
 description: >
   Use to define impact-based regression scope for a release. Triggers include "regression
   scope for...". This skill owns regression intent; it does NOT own live exploration.
-allowed-tools: Bash Read Write Edit Glob Grep Task
 ---
 
 # Define Regression Scope
@@ -15,14 +14,6 @@ Body content.
 
 MISSING_DESCRIPTION = """---
 name: thing
----
-body
-"""
-
-WILDCARD_TOOLS = """---
-name: thing
-description: x
-allowed-tools: Bash *
 ---
 body
 """
@@ -49,11 +40,6 @@ def test_flags_missing_required_keys():
     parsed = parse(MISSING_DESCRIPTION)
     assert not parsed.is_valid
     assert any("description" in f for f in parsed.findings)
-
-
-def test_warns_on_wildcard_allowed_tools():
-    parsed = parse(WILDCARD_TOOLS)
-    assert any("wildcard" in f for f in parsed.findings)
 
 
 def test_warns_on_claude_only_keys():

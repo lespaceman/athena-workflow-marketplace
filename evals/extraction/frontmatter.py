@@ -56,11 +56,4 @@ def parse(skill_md_text: str) -> ParsedFrontmatter:
     for key in portable_violations:
         findings.append(f"WARN: portable SKILL.md contains Claude-only key: {key}")
 
-    allowed_tools = loaded.get("allowed-tools")
-    if allowed_tools is not None and not isinstance(allowed_tools, str):
-        findings.append("ERROR: allowed-tools must be a space-delimited string for portable mode")
-
-    if isinstance(allowed_tools, str) and "*" in allowed_tools:
-        findings.append("WARN: allowed-tools contains wildcard; should enumerate explicit tools")
-
     return ParsedFrontmatter(loaded, body, findings)

@@ -10,7 +10,6 @@ from evals.extraction.frontmatter import parse
 CLEAN_SKILL_MD = """---
 name: clean-skill
 description: A safe skill with explicit scope. Use to do things; does NOT touch the network.
-allowed-tools: Read Write Edit
 license: MIT
 ---
 
@@ -23,7 +22,6 @@ Plain prose without secrets.
 LEAKY_SKILL_MD = """---
 name: leaky-skill
 description: example
-allowed-tools: Read
 license: MIT
 ---
 
@@ -35,22 +33,11 @@ Do not commit AKIAIOSFODNN7EXAMPLE to source.
 NO_LICENSE_MD = """---
 name: no-license
 description: example
-allowed-tools: Read
 ---
 
 # No license
 
 Plain body.
-"""
-
-BASH_NO_SCOPE_MD = """---
-name: bash-skill
-description: short description without the magic word
-allowed-tools: Bash Read
-license: MIT
----
-
-# Bash skill
 """
 
 
@@ -78,8 +65,8 @@ def test_clean_skill_scores_full():
     result = _run(SecurityScan(), _ctx(CLEAN_SKILL_MD))
     assert result.sub_scores["secret_free"] == 1.0
     assert result.sub_scores["license_present"] == 1.0
-    assert result.sub_scores["allowed_tools_scoped"] == 1.0
-    assert result.sub_scores["safe_tool_set"] == 1.0
+    assert "allowed_tools_scoped" not in result.sub_scores
+    assert "safe_tool_set" not in result.sub_scores
     assert result.score == 100.0
 
 
@@ -99,8 +86,3 @@ def test_missing_license_penalized():
 def test_repo_metadata_satisfies_license():
     result = _run(SecurityScan(), _ctx(NO_LICENSE_MD, repo_metadata={"license": "MIT"}))
     assert result.sub_scores["license_present"] == 1.0
-
-
-def test_bash_without_scope_note_lowers_safe_tool_set():
-    result = _run(SecurityScan(), _ctx(BASH_NO_SCOPE_MD))
-    assert result.sub_scores["safe_tool_set"] == 0.5

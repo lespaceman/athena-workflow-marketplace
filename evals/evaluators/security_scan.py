@@ -36,14 +36,10 @@ class SecurityScan(Evaluator):
         secret_free = 0.0 if secret_hits else 1.0
 
         license_present = _score_license(ctx, findings)
-        allowed_tools_scoped = _score_allowed_tools_scoped(ctx, findings)
-        safe_tool_set = _score_safe_tool_set(ctx, findings)
 
         sub_scores = {
             "secret_free": secret_free,
             "license_present": license_present,
-            "allowed_tools_scoped": allowed_tools_scoped,
-            "safe_tool_set": safe_tool_set,
         }
         score = mean(sub_scores.values()) * 100.0
         return EvalResult(score=score, sub_scores=sub_scores, findings=findings)
@@ -87,29 +83,3 @@ def _score_license(ctx: EvalContext, findings: list[str]) -> float:
         return 1.0
     findings.append("no license declared in frontmatter, overlays, or repo metadata")
     return 0.0
-
-
-def _score_allowed_tools_scoped(ctx: EvalContext, findings: list[str]) -> float:
-    allowed_tools = ctx.frontmatter.get("allowed-tools")
-    if not isinstance(allowed_tools, str) or not allowed_tools.strip():
-        findings.append("allowed-tools missing for scope check")
-        return 0.0
-    if "*" in allowed_tools:
-        findings.append("allowed-tools wildcard widens scope")
-        return 0.5
-    return 1.0
-
-
-def _score_safe_tool_set(ctx: EvalContext, findings: list[str]) -> float:
-    allowed_tools = ctx.frontmatter.get("allowed-tools")
-    if not isinstance(allowed_tools, str):
-        return 1.0
-    has_bash = any(tool == "Bash" for tool in allowed_tools.split())
-    if not has_bash:
-        return 1.0
-    description = ctx.frontmatter.get("description")
-    description_text = description.lower() if isinstance(description, str) else ""
-    if "scope" in description_text:
-        return 1.0
-    findings.append("Bash present without an explicit scope note in description")
-    return 0.5

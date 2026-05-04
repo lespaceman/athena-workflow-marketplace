@@ -16,7 +16,6 @@ description: >
   "regression scope for X" and "what regressions to run". This skill owns
   regression intent and produces the charter; it does NOT own live exploration
   or playwright execution. Scope: charter creation only.
-allowed-tools: Bash Read Write Edit Glob Grep Task
 license: MIT
 ---
 
@@ -27,16 +26,6 @@ Body content.
 
 MISSING_DESCRIPTION_MD = """---
 name: thing
-allowed-tools: Read
----
-
-body
-"""
-
-WILDCARD_TOOLS_MD = """---
-name: thing
-description: a short description
-allowed-tools: Bash *
 ---
 
 body
@@ -45,7 +34,6 @@ body
 CLAUDE_ONLY_KEY_MD = """---
 name: thing
 description: a short description
-allowed-tools: Read
 argument-hint: "<arg>"
 ---
 
@@ -72,10 +60,10 @@ def _run(ev, ctx):
 def test_good_skill_scores_high():
     result = _run(ComplianceCheck(), _ctx(GOOD_SKILL_MD))
     assert result.sub_scores["frontmatter_schema"] == 1.0
-    assert result.sub_scores["allowed_tools_form"] == 1.0
     assert result.sub_scores["portable_keys"] == 1.0
     assert result.sub_scores["overlays_present"] == 1.0
     assert result.sub_scores["description_quality"] == 1.0
+    assert "allowed_tools_form" not in result.sub_scores
     assert result.score == pytest.approx(100.0)
 
 
@@ -84,11 +72,6 @@ def test_missing_description_drops_schema_and_quality():
     assert result.sub_scores["frontmatter_schema"] == 0.0
     assert result.sub_scores["description_quality"] == 0.0
     assert any("description" in f for f in result.findings)
-
-
-def test_wildcard_tools_lowers_allowed_tools_form():
-    result = _run(ComplianceCheck(), _ctx(WILDCARD_TOOLS_MD))
-    assert result.sub_scores["allowed_tools_form"] == 0.5
 
 
 def test_claude_only_keys_lowers_portable_keys():

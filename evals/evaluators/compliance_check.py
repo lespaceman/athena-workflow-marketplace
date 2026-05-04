@@ -21,20 +21,6 @@ class ComplianceCheck(Evaluator):
         has_errors = any(f.startswith("ERROR:") for f in parsed.findings)
         frontmatter_schema = 0.0 if has_errors else 1.0
 
-        # allowed_tools_form: present + str + no wildcard → 1.0; partial → 0.5; missing → 0.0.
-        allowed_tools = parsed.frontmatter.get("allowed-tools")
-        if allowed_tools is None:
-            allowed_tools_form = 0.0
-            findings.append("allowed-tools missing")
-        elif not isinstance(allowed_tools, str):
-            allowed_tools_form = 0.5
-            findings.append("allowed-tools present but not a string")
-        elif "*" in allowed_tools:
-            allowed_tools_form = 0.5
-            findings.append("allowed-tools contains wildcard")
-        else:
-            allowed_tools_form = 1.0
-
         # portable_keys: penalize each Claude-only key in the portable SKILL.md.
         violations = sorted(set(parsed.frontmatter) & PORTABLE_FORBIDDEN_KEYS)
         total_forbidden = len(PORTABLE_FORBIDDEN_KEYS)
@@ -59,7 +45,6 @@ class ComplianceCheck(Evaluator):
 
         sub_scores = {
             "frontmatter_schema": frontmatter_schema,
-            "allowed_tools_form": allowed_tools_form,
             "portable_keys": portable_keys,
             "overlays_present": overlays_present,
             "description_quality": description_quality,
