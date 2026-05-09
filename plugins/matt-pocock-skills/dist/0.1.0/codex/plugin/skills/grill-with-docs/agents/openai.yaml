@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill With Docs"
+  short_description: "Grilling session that sharpens the plan against CONTEXT.md and docs/adr/, updating both inline"
+  default_prompt: "Grill me on this plan against CONTEXT.md and docs/adr/, and update the docs as decisions crystallise."

@@ -1,0 +1,15 @@
+{
+  "name": "fullstack-engineering",
+  "version": "0.1.0",
+  "description": "User-invocable companion to the fullstack-engineering Workflow. Ships a single skill that captures the same state machine — Brainstorm → Isolate → Plan → Execute (TDD + browser pass) → Manual QA → Finish — for on-demand use without running the full Workflow loop.",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Full-Stack Engineering",
+    "shortDescription": "On-demand companion to the fullstack-engineering Workflow",
+    "developerName": "Athenaflow",
+    "category": "Engineering"
+  }
+}

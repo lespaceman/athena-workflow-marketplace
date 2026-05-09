@@ -1,0 +1,4 @@
+interface:
+  display_name: "TDD"
+  short_description: "Test-driven development with a red-green-refactor loop, one vertical slice at a time"
+  default_prompt: "Build this feature using red-green-refactor TDD, vertical slices only."

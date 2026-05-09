@@ -1,0 +1,4 @@
+interface:
+  display_name: "Full-Stack Engineering"
+  short_description: "On-demand companion to the fullstack-engineering Workflow — same state machine, invoked once instead of looped"
+  default_prompt: "Walk me through the fullstack-engineering state machine for this change: foundation check, alignment, isolate, plan, execute (TDD + browser pass), review, manual QA, finish."
