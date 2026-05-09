@@ -1,4 +1,0 @@
-interface:
-  display_name: "Grill Me"
-  short_description: "Relentless interview about a plan or design until shared understanding is reached"
-  default_prompt: "Grill me on this design until every branch of the decision tree is resolved."

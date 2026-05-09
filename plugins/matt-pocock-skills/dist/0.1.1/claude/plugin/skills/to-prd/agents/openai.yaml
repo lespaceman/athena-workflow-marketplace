@@ -1,4 +1,0 @@
-interface:
-  display_name: "To PRD"
-  short_description: "Synthesize the current conversation into a PRD on the issue tracker"
-  default_prompt: "Turn what we just discussed into a PRD and submit it as an issue."

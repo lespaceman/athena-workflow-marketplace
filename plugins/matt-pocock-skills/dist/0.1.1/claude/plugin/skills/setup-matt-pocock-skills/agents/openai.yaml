@@ -1,4 +1,0 @@
-interface:
-  display_name: "Setup Matt Pocock Skills"
-  short_description: "Scaffold per-repo config (issue tracker, triage labels, domain doc layout) consumed by the other skills"
-  default_prompt: "Scaffold this repo with CONTEXT.md, docs/adr/, an issue-tracker doc, and a triage-labels doc."
