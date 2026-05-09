@@ -104,8 +104,22 @@ cd plugins/<plugin> && npm run build:artifacts           # emits dist/<version>/
 - **Every plugin change touches three files minimum:** `plugins/<name>/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, and the matching registry entry in one or more of the three `marketplace.json` files. Version fields must match across them.
 - **Test case IDs** use `TC-<FEATURE>-<NUMBER>` (e.g. `TC-LOGIN-001`).
 - **Playwright locators:** semantic (`getByRole`, `getByLabel`) > `data-testid` > text > CSS. No arbitrary `waitForTimeout` — use event-driven waits.
-- **Skill `allowed-tools`** must explicitly enumerate every tool (no wildcards). MCP tool names must match `mcp__plugin_<plugin-name>_<server-name>__<tool>` exactly.
+- **Skill `allowed-tools`** is **optional** — never required for any skill in this repo. When a skill chooses to specify it, it should explicitly enumerate every tool (no wildcards) and any MCP tool names must match `mcp__plugin_<plugin-name>_<server-name>__<tool>` exactly. Skills imported from upstream (e.g. `plugins/matt-pocock-skills/`) routinely ship without `allowed-tools`; that is correct, not a defect.
 - **Skills delegate heavy work to subagents via the Task tool** to protect main context. Browser tools live only in `agent-web-interface`; other plugins' skills reach them through subagents.
 - **Test execution is never delegated.** In the `playwright-automation` / `robot-automation` workflows, the main agent must run `npx playwright test` (or `robot ...`) directly and keep the output as proof.
 - **Skill descriptions** must include exhaustive trigger phrases and state what the skill does vs. does not do — skill dispatch depends on matching trigger language.
 - `dist/` artifacts and `.venv/` are generated; do not commit hand edits to them.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in this repo's GitHub Issues, managed via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

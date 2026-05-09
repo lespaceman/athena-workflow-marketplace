@@ -21,14 +21,14 @@ The files described below are repo packaging conventions used to distribute shar
 
 Each `SKILL.md` should contain only spec-safe frontmatter:
 
-- `name`
-- `description`
-- `license`
-- `compatibility`
-- `metadata`
-- `allowed-tools`
+- `name` (required)
+- `description` (required)
+- `license` (optional)
+- `compatibility` (optional)
+- `metadata` (optional)
+- `allowed-tools` (optional)
 
-For portability, `allowed-tools` must be a space-delimited string.
+`allowed-tools` is **never required** in this repo. When a skill chooses to declare it, it must be a space-delimited string for portability. Skills that ship without it — including upstream-imported skills bundled wholesale — are valid as-is.
 
 ## Claude Overlay
 

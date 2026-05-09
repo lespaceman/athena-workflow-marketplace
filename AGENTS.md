@@ -69,7 +69,7 @@ The `workflow.json` contract defines execution config:
 
 1. Create `plugins/<name>/` with `.Codex-plugin/plugin.json`, and optionally `skills/` and `.mcp.json`
 2. Register in `.Codex-plugin/marketplace.json` under the `plugins` array
-3. Skill files: YAML frontmatter with `name`, `description`, `user-invocable`, `argument-hint`, `allowed-tools` + markdown content
+3. Skill files: YAML frontmatter with required `name`, `description`, plus optional `user-invocable`, `argument-hint`, `allowed-tools` + markdown content. `allowed-tools` is never required — skills may omit it.
 
 ## Adding a New Workflow
 
@@ -82,7 +82,7 @@ The `workflow.json` contract defines execution config:
 - Test case IDs use `TC-<FEATURE>-<NUMBER>` format (e.g., `TC-LOGIN-001`)
 - Playwright locator preference: semantic (`getByRole`, `getByLabel`) > `data-testid` > text > CSS selectors
 - No arbitrary `waitForTimeout` sleeps in generated tests — use event-driven waits
-- Skill `allowed-tools` must explicitly list every MCP tool the skill needs (no wildcards)
+- Skill `allowed-tools` is optional, never required. When a skill chooses to declare it, it must explicitly list every tool (no wildcards).
 - MCP tool names must match exactly: `mcp__plugin_<plugin-name>_<server-name>__<tool>`
 - Skills delegate heavy work to general-purpose subagents via Task tool to save main context
 - Skill descriptions must include exhaustive trigger phrases and clearly state what the skill does vs doesn't do

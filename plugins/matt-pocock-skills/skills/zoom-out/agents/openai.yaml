@@ -1,0 +1,4 @@
+interface:
+  display_name: "Zoom Out"
+  short_description: "Give broader context and a higher-level perspective on an unfamiliar section of code"
+  default_prompt: "Zoom out and give a system-level map of this code area using the project glossary."

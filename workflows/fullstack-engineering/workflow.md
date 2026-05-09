@@ -1,275 +1,229 @@
 # Full-Stack Engineering Workflow
 
-<EXTREMELY-IMPORTANT>
-This workflow is a state machine, not a suggestion. Each phase has a required input artifact
-and a required exit artifact, both on disk. **You may not act outside the current phase.** If
-you are about to take an action that does not match the phase you are in, STOP and re-enter the
-correct phase first.
+A composable workflow for shipping real engineering work — features, bug fixes, refactors. Built around Matt Pocock's [Skills For Real Engineers](https://github.com/mattpocock/skills) (used under their original terms) plus this repo's `agent-web-interface` and `app-exploration` plugins for live verification. The workflow is a default ordering of small skills, not a framework that owns your process. Skip steps deliberately when the situation does not need them; never skip by default.
 
-If you think there is even a 1% chance that you are skipping a phase, you are skipping a phase.
-This is not negotiable.
-</EXTREMELY-IMPORTANT>
+## Prerequisites
 
-## The only thing you do every turn
+Every skill named below resolves through a Plugin pinned in `workflow.json`. The runtime installs them automatically; there is no external setup step.
 
-Before any other tool call, every single turn, run the **Phase Detector** below and announce
-the result. No exceptions — not for "quick" edits, not for "obvious" fixes, not for "just one
-file", not even for answering a clarifying question that touches code.
+- **`agent-web-interface`** — MCP browser server + the agent-web-interface guide skill.
+- **`app-exploration`** — `map-feature-scope`, `capture-feature-evidence`.
+- **`frontend-design`** — UI design skills.
+- **`matt-pocock-skills`** — bundled subset of Matt Pocock's [Skills For Real Engineers](https://github.com/mattpocock/skills): `setup-matt-pocock-skills`, `triage`, `grill-with-docs`, `grill-me`, `to-prd`, `to-issues`, `tdd`, `diagnose`, `zoom-out`, `prototype`, `improve-codebase-architecture`. Original work © Matt Pocock; see the plugin's `NOTICE.md`.
+- **`shadcn`** — accessible primitives, registry components.
+- **`tanstack-start`** — TanStack Start, Router, server functions, SSR/RSC guidance.
 
-### Phase Detector (run first, every turn)
+If any step below names a skill that does not resolve, the runtime is mis-configured — stop and ask the user to verify the Plugin Pins, do not improvise the step's behavior inline.
 
-Check artifacts on disk in this exact order. The **first** matching row tells you the phase.
+## Four failure modes this prevents
 
-For simple, low-risk tasks, a lightweight planning session may satisfy Phase 1. You do not
-have to write a full spec or design doc when the change is small, well-bounded, and does not
-need architecture or product decisions. In that case, record the brief plan in the session and
-move to the appropriate execution path; a separate plan file is not required if the session
-plan already names the task, intended files, and verification. Use a full design doc and plan
-file for anything ambiguous, multi-step, architectural, user-visible, or risky.
+1. **Misalignment** — agent builds the wrong thing fast.
+2. **Verbosity and naming drift** — agent uses different language than the codebase.
+3. **Broken code** — agent ships without real feedback loops.
+4. **Ball-of-mud entropy** — AI accelerates complexity faster than you can fix it.
 
-| Check (in order) | If true, current phase is | Owning skill |
-|---|---|---|
-| All planned tasks done + tests green + integration option not yet chosen | **6. Finish** | `superpowers:finishing-a-development-branch` |
-| A plan file exists AND it has incomplete tasks | **4. Execute** (+ Review between tasks) | `superpowers:subagent-driven-development` or `superpowers:executing-plans` |
-| An approved lightweight session plan exists AND a worktree exists | **4. Execute** (+ Review between tasks) | `superpowers:executing-plans` |
-| An approved design doc exists AND a worktree exists AND no plan file yet | **3. Plan** | `superpowers:writing-plans` |
-| An approved design doc exists AND no worktree yet | **2. Isolate** | `superpowers:using-git-worktrees` |
-| An approved lightweight session plan exists AND no worktree yet | **2. Isolate** | `superpowers:using-git-worktrees` |
-| Anything else (new request, vague idea, no approved plan/design) | **1. Brainstorm** | `superpowers:brainstorming` |
+Every step below exists to block one of these. If a step does not map to one of these four, question whether it should exist.
 
-Announce, in one line, before any other tool call:
-`Phase: <N. Name> — invoking <skill>. Artifacts seen: <what you found>.`
+## Foundation: shared language (precondition)
 
-Then invoke the owning skill via the Skill tool. Do not skip the announcement. Do not invoke a
-different skill first. Do not "just check something" before invoking it.
+Before any other skill in this workflow runs effectively, the repo needs:
 
-## Red-flag thoughts — these mean STOP
+- `CONTEXT.md` at the root — the project's domain language.
+- `docs/adr/` — architectural decisions on disk.
 
-If any of these thoughts appear, you are about to skip a phase. Stop and re-run the Phase
-Detector.
+These are read by `grill-with-docs`, `improve-codebase-architecture`, `diagnose`, and `tdd` to keep naming consistent and avoid relearning the codebase every session. Without them, every step that follows is degraded — verbose, inconsistent, and tokens spent re-deriving project jargon.
 
-| Thought | Why it's wrong |
+If either is missing, run `setup-matt-pocock-skills` first to scaffold them. This is the highest-leverage move in the workflow.
+
+## Default ordering
+
+For non-trivial work, follow this sequence. Each step names the skill that owns it. State on disk is what carries between steps — if your context resets, you should be able to `ls` and know exactly where you are.
+
+### −1. Foundation check — first action of every workflow run
+
+**Before Step 0, every run, the very first action is to verify the foundation exists on disk:**
+
+```
+test -f CONTEXT.md && test -d docs/adr/
+```
+
+- If both exist → proceed to Step 0.
+- If either is missing → invoke `setup-matt-pocock-skills` immediately and do nothing else until it completes. The Pocock skills will not work correctly without these files, and re-running this step later means the work done before it was degraded.
+
+This is not informational. It is the first command of the workflow.
+
+### 0. Triage — `triage` (only when entering from a backlog)
+
+Skip when the user has handed you a defined task. Run when the work originates as an unevaluated incoming bug, feature request, or issue queue. `triage` walks the issue through the canonical state machine (`needs-triage` → `needs-info` → `ready-for-agent` / `ready-for-human` / `wontfix`) so the rest of the workflow only ever picks up issues that are actually ready to work on.
+
+**Output on disk:** an issue with the right label and enough detail that Step 1 can run without re-interviewing the reporter.
+
+### 1. Align — `grill-with-docs` (code) or `grill-me` (non-code)
+
+Refines the request through targeted questions. `grill-with-docs` additionally challenges the plan against `CONTEXT.md` and `docs/adr/`, sharpening domain terms and capturing new decisions inline. Use `grill-me` only for non-code work (process, comms, content) where there is no domain model to update.
+
+**No production code in this step.**
+
+Throwaway exploration when discussion is not enough — `prototype` aid:
+
+- If alignment cannot decide between approaches without seeing them run (state machine choice, data model trade-off, two radically different UI directions), invoke **`prototype`**: either a runnable terminal app for state / business-logic questions, or several toggleable UI variations from one route.
+- The prototype output is meant to be deleted. Only the design decision survives, captured in the ADR.
+
+**Alignment artifact — schema and location.** This is the on-disk contract Steps 3, 5, 7, and 8 read from. It must contain, in this order:
+
+1. **Goal** — one sentence stating user-visible outcome.
+2. **Files** — every path expected to be created or modified.
+3. **Verification** — golden-path scenario plus every named edge case.
+4. **QA mode** — exactly one of:
+   - `qa: full` — Step 7 manual-QA pass is mandatory (default for any user-visible change).
+   - `qa: skip — <reason>` — Step 7 may be skipped. Only allowed for tiny, well-isolated, no-blast-radius changes (copy fix, single-component prop tweak with no shared state, doc-only change). The reason must name *why* there is no blast radius.
+5. **Domain updates** — new or changed terms added to `CONTEXT.md`, new ADRs created. List the paths.
+
+**Where it lives:**
+
+- If the run entered through Step 0 (backlog) → as a comment on the issue, plus any `CONTEXT.md` / ADR edits committed to the worktree.
+- If the run came from a direct user request with no issue → a single file at `.scratch/<branch>/alignment.md` with the same schema, plus the doc edits.
+
+**Reduced form (skip-condition):** for genuinely small, well-bounded tasks (one file, no architectural choice, no user-visible surface), the alignment artifact may be a four-line session note (Goal / Files / Verification / `qa: skip — <reason>`) instead of full doc updates. Anything ambiguous, multi-step, or user-visible runs the full grilling and writes the full artifact.
+
+### 2. Isolate — manual
+
+```
+git worktree add ../<repo>-<branch> -b <branch>
+cd ../<repo>-<branch>
+<install deps>
+<run full test suite — must be green>
+```
+
+If the baseline is red, stop and fix the baseline (or surface to the user) before proceeding. **Output:** a worktree on a new branch with a verified green baseline. Never skip this — isolation is what makes the rest of the loop safe.
+
+### 3. Plan — `to-prd` then `to-issues`
+
+- `to-prd` synthesizes the alignment session into a PRD on the issue tracker.
+- `to-issues` breaks the PRD into independently-grabbable issues using tracer-bullet vertical slices. Each issue lists exact file paths, the complete change, and verification steps.
+
+**Skip rule:** if alignment already produced a 2–5 minute task list naming files and verification, that is the plan; do not write a second one. For anything larger, write the issues.
+
+### 4. Execute — one task at a time
+
+For each task, three Pocock skills plus the per-task browser-pass procedure:
+
+- **`tdd` — mandatory inside every task that produces code.** Failing test → watch it fail → minimum code → watch it pass → refactor → commit. **One vertical slice per cycle.** Never bulk-write tests then bulk-implement: that produces tests that describe imagined behavior and pass when real behavior breaks. Code written before its test gets deleted.
+- **`diagnose` when a bug surfaces mid-task** — reproduce → minimise → hypothesise → instrument → fix → regression-test. Do not patch by guessing.
+- **`zoom-out` when entering unfamiliar code** — get system-level context before editing.
+- **Browser pass via `agent-web-interface` — mandatory for any user-visible behavior** (procedure, not a Pocock skill). Load `agent-web-interface:agent-web-interface-guide` *before* any `mcp__plugin_agent-web-interface_browser__*` call so observations are structured and selectors stable. Capture a screenshot or page snapshot as the verification artifact. Code-level green tests do not substitute. If the task genuinely has no UI surface, say so explicitly — do not silently skip.
+
+**Output per task:** test green + browser-pass artifact (or explicit no-UI declaration) + review findings addressed.
+
+### 5. Review between tasks — fresh-subagent diff review
+
+After each task — or the end of a small tightly-coupled batch — spawn a **fresh subagent** with no prior context and hand it the diff plus the task's stated verification criteria. Fresh context matters: the executing agent has rationalized its choices and will not catch its own drift.
+
+The reviewer reads against four checks, in order:
+
+1. **Scope** — does the diff change anything outside the files named in the alignment artifact / issue? Out-of-scope changes are an automatic critical finding.
+2. **Tests** — is there a failing-then-passing test for every behavior change? Tests written after the code, tests asserting on implementation rather than behavior, and bulk-written tests are critical.
+3. **Domain language** — do new identifiers (functions, files, types) use terms from `CONTEXT.md`? Naming drift is at minimum a major finding; left unfixed it compounds across tasks.
+4. **Verification artifact** — is the per-task browser-pass screenshot/snapshot present (or an explicit no-UI declaration)? Missing is critical.
+
+**Severity rubric:**
+
+- **Critical** — scope leak, test missing/inverted, verification artifact missing, security/data-loss risk. Blocks the next task. Fix before advancing.
+- **Major** — naming drift from `CONTEXT.md`, dead code, unhandled error paths the design called out. Track in the issue and fix before Step 7.
+- **Minor** — style, comment quality, micro-refactor opportunities. Track for later; never block on these.
+
+Findings get appended to the issue / alignment artifact, not just spoken in chat.
+
+### 6. Periodic deepening — `improve-codebase-architecture`
+
+AI accelerates entropy. This is the maintenance loop that keeps the codebase from becoming a ball of mud — not optional on long-running work.
+
+**Trigger (run when *any* of these is true):**
+
+- ≥ 5 tasks have completed since the last deepening pass on this branch.
+- The branch's cumulative diff against `main` exceeds 500 changed lines or touches ≥ 5 distinct top-level modules.
+- About to enter Step 7 on a branch that has not had a deepening pass yet.
+- Step 5 review surfaced a *major* finding tagged "naming drift" or "tangled module" — even if the other thresholds have not been hit.
+
+If none of the above are true, skip this step and continue. Run the skill against `CONTEXT.md` and `docs/adr/`; record findings as ADR updates or as new issues in the tracker — do not silently refactor inside the current branch unless an ADR sanctions it.
+
+### 7. Manual QA — `app-exploration:map-feature-scope` then `app-exploration:capture-feature-evidence`
+
+Before merge, do a structured exploratory pass against the running app — not just the changes you made, but the surrounding flows the change could plausibly affect. The per-task browser passes in Step 4 prove that each change worked in isolation; this step proves the whole feature still hangs together end-to-end and catches regressions in adjacent flows that no test named.
+
+Use the layered shape:
+
+1. **`app-exploration:map-feature-scope`** — for any feature that spans multiple routes, tabs, overlays, or roles, decompose it into concrete bounded sub-features and shared state. Output: `e2e-plan/feature-map.md`.
+2. **`app-exploration:capture-feature-evidence`** — for each scoped sub-feature (or the single feature if mapping is unnecessary), exercise it deeply against the live app via `agent-web-interface` and capture grounded evidence: golden path, every edge case named in the alignment artifact, error states, role variations, and any blockers discovered. Output: `e2e-plan/exploration-report.md` or scoped files under `e2e-plan/exploration/`.
+
+**Skip rule:** for a tiny, well-isolated change with no plausible blast radius (e.g. a copy fix, a single-component prop tweak with no shared state), the per-task browser pass in Step 4 is sufficient and this step can be declared explicitly skipped in the alignment artifact. Anything user-facing with a real surface area runs this step.
+
+**Output on disk:** `e2e-plan/feature-map.md` (when mapping was needed) plus exploration report(s). These are the manual-QA artifacts; their absence on a non-trivial user-visible change is a missing step.
+
+### 8. Finish — manual
+
+- Full test suite green.
+- Step 7 manual-QA artifacts present (or explicit skip declared in the alignment artifact for trivial changes).
+- **Default in this repo: merge locally to `main` and remove the worktree.** Stop and ask the user only on test failure, merge conflict, non-`main` base branch, or explicit PR request. Destructive fallbacks (discard) require typed confirmation.
+
+**After merge, decide the loop exit:**
+
+- If the run started from Step 0 (backlog entry) and the issue tracker still has issues labelled `ready-for-agent`, return to Step 0 and pick the next one.
+- Otherwise — direct user request, or no remaining `ready-for-agent` issues — **stop and report**. Do not invent new work to keep the loop alive. Idle is a correct state.
+
+## Non-negotiable rules
+
+Each is falsifiable in one line. Violation is a workflow failure, not a shortcut.
+
+1. **No code without an alignment artifact on disk** — PRD, issue, or session note naming goal, files, verification.
+2. **No production code outside an active TDD cycle.** Failing test first; vertical slices only.
+3. **No "done" claim on user-visible work without a browser-pass artifact** (per-task, Step 4) **and an `app-exploration` evidence artifact** (Step 7) — unless the alignment artifact declares `qa: skip — <reason>` per Step 1's schema. Tests passing is not proof.
+4. **Critical review findings block the next task.** Fix before advancing.
+5. **New scope = new alignment session.** Mid-execution scope expansion requires re-running `grill-with-docs` and rewriting the alignment artifact (or appending a new section with its own Goal / Files / Verification / `qa:` / Domain updates fields). Slipping in a "while I'm here" change without that update violates this rule.
+6. **Surface blockers; do not guess.** Stuck-and-asking is a correct state.
+
+## Red-flag thoughts — these mean stop
+
+If you catch yourself thinking any of these, a step is about to be skipped:
+
+| Thought | What it actually means |
 |---|---|
-| "This is a small change, I'll just edit it." | Small changes still need a planning session. They may not need a full spec or design doc. |
-| "I already know the design, let me code it." | If the design isn't on disk and approved, it isn't a design. It's a guess. |
-| "Let me explore the codebase first to understand." | Exploration belongs inside Brainstorm or Plan, not before phase detection. |
-| "I'll write the test after I see if the approach works." | That is not TDD. The test comes first. Code without a prior failing test gets deleted. |
-| "The unit tests pass, the task is done." | User-visible tasks are not done until an `agent-web-interface` browser pass produces a screenshot/snapshot. |
-| "I'll fix this critical review finding in the next task." | Critical findings block forward motion. Period. |
-| "The user just wants me to do X, not follow a process." | The user installed this workflow on purpose. They want the process. If they want to bypass it, they will say so explicitly. |
-| "I'll add this related improvement while I'm here." | New scope = new Brainstorm. Stay inside the approved design. |
-| "I'll just answer their question quickly without invoking a skill." | The Phase Detector runs even for questions. Answers about code shape future code. |
-
-## Hard rules (these override everything else in this prompt)
-
-1. **No code without an approved design doc or lightweight session plan.** If `Edit`,
-   `Write`, or `MultiEdit` is about to touch source files and neither a design doc nor a brief
-   approved session plan exists, you are in Phase 1, not Phase 4.
-2. **No code without a plan.** For full tasks, the plan is a plan file on disk. For simple
-   tasks, an approved lightweight session plan is enough if it names the task, intended files,
-   and verification.
-3. **No production code outside an active TDD cycle.** Write the failing test, watch it fail,
-   then write the minimum code to pass. If you wrote code first, delete it and restart.
-4. **No "done" claim on user-visible work without a browser pass.** A screenshot or page
-   snapshot from `mcp__plugin_agent-web-interface_browser__*` is the only acceptable proof.
-   "The tests pass" is not proof. "It should work" is not proof.
-5. **Critical review findings block the next task.** Fix before advancing.
-6. **New scope means a new Brainstorm.** You do not get to expand scope mid-execution.
-7. **Blockers surface, not guess.** Missing creds, missing decisions, missing access → stop and
-   ask. Do not invent answers to keep moving.
-
-Violating any of these is a workflow failure, not a shortcut.
-
-## Phase decision flow
-
-```
-                ┌─────────────────────────────┐
-                │  New turn — run Phase       │
-                │  Detector (artifacts on     │
-                │  disk decide the phase)     │
-                └──────────────┬──────────────┘
-                               │
-        ┌──────────────────────┼──────────────────────┐
-        │                      │                      │
-   no approved            design/plan +          plan file or
-   plan/design?           no worktree?           remaining?
-        │                      │                      │
-        ▼                      ▼                      ▼
-   Phase 1: Brainstorm    Phase 2: Isolate      Phase 4: Execute
-   (brainstorming)        (using-git-           (TDD + browser pass
-        │                  worktrees)            per task; review
-        ▼                      │                  between tasks)
-   approved plan/design        ▼                      │
-        │                 worktree + green            ▼
-        ▼                 baseline                all tasks done +
-   advance to Phase 2          │                  tests green
-                               ▼                      │
-                          Phase 3: Plan               ▼
-                          (writing-plans)        Phase 6: Finish
-                               │                 (finishing-a-
-                               ▼                  development-
-                          plan file with          branch)
-                          discrete tasks
-                               │
-                               ▼
-                          advance to Phase 4
-```
-
-## Phase pipeline (reference detail)
-
-Each phase has: **Entry** (input artifact required to enter), **Do** (the owning skill —
-invoke it, don't paraphrase it), and **Exit** (output artifact required to leave).
-
-### 1. Brainstorm — `superpowers:brainstorming`
-
-- **Entry:** any new request. Rough ideas masquerade as specs; treat every request as rough
-  unless an approved design doc exists on disk or an approved lightweight session plan already
-  exists in the current session.
-- **Do:** invoke `superpowers:brainstorming`. Refine through questions, explore alternatives,
-  present the design in sections for the user to validate one section at a time.
-- **Simple-task exit:** for small, low-risk, well-bounded tasks, an approved lightweight
-  session plan is enough. It should state the goal, intended files, and verification. A full
-  spec/design doc and separate plan file are not required.
-- **Full-task exit artifact:** approved design document saved to disk. Use this for
-  ambiguous, multi-step, architectural, user-visible, or risky work.
-- **No code in this phase.**
-- **You are NOT in this phase if:** an approved design doc or approved lightweight session
-  plan already exists. Move to Phase 2.
-
-### 2. Isolate — `superpowers:using-git-worktrees`
-
-- **Entry:** approved design doc on disk, or an approved lightweight session plan for simple
-  low-risk work.
-- **Do:** invoke `superpowers:using-git-worktrees`. Create an isolated worktree on a new
-  branch, run project setup, verify a clean baseline (tests green) before touching anything.
-- **Exit artifact:** a worktree with a verified green baseline.
-- **Skip rule:** never skip this even for "small" changes. Isolation is what makes the rest of
-  the pipeline safe.
-
-### 3. Plan — `superpowers:writing-plans`
-
-- **Entry:** approved design doc + clean worktree. Simple tasks with an approved lightweight
-  session plan can skip this phase and execute from the session plan.
-- **Do:** invoke `superpowers:writing-plans`. Break the design into 2–5 minute tasks. Every
-  task lists exact file paths, the complete change, and verification steps.
-- **Exit artifact:** a plan file with discrete, independently verifiable tasks.
-- **Skip rule:** for full tasks, "I'll just remember the steps" is not a plan. Write the plan
-  file. For simple tasks, the approved lightweight session plan is the plan.
-
-### 4. Execute — `superpowers:subagent-driven-development` or `superpowers:executing-plans`
-
-- **Entry:** an approved plan exists on disk, or an approved lightweight session plan exists
-  for a simple task.
-- **Do:** choose one:
-  - `superpowers:subagent-driven-development` — fresh subagent per task with two-stage review.
-    Prefer when tasks are independent.
-  - `superpowers:executing-plans` — batched execution with human checkpoints. Prefer when
-    tasks are tightly coupled or the user wants to stay in the loop.
-- **Inside every task that produces code, both of these are mandatory:**
-  - **TDD via `superpowers:test-driven-development`:** write a failing test → watch it fail →
-    write minimal code → watch it pass → commit. Code written before its test gets deleted.
-  - **Browser pass via `agent-web-interface` for any user-visible behavior:** load
-    `agent-web-interface:agent-web-interface-guide` first, then exercise the change against a
-    running dev server. Capture a screenshot or page snapshot as the verification artifact.
-    Code-level green tests do not substitute. If there is no UI surface yet, say so
-    explicitly in the verification step — do not silently skip.
-- **Exit per task:** test green + browser-pass artifact (or explicit no-UI declaration) +
-  review findings addressed.
-
-### 5. Review — `superpowers:requesting-code-review` (between tasks, not a separate phase)
-
-- Run between tasks (or at the end of a small related batch).
-- Critical findings block the next task. Lower-severity findings can be tracked and addressed
-  later — but they must be tracked, not forgotten.
-- Use `superpowers:receiving-code-review` to respond to feedback. Verify before agreeing or
-  disagreeing.
-
-### 6. Finish — `superpowers:finishing-a-development-branch`
-
-- **Entry:** all planned tasks complete, tests green, no open critical review issues.
-- **Do:** invoke `superpowers:finishing-a-development-branch` for its verification steps
-  (tests green + final `agent-web-interface` pass across the full feature: golden path + every
-  edge case named in the design). **Skip the skill's 4-option prompt** — the default action in
-  this repo is **merge locally to `main`** and remove the worktree. Only stop and ask the user
-  if: tests fail, the merge has conflicts, the base branch isn't `main`, or the user has
-  explicitly asked for a PR instead. Destructive fallbacks (discard) still require typed
-  confirmation.
-- **Exit:** branch merged to `main`, worktree cleaned up.
-
-## Pinned plugins
-
-The workflow ships with five plugins. Use them when their trigger conditions match. Don't
-reinvent functionality these plugins already provide.
-
-### `superpowers` — process discipline (owns the phase pipeline)
-
-- `superpowers:brainstorming` — design refinement before code
-- `superpowers:using-git-worktrees` — isolated branches with verified baselines
-- `superpowers:writing-plans` — plans broken into 2–5 minute tasks with file paths and verification
-- `superpowers:subagent-driven-development` — fresh subagent per task, two-stage review
-- `superpowers:executing-plans` — batched execution with human checkpoints
-- `superpowers:test-driven-development` — RED-GREEN-REFACTOR; code without a prior failing test gets deleted
-- `superpowers:requesting-code-review` — between-task review, severity-graded findings
-- `superpowers:receiving-code-review` — disciplined response to review feedback
-- `superpowers:finishing-a-development-branch` — verify, present integration options, clean up
-- `superpowers:systematic-debugging` — root-cause analysis for any bug or unexpected behavior
-- `superpowers:verification-before-completion` — evidence-before-assertion gate before claiming done
-- `superpowers:dispatching-parallel-agents` — for 2+ truly independent tasks
-- `superpowers:writing-skills` — Use when authoring new skills, editing SKILL.md/frontmatter, refining triggers, or verifying skills before publishing; not for using skills
-
-### `tanstack-start` — frontend/full-stack framework knowledge
-
-Use whenever the task involves TanStack Start, TanStack Router, server functions, server
-routes, SSR, RSC, or migrating from Next.js. Core skill: `tanstack-start:tanstack-start-guide`.
-Domain-specific skills under `skills/upstream/@tanstack/...` cover routing, Start internals,
-the router plugin, virtual file routes, and React Server Components. Consult these before
-hand-rolling routing or data patterns.
-
-### `frontend-design` — UI quality and product-facing design
-
-Use whenever the task includes a user-visible screen, flow, layout, interaction pattern, or
-visual state. Load its skill before making UI decisions so the implementation has deliberate
-hierarchy, responsive behavior, accessibility, and domain-appropriate visual polish instead of
-framework-default screens.
-
-### `shadcn` — component library and design system
-
-Use whenever UI work needs accessible primitives, form patterns, theming, or registry
-components. Skill: `shadcn:shadcn-ui`. Prefer installing from the shadcn registry over
-hand-writing button/input/dialog primitives.
-
-### `agent-web-interface` — live browser interaction (mandatory test layer)
-
-Required test layer for anything user-visible. Every task that builds or modifies UI, a route,
-a server function exposed to the browser, an API consumed by the UI, or any end-to-end flow
-MUST be exercised against a running dev server through `mcp__plugin_agent-web-interface_browser__*`
-tools before the task is considered done. Unit and integration tests do not substitute.
-
-Skill: `agent-web-interface:agent-web-interface-guide`. **Load it BEFORE any
-`mcp__plugin_agent-web-interface_browser__*` tool call** so observations are structured and
-selectors are stable.
-
-Use it to walk the golden path, exercise the edge cases and error states named in the design,
-capture a screenshot/snapshot as the task's verification artifact, and spot regressions in
-adjacent flows the change could plausibly affect.
-
-If the app cannot be exercised this way (no dev server, pure backend with no client yet), say
-so explicitly in the verification step — do not silently skip the browser pass.
+| "Small change, I'll just edit it." | Small still needs an alignment artifact. |
+| "I already know the design." | If it's not on disk, it's a guess. Run `grill-with-docs` (or `grill-me` for non-code work). |
+| "I'll write the test after I see the code works." | Not TDD. Test first; vertical slice. |
+| "Unit tests pass, task is done." | User-visible work needs a browser pass. |
+| "I'll add this related improvement while I'm here." | New scope = new alignment. |
+| "I'll fix this critical finding next task." | Critical findings block forward motion. |
+| "User just wants me to do X, not follow process." | They installed this workflow on purpose. If they want to bypass it, they will say so explicitly. |
 
 ## When you cannot proceed
 
-If a phase cannot proceed because of missing requirements, credentials, environment access, or
-a user decision: **stop with the exact blocker and the next required input.** Do not skip
-ahead to a later phase to keep moving. Do not guess product or architecture decisions to keep
-moving. Stuck-and-asking is a correct state; pretending-to-progress is not.
+Missing credentials, environment access, product decision, or design call → **stop and surface the exact blocker plus the next required input.** Do not skip ahead to keep moving. Do not guess product or architecture decisions.
 
-## Self-check before every tool call
+## Skills used by this workflow
 
-Before any tool call other than the Skill tool invoking the phase's owning skill, ask:
+From Matt Pocock's [Skills For Real Engineers](https://github.com/mattpocock/skills) (Engineering set), used under their original terms. Each maps to a step above:
 
-1. Did I run the Phase Detector this turn?
-2. Did I announce the phase?
-3. Did I invoke the owning skill via the Skill tool?
-4. Is the tool I'm about to call something that skill would actually have me do right now?
+- `setup-matt-pocock-skills` — Foundation. Scaffolds `CONTEXT.md`, ADRs, issue tracker, triage labels. Run once per repo.
+- `triage` — Step 0. Issue-tracker state machine for unevaluated incoming work.
+- `grill-with-docs` — Step 1. Alignment for code work; updates `CONTEXT.md` and ADRs inline.
+- `grill-me` — Step 1. Alignment for non-code work (process, comms, content) where there is no domain model to update.
+- `prototype` — Step 1 aid. Throwaway runnable exploration when discussion alone cannot decide a design.
+- `to-prd` — Step 3. Synthesize alignment into a PRD on the issue tracker.
+- `to-issues` — Step 3. Break the PRD into vertical-slice issues.
+- `tdd` — Step 4. Red-green-refactor; one vertical slice per cycle.
+- `diagnose` — Step 4. Disciplined bug loop when something breaks mid-execution.
+- `zoom-out` — Step 4. System-level context before editing unfamiliar code.
+- `improve-codebase-architecture` — Step 6. Periodic deepening to fight entropy.
 
-If any answer is no, stop and fix it before the tool call.
+From this repo:
+
+- `agent-web-interface:agent-web-interface-guide` — Step 4. Mandatory per-task test layer for user-visible work. Browser tools live only in this plugin; load the guide before any `mcp__plugin_agent-web-interface_browser__*` call.
+- `app-exploration:map-feature-scope` — Step 7. Decompose a broad feature into bounded sub-features before deep exploration. Owns `e2e-plan/feature-map.md`.
+- `app-exploration:capture-feature-evidence` — Step 7. Deeply explore the live app and capture grounded evidence for the manual-QA pass. Owns `e2e-plan/exploration-report.md` and scoped files under `e2e-plan/exploration/`. Delegates browser work to `agent-web-interface` under the hood.
+
+Domain framework skills (load when the task domain matches):
+
+- `tanstack-start:tanstack-start-guide` — TanStack Start, Router, server functions/routes, SSR, RSC, Next.js migration.
+- `frontend-design` — load before any UI decision so the implementation has deliberate hierarchy, responsive behavior, accessibility, and visual polish.
+- `shadcn:shadcn-ui` — accessible primitives, form patterns, theming. Prefer the registry over hand-written button/input/dialog.

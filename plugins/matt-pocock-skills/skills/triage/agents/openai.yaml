@@ -1,0 +1,4 @@
+interface:
+  display_name: "Triage"
+  short_description: "Triage incoming issues through a state machine of triage roles"
+  default_prompt: "Triage the next batch of incoming issues into needs-info, ready-for-agent, ready-for-human, or wontfix."
