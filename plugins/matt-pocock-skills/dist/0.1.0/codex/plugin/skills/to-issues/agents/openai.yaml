@@ -1,4 +1,0 @@
-interface:
-  display_name: "To Issues"
-  short_description: "Break a plan, spec, or PRD into independently-grabbable issues using vertical slices"
-  default_prompt: "Break this PRD into vertical-slice issues with clear acceptance criteria."

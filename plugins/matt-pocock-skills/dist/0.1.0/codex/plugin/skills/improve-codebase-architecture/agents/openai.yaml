@@ -1,4 +1,0 @@
-interface:
-  display_name: "Improve Codebase Architecture"
-  short_description: "Find deepening opportunities informed by CONTEXT.md and docs/adr/"
-  default_prompt: "Find deepening opportunities in this codebase using CONTEXT.md and docs/adr/."

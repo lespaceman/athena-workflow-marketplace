@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-fullstack-engineering",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "User-invocable companion to the fullstack-engineering Workflow.",
   "license": "MIT",
   "repository": {
