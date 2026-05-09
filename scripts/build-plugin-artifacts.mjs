@@ -191,8 +191,27 @@ function main() {
     path.join(versionRoot, '.agents', 'plugins', 'marketplace.json'),
     JSON.stringify(buildCodexMarketplaceJson({pluginName, marketplaceName, version}), null, 2) + '\n',
   );
+  fs.writeFileSync(path.join(versionRoot, 'GENERATED.md'), buildGeneratedMarker({pluginName, version}));
 
   console.log(`Built runtime artifacts for ${pluginName}@${version} in ${path.relative(repoRoot, versionRoot)}`);
+}
+
+function buildGeneratedMarker({pluginName, version}) {
+  return [
+    '# Generated artifacts',
+    '',
+    `Built by \`scripts/build-plugin-artifacts.mjs\` (or \`npm run build:artifacts\` from \`plugins/${pluginName}\`).`,
+    '',
+    '**Do not hand-edit any file in this directory.** Edits are clobbered on the next build.',
+    '',
+    'Source of truth:',
+    `- Per-plugin Manifests: \`../../.claude-plugin/plugin.json\`, \`../../.codex-plugin/plugin.json\``,
+    `- Skills: \`../../skills/\``,
+    `- Marketplace Registries: repo-root \`.claude-plugin/marketplace.json\` and \`.agents/plugins/marketplace.json\``,
+    '',
+    `Built version: ${version}`,
+    '',
+  ].join('\n');
 }
 
 main();

@@ -1,6 +1,7 @@
 {
   "name": "regression-testing",
   "description": "Athena CLI runs this authored regression workflow across sessions - gather evidence, define rerunnable regression scope, and recommend the appropriate execution workflow when automation is needed",
+  "marketplaceDescription": "Scope rerunnable checks across changed and high-risk areas",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
   "loop": {

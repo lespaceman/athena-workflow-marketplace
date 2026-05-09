@@ -2,6 +2,7 @@
   "name": "loop-test",
   "version": "0.0.2",
   "description": "Minimal loop test \u2014 agent does a small thing each run, then finishes after a few iterations",
+  "marketplaceDescription": "Dev-only loop check \u2014 agent does a tiny thing each run and stops",
   "promptTemplate": "{input}",
   "plugins": [],
   "workflowFile": "workflow.md",

@@ -13,5 +13,6 @@
     "browser-tasks"
   ],
   "category": "evaluation",
+  "marketplaceDescription": "WebBench benchmark runner - executes real-world browser tasks from the Halluminate/WebBench dataset, scores via LLM-as-judge, and produces evaluation reports",
   "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

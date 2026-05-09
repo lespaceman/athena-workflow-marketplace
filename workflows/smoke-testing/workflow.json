@@ -1,6 +1,7 @@
 {
   "name": "smoke-testing",
   "description": "Athena CLI runs this authored smoke workflow across sessions - gather evidence, define minimum critical-path confidence scope, and recommend the appropriate execution workflow when automation is needed",
+  "marketplaceDescription": "Scope the minimum critical-path checks that confirm a build is healthy",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
   "loop": {

@@ -21,9 +21,12 @@ fi
 if [ "$#" -gt 0 ]; then
   skill_dirs=("$@")
 else
+  # Walk only top-level canonical skills — plugins/<plugin>/skills/<skill>/SKILL.md.
+  # Excludes dist/<version>/ snapshots and any deeply-nested upstream/vendored skills
+  # that follow non-Anthropic conventions (e.g. plugins/tanstack-start/skills/upstream/...).
   while IFS= read -r skill_md; do
     skill_dirs+=("$(dirname "$skill_md")")
-  done < <(find "${repo_root}/plugins" -name SKILL.md | sort)
+  done < <(find "${repo_root}/plugins" -maxdepth 4 -mindepth 4 -name SKILL.md | sort)
 fi
 
 for skill_dir in "${skill_dirs[@]}"; do

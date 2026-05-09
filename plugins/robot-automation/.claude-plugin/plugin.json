@@ -18,5 +18,6 @@
     "flaky-test-fix"
   ],
   "category": "testing",
+  "marketplaceDescription": "Robot Framework execution layer for analysis, authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
   "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

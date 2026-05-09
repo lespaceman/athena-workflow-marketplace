@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+PYTHONPATH="${repo_root}/scripts" exec python3 -m skill_model --repo-root "${repo_root}" "$@"

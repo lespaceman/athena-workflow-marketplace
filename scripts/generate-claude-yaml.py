@@ -2,73 +2,38 @@
 """
 Generate agents/claude.yaml for a skill directory.
 
-Usage:
-    generate-claude-yaml.py <skill_dir> [--frontmatter key=value]
+Delegates to skill_model.write_claude_overlay; the canonical Claude-overlay key list
+lives in scripts/skill_model/spec.py. Keep this entry point so existing call sites
+(init-compatible-skill.py, docs in CLAUDE.md) continue to work.
 """
+from __future__ import annotations
 
 import argparse
-import re
 import sys
 from pathlib import Path
 
-ALLOWED_KEYS = {
-    "argument-hint",
-    "user-invocable",
-    "disable-model-invocation",
-    "context",
-    "agent",
-    "hooks",
-    "paths",
-    "model",
-    "effort",
-    "shell",
-}
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from skill_model import write_claude_overlay
+from skill_model.spec import CLAUDE_OVERLAY_KEYS
 
 
-def quote_yaml(value: str) -> str:
-    escaped = value.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
-    return f'"{escaped}"'
-
-
-def parse_overrides(raw_items):
-    frontmatter = {}
-    for item in raw_items:
+def parse_overrides(items: list[str]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for item in items:
         if "=" not in item:
             raise ValueError(f"Invalid frontmatter override '{item}'. Use key=value.")
         key, value = item.split("=", 1)
         key = key.strip()
         value = value.strip()
-        if key not in ALLOWED_KEYS:
-            allowed = ", ".join(sorted(ALLOWED_KEYS))
+        if key not in CLAUDE_OVERLAY_KEYS:
+            allowed = ", ".join(sorted(CLAUDE_OVERLAY_KEYS))
             raise ValueError(f"Unknown Claude frontmatter key '{key}'. Allowed: {allowed}")
-        frontmatter[key] = value
-    return frontmatter
+        out[key] = value
+    return out
 
 
-def scalar_yaml(value: str) -> str:
-    lower = value.lower()
-    if lower == "true":
-        return "true"
-    if lower == "false":
-        return "false"
-    return quote_yaml(value)
-
-
-def write_claude_yaml(skill_dir: Path, overrides):
-    agents_dir = skill_dir / "agents"
-    agents_dir.mkdir(parents=True, exist_ok=True)
-
-    lines = ["frontmatter:"]
-    for key, value in overrides.items():
-        lines.append(f"  {key}: {scalar_yaml(value)}")
-
-    output = agents_dir / "claude.yaml"
-    output.write_text("\n".join(lines) + "\n")
-    print("[OK] Created agents/claude.yaml")
-    return output
-
-
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(description="Create agents/claude.yaml for a skill directory.")
     parser.add_argument("skill_dir", help="Path to the skill directory")
     parser.add_argument(
@@ -80,21 +45,23 @@ def main():
     args = parser.parse_args()
 
     skill_dir = Path(args.skill_dir).resolve()
-    if not skill_dir.exists() or not skill_dir.is_dir():
+    if not skill_dir.is_dir():
         print(f"[ERROR] Skill directory not found: {skill_dir}")
-        sys.exit(1)
+        return 1
     if not (skill_dir / "SKILL.md").exists():
         print(f"[ERROR] SKILL.md not found in {skill_dir}")
-        sys.exit(1)
+        return 1
 
     try:
         overrides = parse_overrides(args.frontmatter)
     except ValueError as exc:
         print(f"[ERROR] {exc}")
-        sys.exit(1)
+        return 1
 
-    write_claude_yaml(skill_dir, overrides)
+    out_path = write_claude_overlay(skill_dir, overrides)
+    print(f"[OK] Created {out_path.relative_to(Path.cwd()) if out_path.is_relative_to(Path.cwd()) else out_path}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

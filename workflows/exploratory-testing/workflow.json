@@ -1,6 +1,7 @@
 {
   "name": "exploratory-testing",
   "description": "Athena CLI runs this authored exploratory workflow across sessions - gather evidence, frame risk hypotheses, capture exploration gaps, and recommend the appropriate execution workflow when runnable automation is requested",
+  "marketplaceDescription": "Explore an app to surface risks and unknowns, then hand findings to a planning workflow",
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
   "loop": {

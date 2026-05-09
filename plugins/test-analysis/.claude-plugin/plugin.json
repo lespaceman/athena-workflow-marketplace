@@ -13,5 +13,6 @@
     "spec-review"
   ],
   "category": "testing",
+  "marketplaceDescription": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
   "repository": "https://github.com/AthenaFlow/workflow-marketplace"
 }

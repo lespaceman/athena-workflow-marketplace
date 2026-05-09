@@ -13,8 +13,6 @@
     }
   ],
   "homepage": "https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design",
-  "repository": "https://github.com/anthropics/claude-code",
-  "license": "MIT",
   "keywords": [
     "frontend",
     "design",
@@ -24,5 +22,7 @@
     "react",
     "html"
   ],
-  "category": "frontend"
+  "category": "frontend",
+  "license": "MIT",
+  "repository": "https://github.com/anthropics/claude-code"
 }
