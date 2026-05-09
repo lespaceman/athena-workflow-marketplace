@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "pluginRef": "fullstack-engineering@athena-workflow-marketplace",
+  "pluginName": "fullstack-engineering",
+  "marketplaceName": "athena-workflow-marketplace",
+  "version": "0.1.1",
+  "artifacts": {
+    "claude": {
+      "type": "directory",
+      "path": "./claude/plugin"
+    },
+    "codex": {
+      "type": "marketplace",
+      "marketplacePath": "./.agents/plugins/marketplace.json",
+      "pluginPath": "./codex/plugin"
+    }
+  }
+}

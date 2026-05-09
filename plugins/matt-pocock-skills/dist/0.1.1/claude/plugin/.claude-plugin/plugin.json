@@ -1,0 +1,24 @@
+{
+  "name": "matt-pocock-skills",
+  "description": "Bundled subset of Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills) \u2014 eleven engineering and productivity skills used by the fullstack-engineering workflow: setup-matt-pocock-skills, triage, grill-with-docs, grill-me, to-prd, to-issues, tdd, diagnose, zoom-out, prototype, improve-codebase-architecture.",
+  "version": "0.1.1",
+  "author": {
+    "name": "Matt Pocock",
+    "url": "https://github.com/mattpocock/skills"
+  },
+  "keywords": [
+    "tdd",
+    "diagnose",
+    "triage",
+    "grilling",
+    "alignment",
+    "prd",
+    "issues",
+    "architecture",
+    "prototype",
+    "matt-pocock",
+    "engineering"
+  ],
+  "category": "engineering",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
+}
