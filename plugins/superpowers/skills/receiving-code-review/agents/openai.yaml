@@ -1,4 +1,0 @@
-interface:
-  display_name: "Receiving Code Review"
-  short_description: "Use when receiving code review feedback, before implementing suggestions, especially if"
-  default_prompt: "Apply the receiving-code-review skill to the current task."

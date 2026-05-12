@@ -1,4 +1,0 @@
-interface:
-  display_name: "Systematic Debugging"
-  short_description: "Use when encountering any bug, test failure, or unexpected behavior, before"
-  default_prompt: "Apply the systematic-debugging skill to the current task."

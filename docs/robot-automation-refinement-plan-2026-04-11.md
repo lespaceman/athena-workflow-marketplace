@@ -1,6 +1,6 @@
 # Robot Automation Plugin Refinement — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Refine the `robot-automation` plugin to teach the correct Browser library dialect, bake in proactive resilience primitives, adapt to existing codebases via a typed `conventions.yaml` contract, keep Robot-specific best practices inside the shipped skills, and treat scaffolding as an optional external bootstrap path for greenfield starts only.
 

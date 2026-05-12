@@ -79,8 +79,8 @@ class TestMarketplaceProjections(unittest.TestCase):
         self.assertNotIn("repository", out)
 
     def test_claude_marketplace_entry_forwards_external_repository(self):
-        out = render_claude_marketplace_entry(make_plugin(repository="https://github.com/obra/superpowers"))
-        self.assertEqual(out["repository"], "https://github.com/obra/superpowers")
+        out = render_claude_marketplace_entry(make_plugin(repository="https://github.com/example/plugin"))
+        self.assertEqual(out["repository"], "https://github.com/example/plugin")
 
     def test_claude_marketplace_entry_omits_athenaflow_author(self):
         out = render_claude_marketplace_entry(make_plugin(author={"name": "Athenaflow"}))
