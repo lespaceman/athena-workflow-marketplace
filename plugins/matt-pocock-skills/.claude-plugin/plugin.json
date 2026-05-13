@@ -1,7 +1,7 @@
 {
   "name": "matt-pocock-skills",
   "description": "Bundled engineering skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): diagnose, grill-with-docs, triage, improve-codebase-architecture, setup-matt-pocock-skills, tdd, to-issues, to-prd, zoom-out, prototype.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": {
     "name": "Matt Pocock",
     "url": "https://github.com/mattpocock/skills"

@@ -232,7 +232,7 @@
       "name": "matt-pocock-skills",
       "source": "./plugins/matt-pocock-skills",
       "description": "Bundled engineering skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): diagnose, grill-with-docs, triage, improve-codebase-architecture, setup-matt-pocock-skills, tdd, to-issues, to-prd, zoom-out, prototype.",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "author": {
         "name": "Matt Pocock",
         "url": "https://github.com/mattpocock/skills"
@@ -256,7 +256,7 @@
       "name": "fullstack-engineering",
       "source": "./plugins/fullstack-engineering",
       "description": "User-invocable companion to the fullstack-engineering Workflow. Ships a single skill that captures the same state machine \u2014 Brainstorm \u2192 Isolate \u2192 Plan \u2192 Execute (TDD + browser pass) \u2192 Manual QA \u2192 Finish \u2014 for on-demand use without running the full Workflow loop.",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "keywords": [
         "fullstack",
         "engineering",
