@@ -2,12 +2,12 @@
 
 Each phase has: **Entry** (input artifact required to enter), **Do** (the action — invoke the owning skill where one exists; otherwise follow the procedure here), and **Exit** (output artifact required to leave).
 
-The inner-loop skills (`grill-with-docs`, `grill-me`, `to-prd`, `to-issues`, `tdd`, `diagnose`, `zoom-out`, `prototype`, `improve-codebase-architecture`, `write-a-skill`) come from Matt Pocock's [Skills For Real Engineers](https://github.com/mattpocock/skills) and are used here under their original terms. Browser verification comes from this repo's own `agent-web-interface` plugin.
+The inner-loop skills (`diagnose`, `grill-with-docs`, `triage`, `improve-codebase-architecture`, `setup-matt-pocock-skills`, `tdd`, `to-issues`, `to-prd`, `zoom-out`, `prototype`) come from Matt Pocock's [Skills For Real Engineers](https://github.com/mattpocock/skills) engineering set and are used here under their original terms. Browser verification comes from this repo's own `agent-web-interface` plugin.
 
-## 1. Brainstorm — `grill-with-docs` (code) or `grill-me` (non-code)
+## 1. Brainstorm — `grill-with-docs`
 
 - **Entry:** any new request. Treat every request as rough unless an approved design doc / PRD exists on disk or an approved lightweight session plan already exists.
-- **Do:** invoke `grill-with-docs` for code work — it interviews you against the project's domain language (`CONTEXT.md`) and decisions (`docs/adr/`), then updates those docs inline as decisions crystallise. Use `grill-me` for non-code or pure design alignment without doc updates.
+- **Do:** invoke `grill-with-docs` — it interviews you against the project's domain language (`CONTEXT.md`) and decisions (`docs/adr/`), then updates those docs inline as decisions crystallise.
 - **Simple-task exit:** approved lightweight session plan stating goal, intended files, verification. No PRD required.
 - **Full-task exit artifact:** approved design document / PRD on disk (often produced by following the grilling session with `to-prd`). Use for ambiguous, multi-step, architectural, user-visible, or risky work.
 - **No code in this phase.**
@@ -71,7 +71,6 @@ There is no Pocock skill for finishing a development branch. Procedure:
 These cover the inner loops the workflow leans on. Used under their original terms; credit to Matt Pocock.
 
 - `grill-with-docs` — alignment + shared language; interview against `CONTEXT.md` and `docs/adr/` and update both inline. Phase 1 default for code work.
-- `grill-me` — alignment without doc updates. Phase 1 fallback for non-code/simple sessions.
 - `to-prd` — synthesize current conversation into a PRD on the issue tracker. Phase 3 step 1.
 - `to-issues` — break a PRD/plan into vertical-slice issues. Phase 3 step 2.
 - `tdd` — red-green-refactor; vertical slices only. Mandatory inside every Phase 4 task that produces code.
@@ -80,7 +79,6 @@ These cover the inner loops the workflow leans on. Used under their original ter
 - `prototype` — throwaway terminal app or several radically different UI variations to flush out a design before committing. Optional Phase 1 aid.
 - `improve-codebase-architecture` — find deepening opportunities; consolidate tangled modules. Run periodically between tasks; ideal between feature batches.
 - `triage` — issue-tracker state machine when managing a backlog of incoming bugs / feature requests.
-- `write-a-skill` — when authoring or editing a skill (including this one).
 
 Skills with no Pocock equivalent (worktree setup, between-task code review, finishing) are run as manual procedures defined per phase above.
 

@@ -29,7 +29,7 @@ For simple, low-risk tasks, a lightweight planning session may satisfy Phase 1 �
 | Approved design doc / PRD + worktree + no plan file | **3. Plan** | `to-prd` then `to-issues` |
 | Approved design doc + no worktree | **2. Isolate** | (no skill — see PHASES.md) |
 | Approved lightweight session plan + no worktree | **2. Isolate** | (no skill — see PHASES.md) |
-| Anything else (new request, vague idea, no approved plan/design) | **1. Brainstorm** | `grill-with-docs` (code) or `grill-me` (non-code) |
+| Anything else (new request, vague idea, no approved plan/design) | **1. Brainstorm** | `grill-with-docs` |
 
 Announce, in one line, before any other tool call:
 `Phase: <N. Name> — invoking <skill or "manual phase">. Artifacts seen: <what you found>.`
@@ -80,8 +80,8 @@ plan/design?         no worktree?           tasks remaining?
     │                      │                      │
     ▼                      ▼                      ▼
 Phase 1: Brainstorm    Phase 2: Isolate      Phase 4: Execute
-(grill-with-docs       (manual: worktree     (tdd per task;
- / grill-me)            + green baseline)     diagnose on bugs;
+(grill-with-docs)      (manual: worktree     (tdd per task;
+                        + green baseline)     diagnose on bugs;
                                               browser pass via
                                               agent-web-interface)
                                                   │

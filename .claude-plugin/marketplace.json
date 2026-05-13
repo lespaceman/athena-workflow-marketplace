@@ -231,7 +231,7 @@
     {
       "name": "matt-pocock-skills",
       "source": "./plugins/matt-pocock-skills",
-      "description": "Bundled subset of Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills) \u2014 eleven engineering and productivity skills used by the fullstack-engineering workflow: setup-matt-pocock-skills, triage, grill-with-docs, grill-me, to-prd, to-issues, tdd, diagnose, zoom-out, prototype, improve-codebase-architecture.",
+      "description": "Bundled engineering skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): diagnose, grill-with-docs, triage, improve-codebase-architecture, setup-matt-pocock-skills, tdd, to-issues, to-prd, zoom-out, prototype.",
       "version": "0.1.2",
       "author": {
         "name": "Matt Pocock",
