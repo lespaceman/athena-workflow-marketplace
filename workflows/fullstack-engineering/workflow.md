@@ -1,218 +1,229 @@
 # Full-Stack Engineering Workflow
 
-Ship non-trivial engineering work without guessing. Every phase has an artifact. If the artifact is missing, you are not in the next phase.
+Ship engineering changes through alignment, implementation, validation, review, and delivery without letting the agent guess. Each phase consumes an artifact, produces an artifact, and has a gate before the next phase.
+
+This Workflow is an orchestrator, not a replacement for the Skills it routes to. Keep the user in
+control of ambiguous decisions, keep Skills small and composable, and move through the work by
+observable state rather than confidence.
+
+## Plugins
+
+This workflow is authored against the Plugins pinned in `workflow.json`. The markdown lists the
+Plugin surfaces, while `workflow.json` remains the source of truth for Plugin Pins and versions.
+
+| Plugin | Skills Used Here |
+|--------|------------------|
+| `matt-pocock-skills` | `setup-matt-pocock-skills`, `triage`, `grill-with-docs`, `prototype`, `to-prd`, `to-issues`, `zoom-out`, `tdd`, `diagnose`, `improve-codebase-architecture` |
+| `frontend-design` | `frontend-design` |
+| `shadcn` | `shadcn-ui` |
+| `tanstack-start` | `tanstack-start-guide` and focused TanStack routing/start skills when applicable |
+| `agent-web-interface` | `agent-web-interface-guide` |
+| `app-exploration` | `map-feature-scope`, `capture-feature-evidence` |
 
 ## Skills
 
-Use only the ten Matt Pocock engineering skills bundled in `matt-pocock-skills`:
+Load the relevant Skill before each activity. Skills own the detailed method; this Workflow owns
+routing, artifacts, gates, and handoffs.
 
-- `setup-matt-pocock-skills` - repo foundation.
-- `triage` - incoming work state machine.
-- `grill-with-docs` - alignment against `CONTEXT.md` and ADRs.
-- `prototype` - disposable design probe.
-- `to-prd` - PRD from current context.
-- `to-issues` - vertical-slice task breakdown.
-- `zoom-out` - map unfamiliar code.
-- `tdd` - red-green-refactor.
-- `diagnose` - reproduce, minimise, hypothesise, instrument, fix, regression-test.
-- `improve-codebase-architecture` - deepen architecture when drift appears.
+| Activity | Skill |
+|----------|-------|
+| Repo foundation and local conventions | `setup-matt-pocock-skills` |
+| Incoming issue or request triage | `triage` |
+| Scope, constraints, domain language, and ADR alignment | `grill-with-docs` |
+| Disposable design probe | `prototype` |
+| PRD from aligned context | `to-prd` |
+| Vertical-slice task breakdown | `to-issues` |
+| Unfamiliar codebase area | `zoom-out` |
+| Feature implementation or bug fix with behavior tests | `tdd` |
+| Hard bug, flake, or performance regression | `diagnose` |
+| Architecture drift or shallow module cluster | `improve-codebase-architecture` |
+| User-visible UI design | `frontend-design` |
+| shadcn/ui primitives, theming, or registry work | `shadcn-ui` |
+| TanStack Start or Router work | `tanstack-start-guide` |
+| Browser verification | `agent-web-interface-guide` |
+| Broad manual QA or product evidence | `map-feature-scope`, `capture-feature-evidence` |
 
-Use marketplace support skills when the domain demands them:
+## Failure-Mode Routing
 
-- UI: `frontend-design:frontend-design`
-- UI primitives: `shadcn:shadcn-ui`
-- TanStack apps: `tanstack-start:tanstack-start-guide`
-- Browser verification: `agent-web-interface:agent-web-interface-guide`
-- Manual QA: `app-exploration:map-feature-scope`, `app-exploration:capture-feature-evidence`
+Use the Workflow to catch the common agent failure modes early:
 
-## Scale
+| Failure Mode | Symptom | Route |
+|--------------|---------|-------|
+| Misalignment | The request is broad, underspecified, or likely to surprise the user | `grill-with-docs` before planning |
+| Missing domain language | The agent uses vague words, local jargon is unclear, or names drift | `grill-with-docs`; update `CONTEXT.md` or ADRs inline |
+| Weak feedback loop | The agent cannot prove behavior quickly | strengthen baseline, use `tdd`, browser evidence, or `diagnose` |
+| Debugging by inspection | A bug is being "fixed" before it is reproduced | `diagnose` and build a reproducible loop first |
+| Horizontal implementation | Many tests or files are changing before one slice is green | return to one tracer bullet via `tdd` |
+| Architecture entropy | Understanding requires bouncing across shallow modules or tangled seams | `improve-codebase-architecture` |
+| Product guessing | UI, route, selector, role, or behavior assumptions lack evidence | `agent-web-interface-guide` or `capture-feature-evidence` |
 
-Classify once in the alignment artifact.
+## Task Tracker Discipline
 
-- `light` - one bounded change. Needs foundation, alignment, prepare, execution, review, delivery. PRD/issues/manual QA can be skipped with reasons.
-- `standard` - normal feature, bug fix, or refactor. Default. PRD/issues/manual QA may be skipped only when the artifact says why.
-- `full` - risky, architectural, cross-module, multi-route, role-sensitive, auth/payment/security, or broad user-visible work. Requires PRD/issues and manual QA.
+Progress must survive resumes, context resets, subagents, and missing task tools.
 
-If unsure, choose the larger scale.
+On every session start:
+
+1. Read the current tracker or `.scratch/<slug>/` artifacts before acting.
+2. Reconcile completed, in-flight, blocked, and next work.
+3. If a task tool exists, update it. Otherwise write the same state into the active artifact.
+4. Surface mismatches before choosing the next phase.
+
+Use one slug for the run: `agent/<slug>` for branches and `.scratch/<slug>/` for local artifacts.
 
 ## Artifacts
 
-Use one slug for the run: `agent/<slug>` for branch names and `.scratch/<slug>/` for local artifacts.
+| Artifact | Owner | Required When |
+|----------|-------|---------------|
+| `.scratch/<slug>/alignment.md` or issue comment | `grill-with-docs` | Always |
+| `.scratch/<slug>/prd.md` or issue | `to-prd` | Substantial or risky work |
+| `.scratch/<slug>/tasks.md` or issues | `to-issues` | More than one independently verifiable slice |
+| `.scratch/<slug>/baseline.md` | Workflow | Always before code |
+| `.scratch/<slug>/review.md` | Workflow or fresh reviewer | `standard` and `full`; optional for `light` |
+| `e2e-plan/feature-map.md` | `map-feature-scope` | Broad user-visible QA |
+| `e2e-plan/exploration-report.md` or `e2e-plan/exploration/*.md` | `capture-feature-evidence` | Required QA or browser evidence |
 
-Required artifacts:
+If the repo has no issue tracker, use local files. Do not block on missing GitHub or GitLab unless the user explicitly required issue creation.
 
-- Alignment: `.scratch/<slug>/alignment.md` or issue comment.
-- PRD, when needed: `.scratch/<slug>/prd.md` or issue.
-- Tasks, when needed: `.scratch/<slug>/tasks.md` or issues.
-- Baseline: `.scratch/<slug>/baseline.md`.
-- Review: `.scratch/<slug>/review.md`.
-- QA, when needed: `e2e-plan/feature-map.md`, `e2e-plan/exploration-report.md`, or scoped files under `e2e-plan/exploration/`.
+## Orientation Steps
 
-If the repo has no issue tracker, use local files. Do not block on missing GitHub/GitLab unless the user explicitly required issue creation.
-
-## Entry
-
-Run the foundation check first:
+First, run the foundation check:
 
 ```bash
 test -f CONTEXT.md && test -d docs/adr && test -s docs/agents/triage-labels.md
 ```
 
-If it fails, enter Phase 0. If the repo intentionally uses different paths, document those paths in the alignment artifact before treating foundation as present.
+If it fails, enter Phase 0. If the repo intentionally uses different paths, document those paths in
+the alignment artifact before treating foundation as present.
 
-Then choose the first matching phase:
+Classify scale once during alignment:
+
+- `light` - one bounded change; PRD, issues, and QA may be skipped with reasons.
+- `standard` - normal feature, bug fix, or refactor. Default when unsure.
+- `full` - risky, architectural, cross-module, multi-route, role-sensitive, auth/payment/security, or broad user-visible work. Requires PRD/issues and QA.
+
+## Workflow Sequence
+
+Default progression:
+
+**foundation → triage when needed → align → plan when needed → prepare → execute one slice → review → QA when needed → deliver**
+
+Choose the first matching phase:
 
 | State | Phase |
 |---|---|
 | Foundation missing or stale | 0. Foundation |
 | Untriaged issue/backlog/report | 1. Triage |
 | New or unclear work | 2. Align |
-| Alignment exists, plan missing | 3. Plan |
-| Plan exists, baseline missing | 4. Prepare |
+| Alignment exists, but needed PRD/tasks are missing | 3. Plan |
+| Plan exists, but baseline is missing | 4. Prepare |
 | Tasks remain | 5. Execute |
-| Tasks done, review missing | 6. Review |
-| Review done, QA required | 7. QA |
-| Everything done | 8. Deliver |
+| Tasks done, but review missing | 6. Review |
+| Review done, and QA is required | 7. QA |
+| Gates passed | 8. Deliver |
 
-Examples:
+Treat the sequence as a dependency graph, not a rigid script. Direct bug reports route from Align
+into `diagnose`; unfamiliar areas route through `zoom-out`; UI work loads UI support Skills during
+Align, not after implementation has already drifted.
 
-- Expired-card checkout bug: Align, then `diagnose` once reproduced.
-- Settings page with API persistence: Align with `frontend-design`; add `shadcn-ui` and `tanstack-start-guide` if relevant.
+Human checkpoints are required when the Workflow changes intent: after alignment questions expose a
+scope decision, after hypotheses are ranked for a hard bug, before accepting an architecture
+deepening path, and before push/publish/merge.
 
-## Phase 0. Foundation
+## Phase Gates
 
-Run `setup-matt-pocock-skills` when `CONTEXT.md`, `docs/adr`, issue tracker conventions, or triage labels are missing/stale.
+### 0. Foundation
 
-Exit: foundation files exist, or alternate repo paths are documented.
+Run `setup-matt-pocock-skills` when foundation files are missing or stale.
 
-## Phase 1. Triage
+Gate: foundation files exist, or alternate repo paths are documented.
+
+### 1. Triage
 
 Run `triage` only for incoming, unevaluated work.
 
-Exit: the issue/task is ready for agent, ready for human, blocked on info, duplicate, out of scope, or rejected.
+Gate: request is ready for agent, ready for human, blocked on info, duplicate, out of scope, or rejected.
 
-## Phase 2. Align
+### 2. Align
 
-Run `grill-with-docs`. Use `prototype` only when seeing a design run would answer a real question.
+Run `grill-with-docs`. Use `prototype` only when a disposable design probe would answer a real decision.
 
-Load support skills during alignment, not after:
-
-- UI output -> `frontend-design`
-- component primitives/theming -> `shadcn-ui`
-- TanStack routing/server work -> `tanstack-start-guide`
-
-Alignment artifact must contain:
+Alignment artifact must state:
 
 1. Scale: `light`, `standard`, or `full`.
-2. Goal.
-3. Scope: exact files/routes/modules expected to change.
-4. Non-goals.
-5. Verification: tests, browser paths, edge cases.
-6. QA mode: `full`, `focused`, or `skip`.
-7. Domain updates: `CONTEXT.md` / ADR paths changed, or explicitly unchanged.
+2. Goal and non-goals.
+3. Scope: expected files, routes, modules, or surfaces.
+4. Verification: tests, browser paths, edge cases, and baseline command.
+5. QA mode: `full`, `focused`, or `skip`, with reason.
+6. Domain updates: `CONTEXT.md` / ADR paths changed, or explicitly unchanged.
 
-QA modes:
+Gate: alignment artifact exists. No production code in this phase.
 
-- `full` - broad or risky user-visible work. Run Phase 7.
-- `focused` - bounded user-visible work. Browser-check changed path plus one adjacent path.
-- `skip` - docs-only, test-only, internal refactor with no runtime behavior change, or tiny non-shared copy/style change. Say why.
+### 3. Plan
 
-Exit: alignment artifact exists. No production code in this phase.
+Run `to-prd` for substantial work. Run `to-issues` when more than one independently verifiable slice is needed.
 
-## Phase 3. Plan
+Each task must name files, behavior, first test, browser verification, and done criteria.
 
-Run `to-prd` for substantial work. Skip only when the alignment artifact is enough.
+Tasks must be vertical tracer bullets: each slice should produce one observable behavior change that
+can be tested, reviewed, and delivered independently. Do not create tasks that split "all tests",
+"all implementation", and "all cleanup" into separate horizontal phases.
 
-Run `to-issues` when there is more than one independently verifiable slice.
+Gate: PRD/tasks exist, or the alignment artifact explains why they are skipped.
 
-Each task must name:
+### 4. Prepare
 
-- files,
-- behavior,
-- first test,
-- browser verification,
-- done criteria.
+Create a clean work surface according to repo convention.
 
-Exit: PRD/tasks exist, or skip reason is written in alignment.
+- `light` with clean worktree: stay put; create branch `agent/<slug>` when useful.
+- `standard` or `full`: prefer a sibling worktree `../<repo>-<slug>` on branch `agent/<slug>`.
 
-## Phase 4. Prepare
+Run the baseline command named in alignment/tasks and record command/result in `.scratch/<slug>/baseline.md`.
 
-Create a clean surface before code.
+Gate: baseline is known. If baseline is red before your changes, stop, diagnose, or report blocker.
 
-- Existing repo convention wins.
-- `light` + clean worktree: stay put, create branch `agent/<slug>`.
-- `standard` / `full`: create sibling worktree `../<repo>-<slug>` on branch `agent/<slug>`.
+### 5. Execute
 
-Run the baseline command named in alignment/tasks. Record command and result in `.scratch/<slug>/baseline.md`.
-
-If baseline is red before your changes, stop. Diagnose baseline or report blocker. Do not mix baseline repair with feature work unless alignment changes.
-
-Exit: branch/worktree exists, dependencies known, baseline recorded.
-
-## Phase 5. Execute
-
-One vertical slice at a time.
+Work one vertical slice at a time.
 
 - Unknown area -> `zoom-out`.
 - Behavior change -> `tdd`.
-- Bug/flaking/perf surprise -> `diagnose`.
-- UI/browser-observable change -> load `agent-web-interface:agent-web-interface-guide`, exercise the path, record evidence.
+- Bug, flake, or performance surprise -> `diagnose`.
+- UI/browser-observable change -> `agent-web-interface-guide` with evidence recorded.
+- Architecture friction -> pause slice and run `improve-codebase-architecture`.
 
-TDD rule: one failing behavior test, minimal code, passing test, refactor while green. No horizontal "all tests then all code" work.
+Implementation rule: one failing behavior test, minimal code to pass, refactor while green. Do not
+write all tests first and all code second. If a slice cannot get a meaningful test, write a
+characterization harness or record the missing seam as a review finding before proceeding.
 
-For generated config, migrations, or hard-to-test refactors: write a characterization test when possible. If no meaningful test seam exists, record why in the task artifact and compensate with stronger review/browser/manual verification.
+Gate per slice: relevant tests green, evidence recorded or explicitly not applicable, no critical finding open.
 
-Exit per slice: tests green, evidence recorded or explicitly not applicable, no critical finding open.
+### 6. Review
 
-## Phase 6. Review
+Review before the next slice when risk is high, otherwise before QA/delivery.
 
-Review before the next slice, or before QA if all slices are done.
+- `light`: self-review is acceptable.
+- `standard`: record self-review in `.scratch/<slug>/review.md`.
+- `full`: use a fresh subagent diff review when available; otherwise record that no fresh reviewer was available.
 
-Mechanism:
+Review must cover scope, tests, domain language, browser/QA evidence, risks, and findings.
 
-- `light`: self-review.
-- `standard`: self-review recorded in `.scratch/<slug>/review.md`.
-- `full`: fresh subagent diff review when available; otherwise record that no fresh reviewer was available.
+Gate: review recorded; critical findings closed. Architecture findings route to `improve-codebase-architecture`.
 
-Review template:
-
-```md
-## Review
-- Scope:
-- Tests:
-- Domain language:
-- Browser/QA evidence:
-- Risks:
-- Findings: critical / major / minor / none
-```
-
-Critical findings block forward motion.
-
-Run `improve-codebase-architecture` when naming drifts, modules tangle, the branch crosses boundaries, the diff is no longer small, or review finds architecture risk.
-
-Exit: review recorded; critical findings closed.
-
-## Phase 7. QA
+### 7. QA
 
 Run only for `QA mode: full` or `focused`.
 
 - `full`: use `map-feature-scope` when the surface spans routes, roles, overlays, tabs, or shared state; then run `capture-feature-evidence`.
-- `focused`: run `capture-feature-evidence` on the changed path plus one adjacent path. Use mapping only if the boundary is unclear.
-- `skip`: no Phase 7, but the alignment artifact must say why.
+- `focused`: run `capture-feature-evidence` on the changed path plus one adjacent path. Use mapping only if the surface is unclear.
+- `skip`: no QA, but the alignment artifact must say why.
 
 Capture golden path, named edge cases, error/empty states, role variation, adjacent regressions, and blockers.
 
-Exit: QA evidence exists, or skip reason exists.
+Gate: QA evidence exists, or skip reason exists.
 
-## Phase 8. Deliver
+### 8. Deliver
 
-Before final response, confirm:
-
-- relevant tests ran,
-- tasks complete,
-- browser/QA evidence exists or is explicitly skipped,
-- critical findings are closed,
-- changed files and verification are summarized.
+Before final response, confirm tests, completed tasks, review status, QA evidence or skip reason, and remaining risk.
 
 Delivery policy:
 
@@ -221,19 +232,21 @@ Delivery policy:
 - User asked to finish end-to-end and repo has local-merge convention: merge only after tests and QA pass.
 - No delivery preference: stop after verification and ask before push, publish, or merge.
 
-Commit policy:
+## Handoff Rules
 
-- Commit only coherent completed slices.
-- Message format: `<area>: <behavior change>`.
-- Commit body names tests/QA evidence for non-trivial work.
+- If a required Skill or pinned Plugin is unavailable, stop and report the missing surface.
+- If requirements change, return to Phase 2 before changing scope.
+- If user intent is still ambiguous after alignment, ask the user rather than manufacturing a plan.
+- If tests fail for unrelated baseline reasons, separate baseline instability from the requested work.
+- If no meaningful test seam exists, record that as a finding and strengthen review/QA.
+- If the work exposes architecture friction, hand off to `improve-codebase-architecture` with concrete files and symptoms.
+- If browser/product evidence is required but unavailable, stop rather than planning or coding from assumptions.
 
-Stop on failed tests, conflicts, missing credentials, unrelated user changes, or destructive fallback.
+## Guardrails
 
-## Hard Rules
-
-- No production code without alignment.
-- No behavior change outside the TDD/characterization loop.
-- No user-visible done claim without browser evidence or written QA skip.
+- No production code before alignment.
+- No behavior change outside TDD, diagnosis, or characterization.
+- No user-visible done claim without browser evidence or a written QA skip.
 - No new scope without returning to alignment.
-- No architecture drift without review; use `improve-codebase-architecture` when needed.
-- No invented plugin behavior. If a skill is unavailable, stop and report the missing plugin or pin.
+- No invented Plugin behavior; `workflow.json` pins define available Plugins.
+- No direct publish, push, merge, or destructive git action unless explicitly requested or already covered by delivery policy.
