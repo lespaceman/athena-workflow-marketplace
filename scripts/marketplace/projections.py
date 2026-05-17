@@ -43,6 +43,7 @@ def render_plugin_codex_manifest(plugin: Plugin) -> dict[str, Any]:
         "name": plugin.name,
         "version": plugin.version,
         "description": plugin.description,
+        "category": plugin.category,
     }
     if plugin.author:
         out["author"] = deepcopy(plugin.author)

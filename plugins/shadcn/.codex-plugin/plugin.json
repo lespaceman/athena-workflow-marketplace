@@ -12,5 +12,6 @@
     "shortDescription": "Install and compose shadcn/ui components from any registry, with project-aware patterns",
     "developerName": "Athenaflow",
     "category": "Frontend"
-  }
+  },
+  "category": "frontend"
 }

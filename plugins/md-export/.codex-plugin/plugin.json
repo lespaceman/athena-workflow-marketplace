@@ -11,5 +11,6 @@
     "shortDescription": "Export markdown to dark-themed PDFs",
     "developerName": "lespaceman",
     "category": "Developer Tools"
-  }
+  },
+  "category": "developer-tools"
 }

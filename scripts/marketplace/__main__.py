@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from .compiler import CompileError, compile_workflow
 from .loader import ConsistencyError, load
 from .writer import (
     bump_plugin,
@@ -26,7 +27,7 @@ def _repo_root_from_args(args: argparse.Namespace) -> Path:
 def cmd_validate(args: argparse.Namespace) -> int:
     try:
         model = load(_repo_root_from_args(args))
-    except ConsistencyError as e:
+    except (ConsistencyError, CompileError) as e:
         print(f"FAIL: {e}", file=sys.stderr)
         return 1
     diffs = diff_registries(model)
@@ -36,6 +37,12 @@ def cmd_validate(args: argparse.Namespace) -> int:
         for p in drift:
             print(f"  - {p}")
         print("\nRun: python3 -m marketplace write-registries")
+        return 1
+    plan_findings = _compile_all_workflows(model)
+    if plan_findings:
+        print("Compiled Workflow Plan validation failed:")
+        for finding in plan_findings:
+            print(f"  - {finding}")
         return 1
     print(f"OK: {len(model.plugins)} plugins, {len(model.workflows)} workflows; all three registries in sync.")
     return 0
@@ -120,6 +127,31 @@ def cmd_show(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_compile(args: argparse.Namespace) -> int:
+    model = load(_repo_root_from_args(args))
+    try:
+        plan = compile_workflow(model, args.workflow, args.runtime)
+    except (CompileError, KeyError) as e:
+        print(f"FAIL: {e}", file=sys.stderr)
+        return 1
+    print(json.dumps(plan.as_dict(), indent=2))
+    return 0
+
+
+def _compile_all_workflows(model) -> list[str]:
+    findings: list[str] = []
+    for workflow in model.workflows:
+        for runtime in ("athena", "claude", "codex"):
+            try:
+                plan = compile_workflow(model, workflow.name, runtime)
+            except CompileError as e:
+                findings.append(f"{workflow.name} ({runtime}): {e}")
+                continue
+            for finding in plan.validation_findings:
+                findings.append(f"{workflow.name} ({runtime}): {finding}")
+    return findings
+
+
 def _autodetect_targets(model, repo_root: Path) -> list[str]:
     """Walk git diff for changed plugins (mirrors legacy bump-versions.sh behaviour)."""
     plugins_changed: list[str] = []
@@ -176,6 +208,11 @@ def main(argv: list[str] | None = None) -> int:
 
     p_show = sub.add_parser("show", help="dump the canonical model as JSON")
     p_show.set_defaults(func=cmd_show)
+
+    p_compile = sub.add_parser("compile-workflow", help="resolve a Workflow and its Plugin Pins into a runtime-owned plan")
+    p_compile.add_argument("workflow", help="Workflow name")
+    p_compile.add_argument("--runtime", choices=["athena", "claude", "codex"], default="athena")
+    p_compile.set_defaults(func=cmd_compile)
 
     args = parser.parse_args(argv)
     return args.func(args)

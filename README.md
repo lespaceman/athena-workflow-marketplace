@@ -137,6 +137,12 @@ Run the intent suite validator:
 node scripts/validate-intent-suite.mjs
 ```
 
+Inspect the Compiled Workflow Plan a Runtime should consume:
+
+```shell
+scripts/marketplace-cli compile-workflow playwright-automation --runtime codex
+```
+
 ### Authoring Commands
 
 Create a new repo-compatible skill scaffold:
@@ -278,8 +284,8 @@ Workflow intent:
 
 1. Create a plugin directory under `plugins/<name>/`.
 2. Add `plugins/<name>/.claude-plugin/plugin.json`.
-3. Add `plugins/<name>/.codex-plugin/plugin.json` if the plugin needs Codex-specific metadata.
-4. Register plugin in `.claude-plugin/marketplace.json` under `plugins[]`.
+3. Add `plugins/<name>/.codex-plugin/plugin.json`.
+4. Run `scripts/marketplace-cli write-all` to regenerate Marketplace Registries from canonical sources.
 
 Minimal `plugin.json`:
 
@@ -298,18 +304,18 @@ Minimal `plugin.json`:
 
 1. Create `workflows/<workflow-name>/workflow.json`.
 2. Add any workflow-local assets in the same directory.
-3. Register workflow in `.athena-workflow/marketplace.json` under `workflows[]`.
-4. Keep schema/behavior aligned with RFC 0001.
+3. Use object-shaped Plugin Pins in `plugins[]`, each with `ref` and `version`.
+4. Run `scripts/marketplace-cli write-all` to regenerate the Athena Marketplace Registry.
+5. Keep schema/behavior aligned with RFC 0001.
 
-Workflow registration example:
+Workflow Plugin Pin example:
 
 ```json
 {
-  "workflows": [
+  "plugins": [
     {
-      "name": "my-workflow",
-      "source": "./workflows/my-workflow/workflow.json",
-      "description": "My reusable workflow"
+      "ref": "app-exploration@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.8"
     }
   ]
 }

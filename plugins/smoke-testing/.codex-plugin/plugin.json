@@ -11,5 +11,6 @@
     "shortDescription": "Define the minimum critical-path confidence scope",
     "developerName": "Athenaflow",
     "category": "Testing"
-  }
+  },
+  "category": "testing"
 }

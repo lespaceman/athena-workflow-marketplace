@@ -11,5 +11,6 @@
     "shortDescription": "Map broad features, explore scoped areas, and record grounded evidence for test planning",
     "developerName": "Athenaflow",
     "category": "Testing"
-  }
+  },
+  "category": "testing"
 }

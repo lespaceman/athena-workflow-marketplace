@@ -11,5 +11,6 @@
     "shortDescription": "Frame risk hypotheses and investigation focus for exploratory testing",
     "developerName": "Athenaflow",
     "category": "Testing"
-  }
+  },
+  "category": "testing"
 }

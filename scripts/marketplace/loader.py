@@ -6,7 +6,7 @@ from .io import read_json
 from .model import MarketplaceModel, Plugin, PluginPin, Workflow
 
 
-SHARED_FIELDS = ("name", "version", "description")
+SHARED_FIELDS = ("name", "version", "description", "category")
 
 
 class ConsistencyError(ValueError):
@@ -97,7 +97,8 @@ def _load_workflows(repo: Path) -> list[Workflow]:
         if not wj.exists():
             raise ConsistencyError(f"workflow {path.name!r} missing workflow.json")
         data = read_json(wj)
-        pins = [PluginPin.from_ref(p["ref"], p["version"]) for p in data.get("plugins", [])]
+        _check_workflow_shape(path.name, data)
+        pins = [_load_plugin_pin(path.name, p) for p in data.get("plugins", [])]
         workflows.append(
             Workflow(
                 name=data["name"],
@@ -110,3 +111,35 @@ def _load_workflows(repo: Path) -> list[Workflow]:
             )
         )
     return workflows
+
+
+def _check_workflow_shape(workflow_dir_name: str, data: dict) -> None:
+    name = data.get("name")
+    if not isinstance(name, str) or not name:
+        raise ConsistencyError(f"workflow {workflow_dir_name!r} must define string field 'name'")
+    if name != workflow_dir_name:
+        raise ConsistencyError(
+            f"workflow directory {workflow_dir_name!r} contains workflow named {name!r}"
+        )
+    prompt_template = data.get("promptTemplate")
+    if not isinstance(prompt_template, str) or "{input}" not in prompt_template:
+        raise ConsistencyError(
+            f"workflow {name!r} promptTemplate must be a string containing '{{input}}'"
+        )
+    plugins = data.get("plugins")
+    if not isinstance(plugins, list):
+        raise ConsistencyError(f"workflow {name!r} plugins must be a list of Plugin Pin objects")
+
+
+def _load_plugin_pin(workflow_name: str, pin: dict) -> PluginPin:
+    if not isinstance(pin, dict):
+        raise ConsistencyError(
+            f"workflow {workflow_name!r} plugins entries must be Plugin Pin objects with 'ref' and 'version'"
+        )
+    ref = pin.get("ref")
+    version = pin.get("version")
+    if not isinstance(ref, str) or not ref:
+        raise ConsistencyError(f"workflow {workflow_name!r} Plugin Pin is missing string field 'ref'")
+    if not isinstance(version, str) or not version:
+        raise ConsistencyError(f"workflow {workflow_name!r} Plugin Pin {ref!r} is missing string field 'version'")
+    return PluginPin.from_ref(ref, version)

@@ -12,5 +12,6 @@
     "shortDescription": "Browser task benchmarks scored via LLM-as-judge",
     "developerName": "Athenaflow",
     "category": "Evaluation"
-  }
+  },
+  "category": "evaluation"
 }

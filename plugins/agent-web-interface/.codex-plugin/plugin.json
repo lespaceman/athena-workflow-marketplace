@@ -12,5 +12,6 @@
     "shortDescription": "Act inside live sites with clicks, forms, carts, and structured page snapshots",
     "developerName": "Athenaflow",
     "category": "Browser Automation"
-  }
+  },
+  "category": "browser-automation"
 }

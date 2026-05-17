@@ -11,5 +11,6 @@
     "shortDescription": "Framework-specific Playwright layer built on shared exploration and planning artifacts",
     "developerName": "Athenaflow",
     "category": "Testing"
-  }
+  },
+  "category": "testing"
 }

@@ -11,5 +11,6 @@
     "shortDescription": "Define rerunnable regression scope across changed and high-risk areas",
     "developerName": "Athenaflow",
     "category": "Testing"
-  }
+  },
+  "category": "testing"
 }

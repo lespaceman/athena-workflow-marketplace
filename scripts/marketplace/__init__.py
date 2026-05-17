@@ -1,3 +1,4 @@
+from .compiler import CompileError, CompiledPlugin, CompiledWorkflowPlan, compile_workflow
 from .loader import ConsistencyError, load
 from .model import (
     ATHENA_MARKETPLACE_TOP,
@@ -23,6 +24,9 @@ __all__ = [
     "ATHENA_MARKETPLACE_TOP",
     "CLAUDE_MARKETPLACE_TOP",
     "CODEX_MARKETPLACE_TOP",
+    "CompileError",
+    "CompiledPlugin",
+    "CompiledWorkflowPlan",
     "ConsistencyError",
     "MarketplaceModel",
     "Plugin",
@@ -31,6 +35,7 @@ __all__ = [
     "bump_part",
     "bump_plugin",
     "bump_workflow",
+    "compile_workflow",
     "diff_registries",
     "load",
     "write_all",

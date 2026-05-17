@@ -59,6 +59,7 @@ class TestPluginManifestProjections(unittest.TestCase):
     def test_codex_manifest_includes_skills_and_interface(self):
         out = render_plugin_codex_manifest(make_plugin())
         self.assertEqual(out["skills"], "./skills/")
+        self.assertEqual(out["category"], "testing")
         self.assertIn("interface", out)
         self.assertEqual(out["interface"]["displayName"], "Example")
 

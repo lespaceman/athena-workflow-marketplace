@@ -250,7 +250,7 @@ fall back to the shared `skills/` version.
 Runtimes consuming this repository SHOULD:
 
 1. Resolve the shared workflow manifest.
-2. Resolve referenced plugins once.
+2. Resolve referenced Plugin Pins once.
 3. Collect shared plugin assets.
 4. Collect runtime-specific plugin overlay assets for the active runtime.
 5. Compile a runtime-owned workflow plan from those inputs.
@@ -265,6 +265,15 @@ That compiled plan MAY include:
 - runtime-specific routing hints
 
 Runtimes SHOULD NOT perform marketplace/plugin resolution again on every turn.
+
+In this repository, `scripts/marketplace/compiler.py` is the reference module
+for this projection. Use:
+
+```shell
+scripts/marketplace-cli compile-workflow playwright-automation --runtime codex
+```
+
+to inspect the Compiled Workflow Plan that callers should consume.
 
 ## Environment And Script Portability
 

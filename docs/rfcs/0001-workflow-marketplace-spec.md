@@ -109,10 +109,22 @@ Example:
   "promptTemplate": "{input}",
   "workflowFile": "workflow.md",
   "plugins": [
-    "agent-web-interface@lespaceman/athena-workflow-marketplace",
-    "app-exploration@lespaceman/athena-workflow-marketplace",
-    "test-analysis@lespaceman/athena-workflow-marketplace",
-    "playwright-automation@lespaceman/athena-workflow-marketplace"
+    {
+      "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
+      "version": "1.0.12"
+    },
+    {
+      "ref": "app-exploration@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.8"
+    },
+    {
+      "ref": "test-analysis@lespaceman/athena-workflow-marketplace",
+      "version": "0.2.9"
+    },
+    {
+      "ref": "playwright-automation@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.7"
+    }
   ],
   "loop": {
     "enabled": true,
@@ -128,7 +140,7 @@ Example:
 - `description` (optional, string): Human-readable summary.
 - `promptTemplate` (required, string): User input mapping template. MUST include `{input}`.
 - `workflowFile` (optional, string): Relative path to the workflow-specific orchestration doc, appended by the runtime to its workflow/system prompt.
-- `plugins` (required, array): Plugin refs/paths consumable by the runtime.
+- `plugins` (required, array): Plugin Pin objects with `ref` and `version`. `ref` uses `<plugin-name>@<owner>/<repo>`; `version` is the fixed Plugin version the Workflow was authored against.
 - `loop` (optional, object): Loop execution behavior.
 - `isolation` (optional, string): Runtime isolation preference.
 
@@ -144,7 +156,7 @@ If `loop.enabled` is true:
 Recommended per-iteration lifecycle:
 
 1. Load workflow definition.
-2. Resolve and load required plugins.
+2. Compile the Workflow for the active Runtime, resolving Plugin Pins and runtime overlays into a Compiled Workflow Plan.
 3. Restore any runtime-managed session state needed for the next iteration.
 4. Execute next actionable step.
 5. Persist step status and logs.

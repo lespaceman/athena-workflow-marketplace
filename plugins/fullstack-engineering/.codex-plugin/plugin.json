@@ -11,5 +11,6 @@
     "shortDescription": "On-demand companion to the fullstack-engineering Workflow",
     "developerName": "Athenaflow",
     "category": "Engineering"
-  }
+  },
+  "category": "engineering"
 }

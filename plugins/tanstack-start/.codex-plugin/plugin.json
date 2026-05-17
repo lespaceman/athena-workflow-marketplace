@@ -11,5 +11,6 @@
     "shortDescription": "Guidance for building full-stack React apps with TanStack Start",
     "developerName": "Athenaflow",
     "category": "Developer Tools"
-  }
+  },
+  "category": "developer-tools"
 }

@@ -36,6 +36,10 @@ _Avoid_: common field, identity field.
 One of the three external CLIs that consume this repo: Claude Code, Codex, athena-cli. Each consumes a different Marketplace Registry.
 _Avoid_: client, host, target.
 
+**Compiled Workflow Plan**:
+A runtime-owned projection of one Workflow plus its Plugin Pins, resolved Plugin roots, Runtime overlay manifests, Skill roots, MCP config, loop settings, and validation findings. Produced by `scripts/marketplace/compiler.py`.
+_Avoid_: resolved workflow (too vague), execution plan (too broad).
+
 ## Relationships
 
 - A **Plugin** has exactly two **Per-plugin Manifests** (Claude and Codex) and appears in two **Marketplace Registries** (Claude and Codex).
@@ -44,6 +48,7 @@ _Avoid_: client, host, target.
 - A **Workflow** appears in exactly one **Marketplace Registry** (Athena).
 - A **Shared Field** must agree across a Plugin's two Per-plugin Manifests and its two Marketplace Registry entries — four locations.
 - Each **Runtime** consumes exactly one **Marketplace Registry**.
+- A **Runtime** consumes a **Compiled Workflow Plan** rather than re-resolving a Workflow's Plugin Pins on every turn.
 
 ## Example dialogue
 

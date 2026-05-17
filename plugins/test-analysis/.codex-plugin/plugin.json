@@ -11,5 +11,6 @@
     "shortDescription": "Plan coverage, generate test specs, and review them against real evidence",
     "developerName": "Athenaflow",
     "category": "Testing"
-  }
+  },
+  "category": "testing"
 }

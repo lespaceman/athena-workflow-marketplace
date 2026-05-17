@@ -11,5 +11,6 @@
     "shortDescription": "Automation patterns for popular websites",
     "developerName": "Athenaflow",
     "category": "Browser Automation"
-  }
+  },
+  "category": "browser-automation"
 }

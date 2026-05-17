@@ -39,6 +39,7 @@ def make_repo(root: Path) -> None:
             "name": "alpha",
             "version": "0.1.0",
             "description": "first plugin",
+            "category": "testing",
             "author": {"name": "Athenaflow"},
             "skills": "./skills/",
             "interface": {
@@ -56,6 +57,7 @@ def make_repo(root: Path) -> None:
             "name": "alpha-flow",
             "description": "uses alpha",
             "version": "0.0.1",
+            "promptTemplate": "{input}",
             "plugins": [
                 {"ref": "alpha@lespaceman/athena-workflow-marketplace", "version": "0.1.0"},
             ],
@@ -96,6 +98,42 @@ class TestLoaderConsistency(unittest.TestCase):
             cx.write_text(json.dumps(data, indent=2) + "\n")
             with self.assertRaises(ConsistencyError):
                 load(root)
+
+    def test_load_errors_on_category_drift(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_repo(root)
+            cx = root / "plugins" / "alpha" / ".codex-plugin" / "plugin.json"
+            data = json.loads(cx.read_text())
+            data["category"] = "developer-tools"
+            cx.write_text(json.dumps(data, indent=2) + "\n")
+            with self.assertRaises(ConsistencyError) as cm:
+                load(root)
+            self.assertIn("category", str(cm.exception))
+
+    def test_load_errors_on_string_plugin_pin(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_repo(root)
+            workflow = root / "workflows" / "alpha-flow" / "workflow.json"
+            data = json.loads(workflow.read_text())
+            data["plugins"] = ["alpha@lespaceman/athena-workflow-marketplace"]
+            workflow.write_text(json.dumps(data, indent=2) + "\n")
+            with self.assertRaises(ConsistencyError) as cm:
+                load(root)
+            self.assertIn("Plugin Pin objects", str(cm.exception))
+
+    def test_load_errors_when_prompt_template_does_not_accept_input(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_repo(root)
+            workflow = root / "workflows" / "alpha-flow" / "workflow.json"
+            data = json.loads(workflow.read_text())
+            data["promptTemplate"] = "static prompt"
+            workflow.write_text(json.dumps(data, indent=2) + "\n")
+            with self.assertRaises(ConsistencyError) as cm:
+                load(root)
+            self.assertIn("{input}", str(cm.exception))
 
 
 class TestBumpAndCascade(unittest.TestCase):
