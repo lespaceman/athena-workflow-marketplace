@@ -267,6 +267,22 @@
         "phase-gates"
       ],
       "category": "engineering"
+    },
+    {
+      "name": "linear",
+      "source": "./plugins/linear",
+      "description": "Use Linear issues, projects, and workflow state from engineering agents via the official Linear MCP server",
+      "version": "0.1.0",
+      "keywords": [
+        "linear",
+        "mcp",
+        "issues",
+        "projects",
+        "planning",
+        "engineering"
+      ],
+      "category": "engineering",
+      "license": "MIT"
     }
   ]
 }

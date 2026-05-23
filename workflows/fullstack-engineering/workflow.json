@@ -28,6 +28,10 @@
       "version": "0.1.2"
     },
     {
+      "ref": "linear@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.0"
+    },
+    {
       "ref": "matt-pocock-skills@lespaceman/athena-workflow-marketplace",
       "version": "0.1.3"
     },

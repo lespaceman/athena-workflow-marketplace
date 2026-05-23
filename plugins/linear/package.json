@@ -1,0 +1,25 @@
+{
+  "name": "@athenaflow/plugin-linear",
+  "version": "0.1.0",
+  "description": "Linear MCP and agent workflow guidance for engineering issue tracking.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/linear"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    ".mcp.json",
+    "skills/",
+    "dist/"
+  ],
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

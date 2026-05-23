@@ -1,0 +1,17 @@
+{
+  "name": "linear",
+  "version": "0.1.0",
+  "description": "Use Linear issues, projects, and workflow state from engineering agents via the official Linear MCP server",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Linear",
+    "shortDescription": "Manage issue context, project planning, and delivery updates in Linear",
+    "developerName": "Athenaflow",
+    "category": "Engineering"
+  },
+  "category": "engineering"
+}

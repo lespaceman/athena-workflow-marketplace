@@ -1,0 +1,19 @@
+{
+  "name": "linear",
+  "description": "Use Linear issues, projects, and workflow state from engineering agents via the official Linear MCP server",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "repository": "https://github.com/lespaceman/athena-workflow-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "linear",
+    "mcp",
+    "issues",
+    "projects",
+    "planning",
+    "engineering"
+  ],
+  "category": "engineering"
+}

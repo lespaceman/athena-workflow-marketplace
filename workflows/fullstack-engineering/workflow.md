@@ -15,6 +15,7 @@ Plugin surfaces, while `workflow.json` remains the source of truth for Plugin Pi
 |--------|------------------|
 | `matt-pocock-skills` | `setup-matt-pocock-skills`, `triage`, `grill-with-docs`, `prototype`, `to-prd`, `to-issues`, `zoom-out`, `tdd`, `diagnose`, `improve-codebase-architecture` |
 | `frontend-design` | `frontend-design` |
+| `linear` | `linear` |
 | `shadcn` | `shadcn-ui` |
 | `tanstack-start` | `tanstack-start-guide` and focused TanStack routing/start skills when applicable |
 | `agent-web-interface` | `agent-web-interface-guide` |
@@ -29,6 +30,7 @@ routing, artifacts, gates, and handoffs.
 |----------|-------|
 | Repo foundation and local conventions | `setup-matt-pocock-skills` |
 | Incoming issue or request triage | `triage` |
+| Linear issue, project, backlog, or delivery state | `linear` |
 | Scope, constraints, domain language, and ADR alignment | `grill-with-docs` |
 | Disposable design probe | `prototype` |
 | PRD from aligned context | `to-prd` |
@@ -56,6 +58,7 @@ Use the Workflow to catch the common agent failure modes early:
 | Horizontal implementation | Many tests or files are changing before one slice is green | return to one tracer bullet via `tdd` |
 | Architecture entropy | Understanding requires bouncing across shallow modules or tangled seams | `improve-codebase-architecture` |
 | Product guessing | UI, route, selector, role, or behavior assumptions lack evidence | `agent-web-interface-guide` or `capture-feature-evidence` |
+| Tracker drift | Linear status, priority, assignee, project, or blocker relation no longer matches reality | `linear` before planning or delivery |
 
 ## Task Tracker Discipline
 
@@ -83,6 +86,7 @@ Use one slug for the run: `agent/<slug>` for branches and `.scratch/<slug>/` for
 | `e2e-plan/exploration-report.md` or `e2e-plan/exploration/*.md` | `capture-feature-evidence` | Required QA or browser evidence |
 
 If the repo has no issue tracker, use local files. Do not block on missing GitHub or GitLab unless the user explicitly required issue creation.
+When Linear is available, load `linear` before reading or writing issue tracker state. Use Linear for issue/project context and delivery updates, while keeping local artifacts as the durable working notes for the current agent run.
 
 ## Orientation Steps
 
