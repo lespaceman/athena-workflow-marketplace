@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-linear",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Linear MCP and agent workflow guidance for engineering issue tracking.",
   "license": "MIT",
   "repository": {
