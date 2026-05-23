@@ -16,8 +16,6 @@ Plugin surfaces, while `workflow.json` remains the source of truth for Plugin Pi
 | `matt-pocock-skills` | `setup-matt-pocock-skills`, `triage`, `grill-with-docs`, `prototype`, `to-prd`, `to-issues`, `zoom-out`, `tdd`, `diagnose`, `improve-codebase-architecture` |
 | `frontend-design` | `frontend-design` |
 | `linear` | `linear` |
-| `shadcn` | `shadcn-ui` |
-| `tanstack-start` | `tanstack-start-guide` and focused TanStack routing/start skills when applicable |
 | `agent-web-interface` | `agent-web-interface-guide` |
 | `app-exploration` | `map-feature-scope`, `capture-feature-evidence` |
 
@@ -40,8 +38,6 @@ routing, artifacts, gates, and handoffs.
 | Hard bug, flake, or performance regression | `diagnose` |
 | Architecture drift or shallow module cluster | `improve-codebase-architecture` |
 | User-visible UI design | `frontend-design` |
-| shadcn/ui primitives, theming, or registry work | `shadcn-ui` |
-| TanStack Start or Router work | `tanstack-start-guide` |
 | Browser verification | `agent-web-interface-guide` |
 | Broad manual QA or product evidence | `map-feature-scope`, `capture-feature-evidence` |
 
@@ -126,8 +122,8 @@ Choose the first matching phase:
 | Gates passed | 8. Deliver |
 
 Treat the sequence as a dependency graph, not a rigid script. Direct bug reports route from Align
-into `diagnose`; unfamiliar areas route through `zoom-out`; UI work loads UI support Skills during
-Align, not after implementation has already drifted.
+into `diagnose`; unfamiliar areas route through `zoom-out`; user-visible work records design intent
+during Align, not after implementation has already drifted.
 
 Human checkpoints are required when the Workflow changes intent: after alignment questions expose a
 scope decision, after hypotheses are ranked for a hard bug, before accepting an architecture

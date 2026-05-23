@@ -82,17 +82,9 @@ These cover the inner loops the workflow leans on. Used under their original ter
 
 Skills with no Pocock equivalent (worktree setup, between-task code review, finishing) are run as manual procedures defined per phase above.
 
-### `tanstack-start` — frontend/full-stack framework knowledge
-
-Use whenever the task involves TanStack Start, TanStack Router, server functions, server routes, SSR, RSC, or migrating from Next.js. Core skill: `tanstack-start:tanstack-start-guide`. Domain-specific skills under `skills/upstream/@tanstack/...` cover routing, Start internals, the router plugin, virtual file routes, and React Server Components. Consult these before hand-rolling routing or data patterns.
-
 ### `frontend-design` — UI quality and product-facing design
 
 Use whenever the task includes a user-visible screen, flow, layout, interaction pattern, or visual state. Load before making UI decisions so the implementation has deliberate hierarchy, responsive behavior, accessibility, and domain-appropriate visual polish instead of framework-default screens.
-
-### `shadcn` — component library and design system
-
-Use whenever UI work needs accessible primitives, form patterns, theming, or registry components. Skill: `shadcn:shadcn-ui`. Prefer installing from the shadcn registry over hand-writing button/input/dialog primitives.
 
 ### `agent-web-interface` — live browser interaction (mandatory test layer)
 
