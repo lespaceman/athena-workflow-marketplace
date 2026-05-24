@@ -1,10 +1,10 @@
 # Notice
 
-This plugin bundles a subset of skills authored by **Matt Pocock**, originally published at:
+This plugin bundles non-deprecated skills authored by **Matt Pocock**, originally published at:
 
 https://github.com/mattpocock/skills
 
-The ten engineering skills under `skills/` (`diagnose`, `grill-with-docs`, `triage`, `improve-codebase-architecture`, `setup-matt-pocock-skills`, `tdd`, `to-issues`, `to-prd`, `zoom-out`, `prototype`) are © Matt Pocock and are redistributed here under the terms of their upstream license. Refer to the upstream repository for the canonical source and license terms.
+The skills under `skills/engineering/` and `skills/productivity/` are © Matt Pocock and are redistributed here under the terms of their upstream license. Deprecated, in-progress, personal, and misc upstream skills are not bundled. Refer to the upstream repository for the canonical source and license terms.
 
 The wrapping Plugin scaffolding (manifests, marketplace registration, this notice) is © Athenaflow and contributed under the same terms as the rest of this marketplace repo.
 

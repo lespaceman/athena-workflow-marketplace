@@ -1,4 +1,0 @@
-interface:
-  display_name: "Diagnose"
-  short_description: "Disciplined diagnosis loop for hard bugs and performance regressions"
-  default_prompt: "Diagnose this bug: reproduce, minimise, hypothesise, instrument, fix, regression-test."

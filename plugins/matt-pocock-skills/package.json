@@ -1,7 +1,7 @@
 {
   "name": "@athenaflow/plugin-matt-pocock-skills",
   "version": "0.1.3",
-  "description": "Bundled engineering skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills) used by the fullstack-engineering workflow.",
+  "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills) used by workflow packages.",
   "license": "SEE LICENSE IN NOTICE.md",
   "repository": {
     "type": "git",

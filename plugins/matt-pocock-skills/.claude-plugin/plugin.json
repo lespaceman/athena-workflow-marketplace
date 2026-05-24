@@ -1,6 +1,6 @@
 {
   "name": "matt-pocock-skills",
-  "description": "Bundled engineering skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): diagnose, grill-with-docs, triage, improve-codebase-architecture, setup-matt-pocock-skills, tdd, to-issues, to-prd, zoom-out, prototype.",
+  "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): engineering skills plus caveman, grill-me, handoff, and write-a-skill.",
   "version": "0.1.3",
   "author": {
     "name": "Matt Pocock",
@@ -16,6 +16,10 @@
     "issues",
     "architecture",
     "prototype",
+    "caveman",
+    "grill-me",
+    "handoff",
+    "write-a-skill",
     "matt-pocock",
     "engineering"
   ],

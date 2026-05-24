@@ -1,252 +1,598 @@
 # Full-Stack Engineering Workflow
 
-Ship engineering changes through alignment, implementation, validation, review, and delivery without letting the agent guess. Each phase consumes an artifact, produces an artifact, and has a gate before the next phase.
+Carry a change from user intent to verified delivery. This Workflow is a state machine with evidence gates. It orchestrates specialist Skills; it does not teach their internal methods.
 
-This Workflow is an orchestrator, not a replacement for the Skills it routes to. Keep the user in
-control of ambiguous decisions, keep Skills small and composable, and move through the work by
-observable state rather than confidence.
+## Operating Principle
+
+Build only from evidence. If evidence is missing, gather it. If it cannot be gathered, stop and name the missing evidence.
+
+Do not jump phases. A phase is complete only when its artifact exists and its gate passes.
+
+This is a dependency graph, not a script. Skip a phase only when its artifact already exists and is current.
 
 ## Plugins
 
-This workflow is authored against the Plugins pinned in `workflow.json`. The markdown lists the
-Plugin surfaces, while `workflow.json` remains the source of truth for Plugin Pins and versions.
+This Workflow requires the following Plugin surfaces. Treat this table as the agent-facing contract. If any required Plugin or Skill is unavailable at runtime, stop and report the missing surface instead of continuing from memory.
 
-| Plugin | Skills Used Here |
-|--------|------------------|
-| `matt-pocock-skills` | `setup-matt-pocock-skills`, `triage`, `grill-with-docs`, `prototype`, `to-prd`, `to-issues`, `zoom-out`, `tdd`, `diagnose`, `improve-codebase-architecture` |
-| `frontend-design` | `frontend-design` |
+| Plugin | Skills |
+|--------|--------|
+| `matt-pocock-skills` | `setup-matt-pocock-skills`, `triage`, `grill-with-docs`, `grill-me`, `prototype`, `to-prd`, `to-issues`, `zoom-out`, `tdd`, `diagnose`, `improve-codebase-architecture`, `handoff` |
 | `linear` | `linear` |
+| `frontend-design` | `frontend-design` |
+| `shadcn` | `shadcn-ui` |
 | `agent-web-interface` | `agent-web-interface-guide` |
 | `app-exploration` | `map-feature-scope`, `capture-feature-evidence` |
+| `exploratory-testing` | `exploratory-test-writer` |
+| `test-analysis` | `plan-test-coverage`, `generate-test-cases`, `review-test-cases` |
+| `playwright-automation` | `analyze-test-codebase`, `add-playwright-tests`, `write-test-code`, `review-test-code`, `fix-flaky-tests` |
+| `smoke-testing` | `define-smoke-scope` |
+| `regression-testing` | `define-regression-scope` |
 
-## Skills
+## Skill Routing
 
-Load the relevant Skill before each activity. Skills own the detailed method; this Workflow owns
-routing, artifacts, gates, and handoffs.
+Load the owning Skill before doing the activity.
+
+Hard rule: a phase action that names a Skill may not start until that Skill has been loaded for the current turn or delegated subtask. If the Skill is unavailable, stop and report the missing surface. Do not substitute memory, old summaries, or generic reasoning for a missing Skill.
+
+Record loaded Skills in the phase artifact when the phase delegates work to a Skill.
 
 | Activity | Skill |
 |----------|-------|
-| Repo foundation and local conventions | `setup-matt-pocock-skills` |
-| Incoming issue or request triage | `triage` |
-| Linear issue, project, backlog, or delivery state | `linear` |
-| Scope, constraints, domain language, and ADR alignment | `grill-with-docs` |
-| Disposable design probe | `prototype` |
-| PRD from aligned context | `to-prd` |
-| Vertical-slice task breakdown | `to-issues` |
-| Unfamiliar codebase area | `zoom-out` |
-| Feature implementation or bug fix with behavior tests | `tdd` |
-| Hard bug, flake, or performance regression | `diagnose` |
-| Architecture drift or shallow module cluster | `improve-codebase-architecture` |
-| User-visible UI design | `frontend-design` |
-| Browser verification | `agent-web-interface-guide` |
-| Broad manual QA or product evidence | `map-feature-scope`, `capture-feature-evidence` |
+| Repo foundation | `setup-matt-pocock-skills` |
+| Linear tracker work | `linear` |
+| Issue triage | `triage` |
+| Domain alignment | `grill-with-docs` |
+| Non-repo alignment | `grill-me` |
+| Unknown code area | `zoom-out` |
+| Bug or performance diagnosis | `diagnose` |
+| Design probe | `prototype` |
+| PRD | `to-prd` |
+| Vertical issue breakdown | `to-issues` |
+| Architecture deepening | `improve-codebase-architecture` |
+| Behavior implementation | `tdd` |
+| UI design | `frontend-design` |
+| shadcn component work | `shadcn-ui` |
+| Browser interaction | `agent-web-interface-guide` |
+| Feature decomposition | `map-feature-scope` |
+| Product evidence | `capture-feature-evidence` |
+| Exploratory test charter | `exploratory-test-writer` |
+| Coverage plan | `plan-test-coverage` |
+| TC-ID specs | `generate-test-cases` |
+| TC-ID spec review | `review-test-cases` |
+| Playwright analysis | `analyze-test-codebase` |
+| Playwright authoring | `add-playwright-tests` or `write-test-code` |
+| Playwright code review | `review-test-code` |
+| Playwright flake repair | `fix-flaky-tests` |
+| Smoke scope | `define-smoke-scope` |
+| Regression scope | `define-regression-scope` |
+| Handoff | `handoff` |
 
-## Failure-Mode Routing
+## Skill Loading Gate
 
-Use the Workflow to catch the common agent failure modes early:
+Before any phase action:
 
-| Failure Mode | Symptom | Route |
-|--------------|---------|-------|
-| Misalignment | The request is broad, underspecified, or likely to surprise the user | `grill-with-docs` before planning |
-| Missing domain language | The agent uses vague words, local jargon is unclear, or names drift | `grill-with-docs`; update `CONTEXT.md` or ADRs inline |
-| Weak feedback loop | The agent cannot prove behavior quickly | strengthen baseline, use `tdd`, browser evidence, or `diagnose` |
-| Debugging by inspection | A bug is being "fixed" before it is reproduced | `diagnose` and build a reproducible loop first |
-| Horizontal implementation | Many tests or files are changing before one slice is green | return to one tracer bullet via `tdd` |
-| Architecture entropy | Understanding requires bouncing across shallow modules or tangled seams | `improve-codebase-architecture` |
-| Product guessing | UI, route, selector, role, or behavior assumptions lack evidence | `agent-web-interface-guide` or `capture-feature-evidence` |
-| Tracker drift | Linear status, priority, assignee, project, or blocker relation no longer matches reality | `linear` before planning or delivery |
+- Identify each Skill required by the action.
+- Load each required Skill.
+- Confirm the loaded Skill matches the activity.
+- Record the loaded Skill name in the phase artifact.
+
+Gate:
+
+- Continue only when every required Skill for the next action is loaded.
+
+Stop if:
+
+- A required Skill is unavailable.
+- A required Plugin surface is unavailable.
+- The agent cannot determine which Skill owns the activity.
+
+Anti-pattern:
+
+- Do not perform specialist work from memory.
+- Do not skip Skill loading because the workflow already lists the Skill.
+- Do not treat a previous session's loaded Skill as loaded for the current action.
 
 ## Task Tracker Discipline
 
-Progress must survive resumes, context resets, subagents, and missing task tools.
+At every session start:
 
-On every session start:
+- Read tracker, issue, handoff, or prior execution notes.
+- Reconcile done, pending, blocked, and unknown work.
+- Record current phase before changing files.
 
-1. Read the current tracker or `.scratch/<slug>/` artifacts before acting.
-2. Reconcile completed, in-flight, blocked, and next work.
-3. If a task tool exists, update it. Otherwise write the same state into the active artifact.
-4. Surface mismatches before choosing the next phase.
+If Linear is source of truth, load `linear` before reading or writing tracker state.
 
-Use one slug for the run: `agent/<slug>` for branches and `.scratch/<slug>/` for local artifacts.
+Fallback rule:
 
-## Artifacts
+- Prefer a visible tracker, active task tool, or handoff artifact.
+- If none exists, maintain a session execution note in the conversation.
+- Do not write repo files for tracking unless the user asks, the repo convention authorizes it, or an existing workflow artifact already owns that path.
 
-| Artifact | Owner | Required When |
-|----------|-------|---------------|
-| `.scratch/<slug>/alignment.md` or issue comment | `grill-with-docs` | Always |
-| `.scratch/<slug>/prd.md` or issue | `to-prd` | Substantial or risky work |
-| `.scratch/<slug>/tasks.md` or issues | `to-issues` | More than one independently verifiable slice |
-| `.scratch/<slug>/baseline.md` | Workflow | Always before code |
-| `.scratch/<slug>/review.md` | Workflow or fresh reviewer | `standard` and `full`; optional for `light` |
-| `e2e-plan/feature-map.md` | `map-feature-scope` | Broad user-visible QA |
-| `e2e-plan/exploration-report.md` or `e2e-plan/exploration/*.md` | `capture-feature-evidence` | Required QA or browser evidence |
+Minimum execution note fields:
 
-If the repo has no issue tracker, use local files. Do not block on missing GitHub or GitLab unless the user explicitly required issue creation.
-When Linear is available, load `linear` before reading or writing issue tracker state. Use Linear for issue/project context and delivery updates, while keeping local artifacts as the durable working notes for the current agent run.
+- Current phase.
+- Goal.
+- Loaded Skills.
+- Completed artifacts.
+- Pending artifacts.
+- Blocker, or `None`.
+- Next action.
+- Last verification result, or `Not run`.
 
-## Orientation Steps
+## State Graph
 
-First, run the foundation check:
+Default path:
 
-```bash
-test -f CONTEXT.md && test -d docs/adr && test -s docs/agents/triage-labels.md
-```
+**Intake -> Orientation -> Problem Definition -> Design -> Implementation Plan -> Build -> Verification -> Review -> Delivery -> Handoff / Postmortem**
 
-If it fails, enter Phase 0. If the repo intentionally uses different paths, document those paths in
-the alignment artifact before treating foundation as present.
+Valid shortcuts:
 
-Classify scale once during alignment:
+- Read-only request: stop after the first phase that answers it.
+- Tiny local edit: Intake -> Orientation -> Build -> Verification -> Delivery.
+- Confirmed bug: Intake -> Orientation -> Problem Definition with `diagnose`.
+- User-visible UI: must pass Design with `frontend-design` and Verification with browser evidence.
+- Broad product testing: must pass product evidence -> coverage plan -> TC specs -> spec review before automation.
+- Production-sensitive work: no shortcuts.
 
-- `light` - one bounded change; PRD, issues, and QA may be skipped with reasons.
-- `standard` - normal feature, bug fix, or refactor. Default when unsure.
-- `full` - risky, architectural, cross-module, multi-route, role-sensitive, auth/payment/security, or broad user-visible work. Requires PRD/issues and QA.
+Shortcut rule: if a skipped phase owns evidence required by a later gate, the shortcut is invalid.
 
-## Workflow Sequence
+## Phase 1: Intake
 
-Default progression:
+Goal: choose the workflow path.
 
-**foundation → triage when needed → align → plan when needed → prepare → execute one slice → review → QA when needed → deliver**
+Enter with:
 
-Choose the first matching phase:
+- User request, issue, or handoff.
 
-| State | Phase |
-|---|---|
-| Foundation missing or stale | 0. Foundation |
-| Untriaged issue/backlog/report | 1. Triage |
-| New or unclear work | 2. Align |
-| Alignment exists, but needed PRD/tasks are missing | 3. Plan |
-| Plan exists, but baseline is missing | 4. Prepare |
-| Tasks remain | 5. Execute |
-| Tasks done, but review missing | 6. Review |
-| Review done, and QA is required | 7. QA |
-| Gates passed | 8. Deliver |
+Evidence required:
 
-Treat the sequence as a dependency graph, not a rigid script. Direct bug reports route from Align
-into `diagnose`; unfamiliar areas route through `zoom-out`; user-visible work records design intent
-during Align, not after implementation has already drifted.
+- Target repo or product surface is known.
 
-Human checkpoints are required when the Workflow changes intent: after alignment questions expose a
-scope decision, after hypotheses are ranked for a hard bug, before accepting an architecture
-deepening path, and before push/publish/merge.
+Action:
 
-## Phase Gates
+- State outcome.
+- Classify task: bug, feature, refactor, UI, test, research, delivery, incident, production-sensitive.
+- Identify constraints.
+- Use `linear` or `triage` when tracker state is part of the task.
 
-### 0. Foundation
+Artifact:
 
-Run `setup-matt-pocock-skills` when foundation files are missing or stale.
+- Goal statement.
+- Task type.
+- Constraints.
+- Current phase.
 
-Gate: foundation files exist, or alternate repo paths are documented.
+Gate:
 
-### 1. Triage
+- Continue only when the outcome is specific enough to verify.
 
-Run `triage` only for incoming, unevaluated work.
+Stop if:
 
-Gate: request is ready for agent, ready for human, blocked on info, duplicate, out of scope, or rejected.
+- Goals conflict.
+- Target surface is unknown.
+- Intent cannot be inferred safely.
 
-### 2. Align
+Anti-pattern:
 
-Run `grill-with-docs`. Use `prototype` only when a disposable design probe would answer a real decision.
+- Do not turn ambiguity into a private plan.
 
-Alignment artifact must state:
+## Phase 2: Orientation
 
-1. Scale: `light`, `standard`, or `full`.
-2. Goal and non-goals.
-3. Scope: expected files, routes, modules, or surfaces.
-4. Verification: tests, browser paths, edge cases, and baseline command.
-5. QA mode: `full`, `focused`, or `skip`, with reason.
-6. Domain updates: `CONTEXT.md` / ADR paths changed, or explicitly unchanged.
+Goal: know the system before changing it.
 
-Gate: alignment artifact exists. No production code in this phase.
+Enter with:
 
-### 3. Plan
+- Intake artifact.
 
-Run `to-prd` for substantial work. Run `to-issues` when more than one independently verifiable slice is needed.
+Evidence required:
 
-Each task must name files, behavior, first test, browser verification, and done criteria.
+- Project instructions and relevant tracker context have been read when present.
 
-Tasks must be vertical tracer bullets: each slice should produce one observable behavior change that
-can be tested, reviewed, and delivered independently. Do not create tasks that split "all tests",
-"all implementation", and "all cleanup" into separate horizontal phases.
+Action:
 
-Gate: PRD/tasks exist, or the alignment artifact explains why they are skipped.
+- Inspect structure, conventions, commands, relevant modules, tests, domain docs, and ADRs.
+- Use `setup-matt-pocock-skills` if repo workflow foundation is missing.
+- Use `zoom-out` for unfamiliar code.
 
-### 4. Prepare
+Artifact:
 
-Create a clean work surface according to repo convention.
+- Orientation note: relevant surfaces, commands, conventions, risks, open questions.
 
-- `light` with clean worktree: stay put; create branch `agent/<slug>` when useful.
-- `standard` or `full`: prefer a sibling worktree `../<repo>-<slug>` on branch `agent/<slug>`.
+Gate:
 
-Run the baseline command named in alignment/tasks and record command/result in `.scratch/<slug>/baseline.md`.
+- Continue only when likely files, test surfaces, commands, and risks can be named.
 
-Gate: baseline is known. If baseline is red before your changes, stop, diagnose, or report blocker.
+Stop if:
 
-### 5. Execute
+- Required context is inaccessible.
+- No safe first surface can be identified.
 
-Work one vertical slice at a time.
+Anti-pattern:
 
-- Unknown area -> `zoom-out`.
-- Behavior change -> `tdd`.
-- Bug, flake, or performance surprise -> `diagnose`.
-- UI/browser-observable change -> `agent-web-interface-guide` with evidence recorded.
-- Architecture friction -> pause slice and run `improve-codebase-architecture`.
+- Do not implement from filename guesses.
 
-Implementation rule: one failing behavior test, minimal code to pass, refactor while green. Do not
-write all tests first and all code second. If a slice cannot get a meaningful test, write a
-characterization harness or record the missing seam as a review finding before proceeding.
+## Phase 3: Problem Definition
 
-Gate per slice: relevant tests green, evidence recorded or explicitly not applicable, no critical finding open.
+Goal: convert intent into observable behavior.
 
-### 6. Review
+Enter with:
 
-Review before the next slice when risk is high, otherwise before QA/delivery.
+- Orientation artifact.
 
-- `light`: self-review is acceptable.
-- `standard`: record self-review in `.scratch/<slug>/review.md`.
-- `full`: use a fresh subagent diff review when available; otherwise record that no fresh reviewer was available.
+Evidence required:
 
-Review must cover scope, tests, domain language, browser/QA evidence, risks, and findings.
+- Current behavior, desired behavior, or investigation target is known.
 
-Gate: review recorded; critical findings closed. Architecture findings route to `improve-codebase-architecture`.
+Action:
 
-### 7. QA
+- Define current behavior.
+- Define desired behavior.
+- Identify affected users, roles, systems, or callers.
+- Define acceptance criteria.
+- Use `grill-with-docs` or `grill-me` for alignment.
+- Use `diagnose` for bugs.
+- Use `map-feature-scope` and `capture-feature-evidence` when product behavior must be observed.
 
-Run only for `QA mode: full` or `focused`.
+Artifact:
 
-- `full`: use `map-feature-scope` when the surface spans routes, roles, overlays, tabs, or shared state; then run `capture-feature-evidence`.
-- `focused`: run `capture-feature-evidence` on the changed path plus one adjacent path. Use mapping only if the surface is unclear.
-- `skip`: no QA, but the alignment artifact must say why.
+- Acceptance criteria.
+- Reproduction loop or feature slice.
+- Evidence gaps.
 
-Capture golden path, named edge cases, error/empty states, role variation, adjacent regressions, and blockers.
+Gate:
 
-Gate: QA evidence exists, or skip reason exists.
+- Continue only when success and failure are externally observable.
 
-### 8. Deliver
+Stop if:
 
-Before final response, confirm tests, completed tasks, review status, QA evidence or skip reason, and remaining risk.
+- Bug cannot be reproduced or characterized.
+- Feature lacks a smallest useful vertical slice.
+- Required product evidence is unavailable.
 
-Delivery policy:
+Anti-pattern:
 
-- User asked for PR: commit intentionally, push, open/update PR.
-- User asked for local-only: do not PR; report files and verification.
-- User asked to finish end-to-end and repo has local-merge convention: merge only after tests and QA pass.
-- No delivery preference: stop after verification and ask before push, publish, or merge.
+- Do not fix before reproducing.
+- Do not plan from imagined product behavior.
+
+## Phase 4: Design
+
+Goal: choose the smallest coherent approach.
+
+Enter with:
+
+- Problem Definition artifact.
+
+Evidence required:
+
+- Acceptance criteria.
+- Relevant project patterns.
+
+Action:
+
+- Select the approach.
+- Identify changed surfaces and risks.
+- Use `frontend-design` for UI.
+- Use `shadcn-ui` for shadcn work.
+- Use `prototype` only to answer a real design question.
+- Use `improve-codebase-architecture` only for concrete architecture friction.
+
+Artifact:
+
+- Design note.
+- Expected changed surfaces.
+- Risks and rollback or mitigation notes.
+
+Gate:
+
+- Continue only when the design fits project conventions or the exception is explicit.
+
+Stop if:
+
+- Design changes user intent.
+- Public contracts widen without a reason.
+- Production risk lacks mitigation.
+
+Anti-pattern:
+
+- Do not add architecture to make the task feel important.
+- Do not promote prototype code without review.
+
+## Phase 5: Implementation Plan
+
+Goal: split work into safe vertical steps.
+
+Enter with:
+
+- Design artifact.
+
+Evidence required:
+
+- First behavior and verification strategy are known.
+
+Action:
+
+- Create vertical steps.
+- Identify proof for each step.
+- Use `to-prd` for substantial or production-sensitive requirements.
+- Use `to-issues` for multi-slice work.
+- Use `exploratory-test-writer`, `plan-test-coverage`, `generate-test-cases`, and `review-test-cases` when testing artifacts are required.
+
+Artifact:
+
+- Stepwise plan.
+- Verification commands or evidence sources.
+- PRD, issues, coverage plan, and reviewed test specs when required.
+
+Gate:
+
+- Continue only when the first step is clear, small, and verifiable.
+
+Stop if:
+
+- Plan is horizontal.
+- Required test specs are unreviewed.
+- Coverage planning depends on missing product evidence.
+
+Anti-pattern:
+
+- Do not split by layers.
+- Do not write executable tests from unreviewed specs.
+
+## Phase 6: Build
+
+Goal: implement one complete vertical slice.
+
+Enter with:
+
+- Implementation Plan artifact.
+
+Evidence required:
+
+- Baseline command or baseline skip reason.
+- Active slice proof condition.
+
+Action:
+
+- Build only the active slice.
+- Use `tdd` for behavior changes.
+- Use `diagnose` for unexpected failures.
+- Use `frontend-design`, `shadcn-ui`, and `agent-web-interface-guide` for UI surfaces.
+- Use Playwright skills for Playwright automation.
+
+Artifact:
+
+- Code changes.
+- Test changes.
+- Notes for intentional deviations.
+
+Gate:
+
+- Continue only when the slice builds or failure is understood and recorded.
+
+Loop if:
+
+- Failure has a clear local fix path.
+
+Stop if:
+
+- Scope expands beyond accepted design.
+- Required verification is impossible.
+- New production-sensitive risk appears.
+
+Anti-pattern:
+
+- Do not clean up unrelated code.
+- Do not leave temporary debug output.
+- Do not widen interfaces without a recorded reason.
+
+## Phase 7: Verification
+
+Goal: prove the change works.
+
+Enter with:
+
+- Build artifact.
+
+Evidence required:
+
+- Acceptance criteria.
+- Verification plan.
+
+Action:
+
+- Run narrow verification first.
+- Expand verification when blast radius requires it.
+- Rerun bug reproduction loops.
+- Gather browser evidence for UI claims.
+- Run Playwright execution in the main agent.
+- Use `define-smoke-scope` and `define-regression-scope` for release confidence.
+
+Artifact:
+
+- Commands run.
+- Browser or product evidence.
+- Pass/fail result.
+- Remaining unverified risk.
+
+Gate:
+
+- Continue only when verification supports the acceptance criteria.
+
+Loop if:
+
+- Failure is understood and the next fix is evidence-based.
+
+Stop if:
+
+- Tests cannot run.
+- Environment is missing.
+- Results are ambiguous.
+- Product evidence contradicts implementation.
+
+Anti-pattern:
+
+- Do not treat a flaky pass as confidence.
+- Do not hide failed commands.
+
+## Phase 8: Review
+
+Goal: inspect the change as if reviewing a PR.
+
+Enter with:
+
+- Verification artifact.
+
+Evidence required:
+
+- Diff, tests, verification output, and known risks.
+
+Action:
+
+- Check acceptance criteria, regressions, brittle tests, coupling, cleanup, docs, migrations, config, and generated artifacts.
+- Use `review-test-cases` for spec review.
+- Use `review-test-code` for Playwright code review.
+- Use `improve-codebase-architecture` when review finds architecture friction.
+
+Artifact:
+
+- Review notes.
+- Resolved findings.
+- Residual risks.
+
+Gate:
+
+- Continue only when blocking findings are resolved or explicitly documented.
+
+Loop if:
+
+- Findings are local and fixable.
+
+Stop if:
+
+- Review exposes a scope change.
+- Review exposes missing evidence from an earlier phase.
+
+Anti-pattern:
+
+- Do not bury blockers as follow-up suggestions.
+
+## Phase 9: Delivery
+
+Goal: package the work for user handoff, PR, or merge.
+
+Enter with:
+
+- Review artifact.
+
+Evidence required:
+
+- Acceptance criteria satisfied or gaps explicit.
+- Verification and review artifacts exist.
+
+Action:
+
+- Summarize changes, verification, files or artifacts, risks, and follow-up.
+- Use `linear` for tracker updates.
+- Commit, push, open PR, publish, or merge only when requested or explicitly workflow-owned.
+
+Artifact:
+
+- Delivery summary.
+- Tracker update, commit, or PR reference when applicable.
+
+Gate:
+
+- Complete only when the user can understand what changed and how it was proven.
+
+Stop if:
+
+- External delivery lacks authority.
+- Production risk is unresolved.
+
+Anti-pattern:
+
+- Do not imply production readiness from local verification alone.
+
+## Phase 10: Handoff / Postmortem
+
+Goal: preserve state when work cannot finish or should teach the next run.
+
+Enter with:
+
+- Blocked, deferred, interrupted, or materially risky work.
+
+Evidence required:
+
+- Current phase and last completed artifact.
+
+Action:
+
+- Use `handoff`.
+- Record phase, completed work, blocker, next command, next decision, and evidence links.
+- Use `to-issues` or `linear` for durable follow-up.
+
+Artifact:
+
+- Handoff or postmortem note.
+
+Gate:
+
+- Complete only when another agent can resume without rediscovery.
+
+Stop if:
+
+- Sensitive information cannot be safely redacted.
+
+Anti-pattern:
+
+- Do not say "continue from here" without defining "here".
+
+## Reset Rules
+
+Return to an earlier phase when evidence invalidates the current path:
+
+- New scope -> Problem Definition.
+- New public contract -> Design.
+- Product behavior differs from assumption -> Problem Definition.
+- Test spec changes materially -> Implementation Plan.
+- Test code changes materially after review -> Review.
+- Verification reveals a different bug -> Problem Definition with `diagnose`.
+- Production risk appears -> Design and Verification become mandatory.
+
+## Completion Gate
+
+The Workflow is complete only when:
+
+- Acceptance criteria are satisfied.
+- Relevant verification has run.
+- Review has no unresolved blockers.
+- Temporary instrumentation is removed.
+- Product evidence exists for user-visible claims, or skip reason is recorded.
+- Test specs and test code passed required review gates when used.
+- Final summary states what changed, how it was verified, and what risk remains.
 
 ## Handoff Rules
 
-- If a required Skill or pinned Plugin is unavailable, stop and report the missing surface.
-- If requirements change, return to Phase 2 before changing scope.
-- If user intent is still ambiguous after alignment, ask the user rather than manufacturing a plan.
-- If tests fail for unrelated baseline reasons, separate baseline instability from the requested work.
-- If no meaningful test seam exists, record that as a finding and strengthen review/QA.
-- If the work exposes architecture friction, hand off to `improve-codebase-architecture` with concrete files and symptoms.
-- If browser/product evidence is required but unavailable, stop rather than planning or coding from assumptions.
+Stop and hand off when:
+
+- Required evidence cannot be gathered.
+- Required Skill or Plugin named in this document is unavailable.
+- Environment or credentials are missing.
+- User decision is required.
+- Work cannot finish in the current session.
+
+The handoff must name current phase, completed artifacts, blocker, last verification result, and next action.
 
 ## Guardrails
 
-- No production code before alignment.
-- No behavior change outside TDD, diagnosis, or characterization.
-- No user-visible done claim without browser evidence or a written QA skip.
-- No new scope without returning to alignment.
-- No invented Plugin behavior; `workflow.json` pins define available Plugins.
-- No direct publish, push, merge, or destructive git action unless explicitly requested or already covered by delivery policy.
+- Do not guess when evidence can be gathered.
+- Do not implement before orientation.
+- Do not plan before problem definition.
+- Do not review before verification.
+- Do not deliver before review.
+- Do not call work done without verification.
+- Do not hide failed commands.
+- Do not overwrite user changes.
+- Do not convert uncertainty into confidence.
+- Do not invent Plugin behavior.
+- Do not put low-level implementation procedure in this Workflow. Load the owning Skill.
