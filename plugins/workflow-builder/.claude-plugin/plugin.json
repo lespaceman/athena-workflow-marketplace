@@ -1,0 +1,18 @@
+{
+  "name": "workflow-builder",
+  "description": "Scaffold complete Athena workflow packages with workflow definitions, plugin pins, marketplace registration, and validation gates",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "workflow",
+    "athena",
+    "scaffold",
+    "workflow-md",
+    "workflow-json",
+    "marketplace",
+    "plugin-pins"
+  ],
+  "category": "developer-tools"
+}

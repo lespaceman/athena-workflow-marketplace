@@ -1,0 +1,3 @@
+frontmatter:
+  argument-hint: "<workflow name and purpose>"
+  user-invocable: true

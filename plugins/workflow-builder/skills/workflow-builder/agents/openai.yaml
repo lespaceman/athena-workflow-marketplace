@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow Builder"
+  short_description: "Scaffold complete Athena workflows"
+  default_prompt: "Use $workflow-builder to create a complete Athena workflow package with workflow.md, workflow.json, plugin pins, and marketplace registration."

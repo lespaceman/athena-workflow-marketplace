@@ -229,6 +229,20 @@
       "category": "engineering"
     },
     {
+      "name": "workflow-builder",
+      "description": "Scaffold complete Athena workflow packages with workflow definitions, plugin pins, marketplace registration, and validation gates",
+      "version": "0.1.0",
+      "source": {
+        "source": "local",
+        "path": "./plugins/workflow-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
+    },
+    {
       "name": "linear",
       "description": "Use Linear issues, projects, and workflow state from engineering agents via the official Linear MCP server",
       "version": "0.1.1",
