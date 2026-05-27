@@ -1,6 +1,6 @@
 {
   "name": "fullstack-engineering",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Full-stack engineering workflow scaffold for iterating across codebase understanding, implementation, validation, and delivery",
   "marketplaceDescription": "Iterate on full-stack engineering tasks across codebase understanding, implementation, validation, and delivery",
   "promptTemplate": "{input}",
