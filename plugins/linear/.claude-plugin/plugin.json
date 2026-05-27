@@ -1,7 +1,7 @@
 {
   "name": "linear",
   "description": "Use Linear issues, projects, and workflow state from engineering agents via the official Linear MCP server",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": {
     "name": "Athenaflow"
   },
