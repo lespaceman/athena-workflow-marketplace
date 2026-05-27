@@ -61,12 +61,15 @@ Use cycles only when the team already has enough throughput for timeboxing to be
 
 ## Engineering Workflow Integration
 
-At the start of non-trivial engineering work:
+On picking up an issue — always, not only when handed an issue key:
 
-1. If the user provides an issue key, load the issue, project, comments, labels, state, assignee, and linked relations.
-2. If there is no issue and the work is more than a small local edit, ask whether to create one or proceed with local artifacts.
-3. Record issue context in the workflow alignment artifact or local tracker.
-4. Use the issue branch name when the repo and Linear integration support it.
+1. Load the issue in full: description, comments, labels, state, assignee, priority, and linked relations (blocks / blocked-by / sub-issues).
+2. **Read the parent project of the issue.** Pull its problem statement / linked spec, status, milestones, and target dates with `get_project`. An issue is rarely self-contained — the project carries the intent the issue assumes, so never plan from the issue title alone.
+3. **Read every attachment and document on both the issue and its project** — specs, designs, screenshots, linked docs. Use the document/attachment MCP tools (`list_documents`, `get_document`, `get_attachment`, `extract_images`) rather than inferring their contents. If an attachment cannot be retrieved, say so explicitly instead of guessing.
+4. **Assign the issue to yourself and move it to In Progress before writing code.** Resolve your own Linear user through the MCP (current user / `get_user` / `list_users`); if acting on a human's account, assign to that user. Anything being worked must have an owner and an In-Progress state.
+5. If there is no issue and the work is more than a small local edit, ask whether to create one (then assign to self and move to In Progress) or proceed with local artifacts.
+6. Record the issue **and project** context in the workflow alignment artifact or local tracker.
+7. Use the issue branch name when the repo and Linear integration support it.
 
 During execution:
 
@@ -74,6 +77,17 @@ During execution:
 - Comment with evidence, decisions, blockers, and handoff notes when they would help a teammate resume.
 - Do not close issues until tests, review, and required QA evidence are complete or explicitly waived.
 - When a blocker appears, add a relation or comment that points to the concrete blocked work.
+
+## Status Lifecycle And Gates
+
+Drive issue state from real progress, and treat the engineering gates as hard preconditions for forward transitions:
+
+- **Backlog / Todo → In Progress:** on pickup, once the issue is assigned to you.
+- **In Progress → In Review:** when the change is code-complete and code review is requested. Comment with a link to the diff/PR and the verification run.
+- **In Review → Done:** only after **both** gates pass — the **code-review gate** (review findings resolved, no unresolved critical findings) and the **QA / verification gate** (tests green, required browser/QA evidence captured) — and the work is merged, or the user has explicitly waived a gate.
+- Never skip In Review to mark Done. Never close an issue with unresolved critical review findings or missing QA evidence.
+
+Comment at each transition with the evidence that justifies it: decisions made, commands run, review outcome, QA artifacts, and any blocker (with a relation to the blocking issue).
 
 At delivery:
 

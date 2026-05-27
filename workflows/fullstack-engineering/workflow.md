@@ -118,7 +118,12 @@ At every session start:
 - Reconcile done, pending, blocked, and unknown work.
 - Record current phase before changing files.
 
-If Linear is source of truth, load `linear` before reading or writing tracker state.
+If Linear is source of truth, load `linear` before reading or writing tracker state. On picking up any issue, the `linear` skill requires you to:
+
+- Read the issue in full (description, comments, labels, state, relations) **and its parent project** (`get_project`: problem statement, spec, milestones, status).
+- Read **all attachments and documents on both the issue and the project** before planning — do not infer their contents from titles.
+- Assign the issue to yourself and move it to In Progress before writing code.
+- Drive status forward only through the gates: In Review when code-complete, Done only after the code-review and QA gates pass and the work is merged. Comment at each transition with the justifying evidence.
 
 Fallback rule:
 
@@ -510,7 +515,7 @@ Evidence required:
 Action:
 
 - Summarize changes, verification, files or artifacts, risks, and follow-up.
-- Use `linear` for tracker updates.
+- Use `linear` for tracker updates. Move the issue to Done **only after the code-review gate (Phase 8) and the QA/verification gate (Phase 7) have both passed** and the work is merged — otherwise leave it In Review with a comment naming the outstanding gate. Comment with what changed, the verification run, and remaining risk.
 - Commit, push, open PR, publish, or merge only when requested or explicitly workflow-owned.
 
 Artifact:
@@ -577,16 +582,27 @@ Return to an earlier phase when evidence invalidates the current path:
 - Verification reveals a different bug -> Problem Definition with `diagnose`.
 - Production risk appears -> Design and Verification become mandatory.
 
+## Mandatory Gates
+
+The QA/verification gate (Phase 7) and the code-review gate (Phase 8) are not optional steps — they are hard gates. They may not be skipped, deferred, or self-waived:
+
+- **QA / verification gate (Phase 7):** required verification has run and supports the acceptance criteria; user-visible work has browser/product evidence, or an explicit skip reason is recorded. A passing unit suite alone does not clear this gate for user-visible work.
+- **Code-review gate (Phase 8):** the diff has been reviewed against acceptance criteria, regressions, brittle tests, coupling, and cleanup. Critical findings block forward motion and must be resolved, not logged as follow-ups.
+
+No work advances to Delivery, and no Linear issue moves to Done, until both gates pass or the user explicitly waives a specific gate. Only the user may waive a gate; the agent may not waive it on their own judgment. A "done" claim made without clearing both gates is a workflow failure.
+
 ## Completion Gate
 
 The Workflow is complete only when:
 
 - Acceptance criteria are satisfied.
+- The QA/verification gate and the code-review gate have both passed (or a specific gate was explicitly waived by the user).
 - Relevant verification has run.
 - Review has no unresolved blockers.
 - Temporary instrumentation is removed.
 - Product evidence exists for user-visible claims, or skip reason is recorded.
 - Test specs and test code passed required review gates when used.
+- The tracker reflects reality: the issue is in the correct state (Done only after gates pass and merge), with a closing comment of what changed, how it was verified, and remaining risk.
 - Final summary states what changed, how it was verified, and what risk remains.
 
 ## Handoff Rules
