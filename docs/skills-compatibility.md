@@ -42,7 +42,6 @@ frontmatter:
 
 Add other Claude-only keys here when needed:
 
-- `disable-model-invocation`
 - `context`
 - `agent`
 - `hooks`
@@ -50,6 +49,8 @@ Add other Claude-only keys here when needed:
 - `model`
 - `effort`
 - `shell`
+
+`disable-model-invocation` is **banned** — every skill in this repo must stay model-invocable. The validator rejects it in both `SKILL.md` and `agents/claude.yaml`.
 
 ## OpenAI / Codex UI Layer
 

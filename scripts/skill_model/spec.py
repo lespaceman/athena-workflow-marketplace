@@ -27,7 +27,6 @@ CLAUDE_OVERLAY_KEYS = frozenset(
     {
         "argument-hint",
         "user-invocable",
-        "disable-model-invocation",
         "context",
         "agent",
         "hooks",
@@ -37,6 +36,11 @@ CLAUDE_OVERLAY_KEYS = frozenset(
         "shell",
     }
 )
+
+# Keys banned outright across every skill in this repo. All skills must remain
+# model-invocable, so disable-model-invocation may not appear in SKILL.md or
+# agents/claude.yaml.
+BANNED_FRONTMATTER_KEYS = frozenset({"disable-model-invocation"})
 
 
 # Required interface fields in agents/openai.yaml.
@@ -95,6 +99,12 @@ class SkillSpec:
         if not self.portable_frontmatter:
             problems.append(f"{self.skill_md_path}: missing or invalid frontmatter")
         else:
+            banned = sorted(set(self.portable_frontmatter) & BANNED_FRONTMATTER_KEYS)
+            if banned:
+                problems.append(
+                    f"{self.skill_md_path}: banned frontmatter keys: {', '.join(banned)} "
+                    f"(all skills must remain model-invocable)"
+                )
             bad = sorted(set(self.portable_frontmatter) & CLAUDE_OVERLAY_KEYS)
             if bad:
                 problems.append(
@@ -113,7 +123,13 @@ class SkillSpec:
                 if not isinstance(fm, dict):
                     problems.append(f"{self.claude_yaml_path}: missing frontmatter mapping")
                 else:
-                    extra = sorted(set(fm) - CLAUDE_OVERLAY_KEYS)
+                    banned = sorted(set(fm) & BANNED_FRONTMATTER_KEYS)
+                    if banned:
+                        problems.append(
+                            f"{self.claude_yaml_path}: banned frontmatter keys: {', '.join(banned)} "
+                            f"(all skills must remain model-invocable)"
+                        )
+                    extra = sorted(set(fm) - CLAUDE_OVERLAY_KEYS - BANNED_FRONTMATTER_KEYS)
                     if extra:
                         problems.append(
                             f"{self.claude_yaml_path}: unsupported Claude overlay keys: {', '.join(extra)}"

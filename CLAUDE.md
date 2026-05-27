@@ -36,7 +36,7 @@ Shared fields (`name`, `version`, `description`) must stay identical across both
 Skills use a three-file model so the same skill works on Claude and Codex:
 
 - `skills/<skill>/SKILL.md` — portable Agent Skills core. Frontmatter limited to `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools` (space-delimited string). Hand-authored.
-- `skills/<skill>/agents/claude.yaml` — Claude-only overlay (`argument-hint`, `user-invocable`, `disable-model-invocation`, `model`, `hooks`, etc.). **Treated as generated** — regeneration via `scripts/generate-claude-yaml.py` may overwrite hand edits.
+- `skills/<skill>/agents/claude.yaml` — Claude-only overlay (`argument-hint`, `user-invocable`, `model`, `hooks`, etc.). **Treated as generated** — regeneration via `scripts/generate-claude-yaml.py` may overwrite hand edits. Note: `disable-model-invocation` is banned repo-wide — every skill must remain model-invocable, and the validator rejects this key in `SKILL.md` and `claude.yaml`.
 - `skills/<skill>/agents/openai.yaml` — Codex UI metadata (`display_name`, `short_description`, `default_prompt`). Also regenerable.
 
 Use `scripts/init-compatible-skill.py` to scaffold all three.

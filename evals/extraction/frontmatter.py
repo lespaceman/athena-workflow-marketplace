@@ -8,7 +8,6 @@ FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---", re.DOTALL)
 PORTABLE_FORBIDDEN_KEYS: frozenset[str] = frozenset({
     "argument-hint",
     "user-invocable",
-    "disable-model-invocation",
     "context",
     "agent",
     "hooks",
@@ -17,6 +16,9 @@ PORTABLE_FORBIDDEN_KEYS: frozenset[str] = frozenset({
     "effort",
     "shell",
 })
+
+# Banned outright: all skills must remain model-invocable.
+BANNED_KEYS: frozenset[str] = frozenset({"disable-model-invocation"})
 
 REQUIRED_KEYS: frozenset[str] = frozenset({"name", "description"})
 
@@ -51,6 +53,10 @@ def parse(skill_md_text: str) -> ParsedFrontmatter:
     missing = REQUIRED_KEYS - loaded.keys()
     for key in sorted(missing):
         findings.append(f"ERROR: required key missing: {key}")
+
+    banned = sorted(set(loaded) & BANNED_KEYS)
+    for key in banned:
+        findings.append(f"ERROR: banned frontmatter key: {key} (all skills must remain model-invocable)")
 
     portable_violations = sorted(set(loaded) & PORTABLE_FORBIDDEN_KEYS)
     for key in portable_violations:
