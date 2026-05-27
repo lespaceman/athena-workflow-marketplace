@@ -25,6 +25,21 @@ The MCP server is configured as `linear`, so plugin tool names follow:
 mcp__plugin_linear_linear__<tool>
 ```
 
+The plugin ships a Codex-compatible stdio MCP bridge:
+
+```json
+{
+  "mcpServers": {
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
+    }
+  }
+}
+```
+
+For Codex/Athena sessions, keep Linear in this stdio `mcp-remote` form. Do not replace it with a bare `url = "https://mcp.linear.app/mcp"` entry unless the runtime explicitly supports streamable HTTP for that path; older Athena/Codex app-server paths reject direct `url` fields when they are normalized as stdio servers.
+
 Before making changes:
 
 1. Read the current workspace/team/project/issue state needed for the task.
