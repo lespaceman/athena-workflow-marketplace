@@ -12,7 +12,7 @@
       "name": "fullstack-engineering",
       "source": "./workflows/fullstack-engineering/workflow.json",
       "description": "Iterate on full-stack engineering tasks across codebase understanding, implementation, validation, and delivery",
-      "version": "0.1.7"
+      "version": "0.1.8"
     },
     {
       "name": "playwright-automation",

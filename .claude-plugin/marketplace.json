@@ -292,7 +292,7 @@
       "name": "linear",
       "source": "./plugins/linear",
       "description": "Use Linear issues, projects, and workflow state from engineering agents via the official Linear MCP server",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "keywords": [
         "linear",
         "mcp",
