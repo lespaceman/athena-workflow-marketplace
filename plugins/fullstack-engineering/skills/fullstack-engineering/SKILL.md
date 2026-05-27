@@ -36,6 +36,11 @@ Announce, in one line, before any other tool call:
 
 When a phase has an owning skill, invoke it via the Skill tool before doing anything else. When a phase has no owning skill (Isolate, Finish), follow the procedure in [PHASES.md](PHASES.md) directly.
 
+**Load skills on your own judgment.** Every skill named here is model-invocable — when its trigger holds, load it yourself, before the action, without waiting to be asked. Two triggers are easy to miss:
+
+- **First-run setup:** before Brainstorm in a repo with no `## Agent skills` block in `CLAUDE.md`/`AGENTS.md` or no `docs/agents/`, load `setup-matt-pocock-skills` first — the other engineering skills depend on the tracker, triage, and domain context it writes.
+- **Unfamiliar code:** before reading or changing a module you have not mapped this session, load `zoom-out` for the map instead of orienting by ad-hoc file reads.
+
 ## Hard rules (override everything else)
 
 1. **No code without an approved design doc / PRD or lightweight session plan.** If `Edit`/`Write`/`MultiEdit` is about to touch source files and neither exists, you are in Phase 1, not Phase 4.
@@ -57,6 +62,8 @@ If any of these appear, you are about to skip a phase.
 | "Small change, I'll just edit it." | Small changes still need a planning session. |
 | "I already know the design." | If it's not on disk and approved, it's a guess. Run `grill-with-docs`. |
 | "Let me explore the codebase first." | Exploration belongs inside Brainstorm or Plan. Use `zoom-out` for unfamiliar code. |
+| "I already understand this repo's setup." | If the `## Agent skills` block / `docs/agents/` aren't present, the engineering skills lack tracker, triage, and domain context. Load `setup-matt-pocock-skills`. |
+| "That skill is the user's to invoke, not mine." | Every skill here is model-invocable. If its trigger holds, you load it — don't wait to be asked. |
 | "I'll write the test after I see if it works." | Not TDD. Test first. Code without a prior test gets deleted. |
 | "Unit tests pass, task is done." | User-visible tasks need a browser-pass artifact. |
 | "I'll fix this critical finding next task." | Critical findings block forward motion. |

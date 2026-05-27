@@ -7,6 +7,7 @@ The inner-loop skills (`diagnose`, `grill-with-docs`, `triage`, `improve-codebas
 ## 1. Brainstorm — `grill-with-docs`
 
 - **Entry:** any new request. Treat every request as rough unless an approved design doc / PRD exists on disk or an approved lightweight session plan already exists.
+- **First-run setup:** if the repo has no `## Agent skills` block in `CLAUDE.md`/`AGENTS.md` or no `docs/agents/`, load `setup-matt-pocock-skills` before anything else — it wires up the issue tracker, triage labels, and domain-doc layout the other engineering skills (`grill-with-docs`, `to-prd`, `to-issues`, `triage`, `diagnose`) rely on.
 - **Do:** invoke `grill-with-docs` — it interviews you against the project's domain language (`CONTEXT.md`) and decisions (`docs/adr/`), then updates those docs inline as decisions crystallise.
 - **Simple-task exit:** approved lightweight session plan stating goal, intended files, verification. No PRD required.
 - **Full-task exit artifact:** approved design document / PRD on disk (often produced by following the grilling session with `to-prd`). Use for ambiguous, multi-step, architectural, user-visible, or risky work.
