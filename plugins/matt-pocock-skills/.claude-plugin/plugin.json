@@ -1,7 +1,7 @@
 {
   "name": "matt-pocock-skills",
   "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): engineering skills plus caveman, grill-me, handoff, and write-a-skill.",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": {
     "name": "Matt Pocock",
     "url": "https://github.com/mattpocock/skills"
