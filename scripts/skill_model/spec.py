@@ -181,6 +181,28 @@ def discover_skills(repo_root: Path | str = ".") -> list[Path]:
     return sorted(p.parent for p in (repo / "plugins").glob("*/skills/*/SKILL.md"))
 
 
+def find_misplaced_skills(repo_root: Path | str = ".") -> list[Path]:
+    """Return SKILL.md paths not at the canonical plugins/<plugin>/skills/<skill>/SKILL.md depth.
+
+    Skills must live exactly one directory under skills/. Category folders
+    (e.g. skills/engineering/<skill>/SKILL.md) are invisible to discover_skills'
+    glob and to Athena's flat plugin loader, so they must be flagged.
+    """
+    repo = Path(repo_root).resolve()
+    misplaced: list[Path] = []
+    for skill_md in (repo / "plugins").glob("*/skills/**/SKILL.md"):
+        rel = skill_md.relative_to(repo / "plugins")
+        # Vendored upstream bundles (e.g. tanstack-start/skills/upstream/...) are
+        # bundled reference material, not top-level skills, and discover_skills
+        # already ignores them. Leave them alone.
+        if "upstream" in rel.parts:
+            continue
+        # Canonical: (<plugin>, "skills", <skill>, "SKILL.md") -> 4 parts.
+        if len(rel.parts) != 4:
+            misplaced.append(skill_md)
+    return sorted(misplaced)
+
+
 def write_claude_overlay(skill_path: Path | str, frontmatter: dict[str, Any]) -> Path:
     spec = load(skill_path)
     body = spec.render_claude_overlay(frontmatter)

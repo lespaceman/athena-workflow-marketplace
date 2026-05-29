@@ -5,7 +5,13 @@ import argparse
 import sys
 from pathlib import Path
 
-from .spec import CLAUDE_OVERLAY_KEYS, discover_skills, load, write_claude_overlay
+from .spec import (
+    CLAUDE_OVERLAY_KEYS,
+    discover_skills,
+    find_misplaced_skills,
+    load,
+    write_claude_overlay,
+)
 
 
 def _parse_overrides(items: list[str]) -> dict[str, str]:
@@ -24,8 +30,18 @@ def _parse_overrides(items: list[str]) -> dict[str, str]:
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
-    skill_dirs = [Path(p) for p in args.skill_dirs] if args.skill_dirs else discover_skills(args.repo_root)
+    explicit = bool(args.skill_dirs)
+    skill_dirs = [Path(p) for p in args.skill_dirs] if explicit else discover_skills(args.repo_root)
     problems: list[str] = []
+    # Layout gate (repo-wide only): skills must sit exactly one level under
+    # skills/. Category-nested skills are invisible to discover_skills and to
+    # Athena's flat plugin loader, so the per-skill loop above would skip them.
+    if not explicit:
+        for misplaced in find_misplaced_skills(args.repo_root):
+            problems.append(
+                f"{misplaced}: skill is nested too deep; move it to "
+                f"plugins/<plugin>/skills/<skill>/SKILL.md (one level under skills/)"
+            )
     for skill_dir in skill_dirs:
         spec = load(skill_dir)
         problems.extend(spec.validate())

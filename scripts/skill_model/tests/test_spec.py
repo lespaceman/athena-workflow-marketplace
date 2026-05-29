@@ -4,7 +4,12 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from skill_model import CLAUDE_OVERLAY_KEYS, load, write_claude_overlay
+from skill_model import (
+    CLAUDE_OVERLAY_KEYS,
+    find_misplaced_skills,
+    load,
+    write_claude_overlay,
+)
 
 
 def make_skill(root: Path, name: str = "ex", *, skill_md: str | None = None,
@@ -99,6 +104,43 @@ class TestKeyTable(unittest.TestCase):
         self.assertIn("hooks", CLAUDE_OVERLAY_KEYS)
         self.assertNotIn("name", CLAUDE_OVERLAY_KEYS)
         self.assertNotIn("description", CLAUDE_OVERLAY_KEYS)
+
+
+class TestSkillLayout(unittest.TestCase):
+    def test_flat_skill_is_not_flagged(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_skill(root, "explore")
+            self.assertEqual(find_misplaced_skills(root), [])
+
+    def test_category_nested_skill_is_flagged(self):
+        # Athena's plugin loader and this repo's skill discovery both expect
+        # skills exactly one level under skills/. A category folder hides them.
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            nested = root / "plugins" / "p" / "skills" / "engineering" / "tdd"
+            nested.mkdir(parents=True)
+            skill_md = nested / "SKILL.md"
+            skill_md.write_text("---\nname: tdd\ndescription: x\n---\n\n# Body\n")
+
+            self.assertEqual(find_misplaced_skills(root), [skill_md.resolve()])
+
+    def test_vendored_upstream_skills_are_not_flagged(self):
+        # tanstack-start vendors upstream skill bundles under skills/upstream/.
+        # Those are bundled reference material, not top-level skills, so the
+        # layout gate must leave them alone.
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            vendored = (
+                root / "plugins" / "tanstack-start" / "skills" / "upstream"
+                / "@tanstack" / "router-core" / "skills" / "router-core"
+            )
+            vendored.mkdir(parents=True)
+            (vendored / "SKILL.md").write_text(
+                "---\nname: router-core\ndescription: x\n---\n\n# Body\n"
+            )
+
+            self.assertEqual(find_misplaced_skills(root), [])
 
 
 if __name__ == "__main__":
