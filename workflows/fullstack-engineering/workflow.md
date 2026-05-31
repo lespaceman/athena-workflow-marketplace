@@ -2,8 +2,6 @@
 
 A state machine with evidence gates that carries a change from user intent to verified delivery. You, the agent, do the implementation; the Skills it names are instructions for how to handle a given task or phase.
 
-Scope: this workflow's end-to-end automation execution layer is Playwright. Work requiring Robot Framework belongs to the sibling `robot-automation` workflow, not this one.
-
 ## Operating Principle
 
 Build only from evidence.
