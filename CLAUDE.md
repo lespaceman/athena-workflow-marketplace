@@ -52,6 +52,11 @@ Use `scripts/init-compatible-skill.py` to scaffold all three.
 | `playwright-automation` | Playwright execution layer: analyze codebase, write, review, fix flake. |
 | `robot-automation` | Robot Framework (Browser library) execution layer with the same skill shape. |
 | `site-knowledge` | Auto-applied site patterns (Airbnb, Amazon, Apple Store). Not user-invocable. |
+| `frontend-design` | Distinctive, production-grade frontend UI generation that avoids generic AI aesthetics. |
+| `shadcn` | Browse/search/install shadcn/ui components via MCP, plus theming and registry-authoring knowledge. |
+| `linear` | Linear issues, projects, and workflow state for engineering agents via the official Linear MCP server. |
+| `tanstack-start` | TanStack Start guidance: scaffolding examples, routing patterns, and full-stack app structure. |
+| `workflow-builder` | Scaffold complete Athena workflow packages (definitions, plugin pins, marketplace registration, validation gates). |
 | `md-export` | Markdown → dark-themed PDF (has `node_modules/` and `scripts/`; only plugin with runtime JS deps). |
 | `web-bench` | WebBench benchmark runner and LLM-as-judge report pipeline. |
 
