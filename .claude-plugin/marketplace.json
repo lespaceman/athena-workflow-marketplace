@@ -257,22 +257,6 @@
       "category": "engineering"
     },
     {
-      "name": "fullstack-engineering",
-      "source": "./plugins/fullstack-engineering",
-      "description": "User-invocable companion to the fullstack-engineering Workflow. Ships a single skill that captures the same state machine \u2014 Brainstorm \u2192 Isolate \u2192 Plan \u2192 Execute (TDD + browser pass) \u2192 Manual QA \u2192 Finish \u2014 for on-demand use without running the full Workflow loop.",
-      "version": "0.1.5",
-      "keywords": [
-        "fullstack",
-        "engineering",
-        "workflow",
-        "tdd",
-        "browser-pass",
-        "alignment",
-        "phase-gates"
-      ],
-      "category": "engineering"
-    },
-    {
       "name": "workflow-builder",
       "source": "./plugins/workflow-builder",
       "description": "Scaffold complete Athena workflow packages with workflow definitions, plugin pins, marketplace registration, and validation gates",
