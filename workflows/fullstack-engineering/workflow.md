@@ -24,7 +24,7 @@ Each phase below names its Skills.
 When a phase's trigger holds, load that Skill **before** the next action.
 Every Skill here is model-invocable.
 A phase action that needed a Skill but ran without it is a workflow failure.
-Playwright is the automation execution layer.
+When test automation is needed, Playwright is the execution layer.
 
 - Announce each load in one line: `Loading <skill> - trigger: <what you observed>.`
 - Record loaded Skills in the phase artifact.
