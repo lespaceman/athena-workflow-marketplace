@@ -25,11 +25,11 @@
       "skillPath": "skills/engineering/prototype/SKILL.md",
       "computedHash": "a653deb65afa2ee8f45c68f6ef4f593147171b386e994c8cccf89292d9ea9d75"
     },
-    "setup-matt-pocock-skills": {
+    "setup-engineering-workflow-skills": {
       "source": "mattpocock/skills",
-      "sourceType": "github",
-      "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
-      "computedHash": "c778d4e3d86ecc9125c357279a86780657b5db23110e1f7acf4f46d2441e7204"
+      "sourceType": "local-fork",
+      "forkedFrom": "setup-matt-pocock-skills",
+      "note": "Renamed and extended locally (workflow skill map, GitLab option); diverged from upstream - do not re-sync from the canonical source."
     },
     "tdd": {
       "source": "mattpocock/skills",

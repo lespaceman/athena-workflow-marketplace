@@ -23,13 +23,14 @@ Must NOT delegate - run in the main agent: test execution and build/verification
 Each phase below names its Skills.
 When a phase's trigger holds, load that Skill **before** the next action.
 Every Skill here is model-invocable.
+Skill availability comes from the installed plugins, never from repo files: a missing `## Agent skills` block or un-run First-Run Setup never blocks loading a Skill. Load each Skill by its trigger regardless - the block only configures tracker/triage/domain details for a few Skills.
 A phase action that needed a Skill but ran without it is a workflow failure.
 When test automation is needed, Playwright is the execution layer.
 
 - Announce each load in one line: `Loading <skill> - trigger: <what you observed>.`
 - Record loaded Skills in the phase artifact.
 - Do not start a Skill-owned action until that Skill is loaded for the current turn or delegated subtask. A Skill loaded in a previous session does not count.
-- Do not substitute memory, old summaries, or generic reasoning for a missing Skill. If a required Skill or Plugin is unavailable, or you cannot tell which Skill owns the activity, stop and report it.
+- Do not substitute memory, old summaries, or generic reasoning for a named phase Skill you skipped. If a phase-named Skill or its Plugin is genuinely not installed, stop and report it. An activity with no owning Skill is not a blocker - proceed with normal agent work.
 
 Not phase-bound - load whenever their trigger fires, in any phase:
 
@@ -38,6 +39,17 @@ Not phase-bound - load whenever their trigger fires, in any phase:
 - `linear` - tracker state in Linear must be read or written.
 - `triage` - an incoming bug/feature/issue must be classified or prepared.
 - `handoff` - work is blocked, deferred, or being transferred to another agent/session. Unlike the others above, this is not an inline load-and-continue skill; it is the Stop -> handoff route into Phase 10, and current work cannot continue in this session after it fires.
+
+## First-Run Setup
+
+`setup-engineering-workflow-skills` seeds the per-repo config - issue tracker, triage labels, domain-doc layout - that the tracker/triage/domain-aware Skills read: `to-issues`, `to-prd`, `triage`, `diagnose`, `tdd`, `improve-codebase-architecture`, `zoom-out`. It is **mandatory once per repo** when the repo has no `## Agent skills` block (in `CLAUDE.md`/`AGENTS.md`) or `docs/agents/`. It does not gate Skills that ignore it - `frontend-design`, `shadcn-ui`, `linear`, `agent-web-interface-guide`, and the app/test/Playwright Skills load regardless, so a missing block never means zero Skills.
+
+It is interactive - it asks the user to choose the tracker, confirm labels and domain layout, and which doc file to create - so it cannot be completed unattended. Treat it as a precondition only for work that actually reads that config; a missing block never blocks the config-free Skills (see Skill Discipline) and never applies to a read-only request.
+
+When the block is missing AND the next required action needs tracker/triage/domain config (e.g. `to-issues` against an unknown tracker, `triage` applying labels):
+
+- **User available:** run it now (in scope on every run, separate from the change's diff - commit it as its own setup change), then proceed.
+- **No user (AFK):** proceed with everything that does not need the config; Stop -> handoff (Phase 10) only for the specific config-dependent action, naming it. Never silently bootstrap repo docs, never stall over config-free work.
 
 ## Task Tracker Discipline
 
@@ -55,9 +67,9 @@ Keep the remote working branch current so a lost worktree, crash, or context res
 
 - Never work on `main`. Establish the working branch (or `git worktree`) at the start of the run, before the first artifact is committed; Build still re-confirms the green baseline on it before the first code change.
 - Commit **and push** whenever a unit of work lands: each phase artifact that is a repo file, and each completed vertical slice. A local-only commit is not enough - the push is what makes the work recoverable.
-- Pushing your own working branch is a routine safety checkpoint and needs no user approval. It is distinct from PR / publish / merge to `main`, which is outward delivery and stays authority-gated (Phase 9).
+- Pushing your own working branch is a routine safety checkpoint and needs no user approval. PR / publish / merge to a shared branch is outward delivery and stays authority-gated; a clean merge to `main` after both Mandatory Gates pass is itself the workflow-owned authority at Phase 9 (see Delivery).
 - Commit messages name the artifact or slice and its proof state. Never commit secrets; remove temporary instrumentation before the artifact commit.
-- If the remote is unreachable or a push fails, keep committing locally, record the failure as a blocker in the session note, and route to Handoff (Phase 10) if the work cannot otherwise be preserved.
+- If Orientation found no push rights (read-only clone, fork without write), local-commit-only is the sanctioned mode for the run: keep committing locally and note it once, not as a per-artifact blocker. If the remote was expected to be writable but a push fails or it is unreachable, record the failure as a blocker in the session note and route to Handoff (Phase 10) if the work cannot otherwise be preserved.
 
 ## State Graph
 
@@ -94,10 +106,10 @@ Do not turn ambiguity into a private plan.
 
 **2. Orientation** - Know the system before changing it.
 Inspect structure, conventions, commands, relevant modules, tests, domain docs, ADRs.
-Confirm the test suite runs and record its pass/fail state in the orientation note - Build re-confirms against this baseline.
+Confirm the test suite runs and record its pass/fail state in the orientation note - Build re-confirms against this baseline. Confirm whether the remote is writable (push capability) and record it.
 Delegate heavy reading/exploration to subagents (see Delegation).
-Skills: `setup-matt-pocock-skills` first when the repo lacks the agent-skills context (other engineering Skills depend on it); `zoom-out` before touching any unmapped module.
-Artifact: orientation note (surfaces, commands, conventions, risks, open questions, baseline suite pass/fail state).
+Skills: `zoom-out` before touching any unmapped module.
+Artifact: orientation note (surfaces, commands, conventions, risks, open questions, baseline suite pass/fail state, push capability).
 Gate: likely files, test surfaces, commands, and risks can be named, and the baseline suite state is recorded.
 Stop -> handoff if required context is inaccessible or no safe first surface exists.
 Do not implement from filename guesses.
@@ -161,7 +173,7 @@ Summarize changes, verification, files/artifacts, risks, follow-up.
 Skills: `linear` for tracker updates - Done only per Mandatory Gates; otherwise leave it In Review with a comment naming the outstanding gate.
 Default for local worktree work, after a final full-suite green run (and, for user-visible work, a whole-feature browser pass - golden path plus the edge cases named in the design), the worktree lifecycle resolves one of two ways:
 
-- **Merge.** Auto-merge only on a clean fast-forward or clean merge to `main`, then remove the worktree. Stop -> ask user if the merge has conflicts, the base is not `main`, or the tree is dirty.
+- **Merge.** A clean merge to `main` after both Mandatory Gates pass is workflow-owned - no separate user request needed (the "workflow-owned" case in Source Control Discipline). Auto-merge only on a clean fast-forward or clean merge to `main`, then remove the worktree. Stop -> ask user if the merge has conflicts, the base is not `main`, or the tree is dirty.
 - **Abandon.** Work rejected -> remove the worktree and delete the branch **only after typed user confirmation**. Never auto-discard.
 
 Pushing your own working branch is a routine safety checkpoint (Source Control Discipline) and needs no approval. PR / publish / merge to `main` or any shared branch is outward delivery - do it only when requested or workflow-owned, and via the worktree lifecycle above.
@@ -181,6 +193,8 @@ Do not say "continue from here" without defining "here".
 ## Reset Rules
 
 Return to an earlier phase when evidence invalidates the current path: new scope -> Problem Definition; new public contract -> Design; product behavior differs from assumption -> Problem Definition; test spec changes materially -> Implementation Plan; test code changes materially after review -> Review; verification reveals a different bug -> Problem Definition with `diagnose`; production risk appears -> Design and Verification become mandatory.
+
+On a shortcut path, a Reset that names a phase the shortcut skipped is a promotion to the full path: enter that phase now (a join, not a return) and continue the default path from there - e.g. scope expansion during a tiny local edit promotes to Problem Definition.
 
 ## Mandatory Gates
 

@@ -1,15 +1,16 @@
 ---
-name: setup-matt-pocock-skills
-description: Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's issue tracker (GitHub or local markdown), triage label vocabulary, and domain doc layout. Run before first use of `to-issues`, `to-prd`, `triage`, `diagnose`, `tdd`, `improve-codebase-architecture`, or `zoom-out` — or if those skills appear to be missing context about the issue tracker, triage labels, or domain docs.
+name: setup-engineering-workflow-skills
+description: Sets up the engineering workflow's per-repo context — an `## Agent skills` block in AGENTS.md/CLAUDE.md plus `docs/agents/` — capturing this repo's issue tracker (GitHub, GitLab, or local markdown), triage label vocabulary, and domain doc layout, and recording the full workflow skill map as a reference inventory. Run before first use of the engineering workflow or its skills (`to-issues`, `to-prd`, `triage`, `diagnose`, `tdd`, `improve-codebase-architecture`, `zoom-out`), or if those skills appear to be missing context about the issue tracker, triage labels, or domain docs.
 ---
 
-# Setup Matt Pocock's Skills
+# Set Up Engineering Workflow Skills
 
-Scaffold the per-repo configuration that the engineering skills assume:
+Scaffold the per-repo configuration the engineering workflow's skills assume, and record the workflow's skill map:
 
-- **Issue tracker** — where issues live (GitHub by default; local markdown is also supported out of the box)
+- **Issue tracker** — where issues live (GitHub by default; GitLab and local markdown are also supported out of the box)
 - **Triage labels** — the strings used for the five canonical triage roles
 - **Domain docs** — where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
+- **Workflow skill map** — a reference inventory of every skill the engineering workflow can load (recorded as-is, not an interactive decision)
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
@@ -103,9 +104,24 @@ The block:
 ### Domain docs
 
 [one-line summary of layout — "single-context" or "multi-context"]. See `docs/agents/domain.md`.
+
+### Workflow skills
+
+Engineering-workflow skills, loaded by trigger on the agent's own judgment (model-invocable). Availability depends on the plugins being installed, not on this block:
+
+- **Alignment & planning:** `grill-with-docs`, `grill-me`, `prototype`, `to-prd`, `to-issues`
+- **Tracker & triage:** `linear`, `triage`
+- **Code & diagnosis:** `tdd`, `diagnose`, `zoom-out`, `improve-codebase-architecture`
+- **UI:** `frontend-design`, `shadcn-ui`
+- **Live browser:** `agent-web-interface-guide`
+- **Exploration:** `map-feature-scope`, `capture-feature-evidence`
+- **Test design:** `plan-test-coverage`, `generate-test-cases`, `review-test-cases`, `exploratory-test-writer`
+- **Test automation:** `analyze-test-codebase`, `add-playwright-tests`, `write-test-code`, `review-test-code`, `fix-flaky-tests`
+- **Release scope:** `define-smoke-scope`, `define-regression-scope`
+- **Handoff:** `handoff`
 ```
 
-Then write the three docs files using the seed templates in this skill folder as a starting point:
+The `### Workflow skills` section is a fixed inventory — write it as-is; it is not one of the interactive decisions above. Then write the three docs files using the seed templates in this skill folder as a starting point:
 
 - [issue-tracker-github.md](./issue-tracker-github.md) — GitHub issue tracker
 - [issue-tracker-gitlab.md](./issue-tracker-gitlab.md) — GitLab issue tracker
