@@ -11,13 +11,13 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/grill-with-docs/SKILL.md",
-      "computedHash": "c7176600a8bffc9f359102cb041b6686387618b8e1434ba484dd708d45df6d5e"
+      "computedHash": "3e35025119ba03efe7983dfdec3c8b96918142e3978512f3c2bf66d428310c7e"
     },
     "improve-codebase-architecture": {
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
-      "computedHash": "9e9b617b1c70d390e37dbfd1c031c11b3de850e2e3d01c4a2c2888bdb386a247"
+      "computedHash": "f00de04c7bb83cfd0ed1f97f3401a83838212c30856912ee44ba406649e6c749"
     },
     "prototype": {
       "source": "mattpocock/skills",
@@ -47,7 +47,7 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/to-prd/SKILL.md",
-      "computedHash": "b60e3805e361e4eabc6f3df48d305299e0fde64cb24b6e95443c01de907a2e7d"
+      "computedHash": "5212dee3af6a95e60d7daaedac08f15f2789b170468d57d23f722e516a255269"
     },
     "triage": {
       "source": "mattpocock/skills",

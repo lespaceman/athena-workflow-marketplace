@@ -77,7 +77,16 @@ Red flags for invented scenarios:
 - Test cases for UI elements that may not exist (e.g., "retry button" on error page without visiting the error page)
 - Server-side behavior assumptions (e.g., "rate limit after 5 attempts" without evidence)
 
-When suspicious: delegate a spot-check to a subagent with browser access (Task tool). Pass it the target URL, the specific TC-IDs under suspicion, and the claims to verify (element existence, error message text, validation behavior). The subagent should return structured evidence: what it found, what matched, what differed.
+When suspicious: delegate a spot-check to a subagent with browser access (Task tool). Pass it the target URL, the specific TC-IDs under suspicion, and the claims to verify (element existence, error message text, validation behavior). Require structured evidence back, not prose — the same shape `generate-test-cases` uses:
+
+```
+Claim checked: <the TC-ID claim under suspicion>
+Observed step: <what the subagent did>
+URL: <current URL after action>
+Observed controls:
+  - Submit button: role=button, name=/submit/i
+Observed result: <what actually happened — matched / differed, and how>
+```
 
 #### 2d. Duplication and Overlap
 

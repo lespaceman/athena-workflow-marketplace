@@ -181,7 +181,11 @@ Write structured test cases to:
 ## Visual & Responsive
 ## Performance & Loading
 ## Accessibility & UX
+## Deferred
 ```
+
+Include a `## Deferred` section only when one or more TCs cannot be automated this pass; each
+entry follows the Deferred Items structure below and the ≤20% cap applies.
 
 ### File Naming Convention
 
