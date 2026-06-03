@@ -114,6 +114,7 @@ cd plugins/<plugin> && npm run build:artifacts           # emits dist/<version>/
 - **Test execution is never delegated.** In the `playwright-automation` / `robot-automation` workflows, the main agent must run `npx playwright test` (or `robot ...`) directly and keep the output as proof.
 - **Skill descriptions** must include exhaustive trigger phrases and state what the skill does vs. does not do — skill dispatch depends on matching trigger language.
 - `dist/` artifacts and `.venv/` are generated; do not commit hand edits to them.
+- **Workflow version bumps happen in remote CI** — do not hand-bump `version` in `workflows/<name>/workflow.json` (or run a manual bump) when editing a workflow's `workflow.md` or definition. The remote CI `auto-bump` step handles it (see the `chore: auto-bump versions [skip ci]` commits).
 
 ## Agent skills
 
