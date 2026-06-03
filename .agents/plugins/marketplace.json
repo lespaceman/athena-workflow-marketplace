@@ -49,7 +49,7 @@
     {
       "name": "test-analysis",
       "description": "Shared coverage planning, test-case generation, and spec review grounded in exploration evidence",
-      "version": "0.2.9",
+      "version": "0.2.10",
       "source": {
         "source": "local",
         "path": "./plugins/test-analysis"
@@ -203,7 +203,7 @@
     {
       "name": "matt-pocock-skills",
       "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): engineering skills plus caveman, grill-me, handoff, and write-a-skill.",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "source": {
         "source": "local",
         "path": "./plugins/matt-pocock-skills"

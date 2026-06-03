@@ -1,7 +1,8 @@
 {
   "name": "test-analysis",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Shared test planning, specification, and review skills grounded in exploration evidence",
+  "category": "testing",
   "author": {
     "name": "Athenaflow"
   },
@@ -11,6 +12,5 @@
     "shortDescription": "Plan coverage, generate test specs, and review them against real evidence",
     "developerName": "Athenaflow",
     "category": "Testing"
-  },
-  "category": "testing"
+  }
 }

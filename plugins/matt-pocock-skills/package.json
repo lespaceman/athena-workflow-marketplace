@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-matt-pocock-skills",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills) used by workflow packages.",
   "license": "SEE LICENSE IN NOTICE.md",
   "repository": {
