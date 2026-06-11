@@ -1,0 +1,17 @@
+{
+  "name": "clickup",
+  "version": "0.1.0",
+  "description": "Use ClickUp tasks, lists, docs, and workspace state from agents via the official ClickUp MCP server",
+  "category": "engineering",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ClickUp",
+    "shortDescription": "Manage tasks, lists, docs, and delivery state in ClickUp",
+    "developerName": "Athenaflow",
+    "category": "Engineering"
+  },
+  "mcpServers": "./.mcp.json"
+}

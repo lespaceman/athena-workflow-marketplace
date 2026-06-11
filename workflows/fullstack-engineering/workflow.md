@@ -67,8 +67,9 @@ Not phase-bound — load whenever their trigger fires, in any phase:
 - `zoom-out` — about to read or change a module not yet mapped this session.
 - `diagnose` — something is broken, failing, throwing, or slower than expected.
 - `linear` — tracker state in Linear must be read or written.
+- `clickup` — tracker state in ClickUp must be read or written.
 - `triage` — an incoming bug/feature/issue must be classified or prepared.
-- `handoff` — work is blocked, deferred, or transferred. Unlike the others, this is not inline load-and-continue; it is the Stop -> handoff route into Phase 10, and current work cannot continue in this session after it fires.
+- `workflow-handoff` — an in-flight task must be relayed to the next agent: a slice/phase/gate boundary is cleanly done, or you are mid-task and out of usable context (token window exhausted, context rot). It captures resumable workflow state (Turn Protocol block, cleared gates, branch + last pushed commit, durable-artifact pointers, exact next action) so the next agent re-enters at the right phase. Use `handoff` instead for a generic conversation summary with no live workflow state to preserve. Like the route below, this is not inline load-and-continue — it is the Stop -> handoff into Phase 10, and current work cannot continue in this session after it fires.
 
 ## First-Run Setup
 
@@ -85,7 +86,7 @@ When the block is missing AND the next required action needs tracker/triage/doma
 
 At session start: read tracker/issue/handoff/prior notes, reconcile done/pending/blocked/unknown work, and record the current phase before changing files.
 
-- If Linear is source of truth, load `linear` first — it owns the issue-pickup procedure. Drive status only through the gates (In Review when code-complete; Done only per Mandatory Gates), commenting at each transition with justifying evidence.
+- If Linear is source of truth, load `linear` first; if ClickUp is source of truth, load `clickup` first — the matching Skill owns the issue-pickup procedure. Drive status only through the gates (In Review when code-complete; Done only per Mandatory Gates), commenting at each transition with justifying evidence.
 - The session note must live in a visible tracker, active task tool, or handoff artifact. A conversation-only note does not survive compaction: re-persist it to a durable artifact before any compaction or handoff.
 - The note carries: current phase, goal, loaded Skills, completed artifacts, pending artifacts, blocker (or `None`), next action, last verification result (or `Not run`) — i.e. the Turn Protocol block, persisted.
 
@@ -209,7 +210,7 @@ Each phase produces its artifact and emits its gate-pass line before the next be
 
 **10. Handoff / Postmortem** — Preserve state when work cannot finish or should teach the next run.
 - MUST record: phase, completed work, blocker, next command, next decision, evidence links.
-- Skills: `handoff` to capture state; `to-issues`/`linear` for durable follow-up.
+- Skills: `workflow-handoff` to relay resumable workflow state (phase, cleared gates, branch + last pushed commit, next action) so the next agent resumes mid-flight; `handoff` for a generic conversation summary; `to-issues`/`linear` for durable follow-up.
 - Artifact: handoff or postmortem note.
 - Gate: another agent can resume without rediscovery.
 - Stop -> ask user if sensitive information cannot be safely redacted.

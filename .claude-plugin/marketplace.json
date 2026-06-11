@@ -287,6 +287,22 @@
       ],
       "category": "engineering",
       "license": "MIT"
+    },
+    {
+      "name": "clickup",
+      "source": "./plugins/clickup",
+      "description": "Use ClickUp tasks, lists, docs, and workspace state from agents via the official ClickUp MCP server",
+      "version": "0.1.0",
+      "keywords": [
+        "clickup",
+        "mcp",
+        "tasks",
+        "projects",
+        "planning",
+        "productivity"
+      ],
+      "category": "engineering",
+      "license": "MIT"
     }
   ]
 }

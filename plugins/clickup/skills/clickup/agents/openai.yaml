@@ -1,0 +1,10 @@
+interface:
+  display_name: "ClickUp"
+  short_description: "Read and update ClickUp tasks, lists, docs, and delivery state"
+  default_prompt: "Use ClickUp to inspect or update task, list, doc, and delivery state. Keep tracker updates concise and grounded in the current work."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "clickup"
+      description: "ClickUp MCP tools for task, list, folder, space, doc, comment, and workflow-state operations"
