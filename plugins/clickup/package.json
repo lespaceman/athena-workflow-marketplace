@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-clickup",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ClickUp MCP and agent workflow guidance for task and project tracking.",
   "license": "MIT",
   "repository": {
