@@ -1,0 +1,43 @@
+{
+  "name": "product-discovery",
+  "version": "0.1.7",
+  "description": "Product discovery workflow scaffold that turns an idea into a grounded PRD and a throwaway prototype, then publishes them as a Linear project ready for the fullstack-engineering workflow",
+  "marketplaceDescription": "Turn a product idea into a grounded PRD and a throwaway prototype, then publish them as a Linear project that feeds the fullstack-engineering workflow",
+  "promptTemplate": "{input}",
+  "workflowFile": "workflow.md",
+  "loop": {
+    "enabled": true,
+    "maxIterations": 100
+  },
+  "examplePrompts": [
+    "Run product discovery for a new merchant onboarding flow and publish a PRD plus prototype to Linear",
+    "Prototype two designs for the payouts dashboard, pick one, and turn it into a PRD",
+    "Create a PRD and a throwaway prototype in eximpe-design, then open a Linear project for engineering"
+  ],
+  "plugins": [
+    {
+      "ref": "agent-web-interface@lespaceman/athena-workflow-marketplace",
+      "version": "1.0.12"
+    },
+    {
+      "ref": "app-exploration@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.8"
+    },
+    {
+      "ref": "matt-pocock-skills@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.8"
+    },
+    {
+      "ref": "frontend-design@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.2"
+    },
+    {
+      "ref": "shadcn@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.1"
+    },
+    {
+      "ref": "linear@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.3"
+    }
+  ]
+}
