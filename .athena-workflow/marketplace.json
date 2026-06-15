@@ -55,6 +55,12 @@
       "source": "./workflows/loop-test/workflow.json",
       "description": "Dev-only loop check \u2014 agent does a tiny thing each run and stops",
       "version": "0.0.2"
+    },
+    {
+      "name": "product-discovery",
+      "source": "./workflows/product-discovery/workflow.json",
+      "description": "Turn a product idea into a grounded PRD and a throwaway prototype, then publish them as a Linear project that feeds the fullstack-engineering workflow",
+      "version": "0.1.7"
     }
   ]
 }
