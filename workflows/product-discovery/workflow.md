@@ -18,7 +18,8 @@ This Workflow requires the following Plugin surfaces. Treat this table as the ag
 
 | Plugin | Skills |
 |--------|--------|
-| `matt-pocock-skills` | `setup-matt-pocock-skills`, `triage`, `grill-me`, `grill-with-docs`, `zoom-out`, `prototype`, `to-prd`, `to-issues`, `handoff` |
+| `setup-engineering-workflow` | `setup-engineering-workflow` |
+| `matt-pocock-skills` | `triage`, `grill-me`, `grill-with-docs`, `zoom-out`, `prototype`, `to-prd`, `to-issues`, `handoff` |
 | `app-exploration` | `map-feature-scope`, `capture-feature-evidence` |
 | `agent-web-interface` | `agent-web-interface-guide` |
 | `frontend-design` | `frontend-design` |
@@ -35,7 +36,7 @@ Record loaded Skills in the phase artifact when the phase delegates work to a Sk
 
 | Activity | Skill |
 |----------|-------|
-| Repo foundation (glossary, tracker, label vocabulary) | `setup-matt-pocock-skills` |
+| Repo foundation (glossary, tracker, label vocabulary) | `setup-engineering-workflow` |
 | Logging or moving an idea/issue on the tracker | `triage` |
 | Linear project, issue, and document work | `linear` |
 | Unknown code area mapping | `zoom-out` |
@@ -142,7 +143,7 @@ Action:
 - Classify the discovery: new product, new feature, enhancement, or redesign.
 - Identify users, constraints, and the design question the prototype must answer.
 - Use `linear` to read or create the owning project/idea, or `triage` to log a raw idea, when tracker state is part of the task.
-- Use `setup-matt-pocock-skills` if the repo glossary, tracker, or label vocabulary is missing.
+- Use `setup-engineering-workflow` if the repo glossary, tracker, or label vocabulary is missing.
 
 Artifact:
 
