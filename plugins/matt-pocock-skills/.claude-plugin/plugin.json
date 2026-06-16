@@ -1,6 +1,6 @@
 {
   "name": "matt-pocock-skills",
-  "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): engineering skills plus caveman, grill-me, handoff, and write-a-skill.",
+  "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): engineering skills plus caveman, handoff, write-a-skill, git-guardrails-claude-code, and setup-pre-commit.",
   "version": "0.1.8",
   "author": {
     "name": "Matt Pocock",
@@ -17,9 +17,10 @@
     "architecture",
     "prototype",
     "caveman",
-    "grill-me",
     "handoff",
     "write-a-skill",
+    "git-guardrails",
+    "pre-commit",
     "matt-pocock",
     "engineering"
   ],

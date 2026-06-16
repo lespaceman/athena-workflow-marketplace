@@ -73,7 +73,7 @@ Not phase-bound — load whenever their trigger fires, in any phase:
 
 ## First-Run Setup
 
-`setup-engineering-workflow-skills` seeds per-repo config — issue tracker, triage labels, domain-doc layout — that the tracker/triage/domain-aware Skills read: `to-issues`, `to-prd`, `triage`, `diagnose`, `tdd`, `improve-codebase-architecture`, `zoom-out`. It is **mandatory once per repo** when the repo has no `## Agent skills` block (in `CLAUDE.md`/`AGENTS.md`) or `docs/agents/`. It does not gate Skills that ignore it — `frontend-design`, `shadcn-ui`, `linear`, `agent-web-interface-guide`, and the app/test/Playwright Skills load regardless, so a missing block never means zero Skills.
+`setup-engineering-workflow` seeds per-repo config — issue tracker, triage labels, domain-doc layout — that the tracker/triage/domain-aware Skills read: `to-issues`, `to-prd`, `triage`, `diagnose`, `tdd`, `improve-codebase-architecture`, `zoom-out`. It is **mandatory once per repo** when the repo has no `## Agent skills` block (in `CLAUDE.md`/`AGENTS.md`) or `docs/agents/`. It does not gate Skills that ignore it — `frontend-design`, `shadcn-ui`, `linear`, `agent-web-interface-guide`, and the app/test/Playwright Skills load regardless, so a missing block never means zero Skills.
 
 It is interactive (asks the user to choose tracker, confirm labels and domain layout, and which doc file to create) so it cannot be completed unattended. Treat it as a precondition only for work that actually reads that config; a missing block never blocks the config-free Skills and never applies to a read-only request.
 

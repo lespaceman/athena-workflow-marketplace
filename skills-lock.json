@@ -25,11 +25,11 @@
       "skillPath": "skills/engineering/prototype/SKILL.md",
       "computedHash": "a653deb65afa2ee8f45c68f6ef4f593147171b386e994c8cccf89292d9ea9d75"
     },
-    "setup-engineering-workflow-skills": {
+    "setup-engineering-workflow": {
       "source": "mattpocock/skills",
       "sourceType": "local-fork",
       "forkedFrom": "setup-matt-pocock-skills",
-      "note": "Renamed and extended locally (workflow skill map, GitLab option); diverged from upstream - do not re-sync from the canonical source."
+      "note": "Extracted to the standalone setup-engineering-workflow plugin; renamed and extended locally (workflow skill map, GitLab option); diverged from upstream - do not re-sync from the canonical source."
     },
     "tdd": {
       "source": "mattpocock/skills",

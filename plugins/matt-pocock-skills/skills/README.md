@@ -12,7 +12,6 @@ Skills for code work.
 - **[grill-with-docs](./grill-with-docs/SKILL.md)** — Grilling session that challenges your plan against the existing domain model, sharpens terminology, and updates `CONTEXT.md` and ADRs inline.
 - **[triage](./triage/SKILL.md)** — Triage issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./improve-codebase-architecture/SKILL.md)** — Find deepening opportunities in a codebase, informed by the domain language in `CONTEXT.md` and the decisions in `docs/adr/`.
-- **[setup-engineering-workflow-skills](./setup-engineering-workflow-skills/SKILL.md)** — Scaffold the per-repo config (issue tracker, triage label vocabulary, domain doc layout) that the other engineering skills consume.
 - **[tdd](./tdd/SKILL.md)** — Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
 - **[to-issues](./to-issues/SKILL.md)** — Break any plan, spec, or PRD into independently-grabbable GitHub issues using vertical slices.
 - **[to-prd](./to-prd/SKILL.md)** — Turn the current conversation context into a PRD and submit it as a GitHub issue.
@@ -24,6 +23,13 @@ Skills for code work.
 General workflow tools, not code-specific.
 
 - **[caveman](./caveman/SKILL.md)** — Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler while keeping full technical accuracy.
-- **[grill-me](./grill-me/SKILL.md)** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
 - **[handoff](./handoff/SKILL.md)** — Compact the current conversation into a handoff document so another agent can continue the work.
+- **[workflow-handoff](./workflow-handoff/SKILL.md)** — Relay an in-flight fullstack-engineering task to the next agent at the exact phase and gate — at a clean slice/phase boundary or mid-task under context rot. Preserves the Turn Protocol block, cleared gates, branch + last pushed commit, and durable-artifact pointers.
 - **[write-a-skill](./write-a-skill/SKILL.md)** — Create new skills with proper structure, progressive disclosure, and bundled resources.
+
+## Misc
+
+Repo setup and safety tooling.
+
+- **[git-guardrails-claude-code](./git-guardrails-claude-code/SKILL.md)** — Set up a Claude Code PreToolUse hook that blocks dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute.
+- **[setup-pre-commit](./setup-pre-commit/SKILL.md)** — Scaffold Husky pre-commit hooks with lint-staged (Prettier), type checking, and tests in the current repo.

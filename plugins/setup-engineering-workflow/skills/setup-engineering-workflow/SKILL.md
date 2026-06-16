@@ -1,9 +1,9 @@
 ---
-name: setup-engineering-workflow-skills
+name: setup-engineering-workflow
 description: Sets up the engineering workflow's per-repo context — an `## Agent skills` block in AGENTS.md/CLAUDE.md plus `docs/agents/` — capturing this repo's issue tracker (GitHub, GitLab, or local markdown), triage label vocabulary, and domain doc layout, and recording the full workflow skill map as a reference inventory. Run before first use of the engineering workflow or its skills (`to-issues`, `to-prd`, `triage`, `diagnose`, `tdd`, `improve-codebase-architecture`, `zoom-out`), or if those skills appear to be missing context about the issue tracker, triage labels, or domain docs.
 ---
 
-# Set Up Engineering Workflow Skills
+# Set Up Engineering Workflow
 
 Scaffold the per-repo configuration the engineering workflow's skills assume, and record the workflow's skill map:
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Engineering Workflow"
+  short_description: "Scaffold the engineering workflow's per-repo context"
+  default_prompt: "Use $setup-engineering-workflow to set up this repo's engineering workflow context: the issue tracker, triage label vocabulary, domain doc layout, and the workflow skill map."

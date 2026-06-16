@@ -1,0 +1,19 @@
+{
+  "name": "setup-engineering-workflow",
+  "description": "Set up the engineering workflow's per-repo context: an `## Agent skills` block in AGENTS.md/CLAUDE.md plus `docs/agents/` capturing the issue tracker (GitHub, GitLab, or local markdown), triage label vocabulary, and domain doc layout, with the full workflow skill map recorded as a reference inventory.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "setup",
+    "engineering",
+    "workflow",
+    "issue-tracker",
+    "triage",
+    "domain-docs",
+    "agent-skills"
+  ],
+  "category": "engineering",
+  "repository": "https://github.com/AthenaFlow/workflow-marketplace"
+}

@@ -202,7 +202,7 @@
     },
     {
       "name": "matt-pocock-skills",
-      "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): engineering skills plus caveman, grill-me, handoff, and write-a-skill.",
+      "description": "Bundled non-deprecated skills from Matt Pocock's Skills For Real Engineers (https://github.com/mattpocock/skills): engineering skills plus caveman, handoff, write-a-skill, git-guardrails-claude-code, and setup-pre-commit.",
       "version": "0.1.8",
       "source": {
         "source": "local",
@@ -249,6 +249,20 @@
       "source": {
         "source": "local",
         "path": "./plugins/clickup"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "engineering"
+    },
+    {
+      "name": "setup-engineering-workflow",
+      "description": "Set up the engineering workflow's per-repo context: an `## Agent skills` block in AGENTS.md/CLAUDE.md plus `docs/agents/` capturing the issue tracker (GitHub, GitLab, or local markdown), triage label vocabulary, and domain doc layout, with the full workflow skill map recorded as a reference inventory.",
+      "version": "0.1.0",
+      "source": {
+        "source": "local",
+        "path": "./plugins/setup-engineering-workflow"
       },
       "policy": {
         "installation": "AVAILABLE",
