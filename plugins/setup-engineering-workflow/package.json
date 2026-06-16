@@ -1,6 +1,6 @@
 {
   "name": "@athenaflow/plugin-setup-engineering-workflow",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Set up the engineering workflow's per-repo context (issue tracker, triage labels, domain docs, and workflow skill map) consumed by the engineering workflow skills.",
   "license": "MIT",
   "repository": {

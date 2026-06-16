@@ -12,7 +12,7 @@
       "name": "fullstack-engineering",
       "source": "./workflows/fullstack-engineering/workflow.json",
       "description": "Iterate on full-stack engineering tasks across codebase understanding, implementation, validation, and delivery",
-      "version": "0.1.15"
+      "version": "0.1.16"
     },
     {
       "name": "playwright-automation",
@@ -60,7 +60,7 @@
       "name": "product-discovery",
       "source": "./workflows/product-discovery/workflow.json",
       "description": "Turn a product idea into a grounded PRD and a throwaway prototype, then publish them as a Linear project that feeds the fullstack-engineering workflow",
-      "version": "0.1.8"
+      "version": "0.1.9"
     }
   ]
 }
