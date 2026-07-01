@@ -1,0 +1,20 @@
+{
+  "name": "sentry",
+  "description": "Use Sentry error tracking, performance monitoring, and stack traces from engineering agents via the official Sentry MCP server",
+  "version": "0.1.0",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "keywords": [
+    "sentry",
+    "mcp",
+    "errors",
+    "performance",
+    "monitoring",
+    "debugging",
+    "engineering"
+  ],
+  "category": "engineering",
+  "license": "MIT",
+  "repository": "https://github.com/lespaceman/athena-workflow-marketplace"
+}
