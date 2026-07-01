@@ -1,7 +1,8 @@
 {
   "name": "smoke-testing",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Smoke testing scopes \u2014 define the minimum critical-path confidence checks before selecting runnable automation",
+  "category": "testing",
   "author": {
     "name": "Athenaflow"
   },
@@ -11,6 +12,5 @@
     "shortDescription": "Define the minimum critical-path confidence scope",
     "developerName": "Athenaflow",
     "category": "Testing"
-  },
-  "category": "testing"
+  }
 }

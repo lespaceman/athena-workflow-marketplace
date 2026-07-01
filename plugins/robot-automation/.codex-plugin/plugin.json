@@ -1,7 +1,8 @@
 {
   "name": "robot-automation",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Robot Framework execution layer for codebase analysis, .robot authoring, review, and flake repair; full workflows also require app-exploration and test-analysis",
+  "category": "testing",
   "author": {
     "name": "Athenaflow"
   },
@@ -11,6 +12,5 @@
     "shortDescription": "Framework-specific Robot layer built on shared exploration and planning artifacts",
     "developerName": "Athenaflow",
     "category": "Testing"
-  },
-  "category": "testing"
+  }
 }

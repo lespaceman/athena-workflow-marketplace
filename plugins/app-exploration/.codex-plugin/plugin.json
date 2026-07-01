@@ -1,7 +1,8 @@
 {
   "name": "app-exploration",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Shared feature mapping plus live product exploration and evidence capture for downstream testing workflows",
+  "category": "testing",
   "author": {
     "name": "Athenaflow"
   },
@@ -11,6 +12,5 @@
     "shortDescription": "Map broad features, explore scoped areas, and record grounded evidence for test planning",
     "developerName": "Athenaflow",
     "category": "Testing"
-  },
-  "category": "testing"
+  }
 }
