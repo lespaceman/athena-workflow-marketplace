@@ -1,7 +1,7 @@
 ---
 name: map-feature-scope
 description: >
-  Quickly map a broad product feature into concrete sub-features before deep exploration begins. Use when a requested feature may span multiple routes, tabs, overlays, roles, or primary interactive surfaces and the agent needs to identify bounded exploration units, shared state, and blockers before spawning parallel browser subagents. This skill owns `e2e-plan/feature-map.md`; it does not produce the final deep exploration evidence, coverage plan, or test specs.
+  Quickly map a broad product feature into concrete sub-features before deep exploration begins. Use when a requested feature may span multiple routes, tabs, overlays, roles, or primary interactive surfaces and the agent needs to identify bounded exploration units, shared state, and blockers before spawning parallel browser subagents. This skill owns `docs/qa/feature-map.md`; it does not produce the final deep exploration evidence, coverage plan, or test specs.
 allowed-tools: Read Write Edit Glob Grep Task
 ---
 
@@ -25,8 +25,8 @@ Derive:
 
 ### 1. Build context before browsing
 
-- Read any existing `e2e-plan/feature-map.md`, `e2e-plan/exploration-report.md`,
-  `e2e-plan/exploration/*.md`, `e2e-plan/coverage-plan.md`, and `test-cases/*.md` files related to
+- Read any existing `docs/qa/feature-map.md`, `docs/qa/exploration-report.md`,
+  `docs/qa/exploration/*.md`, `docs/qa/coverage-plan.md`, and `docs/qa/test-cases/*.md` files related to
   the same feature.
 - Search the repo for route names, feature keywords, and existing tests so you can distinguish
   already-known surfaces from unknown ones.
@@ -64,7 +64,7 @@ Split the feature when one or more of these is true:
 Do not create artificial sub-features. If the flow is genuinely narrow, say so and mark the
 feature as a single-surface feature.
 
-### 4. Write `e2e-plan/feature-map.md`
+### 4. Write `docs/qa/feature-map.md`
 
 Use this structure:
 
@@ -100,7 +100,7 @@ Use this structure:
 2. <sub-feature slug> — parallel | serial — <why>
 
 ## Rollup Guidance
-- <what the orchestrator must merge into `e2e-plan/exploration-report.md` later>
+- <what the orchestrator must merge into `docs/qa/exploration-report.md` later>
 
 ## Recommended Next Step
 - `capture-feature-evidence` for each required sub-feature
@@ -109,7 +109,7 @@ Use this structure:
 ### 5. Stop cleanly when decomposition is blocked
 
 If you cannot safely identify bounded sub-features:
-- still write `e2e-plan/feature-map.md`
+- still write `docs/qa/feature-map.md`
 - mark it `PARTIAL` or `BLOCKED`
 - record the exact blocker
 - recommend serial exploration only when parallelization cannot be justified

@@ -52,14 +52,14 @@ This skill does not:
 
 This skill consumes:
 
-- `e2e-plan/exploration-report.md` when available
-- `e2e-plan/coverage-plan.md` when available
-- existing `test-cases/*.md` specs when available
+- `docs/qa/exploration-report.md` when available
+- `docs/qa/coverage-plan.md` when available
+- existing `docs/qa/test-cases/*.md` specs when available
 - existing automated coverage and repo evidence about changed areas
 
 This skill produces:
 
-- `e2e-plan/regression-charter.md` — an optional plugin-owned artifact. It is not part of the core
+- `docs/qa/regression-charter.md` — an optional plugin-owned artifact. It is not part of the core
   shared artifact contract.
 
 ## Workflow
@@ -79,7 +79,7 @@ This skill produces:
 - If rerun depth depends on current validation behavior, redirects, auth walls, conditional UI,
   cross-feature interaction, or end-to-end path shape, require fresh or clearly relevant
   `capture-feature-evidence` evidence.
-- If `e2e-plan/exploration-report.md` is missing, stale, or incomplete for an included area, do one
+- If `docs/qa/exploration-report.md` is missing, stale, or incomplete for an included area, do one
   of two things only:
   - run `capture-feature-evidence` to close the gap, or
   - publish a clearly labeled preliminary regression charter with explicit evidence gaps
@@ -134,7 +134,7 @@ If everything lands in one bucket, the charter is usually too vague to be action
 
 ### 5. Write the charter
 
-Write `e2e-plan/regression-charter.md`:
+Write `docs/qa/regression-charter.md`:
 
 ```markdown
 # Regression Charter: <Feature/Product/Release>
@@ -166,7 +166,7 @@ Write `e2e-plan/regression-charter.md`:
 
 - Run `capture-feature-evidence` if evidence gaps block confident prioritization
 - Run `plan-test-coverage` if shared prioritization still needs to be updated
-- Expand or refresh `test-cases/*.md` if deeper shared specs are still missing
+- Expand or refresh `docs/qa/test-cases/*.md` if deeper shared specs are still missing
 - Hand the included regression areas to the execution workflow if runnable automation is requested
 ```
 
@@ -186,5 +186,5 @@ Write `e2e-plan/regression-charter.md`:
 - Pulling in low-signal areas without a reason.
 - Collapsing regression and smoke into the same artifact.
 - Writing framework-specific automation here.
-- Claiming ownership of `coverage-plan.md` or `test-cases/*.md`.
+- Claiming ownership of `coverage-plan.md` or `docs/qa/test-cases/*.md`.
 - Presenting inferred rerun depth as confirmed when live evidence is still missing.

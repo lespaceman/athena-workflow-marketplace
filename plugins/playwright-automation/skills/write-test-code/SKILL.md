@@ -29,8 +29,8 @@ Parse the test description or spec file path from: $ARGUMENTS
 
 ### 3. Verify Key Selectors Against Shared Evidence
 - If a test case spec file includes **Selectors observed**, use those as your starting point
-- Read `e2e-plan/exploration-report.md` when selector evidence or observed flow behavior matters
-- If no spec, selectors, or exploration artifact are available, stop and run `capture-feature-evidence` to produce or refresh `e2e-plan/exploration-report.md` before writing code — do not guess
+- Read `docs/qa/exploration-report.md` when selector evidence or observed flow behavior matters
+- If no spec, selectors, or exploration artifact are available, stop and run `capture-feature-evidence` to produce or refresh `docs/qa/exploration-report.md` before writing code — do not guess
 - Use direct browser spot-checks only to verify 2-3 critical selectors already captured in the exploration report or test case spec; do not treat ad hoc browsing as a substitute for the shared exploration artifact
 
 ### 4. Implement Tests

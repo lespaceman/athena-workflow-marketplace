@@ -12,7 +12,7 @@ Review Robot Framework test automation as a quality gate for long-term maintaina
 ## Workflow
 
 1. Identify the review scope: `.robot` suites, `.resource` keyword files, variable files, Python libraries, CI config, and dependency files.
-2. Read local conventions first: `robot.toml`, `pyproject.toml`, `requirements*.txt`, `robocop.toml`, `ruff.toml`, `pytest.ini`, `e2e-plan/conventions.yaml`, and 2-3 nearby suites/resources.
+2. Read local conventions first: `robot.toml`, `pyproject.toml`, `requirements*.txt`, `robocop.toml`, `ruff.toml`, `pytest.ini`, `docs/qa/conventions.yaml`, and 2-3 nearby suites/resources.
 3. Review findings by severity:
    - BLOCKER: likely false pass/fail, hidden assertion failure, nondeterminism, unsafe secret handling, or code that cannot run.
    - WARNING: likely flake, maintenance burden, poor abstraction, unclear ownership, or convention drift.

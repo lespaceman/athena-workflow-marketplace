@@ -1,7 +1,7 @@
 ---
 name: capture-feature-evidence
 description: >
-  Deeply explore a live app feature or a single mapped sub-feature and capture grounded evidence for downstream planning in `e2e-plan/exploration-report.md` or a scoped file under `e2e-plan/exploration/`. Use after the requested scope is already known, especially after `map-feature-scope` has identified bounded sub-features for a large feature. This skill owns observed product evidence and blockers for the scoped area; it does not perform feature decomposition, frame exploratory charters, prioritize risks, or write coverage plans.
+  Deeply explore a live app feature or a single mapped sub-feature and capture grounded evidence for downstream planning in `docs/qa/exploration-report.md` or a scoped file under `docs/qa/exploration/`. Use after the requested scope is already known, especially after `map-feature-scope` has identified bounded sub-features for a large feature. This skill owns observed product evidence and blockers for the scoped area; it does not perform feature decomposition, frame exploratory charters, prioritize risks, or write coverage plans.
 allowed-tools: Read Write Edit Glob Grep Task
 ---
 
@@ -18,20 +18,20 @@ exploratory charters, smoke/regression scope, or coverage planning.
 Parse the target URL and feature or journey description from: $ARGUMENTS
 
 Derive a short feature slug from the journey so the evidence is easy to reference later. If
-`e2e-plan/feature-map.md` exists, scope this run to one mapped sub-feature and reuse the slug from
+`docs/qa/feature-map.md` exists, scope this run to one mapped sub-feature and reuse the slug from
 that artifact.
 
 ## Workflow
 
 ### 1. Build context before browsing
 
-- Read any existing `e2e-plan/feature-map.md`, `e2e-plan/exploration-report.md`,
-  `e2e-plan/exploration/*.md`, `e2e-plan/coverage-plan.md`, and `test-cases/*.md` files for the
+- Read any existing `docs/qa/feature-map.md`, `docs/qa/exploration-report.md`,
+  `docs/qa/exploration/*.md`, `docs/qa/coverage-plan.md`, and `docs/qa/test-cases/*.md` files for the
   same feature so you do not duplicate stale assumptions.
 - Search the codebase for feature keywords, route names, and existing test files to understand what
   is already known and where exploration should focus.
 - State the evidence gap you are trying to close.
-- If `e2e-plan/feature-map.md` exists, identify the exact sub-feature row this run owns and do not
+- If `docs/qa/feature-map.md` exists, identify the exact sub-feature row this run owns and do not
   widen scope beyond that row.
 
 ### 2. Explore the live product via browser tooling
@@ -126,9 +126,9 @@ Notes:
 ### 3. Distill the evidence
 
 Write one artifact for the scoped area:
-- `e2e-plan/exploration/<subfeature-slug>.md` when `e2e-plan/feature-map.md` exists and the feature
+- `docs/qa/exploration/<subfeature-slug>.md` when `docs/qa/feature-map.md` exists and the feature
   was decomposed
-- `e2e-plan/exploration-report.md` only when the requested feature is genuinely single-surface
+- `docs/qa/exploration-report.md` only when the requested feature is genuinely single-surface
 
 The report must separate:
 - **Observed evidence**: behavior directly seen in the browser or codebase
@@ -144,7 +144,7 @@ Use this structure:
 **Date:** <date>
 **Scope:** <scoped journey explored>
 **Execution-relevant environment notes:** <viewport, browser, auth/role, seeded data assumptions, feature flags, locale/timezone, or "None">
-**Feature map source:** `e2e-plan/feature-map.md` | none
+**Feature map source:** `docs/qa/feature-map.md` | none
 **Evidence status:** COMPLETE | PARTIAL | BLOCKED
 
 ## Summary
@@ -247,7 +247,7 @@ exploration is valuable, but not valuable enough to break live data.
 - Cases reference specific things actually observed in the app (real field names, real error
   messages, real API endpoints, real selectors).
 - The exploration summary is honest about what wasn't covered and what's still unknown — the "Elements Not Yet Reached" section is required, not decorative.
-- Artifacts are written to the shared locations (`e2e-plan/`) so downstream skills can consume them.
+- Artifacts are written to the shared locations (`docs/qa/`) so downstream skills can consume them.
 
 ## What to avoid
 

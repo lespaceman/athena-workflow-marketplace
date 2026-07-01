@@ -61,12 +61,12 @@ def validate_intent(ctx: SuiteContext) -> None:
     regression_skill = ctx.read("plugins/regression-testing/skills/define-regression-scope/SKILL.md")
 
     for label, content in (("exploratory-test-writer", exploratory_skill), ("define-smoke-scope", smoke_skill), ("define-regression-scope", regression_skill)):
-        ctx.assert_("produces `e2e-plan/coverage-plan.md`" not in content, f"{label} must not claim ownership of coverage-plan.md")
-        ctx.assert_("produces `test-cases/<feature>.md`" not in content, f"{label} must not claim ownership of test-cases/<feature>.md")
+        ctx.assert_("produces `docs/qa/coverage-plan.md`" not in content, f"{label} must not claim ownership of coverage-plan.md")
+        ctx.assert_("produces `docs/qa/test-cases/<feature>.md`" not in content, f"{label} must not claim ownership of docs/qa/test-cases/<feature>.md")
 
-    ctx.assert_("e2e-plan/exploratory-charter.md" in exploratory_skill, "exploratory-test-writer must reference exploratory-charter.md")
-    ctx.assert_("e2e-plan/smoke-charter.md" in smoke_skill, "define-smoke-scope must reference smoke-charter.md")
-    ctx.assert_("e2e-plan/regression-charter.md" in regression_skill, "define-regression-scope must reference regression-charter.md")
+    ctx.assert_("docs/qa/exploratory-charter.md" in exploratory_skill, "exploratory-test-writer must reference exploratory-charter.md")
+    ctx.assert_("docs/qa/smoke-charter.md" in smoke_skill, "define-smoke-scope must reference smoke-charter.md")
+    ctx.assert_("docs/qa/regression-charter.md" in regression_skill, "define-regression-scope must reference regression-charter.md")
     ctx.assert_("optional artifact owned by this plugin" in exploratory_skill, "exploratory-test-writer must mark exploratory-charter.md as optional")
     ctx.assert_("not part of the core" in smoke_skill, "define-smoke-scope must mark smoke-charter.md as optional")
     ctx.assert_("not part of the core" in regression_skill, "define-regression-scope must mark regression-charter.md as optional")

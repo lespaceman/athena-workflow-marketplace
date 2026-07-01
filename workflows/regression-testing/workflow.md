@@ -22,16 +22,16 @@ The default progression is:
 
 - Load `define-regression-scope` as the workflow entry skill.
 - If the regression decision depends on real product behavior and
-  `e2e-plan/exploration-report.md` is missing or stale, load `capture-feature-evidence` first.
+  `docs/qa/exploration-report.md` is missing or stale, load `capture-feature-evidence` first.
 - If the regression decision exposes coverage gaps or changed-area work that needs updated shared
   planning, load `plan-test-coverage` and `generate-test-cases` after the charter is drafted.
 
 ## Handoff Rules
 
-- `define-regression-scope` owns `e2e-plan/regression-charter.md`, not the shared artifact chain.
-- `capture-feature-evidence` owns `e2e-plan/exploration-report.md`.
-- `plan-test-coverage` owns `e2e-plan/coverage-plan.md`.
-- `generate-test-cases` owns `test-cases/<feature>.md`.
+- `define-regression-scope` owns `docs/qa/regression-charter.md`, not the shared artifact chain.
+- `capture-feature-evidence` owns `docs/qa/exploration-report.md`.
+- `plan-test-coverage` owns `docs/qa/coverage-plan.md`.
+- `generate-test-cases` owns `docs/qa/test-cases/<feature>.md`.
 
 If runnable automation is requested after the regression charter is finalized, stop with an
 explicit recommendation to move into the appropriate execution workflow:
@@ -46,4 +46,4 @@ run the framework automation in the same workflow session.
 
 - Regression scope should be broader than smoke but still justified by risk, change, or criticality.
 - Do not write framework-specific automation here.
-- Do not claim ownership of `coverage-plan.md` or `test-cases/*.md`.
+- Do not claim ownership of `coverage-plan.md` or `docs/qa/test-cases/*.md`.

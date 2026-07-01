@@ -1,7 +1,7 @@
 ---
 name: write-robot-code
 description: >
-  Use when writing, refactoring, or modifying Robot Framework E2E test code with the Browser library. Covers creating `.robot` suites from TC-ID specs, converting browser exploration results to executable keywords, refactoring locators or resources, adding network mocking via `Route`, test data setup with RequestsLibrary, `e2e-plan/conventions.yaml` adherence, smoke-first implementation, auth patterns, and parallel-safe isolation for `pabot`. Triggers: "write a Robot test for", "add a Robot test case", "refactor this locator", "add error path tests", "convert specs to .robot code", "add network mocking in Robot", "set up auth for Robot tests". NOT for: full pipeline from scratch (use add-robot-tests), shared live-site exploration (use capture-feature-evidence), generating specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
+  Use when writing, refactoring, or modifying Robot Framework E2E test code with the Browser library. Covers creating `.robot` suites from TC-ID specs, converting browser exploration results to executable keywords, refactoring locators or resources, adding network mocking via `Route`, test data setup with RequestsLibrary, `docs/qa/conventions.yaml` adherence, smoke-first implementation, auth patterns, and parallel-safe isolation for `pabot`. Triggers: "write a Robot test for", "add a Robot test case", "refactor this locator", "add error path tests", "convert specs to .robot code", "add network mocking in Robot", "set up auth for Robot tests". NOT for: full pipeline from scratch (use add-robot-tests), shared live-site exploration (use capture-feature-evidence), generating specs without code (use plan-test-coverage or generate-test-cases), diagnosing flaky tests (use fix-flaky-tests).
 allowed-tools: Read Write Edit Bash Glob Grep Task
 ---
 
@@ -21,8 +21,8 @@ Parse the test description or spec file path from: $ARGUMENTS
 - If a test case spec file path is provided, read it for TC-IDs and expected behaviors
 
 ### 2. Inspect Repo Conventions
-- Read `e2e-plan/conventions.yaml` first if it exists. Validate it against `plugins/robot-automation/schemas/conventions.schema.json` and treat it as the source of truth for locator style, resource pattern, auth strategy, tag vocabulary, and parallel mode.
-- If `e2e-plan/conventions.yaml` does not exist and the project already has Robot code, stop and run `analyze-test-codebase` first.
+- Read `docs/qa/conventions.yaml` first if it exists. Validate it against `plugins/robot-automation/schemas/conventions.schema.json` and treat it as the source of truth for locator style, resource pattern, auth strategy, tag vocabulary, and parallel mode.
+- If `docs/qa/conventions.yaml` does not exist and the project already has Robot code, stop and run `analyze-test-codebase` first.
 - Search for `robot.toml`, `pyproject.toml`, `requirements*.txt`, `__init__.robot`, and CI scripts to confirm `robotframework-browser` is installed and extract `outputdir`, default tags, listeners, and retry config
 - Search for existing suites under `tests/**/*.robot` and resources under `resources/**/*.resource`
 - Read 2-3 existing `.robot` files to match the project's naming, structure, locator style, and keyword granularity
@@ -31,7 +31,7 @@ Parse the test description or spec file path from: $ARGUMENTS
 
 ### 3. Verify Key Selectors Against Shared Evidence
 - If a test case spec file includes **Selectors observed**, use those as your starting point
-- Read `e2e-plan/exploration-report.md` when selector evidence or observed flow behavior matters
+- Read `docs/qa/exploration-report.md` when selector evidence or observed flow behavior matters
 - If no spec or exploration artifact is available, stop and run `capture-feature-evidence` before writing code
 - Spot-check critical selectors with `find` or `get_element` to confirm they resolve to the intended elements
 - Record canonical Browser-library locators in one of these forms:

@@ -28,12 +28,12 @@ and what downstream automation should target first.
 ## Integration with shared artifacts
 
 This skill **consumes**:
-- `e2e-plan/exploration-report.md` when available
-- `e2e-plan/coverage-plan.md` when available
-- existing `test-cases/*.md` specs and automated coverage when available
+- `docs/qa/exploration-report.md` when available
+- `docs/qa/coverage-plan.md` when available
+- existing `docs/qa/test-cases/*.md` specs and automated coverage when available
 
 This skill **produces**:
-- `e2e-plan/smoke-charter.md` — an optional plugin-owned artifact. It is not part of the core
+- `docs/qa/smoke-charter.md` — an optional plugin-owned artifact. It is not part of the core
   shared artifact contract.
 
 ## Workflow
@@ -54,7 +54,7 @@ This skill **produces**:
 - If the smoke decision depends on current validation behavior, redirects, auth walls, conditional
   UI, or the actual entry/completion path, require fresh or clearly relevant `capture-feature-evidence`
   evidence.
-- If `e2e-plan/exploration-report.md` is missing, stale, or incomplete for a must-not-break flow,
+- If `docs/qa/exploration-report.md` is missing, stale, or incomplete for a must-not-break flow,
   do one of two things only:
   - run `capture-feature-evidence` before finalizing the scope, or
   - publish a clearly labeled preliminary smoke charter with explicit evidence gaps
@@ -96,7 +96,7 @@ smoke.
 
 ### 5. Write the charter
 
-Write `e2e-plan/smoke-charter.md`:
+Write `docs/qa/smoke-charter.md`:
 
 ```markdown
 # Smoke Charter: <Feature/Product>
@@ -143,5 +143,5 @@ Write `e2e-plan/smoke-charter.md`:
 - Turning smoke into a full regression suite.
 - Including every validation rule just because it exists.
 - Writing framework-specific automation steps here.
-- Claiming ownership of `coverage-plan.md` or `test-cases/*.md`.
+- Claiming ownership of `coverage-plan.md` or `docs/qa/test-cases/*.md`.
 - Presenting an inferred critical path as confirmed when live evidence is missing.

@@ -52,7 +52,7 @@ def validate_robot(ctx: SuiteContext) -> None:
         ctx.assert_("review-test-cases" in content, f"{label} must reference review-test-cases as the shared spec review layer")
 
     for label, content in (("add-robot-tests", add_tests), ("write-robot-code", write_code)):
-        ctx.assert_("e2e-plan/exploration-report.md" in content, f"{label} must reference e2e-plan/exploration-report.md")
+        ctx.assert_("docs/qa/exploration-report.md" in content, f"{label} must reference docs/qa/exploration-report.md")
 
-    ctx.assert_("e2e-plan/coverage-plan.md" in add_tests, "add-robot-tests must reference e2e-plan/coverage-plan.md")
-    ctx.assert_("test-cases/<feature>.md" in add_tests, "add-robot-tests must reference test-cases/<feature>.md")
+    ctx.assert_("docs/qa/coverage-plan.md" in add_tests, "add-robot-tests must reference docs/qa/coverage-plan.md")
+    ctx.assert_("docs/qa/test-cases/<feature>.md" in add_tests, "add-robot-tests must reference docs/qa/test-cases/<feature>.md")

@@ -1,7 +1,7 @@
 ---
 name: plan-test-coverage
 description: >
-  Use before writing specs or executable tests to decide what coverage is needed first. This shared planning skill consumes exploration evidence, existing tests, and related artifacts to produce `e2e-plan/coverage-plan.md` with prioritized P0/P1/P2 coverage and TC-IDs. When `e2e-plan/exploratory-charter.md` exists (produced by `exploratory-test-writer`), use it as optional risk-framing context; do not require it and do not let it replace grounded exploration evidence. Use it for requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It plans; it does not perform the canonical exploration step and it does not write executable tests.
+  Use before writing specs or executable tests to decide what coverage is needed first. This shared planning skill consumes exploration evidence, existing tests, and related artifacts to produce `docs/qa/coverage-plan.md` with prioritized P0/P1/P2 coverage and TC-IDs. When `docs/qa/exploratory-charter.md` exists (produced by `exploratory-test-writer`), use it as optional risk-framing context; do not require it and do not let it replace grounded exploration evidence. Use it for requests like "what tests do I need", "coverage gaps", or "what TC-IDs are missing". It plans; it does not perform the canonical exploration step and it does not write executable tests.
 allowed-tools: Read Write Glob Grep Task
 ---
 
@@ -9,11 +9,11 @@ allowed-tools: Read Write Glob Grep Task
 
 Plan what to test by consuming shared exploration evidence and existing coverage.
 
-This skill may consume `e2e-plan/exploratory-charter.md` when it exists, but that file is optional
-context. `e2e-plan/exploration-report.md` remains the canonical grounded-evidence artifact whenever
+This skill may consume `docs/qa/exploratory-charter.md` when it exists, but that file is optional
+context. `docs/qa/exploration-report.md` remains the canonical grounded-evidence artifact whenever
 real product behavior is required.
 
-When `e2e-plan/feature-map.md` and `e2e-plan/exploration/*.md` exist, plan per sub-feature first
+When `docs/qa/feature-map.md` and `docs/qa/exploration/*.md` exist, plan per sub-feature first
 and then add cross-subfeature journeys on top of that evidence.
 
 ## Calibrating planning depth
@@ -36,13 +36,13 @@ area, or is this level right?"
 1. **Parse input** — extract the target URL and feature area from: $ARGUMENTS
 
 2. **Load the evidence base**:
-   - Read `e2e-plan/feature-map.md` when the feature may have been decomposed
-   - Read `e2e-plan/exploration-report.md` when real product evidence is required for the target
+   - Read `docs/qa/feature-map.md` when the feature may have been decomposed
+   - Read `docs/qa/exploration-report.md` when real product evidence is required for the target
      feature
-   - Read relevant `e2e-plan/exploration/*.md` files when the feature map identifies sub-features
-   - Read `e2e-plan/exploratory-charter.md` when it exists and the feature came through the
+   - Read relevant `docs/qa/exploration/*.md` files when the feature map identifies sub-features
+   - Read `docs/qa/exploratory-charter.md` when it exists and the feature came through the
      exploratory workflow
-   - Read existing `test-cases/*.md` specs for the same feature
+   - Read existing `docs/qa/test-cases/*.md` specs for the same feature
    - Search for existing automated coverage related to the feature
    - Note any missing artifact that blocks confident planning
 
@@ -50,7 +50,7 @@ area, or is this level right?"
    - `feature-map.md` supplies the decomposition, shared dependencies, and the expected exploration
      units
    - `exploration-report.md` supplies observed behavior, selectors, copy, and blockers
-   - `e2e-plan/exploration/*.md` supplies the deep evidence for each scoped sub-feature
+   - `docs/qa/exploration/*.md` supplies the deep evidence for each scoped sub-feature
    - `exploratory-charter.md` supplies mission, risk framing, and investigation focus
    - if they conflict, observed evidence wins over inferred or interview-based framing
    - carry forward any `Execution-relevant environment notes`, `Selector confidence`, and
@@ -67,9 +67,9 @@ area, or is this level right?"
 
 4. **Block when required exploration evidence is missing**:
    - If the target flow depends on real product behavior, validation copy, selector shape, or
-     conditional UI and `e2e-plan/exploration-report.md` is missing or clearly stale, stop and run
+     conditional UI and `docs/qa/exploration-report.md` is missing or clearly stale, stop and run
      `capture-feature-evidence`
-   - Do not treat `e2e-plan/exploratory-charter.md` as a substitute for missing exploration
+   - Do not treat `docs/qa/exploratory-charter.md` as a substitute for missing exploration
      evidence
    - Do not replace missing exploration with lightweight pseudo-exploration
    - If you can still produce a partial plan from repo evidence alone, label the plan as partial and
@@ -114,7 +114,7 @@ area, or is this level right?"
    - do not collapse multiple mapped surfaces into one undifferentiated list unless the feature map
      explicitly says the feature is single-surface
 
-9. **Write `e2e-plan/coverage-plan.md`**:
+9. **Write `docs/qa/coverage-plan.md`**:
 
 ```markdown
 ## Test Coverage Plan: <Feature>
@@ -125,7 +125,7 @@ area, or is this level right?"
 **Existing coverage:** <N tests already exist / none>
 **Status:** COMPLETE | PARTIAL | BLOCKED
 
-### Feature Map Summary (include when `e2e-plan/feature-map.md` exists)
+### Feature Map Summary (include when `docs/qa/feature-map.md` exists)
 - Decomposition verdict: SINGLE-SURFACE | MULTI-SURFACE
 - Sub-features: <list of slugs and names>
 
@@ -180,7 +180,7 @@ area, or is this level right?"
 ### Execution Fragility Notes
 - <TC-ID or control>: <low-confidence selector / viewport dependency / re-explore note, or "None">
 
-### Exploratory Inputs Applied (include only when `e2e-plan/exploratory-charter.md` was used)
+### Exploratory Inputs Applied (include only when `docs/qa/exploratory-charter.md` was used)
 - <risk hypothesis or mission statement that changed prioritization>
 - <exploration gap that remains open and constrains planning>
 

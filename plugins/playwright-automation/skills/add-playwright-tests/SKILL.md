@@ -4,8 +4,8 @@ description: >
   THE DEFAULT ENTRY POINT for the Playwright execution layer in the split testing suite. Use to
   add, create, or set up Playwright end-to-end tests for a feature, page, or application. It
   orchestrates the full Playwright workflow after shared exploration and planning: analyze the
-  Playwright codebase, consume `e2e-plan/feature-map.md`, `e2e-plan/exploration-report.md`,
-  `e2e-plan/coverage-plan.md`, and `test-cases/*.md`, write production-grade test code, review it,
+  Playwright codebase, consume `docs/qa/feature-map.md`, `docs/qa/exploration-report.md`,
+  `docs/qa/coverage-plan.md`, and `docs/qa/test-cases/*.md`, write production-grade test code, review it,
   and verify it with real execution. Delegates to `analyze-test-codebase`, `write-test-code`,
   `review-test-code`, and `fix-flaky-tests`, while relying on shared `map-feature-scope`,
   `capture-feature-evidence`, `plan-test-coverage`,
@@ -49,11 +49,11 @@ constraints.
 
 ### Understand the product through shared evidence
 
-- Read `e2e-plan/exploration-report.md` if it exists.
-- Read `e2e-plan/feature-map.md` and any `e2e-plan/exploration/*.md` files if they exist.
+- Read `docs/qa/exploration-report.md` if it exists.
+- Read `docs/qa/feature-map.md` and any `docs/qa/exploration/*.md` files if they exist.
 - If the required product evidence is missing or stale, run `map-feature-scope` first for broad
   features, then run `capture-feature-evidence` for each required scoped area before continuing.
-- Read `e2e-plan/coverage-plan.md` and `test-cases/*.md` files for the feature if they exist.
+- Read `docs/qa/coverage-plan.md` and `docs/qa/test-cases/*.md` files for the feature if they exist.
 
 The execution layer should not improvise product behavior that the exploration layer was supposed to
 establish. If real product understanding is missing, stop and create or refresh the shared
@@ -77,18 +77,18 @@ artifacts first.
 
 Before you write Playwright code, make sure the shared handoff artifacts exist and are current:
 
-- `e2e-plan/feature-map.md` for broad multi-surface features
-- `e2e-plan/exploration-report.md`
-- `e2e-plan/exploration/*.md` for mapped sub-features
-- `e2e-plan/coverage-plan.md`
-- `test-cases/<feature>.md`
+- `docs/qa/feature-map.md` for broad multi-surface features
+- `docs/qa/exploration-report.md`
+- `docs/qa/exploration/*.md` for mapped sub-features
+- `docs/qa/coverage-plan.md`
+- `docs/qa/test-cases/<feature>.md`
 
 If any required artifact is missing, dispatch each shared skill via a Task-tool subagent — the orchestrator coordinates, subagents produce:
 
-1. **Run `map-feature-scope` in a subagent** when the request may span multiple routes, tabs, overlays, roles, or primary interactive surfaces. The subagent writes `e2e-plan/feature-map.md`.
-2. If the feature map says `SINGLE-SURFACE`, run one `capture-feature-evidence` subagent and let it write `e2e-plan/exploration-report.md`.
-3. If the feature map says `MULTI-SURFACE`, dispatch one fresh `capture-feature-evidence` subagent per sub-feature marked `parallel-safe = yes`, then run any `parallel-safe = no` rows serially once their prerequisites are satisfied. Each subagent writes `e2e-plan/exploration/<subfeature>.md`.
-4. Synthesize or refresh `e2e-plan/exploration-report.md` as a rollup over the mapped exploration artifacts. The rollup is an index and merged summary only; it does not invent observations.
+1. **Run `map-feature-scope` in a subagent** when the request may span multiple routes, tabs, overlays, roles, or primary interactive surfaces. The subagent writes `docs/qa/feature-map.md`.
+2. If the feature map says `SINGLE-SURFACE`, run one `capture-feature-evidence` subagent and let it write `docs/qa/exploration-report.md`.
+3. If the feature map says `MULTI-SURFACE`, dispatch one fresh `capture-feature-evidence` subagent per sub-feature marked `parallel-safe = yes`, then run any `parallel-safe = no` rows serially once their prerequisites are satisfied. Each subagent writes `docs/qa/exploration/<subfeature>.md`.
+4. Synthesize or refresh `docs/qa/exploration-report.md` as a rollup over the mapped exploration artifacts. The rollup is an index and merged summary only; it does not invent observations.
 5. Run `plan-test-coverage` to produce the coverage plan (delegate if heavy).
 6. Run `generate-test-cases` to produce TC-ID specs (delegate if heavy).
 7. **Run `review-test-cases` in a fresh subagent** — not the agent that authored the spec. Stop if the verdict is `NEEDS REVISION`.
@@ -106,11 +106,11 @@ Once the shared artifacts are ready:
 
 Delegate writing to subagents when the test suite is large — the main orchestrator coordinates review gates and the coverage audit; the code-writing subagent focuses on translating specs to Playwright tests. Pass the relevant artifacts into each writing call:
 
-- `e2e-plan/feature-map.md`
-- `e2e-plan/exploration-report.md`
-- relevant `e2e-plan/exploration/<subfeature>.md` files
-- `e2e-plan/coverage-plan.md`
-- `test-cases/<feature>.md` or `test-cases/<feature>/<subfeature>.md`
+- `docs/qa/feature-map.md`
+- `docs/qa/exploration-report.md`
+- relevant `docs/qa/exploration/<subfeature>.md` files
+- `docs/qa/coverage-plan.md`
+- `docs/qa/test-cases/<feature>.md` or `docs/qa/test-cases/<feature>/<subfeature>.md`
 - any conventions or analysis files emitted by `analyze-test-codebase`
 
 ## 4. Run The Mandatory Quality Gates
@@ -149,8 +149,8 @@ npx playwright test <file> --reporter=list 2>&1
 
 Green test output is necessary but not sufficient. Dispatch a fresh subagent with the following inputs:
 
-- `e2e-plan/exploration-report.md` (specifically the Element Inventory and Elements Not Yet Reached sections)
-- relevant `e2e-plan/exploration/<subfeature>.md` files for mapped features
+- `docs/qa/exploration-report.md` (specifically the Element Inventory and Elements Not Yet Reached sections)
+- relevant `docs/qa/exploration/<subfeature>.md` files for mapped features
 - the executed test file(s)
 
 The subagent's job is to classify each inventory element as one of:
@@ -159,7 +159,7 @@ The subagent's job is to classify each inventory element as one of:
 - `covered-visibility-only` — a test references the element but does not exercise it functionally
 - `uncovered` — no test touches the element
 
-Output: `e2e-plan/coverage-audit.md` with the classification table and one of three verdicts:
+Output: `docs/qa/coverage-audit.md` with the classification table and one of three verdicts:
 
 - **GREEN** — every promoted P0/P1 inventory-backed behavior is covered functionally, or any uncovered item is explicitly out of current scope and was never promoted into the accepted spec or coverage plan
 - **YELLOW** — one or more promoted items remain deferred, partially covered, or visibility-only, but the operator has explicitly accepted those gaps with written reasoning

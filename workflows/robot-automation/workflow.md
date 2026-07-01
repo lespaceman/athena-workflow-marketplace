@@ -83,7 +83,7 @@ state, DOM shape, labels, roles, selectors, navigation, timing, or data.
 
 - If the request is narrow and obviously single-surface, go straight to `capture-feature-evidence`.
 - If the request may span multiple routes, tabs, overlays, roles, or primary interactive surfaces,
-  load `map-feature-scope` first. It writes `e2e-plan/feature-map.md`, which tells the
+  load `map-feature-scope` first. It writes `docs/qa/feature-map.md`, which tells the
   orchestrator whether one exploration run is enough or whether multiple scoped `capture-feature-evidence` runs
   should follow.
 - If the request is to fix, stabilize, update, or repair existing suites, first identify the failing
@@ -91,21 +91,21 @@ state, DOM shape, labels, roles, selectors, navigation, timing, or data.
   that flow against the current app before changing selectors or waits.
 
 Load `capture-feature-evidence` after scoping and capture either:
-- `e2e-plan/exploration-report.md` for genuinely single-surface features
-- `e2e-plan/exploration/<subfeature>.md` for mapped multi-surface features
+- `docs/qa/exploration-report.md` for genuinely single-surface features
+- `docs/qa/exploration/<subfeature>.md` for mapped multi-surface features
 
-The orchestrator then synthesizes `e2e-plan/exploration-report.md` as the canonical rollup handoff
+The orchestrator then synthesizes `docs/qa/exploration-report.md` as the canonical rollup handoff
 into the Robot execution layer.
 
 ### Plan coverage when evidence is sufficient
 
 Load `plan-test-coverage` after exploration. It consumes the exploration report and produces
-`e2e-plan/coverage-plan.md`; it is not the exploration step.
+`docs/qa/coverage-plan.md`; it is not the exploration step.
 
 ### Observations
 
-After orientation, preserve the concrete product evidence in `e2e-plan/exploration-report.md` and,
-for mapped features, the underlying `e2e-plan/exploration/*.md` files. When downstream work depends
+After orientation, preserve the concrete product evidence in `docs/qa/exploration-report.md` and,
+for mapped features, the underlying `docs/qa/exploration/*.md` files. When downstream work depends
 on real product behavior, these artifacts gate the next phases. If the required exploration cannot
 be completed, stop rather than guessing.
 
@@ -132,7 +132,7 @@ Each step has prerequisites. The important gating relationships:
 
 | Before you can... | You must have... |
 |---|---|
-| Generate specs (`generate-test-cases`) | `e2e-plan/exploration-report.md`, plus mapped `e2e-plan/exploration/*.md` files when the feature was decomposed |
+| Generate specs (`generate-test-cases`) | `docs/qa/exploration-report.md`, plus mapped `docs/qa/exploration/*.md` files when the feature was decomposed |
 | Write test code (`write-robot-code`) | Specs that passed review (Gate 1) |
 | Run tests | Code that passed review (Gate 2) |
 
@@ -180,7 +180,7 @@ Four gates are mandatory. The first two are review-only — they produce finding
 ### Gate 1: Review specs
 
 After `generate-test-cases`, before `write-robot-code`:
-- Load `review-test-cases` and run against `test-cases/<feature>.md`
+- Load `review-test-cases` and run against `docs/qa/test-cases/<feature>.md`
 - If **NEEDS REVISION** — revise the spec, then rerun `review-test-cases` before writing code
 
 ### Gate 2: Review code
@@ -233,7 +233,7 @@ Mandatory re-exploration triggers include:
 - any proposed selector-only fix for an existing failing suite when no current browser evidence has
   been captured for the failing flow
 
-**Failure triage via browser (mandatory before fixing).** When a test fails, do not patch selectors, add `Sleep`s, or label the failure as flake until the cause is classified against the live product. Dispatch a fresh subagent with `mcp__plugin_agent-web-interface_browser__*` access and the relevant `e2e-plan/exploration-report.md` (or `e2e-plan/exploration/<subfeature>.md`) section. The subagent must:
+**Failure triage via browser (mandatory before fixing).** When a test fails, do not patch selectors, add `Sleep`s, or label the failure as flake until the cause is classified against the live product. Dispatch a fresh subagent with `mcp__plugin_agent-web-interface_browser__*` access and the relevant `docs/qa/exploration-report.md` (or `docs/qa/exploration/<subfeature>.md`) section. The subagent must:
 
 1. Navigate to the failing flow and reproduce the user action by hand.
 2. Compare the current DOM against the recorded evidence — labels, roles, structure, selector candidates.
@@ -261,7 +261,7 @@ After Gate 3 passes (and the three consecutive green runs required for signoff),
 - `covered-visibility-only` — a test references the element but does not exercise it functionally
 - `uncovered` — no test touches it
 
-The audit writes `e2e-plan/coverage-audit.md` and returns a verdict:
+The audit writes `docs/qa/coverage-audit.md` and returns a verdict:
 
 - **GREEN** — every promoted P0/P1 inventory-backed behavior is covered functionally, or any uncovered item is explicitly out of current scope and was never promoted into the accepted spec or coverage plan
 - **YELLOW** — one or more promoted items remain deferred, partially covered, or visibility-only, but the operator has explicitly accepted those gaps with written reasoning
@@ -280,7 +280,7 @@ completion signals the authoring agent could not honestly grade.
 **1. Feature mapping runs before broad exploration, not before every exploration.** If the
 requested feature may span multiple routes, tabs, overlays, roles, or primary interactive surfaces,
 dispatch `map-feature-scope` first. For obviously narrow single-surface requests, skip it and go
-straight to `capture-feature-evidence`. The output of mapping is `e2e-plan/feature-map.md`, not a deep evidence
+straight to `capture-feature-evidence`. The output of mapping is `docs/qa/feature-map.md`, not a deep evidence
 report.
 
 **2. Deep exploration runs in scoped subagents.** The main agent does not browse. Dispatch

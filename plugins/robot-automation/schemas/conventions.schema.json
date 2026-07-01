@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/lespaceman/athena-workflow-marketplace/plugins/robot-automation/schemas/conventions.schema.json",
   "title": "Robot Automation Conventions Contract",
-  "description": "Typed contract between analyze-test-codebase / scaffold-robot-project (writers) and all downstream skills (readers). The artifact is written to e2e-plan/conventions.yaml at project root.",
+  "description": "Typed contract between analyze-test-codebase / scaffold-robot-project (writers) and all downstream skills (readers). The artifact is written to docs/qa/conventions.yaml at project root.",
   "type": "object",
   "required": [
     "version",

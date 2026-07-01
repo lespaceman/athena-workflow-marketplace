@@ -1,7 +1,7 @@
 ---
 name: analyze-test-codebase
 description: >
-  Use to inspect an existing Robot Framework + Browser library codebase before writing, reviewing, or fixing tests. Covers robot.toml or pyproject config, resource files, keyword libraries, listeners, auth keywords, suite init (`__init__.robot`), tag conventions, directory structure, and emits the typed `e2e-plan/conventions.yaml` contract used by downstream skills. Triggers: "understand", "check", "show me", "inspect", or "analyze" the current Robot Framework test setup, config, infrastructure, patterns, or conventions. Does NOT write or fix tests, install Robot Framework, or explore live websites.
+  Use to inspect an existing Robot Framework + Browser library codebase before writing, reviewing, or fixing tests. Covers robot.toml or pyproject config, resource files, keyword libraries, listeners, auth keywords, suite init (`__init__.robot`), tag conventions, directory structure, and emits the typed `docs/qa/conventions.yaml` contract used by downstream skills. Triggers: "understand", "check", "show me", "inspect", or "analyze" the current Robot Framework test setup, config, infrastructure, patterns, or conventions. Does NOT write or fix tests, install Robot Framework, or explore live websites.
 allowed-tools: Read Glob Grep Bash
 ---
 
@@ -112,7 +112,7 @@ Scan and analyze an existing Robot Framework test codebase to understand its con
 - Auth: reuse existing persisted state setup
 ```
 
-7. **Emit `e2e-plan/conventions.yaml`** — in addition to the human-readable report, produce a strict, versioned conventions artifact for downstream skills to read. Validate it against `plugins/robot-automation/schemas/conventions.schema.json`. If no Robot project is present, stop and note that analysis could not infer conventions from history; only suggest the optional external scaffold repository if a greenfield bootstrap is requested.
+7. **Emit `docs/qa/conventions.yaml`** — in addition to the human-readable report, produce a strict, versioned conventions artifact for downstream skills to read. Validate it against `plugins/robot-automation/schemas/conventions.schema.json`. If no Robot project is present, stop and note that analysis could not infer conventions from history; only suggest the optional external scaffold repository if a greenfield bootstrap is requested.
 
 ## Out of Scope
 

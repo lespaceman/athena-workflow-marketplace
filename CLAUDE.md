@@ -46,8 +46,8 @@ Use `scripts/init-compatible-skill.py` to scaffold all three.
 | Plugin | Role |
 |--------|------|
 | `agent-web-interface` | MCP browser server (Puppeteer/CDP) + live-interaction skill. Other plugins delegate browser work here. |
-| `app-exploration` | Shared live-product exploration. Owns `e2e-plan/exploration-report.md`. |
-| `test-analysis` | Shared coverage planning, TC-ID spec generation, spec review. Owns `e2e-plan/coverage-plan.md` and `test-cases/<feature>.md`. |
+| `app-exploration` | Shared live-product exploration. Owns `docs/qa/exploration-report.md`. |
+| `test-analysis` | Shared coverage planning, TC-ID spec generation, spec review. Owns `docs/qa/coverage-plan.md` and `docs/qa/test-cases/<feature>.md`. |
 | `exploratory-testing` / `smoke-testing` / `regression-testing` | Intent layer — risk/scope charters before execution layer is chosen. |
 | `playwright-automation` | Playwright execution layer: analyze codebase, write, review, fix flake. |
 | `robot-automation` | Robot Framework (Browser library) execution layer with the same skill shape. |

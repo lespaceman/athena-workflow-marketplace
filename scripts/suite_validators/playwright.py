@@ -51,10 +51,10 @@ def validate_playwright(ctx: SuiteContext) -> None:
     ctx.assert_("agent-web-interface-guide" in workflow_md, "workflows/playwright-automation/workflow.md must explicitly list agent-web-interface-guide for browser-backed exploration and triage")
 
     for label, content in (("plan-test-coverage", coverage), ("generate-test-cases", generate), ("review-test-cases", review)):
-        ctx.assert_("e2e-plan/exploration-report.md" in content, f"{label} must reference e2e-plan/exploration-report.md")
+        ctx.assert_("docs/qa/exploration-report.md" in content, f"{label} must reference docs/qa/exploration-report.md")
 
-    ctx.assert_("e2e-plan/coverage-plan.md" in coverage, "plan-test-coverage must produce e2e-plan/coverage-plan.md")
+    ctx.assert_("docs/qa/coverage-plan.md" in coverage, "plan-test-coverage must produce docs/qa/coverage-plan.md")
     ctx.assert_(
-        "test-cases/<feature-name>.md" in generate or "test-cases/<feature>.md" in generate,
-        "generate-test-cases must target test-cases/<feature>.md-style output",
+        "docs/qa/test-cases/<feature-name>.md" in generate or "docs/qa/test-cases/<feature>.md" in generate,
+        "generate-test-cases must target docs/qa/test-cases/<feature>.md-style output",
     )

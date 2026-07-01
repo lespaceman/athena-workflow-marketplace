@@ -25,8 +25,8 @@ If no argument provided, search for recently modified `*.spec.ts` or `*.test.ts`
 2. Read project conventions for comparison:
    - `playwright.config.ts` or `playwright.config.js` — extract `baseURL`, `testDir`, projects, timeouts, `fullyParallel`, `workers`
    - 2-3 existing test files (not the ones under review) to establish the project's conventions
-   - `e2e-plan/conventions.md` if it exists
-3. Read the corresponding test case spec (`test-cases/<feature>.md`) if it exists — needed for traceability check
+   - `docs/qa/conventions.md` if it exists
+3. Read the corresponding test case spec (`docs/qa/test-cases/<feature>.md`) if it exists — needed for traceability check
 4. Note the project's locator strategy, fixture patterns, auth approach, and naming conventions
 
 ### Step 2: Run the Review Checklist

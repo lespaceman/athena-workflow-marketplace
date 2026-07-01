@@ -22,7 +22,7 @@ The default progression is:
 - Load `exploratory-test-writer` as the intent-layer entry point.
 - Use the first charter pass to decide whether grounded product evidence is missing, stale, or too
   thin to support confident risk framing.
-- If the charter depends on grounded product behavior and `e2e-plan/exploration-report.md` is
+- If the charter depends on grounded product behavior and `docs/qa/exploration-report.md` is
   missing or stale, run `capture-feature-evidence`, then return to `exploratory-test-writer` to finalize the
   charter.
 - Use the completed charter to identify what still needs deeper probing and what should be handed to
@@ -30,14 +30,14 @@ The default progression is:
 
 ## Handoff Rules
 
-- `exploratory-test-writer` owns `e2e-plan/exploratory-charter.md`, including mission, risk
+- `exploratory-test-writer` owns `docs/qa/exploratory-charter.md`, including mission, risk
   hypotheses, exploratory ordering, and evidence gaps.
 - `plan-test-coverage` may consume that charter as optional context, but it owns the final
   P0/P1/P2 coverage priority and it does not let the charter replace the required grounded evidence
-  in `e2e-plan/exploration-report.md`.
-- `capture-feature-evidence` owns `e2e-plan/exploration-report.md`.
-- `plan-test-coverage` owns `e2e-plan/coverage-plan.md`.
-- `generate-test-cases` owns `test-cases/<feature>.md`.
+  in `docs/qa/exploration-report.md`.
+- `capture-feature-evidence` owns `docs/qa/exploration-report.md`.
+- `plan-test-coverage` owns `docs/qa/coverage-plan.md`.
+- `generate-test-cases` owns `docs/qa/test-cases/<feature>.md`.
 
 If the user explicitly asks for shared coverage planning or test-case specs, load the shared
 `test-analysis` skills after the charter is complete. Do not encode that sequencing inside the

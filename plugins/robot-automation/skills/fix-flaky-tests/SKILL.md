@@ -17,7 +17,7 @@ Parse the test file path or test name from: $ARGUMENTS
 
 ### Step 1: Reproduce and Classify
 1. Read the failing test file
-2. Read `e2e-plan/conventions.yaml` if it exists so you know the intended locator style and runtime baseline
+2. Read `docs/qa/conventions.yaml` if it exists so you know the intended locator style and runtime baseline
 3. Run the test multiple times to observe the pattern
 4. Run it in isolation if needed
 5. Classify the root cause
@@ -56,7 +56,7 @@ Investigate based on the category:
 | Race condition | Use `Promise To` + action + `Wait For` |
 | Locator | Scope with `parent=` or `>>`, avoid positional selectors |
 | Environment | Pin viewport, locale, timezone, and block interfering third-party scripts |
-| Config drift | Add missing brownfield resilience primitives in place and rewrite `e2e-plan/conventions.yaml` |
+| Config drift | Add missing brownfield resilience primitives in place and rewrite `docs/qa/conventions.yaml` |
 | Strict ambiguity | Keep strict mode on and narrow the locator |
 | Evidence gap | Re-explore the live DOM at the execution conditions before changing the test |
 

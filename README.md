@@ -211,7 +211,7 @@ The testing plugins now split shared responsibilities from framework execution:
 
 | Plugin | Canonical responsibility |
 |-------|-------------|
-| `app-exploration` | Explore the live product and write `e2e-plan/exploration-report.md` |
+| `app-exploration` | Explore the live product and write `docs/qa/exploration-report.md` |
 | `test-analysis` | Plan coverage, generate TC-ID specs, and review those specs |
 | `playwright-automation` | Playwright execution layer: analyze codebases, write tests, review them, and fix flake after the shared layers are ready |
 | `robot-automation` | Robot execution layer: analyze codebases, write `.robot` suites, review them, and fix flake after the shared layers are ready |
@@ -228,15 +228,15 @@ Plugins that express testing intent while leaving execution ownership to the fra
 
 Shared artifact contract:
 
-- `e2e-plan/exploration-report.md`
-- `e2e-plan/coverage-plan.md`
-- `test-cases/<feature>.md`
+- `docs/qa/exploration-report.md`
+- `docs/qa/coverage-plan.md`
+- `docs/qa/test-cases/<feature>.md`
 
 Optional plugin-owned intent artifacts:
 
-- `e2e-plan/exploratory-charter.md`
-- `e2e-plan/smoke-charter.md`
-- `e2e-plan/regression-charter.md`
+- `docs/qa/exploratory-charter.md`
+- `docs/qa/smoke-charter.md`
+- `docs/qa/regression-charter.md`
 
 Canonical entry skills:
 

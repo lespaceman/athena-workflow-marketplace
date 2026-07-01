@@ -24,8 +24,8 @@ If no argument is provided, search for recently modified `*.robot` files and rev
 2. Read project conventions for comparison:
    - `robot.toml` or `pyproject.toml`
    - 2-3 existing `.robot` files not under review
-   - `e2e-plan/conventions.yaml` if it exists, validating it against `plugins/robot-automation/schemas/conventions.schema.json`
-3. Read the corresponding `test-cases/<feature>.md` file if it exists
+   - `docs/qa/conventions.yaml` if it exists, validating it against `plugins/robot-automation/schemas/conventions.schema.json`
+3. Read the corresponding `docs/qa/test-cases/<feature>.md` file if it exists
 4. Note the project's locator strategy, resource pattern, auth approach, tags, and runtime expectations
 
 ### Step 2: Run the Review Checklist

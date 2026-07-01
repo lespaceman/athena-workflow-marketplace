@@ -2,8 +2,8 @@
 name: generate-test-cases
 description: >
   Use to write detailed TC-ID test case specifications for a web app feature, not executable code.
-  This shared skill consumes `e2e-plan/exploration-report.md`, `e2e-plan/coverage-plan.md`, and
-  existing coverage artifacts to write structured specs under `test-cases/`. Use it after coverage
+  This shared skill consumes `docs/qa/exploration-report.md`, `docs/qa/coverage-plan.md`, and
+  existing coverage artifacts to write structured specs under `docs/qa/test-cases/`. Use it after coverage
   planning or when asked for test cases or TC-IDs. It does not write framework-specific test code.
 allowed-tools: Read Write Bash Glob Grep Task
 ---
@@ -21,14 +21,14 @@ Parse the target URL and user journey description from: $ARGUMENTS
 ### Step 1: Load The Evidence Base
 
 Read and reconcile:
-- `e2e-plan/feature-map.md` when present
-- `e2e-plan/exploration-report.md`
-- relevant `e2e-plan/exploration/*.md`
-- `e2e-plan/coverage-plan.md`
-- existing `test-cases/*.md` specs for the feature
+- `docs/qa/feature-map.md` when present
+- `docs/qa/exploration-report.md`
+- relevant `docs/qa/exploration/*.md`
+- `docs/qa/coverage-plan.md`
+- existing `docs/qa/test-cases/*.md` specs for the feature
 - existing automated coverage if needed to avoid duplicate TC-IDs
 
-If the feature clearly needs real product evidence and `e2e-plan/exploration-report.md` is missing,
+If the feature clearly needs real product evidence and `docs/qa/exploration-report.md` is missing,
 stop and run `capture-feature-evidence` first.
 
 Parse the journey description to identify:
@@ -46,7 +46,7 @@ Work from the exploration report first:
 
 If `feature-map.md` exists and marks the feature as `MULTI-SURFACE`:
 - generate one spec file per mapped sub-feature by default
-- use the relevant `e2e-plan/exploration/<subfeature>.md` as the primary evidence source for that
+- use the relevant `docs/qa/exploration/<subfeature>.md` as the primary evidence source for that
   file
 - add a separate integration spec only for journeys that intentionally cross sub-feature boundaries
 
@@ -126,9 +126,9 @@ See [references/scenario-categories.md](references/scenario-categories.md) for d
 ### Step 5: Generate Test Case Specifications
 
 Write structured test cases to:
-- `test-cases/<feature-name>.md` for single-surface features
-- `test-cases/<feature-name>/<subfeature-name>.md` for mapped multi-surface features
-- optionally `test-cases/<feature-name>/integration.md` for cross-subfeature journeys
+- `docs/qa/test-cases/<feature-name>.md` for single-surface features
+- `docs/qa/test-cases/<feature-name>/<subfeature-name>.md` for mapped multi-surface features
+- optionally `docs/qa/test-cases/<feature-name>/integration.md` for cross-subfeature journeys
 
 ## Output Specification
 
@@ -240,14 +240,14 @@ Report and work around:
 
 Here's a compressed example showing evidence-to-spec flow for a simple contact form:
 
-**Exploration evidence** (from `e2e-plan/exploration-report.md`):
+**Exploration evidence** (from `docs/qa/exploration-report.md`):
 Visited the contact page. Found: name field (text, no visible limit), email field (validates format
 client-side), message textarea (maxlength=500 in HTML), submit button, success toast, no CAPTCHA.
 Network traffic shows POST to `/api/contact` returning 200 with `{"status":"queued"}`. Console
 clean. Tried empty submit -> client-side validation fires on email only, name and message submit
 empty.
 
-**Coverage plan** (from `e2e-plan/coverage-plan.md`):
+**Coverage plan** (from `docs/qa/coverage-plan.md`):
 
 | Area | Impact | Likelihood | Priority |
 |------|--------|------------|----------|
@@ -257,7 +257,7 @@ empty.
 | Message length limits | Low (truncation) | Medium (server limit unknown) | P1 |
 | Rate limiting / abuse | Medium (abuse) | Unknown | P1 |
 
-**Generated test cases** (written to `test-cases/contact-form.md`):
+**Generated test cases** (written to `docs/qa/test-cases/contact-form.md`):
 
 ### Input Validation
 **TC-CONTACT-001** — Submit with empty name and message (P0)

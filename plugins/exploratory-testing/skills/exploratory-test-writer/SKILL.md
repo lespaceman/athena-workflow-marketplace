@@ -39,13 +39,13 @@ sequencer for them.
 ## Integration with shared artifacts
 
 This skill **consumes**:
-- `e2e-plan/exploration-report.md` — when available, uses it to ground risk hypotheses in observed
+- `docs/qa/exploration-report.md` — when available, uses it to ground risk hypotheses in observed
   behavior rather than speculation
 
 This skill **produces**:
-- `e2e-plan/exploratory-charter.md` — an optional artifact owned by this plugin. It complements, rather than
+- `docs/qa/exploratory-charter.md` — an optional artifact owned by this plugin. It complements, rather than
   replaces, the core shared artifact chain (`exploration-report.md`, `coverage-plan.md`,
-  `test-cases/*.md`). Downstream skills may consume it for context but do not depend on it.
+  `docs/qa/test-cases/*.md`). Downstream skills may consume it for context but do not depend on it.
 
 Before doing anything, check whether these artifacts already exist. Prior exploration work is
 valuable evidence — don't discard it.
@@ -69,9 +69,9 @@ area?"
 
 ### 1. Gather context
 
-- Read `e2e-plan/exploration-report.md` if it exists. Use observed behavior to ground your risk
+- Read `docs/qa/exploration-report.md` if it exists. Use observed behavior to ground your risk
   framing.
-- Read `e2e-plan/coverage-plan.md` and `test-cases/*.md` if they exist, so you don't duplicate
+- Read `docs/qa/coverage-plan.md` and `docs/qa/test-cases/*.md` if they exist, so you don't duplicate
   existing coverage thinking.
 - Search the codebase for feature keywords, route names, and existing test files.
 - If no exploration report exists and product context is still missing, note this as a gap and
@@ -146,7 +146,7 @@ Each gap should be directly handoff-ready and include:
 
 ### 5. Write the charter
 
-Write `e2e-plan/exploratory-charter.md`:
+Write `docs/qa/exploratory-charter.md`:
 
 ```markdown
 # Exploratory Charter: <Feature/Product>
