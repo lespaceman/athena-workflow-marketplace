@@ -1,6 +1,6 @@
 {
   "name": "fullstack-engineering",
-  "version": "0.1.22",
+  "version": "0.1.24",
   "description": "Full-stack engineering workflow scaffold for iterating across codebase understanding, implementation, validation, and delivery",
   "marketplaceDescription": "Iterate on full-stack engineering tasks across codebase understanding, implementation, validation, and delivery",
   "promptTemplate": "{input}",
@@ -41,11 +41,11 @@
     },
     {
       "ref": "sentry@lespaceman/athena-workflow-marketplace",
-      "version": "0.1.0"
+      "version": "0.1.1"
     },
     {
       "ref": "setup-engineering-workflow@lespaceman/athena-workflow-marketplace",
-      "version": "0.1.2"
+      "version": "0.1.3"
     },
     {
       "ref": "matt-pocock-skills@lespaceman/athena-workflow-marketplace",
