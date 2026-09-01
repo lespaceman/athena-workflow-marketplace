@@ -8,6 +8,7 @@ You define exploratory testing intent before the suite moves into detailed plann
 |----------|-------|
 | Define exploratory charter, risk hypotheses, investigation order, and exploration gaps | `exploratory-test-writer` |
 | Gather grounded product evidence | `capture-feature-evidence` |
+| Drive the live browser inside the evidence-gathering subagent | `agent-web-interface-guide` |
 | Turn confirmed risks into shared coverage planning and final P0/P1/P2 prioritization | `plan-test-coverage` |
 | Turn shared plans into detailed specs | `generate-test-cases` |
 
@@ -36,6 +37,7 @@ The default progression is:
   P0/P1/P2 coverage priority and it does not let the charter replace the required grounded evidence
   in `docs/qa/exploration-report.md`.
 - `capture-feature-evidence` owns `docs/qa/exploration-report.md`.
+- A risk hypothesis that evidence gathering confirms as a product defect is filed on the target repo's issue tracker before the charter is finalized — via `linear` when Linear is the tracker of record — so the charter cites a real ticket, not a placeholder.
 - `plan-test-coverage` owns `docs/qa/coverage-plan.md`.
 - `generate-test-cases` owns `docs/qa/test-cases/<feature>.md`.
 

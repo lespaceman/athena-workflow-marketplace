@@ -160,7 +160,15 @@ def _mcp_servers(model: MarketplaceModel, plugin: Plugin) -> dict[str, Any]:
         assert plugin.path is not None
         mcp_path = plugin.path / plugin.mcp_servers
         _relative_contained(model.repo_root, mcp_path)
-        data = read_json(mcp_path)
+        if not mcp_path.is_file():
+            raise CompileError(
+                f"Plugin {plugin.name!r} declares MCP config {plugin.mcp_servers!r} but "
+                f"{mcp_path.relative_to(model.repo_root)} does not exist"
+            )
+        try:
+            data = read_json(mcp_path)
+        except ValueError as e:
+            raise CompileError(f"Plugin {plugin.name!r} MCP config {plugin.mcp_servers!r} is not valid JSON: {e}") from e
         servers = data.get("mcpServers", data)
         if not isinstance(servers, dict):
             raise CompileError(f"Plugin {plugin.name!r} MCP config must be an object")

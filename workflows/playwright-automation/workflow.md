@@ -12,6 +12,7 @@ plugin surfaces, while `workflow.json` remains the source of truth for versions.
 | `agent-web-interface` | `agent-web-interface-guide` |
 | `app-exploration` | `map-feature-scope`, `capture-feature-evidence` |
 | `test-analysis` | `plan-test-coverage`, `generate-test-cases`, `review-test-cases` |
+| `linear` | `linear` — verify or file the blocking ticket named in a deferred TC's un-defer plan, when Linear is the target repo's tracker of record |
 | `playwright-automation` | `add-playwright-tests`, `analyze-test-codebase`, `write-test-code`, `review-test-code`, `fix-flaky-tests` |
 
 ## Skills
@@ -171,6 +172,7 @@ These targets are not soft suggestions. Gate 1 rejects specs that violate them w
 
 - **blocker** — the concrete thing preventing automation (e.g., "requires seeded data", "third-party iframe with no test hook", "production-only API")
 - **un-defer plan** — what changes to make this testable (e.g., "add fixture once backend ticket APM-412 lands")
+  When the un-defer plan names a ticket and Linear is the target repo's tracker of record, load `linear` to look the ticket up — and file it if it does not exist — so the deferral points at a real, open item rather than a placeholder.
 - **scope** — `this-sprint` or `out-of-scope`
 
 Cap: at most **20% of TCs** in a spec may be deferred. Over that, the spec fails Gate 1 with "scope too narrow — revisit exploration"; the fix is more evidence, not more deferrals.

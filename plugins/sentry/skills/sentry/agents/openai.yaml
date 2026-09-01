@@ -1,0 +1,10 @@
+interface:
+  display_name: "Sentry"
+  short_description: "Read Sentry errors, stack traces, performance data, and release health"
+  default_prompt: "Use Sentry to inspect issues, events, and stack traces. Stay grounded in the data — fetch before concluding."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "sentry"
+      description: "Sentry MCP tools for issue, event, stack trace, release, performance, and environment operations"

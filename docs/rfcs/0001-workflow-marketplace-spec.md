@@ -143,6 +143,18 @@ Example:
 - `plugins` (required, array): Plugin Pin objects with `ref` and `version`. `ref` uses `<plugin-name>@<owner>/<repo>`; `version` is the fixed Plugin version the Workflow was authored against.
 - `loop` (optional, object): Loop execution behavior.
 - `isolation` (optional, string): Runtime isolation preference.
+- `version` (string; present on every Workflow in this repository, the loader defaults it to `0.0.0` when absent): Semantic version of the Workflow definition. Bumped by CI whenever the definition, its `workflowFile`, or any Plugin Pin changes; the Athena Marketplace Registry entry carries the same value.
+- `marketplaceDescription` (optional, string): Shorter summary shown in the Athena Marketplace Registry instead of `description`.
+- `examplePrompts` (optional, array of strings): Sample inputs a runtime may show to users when they pick the Workflow.
+
+### Workflow File Conventions
+
+When `workflowFile` is present, this repository's validator (`scripts/marketplace-cli validate`) checks it against `plugins[]`:
+
+- Every backticked name in the file that matches a Skill shipped by any Plugin in this repository MUST belong to a pinned Plugin.
+- Every pinned Plugin MUST be referenced at least once, by its own name or by one of its Skills.
+- In a Plugins table (a row whose first cell is a backticked Plugin name), every backticked name in the other cells MUST be a Skill that Plugin ships — the one check that catches a Skill name existing nowhere.
+- Fenced code blocks are not scanned. A deliberate mention of an unpinned Skill can be exempted with `<!-- marketplace-validate: ignore-skill <name> -->`.
 
 ### Loop Semantics
 

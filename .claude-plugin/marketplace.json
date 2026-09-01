@@ -306,6 +306,23 @@
       "license": "MIT"
     },
     {
+      "name": "sentry",
+      "source": "./plugins/sentry",
+      "description": "Use Sentry error tracking, performance monitoring, and stack traces from engineering agents via the official Sentry MCP server",
+      "version": "0.1.0",
+      "keywords": [
+        "sentry",
+        "mcp",
+        "errors",
+        "performance",
+        "monitoring",
+        "debugging",
+        "engineering"
+      ],
+      "category": "engineering",
+      "license": "MIT"
+    },
+    {
       "name": "setup-engineering-workflow",
       "source": "./plugins/setup-engineering-workflow",
       "description": "Set up the engineering workflow's per-repo context: an `## Agent skills` block in AGENTS.md/CLAUDE.md plus `docs/agents/` capturing the issue tracker (GitHub, GitLab, or local markdown), triage label vocabulary, and domain doc layout, with the full workflow skill map recorded as a reference inventory.",

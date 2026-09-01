@@ -1,0 +1,17 @@
+{
+  "name": "sentry",
+  "version": "0.1.0",
+  "description": "Use Sentry error tracking, performance monitoring, and stack traces from engineering agents via the official Sentry MCP server",
+  "category": "engineering",
+  "author": {
+    "name": "Athenaflow"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Sentry",
+    "shortDescription": "Query errors, stack traces, performance, and release data in Sentry",
+    "developerName": "Athenaflow",
+    "category": "Engineering"
+  },
+  "mcpServers": "./.mcp.json"
+}

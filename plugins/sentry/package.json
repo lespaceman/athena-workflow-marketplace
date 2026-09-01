@@ -1,0 +1,25 @@
+{
+  "name": "@athenaflow/plugin-sentry",
+  "version": "0.1.0",
+  "description": "Sentry MCP and agent workflow guidance for error tracking and performance monitoring.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lespaceman/athena-workflow-marketplace.git",
+    "directory": "plugins/sentry"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    ".mcp.json",
+    "skills/",
+    "dist/"
+  ],
+  "scripts": {
+    "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
+    "prepack": "npm run build:artifacts"
+  }
+}

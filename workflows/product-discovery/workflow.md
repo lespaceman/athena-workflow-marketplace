@@ -1,6 +1,6 @@
 # Product Discovery Workflow
 
-Carry a product idea from raw intent to two delivery-ready artifacts: a grounded PRD and a throwaway prototype, published as a Linear project that the `fullstack-engineering` workflow can pick up. This Workflow is a state machine with evidence gates. It orchestrates specialist Skills; it does not teach their internal methods.
+Carry a product idea from raw intent to two delivery-ready artifacts: a grounded PRD and a throwaway prototype, published as a project on the tracker of record (a Linear project, or a ClickUp list plus Doc) that the `fullstack-engineering` workflow can pick up. This Workflow is a state machine with evidence gates. It orchestrates specialist Skills; it does not teach their internal methods.
 
 ## Operating Principle
 
@@ -19,12 +19,13 @@ This Workflow requires the following Plugin surfaces. Treat this table as the ag
 | Plugin | Skills |
 |--------|--------|
 | `setup-engineering-workflow` | `setup-engineering-workflow` |
-| `matt-pocock-skills` | `triage`, `grill-me`, `grill-with-docs`, `zoom-out`, `prototype`, `to-prd`, `to-issues`, `handoff` |
+| `matt-pocock-skills` | `triage`, `grill-with-docs`, `zoom-out`, `prototype`, `to-prd`, `to-issues`, `handoff` |
 | `app-exploration` | `map-feature-scope`, `capture-feature-evidence` |
 | `agent-web-interface` | `agent-web-interface-guide` |
 | `frontend-design` | `frontend-design` |
 | `shadcn` | `shadcn-ui` |
 | `linear` | `linear` |
+| `clickup` | `clickup` |
 
 ## Skill Routing
 
@@ -36,15 +37,15 @@ Record loaded Skills in the phase artifact when the phase delegates work to a Sk
 
 | Activity | Skill |
 |----------|-------|
-| Repo foundation (glossary, tracker, label vocabulary) | `setup-engineering-workflow` |
+| Repo foundation (glossary, tracker, label vocabulary; its delivery-mode section does not apply here) | `setup-engineering-workflow` |
 | Logging or moving an idea/issue on the tracker | `triage` |
 | Linear project, issue, and document work | `linear` |
+| ClickUp list, task, and doc work (when ClickUp is the tracker of record) | `clickup` |
 | Unknown code area mapping | `zoom-out` |
 | Feature decomposition of an existing surface | `map-feature-scope` |
 | Observing current product behavior | `capture-feature-evidence` |
 | Browser interaction (evidence and viewing the prototype) | `agent-web-interface-guide` |
-| Stress-testing the idea against the domain model and ADRs | `grill-with-docs` |
-| Stress-testing the idea when no repo domain model applies | `grill-me` |
+| Stress-testing the idea against the domain model and ADRs (creates `CONTEXT.md`/ADRs lazily if none exist) | `grill-with-docs` |
 | Building a throwaway prototype to answer a design question | `prototype` |
 | Designing prototype UI | `frontend-design` |
 | shadcn component primitives in the prototype | `shadcn-ui` |
@@ -83,11 +84,11 @@ Anti-pattern:
 
 At every session start:
 
-- Read tracker, Linear project, handoff, or prior execution notes.
+- Read tracker, tracker project (Linear or ClickUp), handoff, or prior execution notes.
 - Reconcile done, pending, blocked, and unknown work.
 - Record current phase before changing files.
 
-If Linear is the source of truth, load `linear` before reading or writing tracker state.
+If Linear is the source of truth, load `linear` before reading or writing tracker state; if ClickUp is, load `clickup` and publish the project as a ClickUp list with a Doc instead of a Linear project.
 
 Fallback rule:
 
@@ -100,7 +101,7 @@ Minimum execution note fields:
 - Current phase.
 - Discovery goal.
 - Loaded Skills.
-- Completed artifacts (evidence note, decisions, prototype location, PRD, Linear refs).
+- Completed artifacts (evidence note, decisions, prototype location, PRD, tracker refs).
 - Pending artifacts.
 - Blocker, or `None`.
 - Next action.
@@ -110,7 +111,7 @@ Minimum execution note fields:
 
 Default path:
 
-**Intake -> Evidence -> Alignment -> Prototype -> PRD -> Publish to Linear -> Handoff to Engineering**
+**Intake -> Evidence -> Alignment -> Prototype -> PRD -> Publish to the tracker of record -> Handoff to Engineering**
 
 Alternate terminal state:
 
@@ -130,7 +131,7 @@ Goal: frame the discovery and choose the path.
 
 Enter with:
 
-- A product idea, request, problem statement, or Linear item.
+- A product idea, request, problem statement, or tracker item (Linear or ClickUp).
 
 Evidence required:
 
@@ -216,7 +217,7 @@ Evidence required:
 Action:
 
 - Use `grill-with-docs` to stress-test the idea against the domain model and ADRs, updating `CONTEXT.md` / ADRs inline when decisions crystallize.
-- Use `grill-me` when no repo domain model applies.
+- When no repo domain model exists yet, `grill-with-docs` still applies — it creates `CONTEXT.md` and ADRs lazily as decisions crystallize.
 - Resolve dependencies between decisions one at a time; record a recommended answer for each.
 
 Artifact:
@@ -316,9 +317,9 @@ Anti-pattern:
 - Do not invent requirements the discovery never grounded.
 - Do not interview the user from scratch at PRD time.
 
-## Phase 6: Publish to Linear
+## Phase 6: Publish to the tracker of record
 
-Goal: turn the PRD into a Linear project engineering can grab.
+Goal: turn the PRD into a project engineering can grab, on whichever tracker `docs/agents/issue-tracker.md` names — a Linear project via `linear`, or a ClickUp list plus Doc via `clickup`.
 
 Enter with:
 
@@ -326,17 +327,17 @@ Enter with:
 
 Evidence required:
 
-- The owning Linear team/project is identified or can be created.
+- The owning Linear team/project, or ClickUp space/list, is identified or can be created.
 
 Action:
 
-- Use `linear` to create or refresh the project and attach or link the PRD and prototype.
-- Use `to-issues` to break the PRD into independently-grabbable vertical-slice issues, then create them via `linear`.
+- Use `linear` (or `clickup`) to create or refresh the project (or list plus Doc) and attach or link the PRD and prototype.
+- Use `to-issues` to break the PRD into independently-grabbable vertical-slice issues, then create them via `linear` (or `clickup`).
 - Link each issue to the PRD and prototype.
 
 Artifact:
 
-- Linear project containing the PRD reference, prototype reference, and vertical-slice issues.
+- Tracker project (Linear project, or ClickUp list plus Doc) containing the PRD reference, prototype reference, and vertical-slice issues.
 
 Gate:
 
@@ -344,7 +345,7 @@ Gate:
 
 Stop if:
 
-- Linear access or the target project cannot be obtained.
+- Tracker access (Linear or ClickUp) or the target project cannot be obtained.
 
 Anti-pattern:
 
@@ -357,7 +358,7 @@ Goal: package discovery so the `fullstack-engineering` workflow can start withou
 
 Enter with:
 
-- PRD, prototype, and Linear project references.
+- PRD, prototype, and tracker project references (Linear project, or ClickUp list plus Doc).
 
 Evidence required:
 
@@ -366,7 +367,7 @@ Evidence required:
 Action:
 
 - Use `handoff` to write the handoff document.
-- Name the PRD location/URL, prototype repo and route, Linear project and issue keys, resolved decisions, open risks, and the recommended next workflow (`fullstack-engineering`).
+- Name the PRD location/URL, prototype repo and route, tracker project and issue keys (Linear or ClickUp), resolved decisions, open risks, and the recommended next workflow (`fullstack-engineering`).
 
 Artifact:
 
@@ -402,7 +403,7 @@ The Workflow is complete only when:
 
 - A PRD exists with problem, users, scope, and observable acceptance criteria.
 - A runnable throwaway prototype exists and its chosen direction is recorded.
-- A Linear project exists with vertical-slice issues linked to the PRD and prototype.
+- A tracker project (Linear project, or ClickUp list plus Doc) exists with vertical-slice issues linked to the PRD and prototype.
 - The handoff note names every artifact and the recommended next workflow.
 - Open risks and deferred decisions are documented.
 
@@ -413,7 +414,7 @@ Stop and hand off when:
 - Required evidence cannot be gathered.
 - A required Skill or Plugin named in this document is unavailable.
 - A design decision requires a user choice that cannot be obtained.
-- Linear or the prototype repo is inaccessible.
+- The tracker of record (Linear or ClickUp) or the prototype repo is inaccessible.
 - Work cannot finish in the current session.
 
 The handoff must name current phase, completed artifacts, blocker, last verification result, and next action.
