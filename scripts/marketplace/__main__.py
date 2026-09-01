@@ -9,6 +9,7 @@ from pathlib import Path
 
 from .compiler import CompileError, compile_workflow
 from .loader import ConsistencyError, load
+from .workflow_refs import check_all_workflow_references
 from .writer import (
     bump_plugin,
     bump_workflow,
@@ -44,7 +45,13 @@ def cmd_validate(args: argparse.Namespace) -> int:
         for finding in plan_findings:
             print(f"  - {finding}")
         return 1
-    print(f"OK: {len(model.plugins)} plugins, {len(model.workflows)} workflows; all three registries in sync.")
+    ref_findings = check_all_workflow_references(model)
+    if ref_findings:
+        print("Workflow file / Plugin Pin cross-check failed:")
+        for finding in ref_findings:
+            print(f"  - {finding}")
+        return 1
+    print(f"OK: {len(model.plugins)} plugins, {len(model.workflows)} workflows; all three registries in sync; workflow files match their Plugin Pins.")
     return 0
 
 
@@ -192,7 +199,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo-root", default=".", help="repo root (default: current directory)")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p_validate = sub.add_parser("validate", help="check that all three Marketplace Registries are projections of the canonical model")
+    p_validate = sub.add_parser("validate", help="check registries, Plugin Pins, MCP configs, and workflow-file skill references against the canonical model")
     p_validate.set_defaults(func=cmd_validate)
 
     p_wr = sub.add_parser("write-registries", help="rewrite the three Marketplace Registries from the canonical model")

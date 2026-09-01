@@ -1,0 +1,25 @@
+name: Validate Marketplace
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Marketplace tooling unit tests
+        run: python3 -m unittest discover -s scripts/marketplace/tests -t scripts -p 'test_*.py'
+
+      - name: Validate registries, Plugin Pins, MCP configs, and workflow skill references
+        run: scripts/marketplace-cli validate

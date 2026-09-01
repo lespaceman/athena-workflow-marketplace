@@ -9,6 +9,7 @@ work.
 |----------|-------|
 | Define the smoke charter and included release checks | `define-smoke-scope` |
 | Gather grounded product evidence | `capture-feature-evidence` |
+| Drive the live browser inside the evidence-gathering subagent | `agent-web-interface-guide` |
 | Update shared prioritization when needed | `plan-test-coverage` |
 
 ## Workflow Sequence
@@ -29,6 +30,7 @@ The default progression is:
 
 - `define-smoke-scope` owns `docs/qa/smoke-charter.md`, not the shared artifact chain.
 - `capture-feature-evidence` owns `docs/qa/exploration-report.md`.
+- A risk hypothesis that evidence gathering confirms as a product defect is filed on the target repo's issue tracker before the charter is finalized — via `linear` when Linear is the tracker of record — so the charter cites a real ticket, not a placeholder.
 - `plan-test-coverage` owns `docs/qa/coverage-plan.md`.
 
 If runnable automation is requested after the smoke charter is finalized, stop with an explicit

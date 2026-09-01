@@ -130,3 +130,7 @@ Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-
 ### Domain docs
 
 Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
+### Delivery mode
+
+`merge` — `main` is unprotected and the repo has a single maintainer, so a finished working branch is merged into `main` locally and the worktree removed; no PR, no prompt. See `docs/agents/delivery.md`.

@@ -10,6 +10,7 @@ from .model import (
     Workflow,
 )
 from .semver import bump_part
+from .workflow_refs import check_all_workflow_references, check_workflow_references, plugin_skill_names
 from .writer import (
     bump_plugin,
     bump_workflow,
@@ -35,9 +36,12 @@ __all__ = [
     "bump_part",
     "bump_plugin",
     "bump_workflow",
+    "check_all_workflow_references",
+    "check_workflow_references",
     "compile_workflow",
     "diff_registries",
     "load",
+    "plugin_skill_names",
     "write_all",
     "write_per_plugin_manifests",
     "write_registries",
