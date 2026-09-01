@@ -141,7 +141,7 @@ Engineering-workflow skills, loaded by trigger on the agent's own judgment (mode
 3. Group them under these headings, dropping any heading with no installed skill: **Setup**, **Alignment & planning**, **Tracker & triage**, **Production errors**, **Code & diagnosis**, **UI**, **Live browser**, **Exploration**, **Test design**, **Test automation**, **Release scope**, **Handoff**.
 4. List skills that are installed with a pinned plugin but are *not* routed by the workflow under a final line **Installed, not part of the workflow (load only on explicit request):** — the workflow's own `## Plugins` section names them.
 
-If neither source is resolvable, fall back to this reference inventory (current as of `fullstack-engineering` 0.1.16) and say so in the block:
+If neither source is resolvable, fall back to this reference inventory (kept in step with the `## Plugins` table in the `fullstack-engineering` workflow) and say so in the block:
 
 - **Setup:** `setup-engineering-workflow`
 - **Alignment & planning:** `grill-with-docs`, `prototype`, `to-prd`, `to-issues`

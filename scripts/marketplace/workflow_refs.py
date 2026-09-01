@@ -7,9 +7,12 @@ Two rules (RFC 0001, "Workflow File Conventions"):
    workflow's own "missing Skill -> Stop" rule fire on every run.
 2. Every pinned Plugin must be referenced at least once, by its own name or by one of
    its Skills. An unreferenced pin costs context on every turn and never routes.
+3. In a Plugins table (a Markdown row whose first cell is a backticked Plugin name),
+   every backticked name in the remaining cells must be a Skill that Plugin ships. This
+   is the one place a name that exists nowhere (a typo, a removed Skill) can be caught.
 
-Limits: rule 1 only knows Skills that exist somewhere in this repository, so a name that
-exists nowhere (a typo, a removed skill) is invisible to it. Fenced code blocks are not
+Limits: outside a Plugins table, rule 1 only knows Skills that exist somewhere in this
+repository, so a nonexistent name in running prose is invisible. Fenced code blocks are not
 scanned. A workflow file can exempt a deliberate mention of an unpinned Skill with an
 HTML comment: ``<!-- marketplace-validate: ignore-skill <name> -->``.
 """
@@ -22,9 +25,10 @@ from .model import MarketplaceModel, Plugin, Workflow
 
 _BACKTICKED = re.compile(r"`([A-Za-z0-9][A-Za-z0-9_-]*)`")
 _FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,}).*?^[ \t]*\1[ \t]*$", re.S | re.M)
-_FRONTMATTER = re.compile(r"\A﻿?---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\Z)", re.S)
+_FRONTMATTER = re.compile("\\A\ufeff?---[ \\t]*\\r?\\n(.*?)\\r?\\n---[ \\t]*(?:\\r?\\n|\\Z)", re.S)
 _NAME_FIELD = re.compile(r"^name:[ \t]*(.+?)[ \t]*$", re.M)
 _IGNORE = re.compile(r"<!--\s*marketplace-validate:\s*ignore-skill\s+([A-Za-z0-9][A-Za-z0-9_-]*)\s*-->")
+_TABLE_ROW = re.compile(r"^\|\s*`([A-Za-z0-9][A-Za-z0-9_-]*)`\s*\|(.*)\|\s*$", re.M)
 
 
 def _skill_roots(plugin: Plugin) -> list[Path]:
@@ -82,6 +86,12 @@ def referenced_names(markdown: str) -> tuple[set[str], set[str]]:
     return set(_BACKTICKED.findall(prose)), ignored
 
 
+def plugin_table_rows(markdown: str) -> list[tuple[str, list[str]]]:
+    """(first-cell name, backticked names in the other cells) for every table row."""
+    prose = _FENCE.sub("", markdown)
+    return [(head, _BACKTICKED.findall(rest)) for head, rest in _TABLE_ROW.findall(prose)]
+
+
 def check_workflow_references(
     model: MarketplaceModel,
     workflow: Workflow,
@@ -94,11 +104,24 @@ def check_workflow_references(
     if not md_path.is_file():
         return [f"{workflow.name}: workflowFile {md_path.name!r} does not exist"]
 
-    tokens, ignored = referenced_names(md_path.read_text(encoding="utf-8"))
+    markdown = md_path.read_text(encoding="utf-8")
+    tokens, ignored = referenced_names(markdown)
     if owners is None:
         owners = skill_owners(model)
     pinned = {pin.plugin_name for pin in workflow.pins}
+    known = {p.name for p in model.plugins}
     findings: list[str] = []
+
+    for head, names in plugin_table_rows(markdown):
+        if head not in known:
+            continue
+        shipped = set(plugin_skill_names(model.plugin(head)))
+        for name in names:
+            if name not in shipped and name != head:
+                findings.append(
+                    f"{workflow.name}: {md_path.name} lists `{name}` under plugin {head!r}, "
+                    f"which ships no such skill ({', '.join(sorted(shipped)) or 'none'})"
+                )
 
     for token in sorted(tokens - ignored):
         token_owners = owners.get(token)
@@ -108,7 +131,6 @@ def check_workflow_references(
                 f"({', '.join(sorted(token_owners))}) is not pinned in workflow.json"
             )
 
-    known = {p.name for p in model.plugins}
     for plugin_name in sorted(pinned):
         if plugin_name not in known:
             continue  # the compiler already reports unknown pins

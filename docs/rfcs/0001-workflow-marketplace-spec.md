@@ -153,6 +153,7 @@ When `workflowFile` is present, this repository's validator (`scripts/marketplac
 
 - Every backticked name in the file that matches a Skill shipped by any Plugin in this repository MUST belong to a pinned Plugin.
 - Every pinned Plugin MUST be referenced at least once, by its own name or by one of its Skills.
+- In a Plugins table (a row whose first cell is a backticked Plugin name), every backticked name in the other cells MUST be a Skill that Plugin ships — the one check that catches a Skill name existing nowhere.
 - Fenced code blocks are not scanned. A deliberate mention of an unpinned Skill can be exempted with `<!-- marketplace-validate: ignore-skill <name> -->`.
 
 ### Loop Semantics

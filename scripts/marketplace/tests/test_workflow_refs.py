@@ -110,6 +110,17 @@ class TestWorkflowReferences(unittest.TestCase):
             model = load(root)
             self.assertEqual(check_workflow_references(model, model.workflow("flow")), [])
 
+    def test_plugins_table_catches_a_skill_that_exists_nowhere(self):
+        md = "| Plugin | Skills |\n|---|---|\n| `alpha` | `a-skill`, `ghost-skill` |\n"
+        findings = self._findings(["alpha"], md)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("`ghost-skill`", findings[0])
+        self.assertIn("'alpha'", findings[0])
+
+    def test_plugins_table_accepts_shipped_skills_and_non_plugin_rows(self):
+        md = "| Plugin | Skills |\n|---|---|\n| `alpha` | `a-skill` |\n| `not-a-plugin` | `whatever` |\n| Activity | `a-skill` |\n"
+        self.assertEqual(self._findings(["alpha"], md), [])
+
     def test_missing_workflow_file_is_reported(self):
         with TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -1,0 +1,119 @@
+diff --git a/src/infra/plugins/__tests__/loader.test.ts b/src/infra/plugins/__tests__/loader.test.ts
+index 34d9b6c..eb40f3b 100644
+--- a/src/infra/plugins/__tests__/loader.test.ts
++++ b/src/infra/plugins/__tests__/loader.test.ts
+@@ -44,6 +44,16 @@ function addSkill(name: string, frontmatter: string, body: string) {
+ 		`---\n${frontmatter}\n---\n${body}`;
+ }
+ 
++function addCategorySkill(
++	category: string,
++	name: string,
++	frontmatter: string,
++	body: string,
++) {
++	files[`/plugins/test/skills/${category}/${name}/SKILL.md`] =
++		`---\n${frontmatter}\n---\n${body}`;
++}
++
+ beforeEach(() => {
+ 	// Clear the virtual FS
+ 	for (const key of Object.keys(files)) {
+@@ -91,6 +101,41 @@ describe('loadPlugin', () => {
+ 		expect(commands[0]!.session).toBe('new');
+ 	});
+ 
++	it('loads skills nested one level under a category folder', () => {
++		// matt-pocock-skills lays skills out as skills/<category>/<skill>/SKILL.md
++		addCategorySkill(
++			'engineering',
++			'tdd',
++			'name: tdd\ndescription: Red-green-refactor\nuser-invocable: true',
++			'Body',
++		);
++
++		const commands = loadPlugin('/plugins/test');
++
++		expect(commands).toHaveLength(1);
++		expect(commands[0]!.name).toBe('tdd');
++	});
++
++	it('loads flat and category-nested skills together', () => {
++		addSkill(
++			'flat-skill',
++			'name: flat-skill\ndescription: Flat\nuser-invocable: true',
++			'Body',
++		);
++		addCategorySkill(
++			'productivity',
++			'caveman',
++			'name: caveman\ndescription: Terse\nuser-invocable: true',
++			'Body',
++		);
++
++		const names = loadPlugin('/plugins/test')
++			.map(c => c.name)
++			.sort();
++
++		expect(names).toEqual(['caveman', 'flat-skill']);
++	});
++
+ 	it('filters out non-invocable skills', () => {
+ 		addSkill(
+ 			'invocable',
+diff --git a/src/infra/plugins/loader.ts b/src/infra/plugins/loader.ts
+index 1407f55..cb9cd0f 100644
+--- a/src/infra/plugins/loader.ts
++++ b/src/infra/plugins/loader.ts
+@@ -40,20 +40,11 @@ export function loadPlugin(pluginDir: string): PromptCommand[] {
+ 	const mcpConfigPath = path.join(pluginDir, '.mcp.json');
+ 	const hasMcpConfig = fs.existsSync(mcpConfigPath);
+ 
+-	const entries = fs.readdirSync(skillsDir, {withFileTypes: true});
+ 	const commands: PromptCommand[] = [];
+ 
+-	for (const entry of entries) {
+-		if (!entry.isDirectory()) continue;
+-
+-		const skillPath = path.join(skillsDir, entry.name, 'SKILL.md');
+-		if (!fs.existsSync(skillPath)) continue;
+-
+-		const content = fs.readFileSync(skillPath, 'utf-8');
+-		const parsed = parseFrontmatter(content);
+-
+-		if (!parsed.frontmatter['user-invocable']) continue;
+-
++	const loadSkillFile = (skillPath: string): void => {
++		const parsed = parseFrontmatter(fs.readFileSync(skillPath, 'utf-8'));
++		if (!parsed.frontmatter['user-invocable']) return;
+ 		commands.push(
+ 			skillToCommand(
+ 				parsed.frontmatter,
+@@ -61,6 +52,27 @@ export function loadPlugin(pluginDir: string): PromptCommand[] {
+ 				hasMcpConfig ? mcpConfigPath : undefined,
+ 			),
+ 		);
++	};
++
++	for (const entry of fs.readdirSync(skillsDir, {withFileTypes: true})) {
++		if (!entry.isDirectory()) continue;
++
++		const entryDir = path.join(skillsDir, entry.name);
++		const directSkill = path.join(entryDir, 'SKILL.md');
++
++		if (fs.existsSync(directSkill)) {
++			// Flat layout: skills/<skill>/SKILL.md
++			loadSkillFile(directSkill);
++			continue;
++		}
++
++		// Category layout: skills/<category>/<skill>/SKILL.md (one level deeper).
++		// matt-pocock-skills groups skills under engineering/ and productivity/.
++		for (const nested of fs.readdirSync(entryDir, {withFileTypes: true})) {
++			if (!nested.isDirectory()) continue;
++			const nestedSkill = path.join(entryDir, nested.name, 'SKILL.md');
++			if (fs.existsSync(nestedSkill)) loadSkillFile(nestedSkill);
++		}
+ 	}
+ 
+ 	return commands;
