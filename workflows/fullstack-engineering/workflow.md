@@ -71,7 +71,9 @@ LAST VERIFICATION: <command + result, or "Not run">
 Rules:
 - No status block emitted -> you are not allowed to edit files, run commands, or call Skills this turn.
 - The block is cheap and mandatory. Re-emit it after every phase transition and after every Stop.
-- **Persist it; printing it is not enough.** The chat does not survive compaction. Every turn, write the current block into the **run tracker**'s `## Status` section (overwrite in place) and append every gate line to a `## Gates` ledger in the same file. The run tracker is the runtime's tracker file, whose last line the runtime reads for terminal markers; it is distinct from the **issue tracker** (Linear, ClickUp, GitHub). When the runtime provides no run tracker, keep a session note file with the same two sections and treat it as the run tracker everywhere below.
+- **Persist it; printing it is not enough.** The chat does not survive compaction. Every turn, write the current block into the **run tracker**'s `## Status` section (overwrite in place) — current truth and next intent only, revised in place, never appended.
+- **Gate lines are the run's journal, not its state**, so they follow the run tracker's own shedding rules rather than the Status section's overwrite-in-place rule. Append every gate line to a `## Gates` ledger in the run tracker as you emit it. On the common single-unit run this is the whole of it: the run tracker's Dossier never grows past the run tracker itself, and the `## Gates` ledger simply lives there for the life of the run. If the run tracker's Dossier sheds a unit — a phase or slice closing while another stays open, or the run tracker crossing the runtime's size threshold — that unit's gate lines move with the rest of its cold detail into its unit record, and the run tracker keeps only a pointer row plus the still-open unit's live gate lines in its own `## Gates` ledger. On a runtime with no Dossier/unit-record mechanism, every gate line simply stays in the run tracker's `## Gates` ledger, unshed, as before — never drop a gate line to keep the file small.
+- The run tracker is the runtime's tracker file, whose last line the runtime reads for terminal markers; it is distinct from the **issue tracker** (Linear, ClickUp, GitHub). When the runtime provides no run tracker, keep a session note file with the same two sections and treat it as the run tracker everywhere below.
 - Nothing in the harness checks this for you. Fill the block by reading the run tracker's `## Status` and reconciling it against `git status` / `git log` — that read-only inspection is part of emitting the block, not an action gated by it. Then write the corrected block back before any other action. A stale `## Status` is exactly the workflow failure this rule exists to make visible.
 
 ## Phase Transition Rule — the hard forcing function
@@ -82,7 +84,7 @@ You may NOT begin phase N+1 until you have, in the conversation, emitted:
 GATE <phase N>: PASS — artifact: <where it lives durably> — evidence: <what proves the gate>
 ```
 
-- One gate line per phase, before the next phase's first action, emitted in the chat AND appended to the run tracker's `## Gates` ledger. No line -> no transition.
+- One gate line per phase, before the next phase's first action, emitted in the chat AND appended to the run tracker's `## Gates` ledger — or, once that phase's unit has been shed to its unit record, to that record's gate evidence instead. No line -> no transition.
 - "Evidence" is observable: a command's output, a committed file, a tracker entry, browser proof. Never "I believe" / "it should".
 - A gate you cannot honestly mark PASS is a Stop, not a downgrade. Route it per the phase's Stop channel.
 - Mandatory Gates (Phase 7, Phase 8) are never marked PASS without the proof named there, and never self-waived.
