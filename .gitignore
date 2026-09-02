@@ -21,3 +21,6 @@ evals/.ruff_cache/
 *.db
 *.db-wal
 *.db-shm
+
+# Athena/drisp run session directories
+.athena/
