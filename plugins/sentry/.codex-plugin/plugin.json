@@ -1,6 +1,6 @@
 {
   "name": "sentry",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Use Sentry error tracking, performance monitoring, and stack traces from engineering agents via the official Sentry MCP server",
   "category": "engineering",
   "author": {
