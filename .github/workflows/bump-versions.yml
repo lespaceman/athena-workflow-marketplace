@@ -127,31 +127,40 @@ jobs:
           # `npm publish` succeeds and registers metadata but the tarball never
           # lands on the CDN, leaving the package uninstallable. Catch it here
           # rather than at user `npm install` time.
+          #
+          # BOTH the metadata lookup (`npm view … dist.tarball`) and the tarball
+          # fetch are retried: right after a publish npm's read replica can lag,
+          # returning an empty tarball URL for a few seconds. Retrying only the
+          # fetch (not the lookup) made this step false-fail on that propagation
+          # race even though the publish had succeeded.
           fail=0
           while IFS= read -r plugin; do
             [ -n "$plugin" ] || continue
             pkg_name="$(node -p "require('./plugins/$plugin/package.json').name")"
             pkg_version="$(node -p "require('./plugins/$plugin/package.json').version")"
-            tarball_url="$(npm view "${pkg_name}@${pkg_version}" dist.tarball 2>/dev/null)"
-            if [ -z "$tarball_url" ]; then
-              echo "::error::No tarball URL returned by registry for ${pkg_name}@${pkg_version}"
-              fail=1
-              continue
-            fi
-            echo "Verifying ${pkg_name}@${pkg_version} -> ${tarball_url}"
+            echo "Verifying ${pkg_name}@${pkg_version}..."
             ok=0
-            for attempt in 1 2 3 4 5; do
+            last=""
+            for attempt in 1 2 3 4 5 6; do
+              tarball_url="$(npm view "${pkg_name}@${pkg_version}" dist.tarball 2>/dev/null)"
+              if [ -z "$tarball_url" ]; then
+                last="registry has no tarball URL yet"
+                echo "  attempt ${attempt}: ${last} — retrying in $((attempt * 5))s"
+                sleep $((attempt * 5))
+                continue
+              fi
               status="$(curl -sS -o /dev/null -w '%{http_code}' -I "$tarball_url" || echo "000")"
               if [ "$status" = "200" ]; then
-                echo "  attempt ${attempt}: HTTP ${status} OK"
+                echo "  attempt ${attempt}: HTTP 200 OK -> ${tarball_url}"
                 ok=1
                 break
               fi
-              echo "  attempt ${attempt}: HTTP ${status} — retrying in $((attempt * 5))s"
+              last="tarball HTTP ${status}"
+              echo "  attempt ${attempt}: ${last} — retrying in $((attempt * 5))s"
               sleep $((attempt * 5))
             done
             if [ "$ok" != "1" ]; then
-              echo "::error::Tarball for ${pkg_name}@${pkg_version} is not retrievable after publish (last status ${status}). npm registered metadata but did not persist the tarball — re-run the workflow or push a trivial change to force a republish."
+              echo "::error::${pkg_name}@${pkg_version} is not verifiably published after retries (last: ${last}). npm registered metadata but the tarball is not retrievable — re-run the workflow or push a trivial change to force a republish."
               fail=1
             fi
           done <<'EOF'
