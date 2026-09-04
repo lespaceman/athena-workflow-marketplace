@@ -72,20 +72,6 @@ jobs:
           ${{ steps.collect_plugins.outputs.plugin_list }}
           EOF
 
-      - name: Commit version bumps
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No version changes to commit"
-          else
-            git commit -m "chore: auto-bump versions [skip ci]"
-            git pull --rebase origin main
-            git push
-          fi
-
       - name: Publish changed plugins to npm
         if: steps.collect_plugins.outputs.changed == 'true'
         shell: bash
@@ -172,3 +158,25 @@ jobs:
           ${{ steps.collect_plugins.outputs.plugin_list }}
           EOF
           exit "$fail"
+
+      # Commit the version bumps LAST — only after publish and verify have both
+      # succeeded. If publishing fails (e.g. a token that cannot write to the
+      # scope), every step below the failure is skipped, so the bumped versions
+      # and cascaded pins are never pushed to main. This keeps main from drifting
+      # ahead of npm — pinning a workflow to a version that was never published.
+      # `npm publish` reads the working-tree package.json (already bumped in the
+      # first step), so publishing before committing is safe. Workflow-only bumps
+      # (no plugin changed → Publish/Verify skip as success) still land here.
+      - name: Commit version bumps
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+          else
+            git commit -m "chore: auto-bump versions [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
