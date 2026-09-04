@@ -16,7 +16,8 @@
     ".codex-plugin/",
     "skills/",
     "dist/",
-    "NOTICE.md"
+    "NOTICE.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",

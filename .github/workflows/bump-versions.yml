@@ -90,13 +90,46 @@ jobs:
         if: steps.collect_plugins.outputs.changed == 'true'
         shell: bash
         run: |
+          # Attempt every changed plugin independently. A single plugin's failure
+          # (e.g. a brand-new scoped package the NPM_TOKEN cannot create, which npm
+          # reports as a 404 on PUT) must NOT abort the loop and starve the plugins
+          # queued behind it — that is how one new package silently blocked an
+          # existing plugin's release. Collect outcomes and fail at the end.
+          set +e
+          published=()
+          skipped=()
+          failed=()
           while IFS= read -r plugin; do
             [ -n "$plugin" ] || continue
-            echo "Publishing $plugin..."
-            (cd "plugins/$plugin" && npm publish --access public --provenance)
+            pkg_name="$(node -p "require('./plugins/$plugin/package.json').name")"
+            pkg_version="$(node -p "require('./plugins/$plugin/package.json').version")"
+
+            # Idempotent re-runs: if this exact version is already on the registry,
+            # skip it rather than failing on npm's EPUBLISHCONFLICT.
+            if npm view "${pkg_name}@${pkg_version}" version >/dev/null 2>&1; then
+              echo "Skipping ${pkg_name}@${pkg_version} — already published."
+              skipped+=("${pkg_name}@${pkg_version}")
+              continue
+            fi
+
+            echo "Publishing ${pkg_name}@${pkg_version}..."
+            if (cd "plugins/$plugin" && npm publish --access public --provenance); then
+              published+=("${pkg_name}@${pkg_version}")
+            else
+              echo "::error::Failed to publish ${pkg_name}@${pkg_version}. If npm reported a 404 on PUT, this is a new package the NPM_TOKEN cannot create — grant the token publish access to ${pkg_name} (or first-publish it manually), then re-run."
+              failed+=("${pkg_name}@${pkg_version}")
+            fi
           done <<'EOF'
           ${{ steps.collect_plugins.outputs.plugin_list }}
           EOF
+
+          echo "Published: ${published[*]:-(none)}"
+          echo "Skipped (already published): ${skipped[*]:-(none)}"
+          echo "Failed: ${failed[*]:-(none)}"
+          if [ "${#failed[@]}" -gt 0 ]; then
+            echo "::error::${#failed[@]} plugin(s) failed to publish: ${failed[*]}"
+            exit 1
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
