@@ -16,7 +16,8 @@
     ".codex-plugin/",
     ".mcp.json",
     "skills/",
-    "dist/"
+    "dist/",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build:artifacts": "node ../../scripts/build-plugin-artifacts.mjs .",
