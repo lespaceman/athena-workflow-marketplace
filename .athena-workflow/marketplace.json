@@ -61,6 +61,12 @@
       "source": "./workflows/product-discovery/workflow.json",
       "description": "Turn a product idea into a grounded PRD and a throwaway prototype, then publish them as a Linear project that feeds the fullstack-engineering workflow",
       "version": "0.1.13"
+    },
+    {
+      "name": "gg-v7",
+      "source": "./workflows/gg-v7/workflow.json",
+      "description": "Take a pasted task end-to-end \u2014 one requirements grill, then worktree, tests, atomic commits, hard gate, audit, and a raised PR",
+      "version": "0.1.0"
     }
   ]
 }
