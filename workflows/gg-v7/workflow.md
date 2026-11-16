@@ -42,6 +42,7 @@ Never guess a placeholder. Record every resolved value in the run log's `## Proj
 | `{{TYPE_PREFIXES}}` | Allowed change-type prefixes | FEAT / BUG / EN / UI / HOUSEKEEPING / REFACTOR / TEST / CONFIG |
 | `{{SENSITIVE_DATA_EXAMPLES}}` | Concrete kinds of production data this domain holds | account numbers, mailboxes, customer IDs |
 | `{{KNOWN_BASELINE_FAILURES}}` | Tests known to fail on a clean base branch | none |
+| `{{KNOWN_FAILURE_DESELECTS}}` | pytest `--deselect` flags for those tests, derived from the line above | empty |
 | `{{GATE_COMMANDS}}` | The repo's authoritative check list, if it defines one | `make check` |
 | `{{STACK}}` | Stack(s) the change touches, selecting the gate below | Python/Django, TypeScript/Vite, Java |
 | `{{PY_ENV_TOOL}}` | Python environment manager | poetry |
@@ -166,7 +167,7 @@ A wrong title or list is editable afterwards; a stop is not recoverable. Ownersh
 
 ## Stage 2 — Requirements — THE ONLY STOP
 
-Load `grill-with-docs` and interrogate until the requirements are unambiguous — edge cases, inputs and outputs, what is explicitly out of scope. This is the one stage that holds the user, because it is the one input that cannot be derived. Everything after it runs autonomously, so a misread here is expensive: it freezes the tests against the wrong target and is not caught until the PR.
+Load `grill-with-docs` for its interview only — do not create or edit `CONTEXT.md` or ADRs unless the user asks, since those files would land in the PR outside the task's scope — and interrogate until the requirements are unambiguous — edge cases, inputs and outputs, what is explicitly out of scope. This is the one stage that holds the user, because it is the one input that cannot be derived. Everything after it runs autonomously, so a misread here is expensive: it freezes the tests against the wrong target and is not caught until the PR.
 
 Push harder than feels comfortable. One question at a time, each with a recommended answer, and **anything answerable from the codebase gets answered by reading the codebase instead of asking** — fan out sub-agents to read while the conversation continues.
 
@@ -220,10 +221,11 @@ Detect the stack (`{{STACK}}`) and run its full check list. **Zero errors before
 
 ### Python (`{{PY_ENV_TOOL}}`) — one script, all checks, zero errors
 
-**Substitute every placeholder, write the result to `<scratchpad>/gate.sh`, and run `bash <scratchpad>/gate.sh`.** Do not split it across several Bash calls and do not paste it into an interactive shell. Shell state does not survive between tool calls, so `$VENV` and `$BASE` set in one call are empty in the next — and an empty `$BASE` makes `git diff "$BASE"...HEAD` resolve as `HEAD...HEAD`, which returns zero files, prints "no python changes" and exits 0 on a branch with dozens of changed files. That is the fake pass this whole section exists to prevent. `{{BASE_BRANCH}}` is the bare base branch confirmed at Stage 0; `{{TEST_ENV_FLAGS}}` becomes the empty string when the repo needs none. Drop the database block when `{{TEST_DB_CONTAINER}}` is `n/a`; drop a check the repo does not use (no mypy, no pre-commit) and record that.
+**Substitute every placeholder, write the result to `<scratchpad>/gate.sh`, and run `bash <scratchpad>/gate.sh`.** Do not split it across several Bash calls and do not paste it into an interactive shell. Shell state does not survive between tool calls, so `$VENV` and `$BASE` set in one call are empty in the next — and an empty `$BASE` makes `git diff "$BASE"...HEAD` resolve as `HEAD...HEAD`, which returns zero files, prints "no python changes" and exits 0 on a branch with dozens of changed files. That is the fake pass this whole section exists to prevent. `{{BASE_BRANCH}}` is the bare base branch confirmed at Stage 0; `{{TEST_ENV_FLAGS}}` becomes the empty string when the repo needs none. `{{KNOWN_FAILURE_DESELECTS}}` becomes one `--deselect <node-id>` per test in `{{KNOWN_BASELINE_FAILURES}}`, or the empty string — the only failures the gate may ignore are the ones the user accepted at Stage 0. Drop the database block when `{{TEST_DB_CONTAINER}}` is `n/a`; drop a check the repo does not use (no mypy, no pre-commit) and record that.
 
 ```bash
 set -u
+[ -f "$0" ] || { echo "GATE RED: run as a file, not piped"; exit 1; }
 grep -q '{''{' "$0" && { echo "GATE RED: unsubstituted placeholder in $0"; exit 1; }
 
 BASE_BRANCH="{{BASE_BRANCH}}"
@@ -281,14 +283,14 @@ fi
 stage mypy env {{TEST_ENV_FLAGS}} PYTHONPATH="$PWD" "$VENV/bin/mypy" . --cache-dir="$PWD/.mypy_cache" \
   || { summary; echo "GATE RED: mypy"; exit 1; }
 stage pre-commit "$VENV/bin/pre-commit" run --all-files || { summary; echo "GATE RED: pre-commit"; exit 1; }
-stage pytest env {{TEST_ENV_FLAGS}} "$VENV/bin/pytest" -n auto -p no:cacheprovider \
+stage pytest env {{TEST_ENV_FLAGS}} "$VENV/bin/pytest" -n auto -p no:cacheprovider {{KNOWN_FAILURE_DESELECTS}} \
   || { summary; echo "GATE RED: pytest"; exit 1; }
 
 summary
 echo "GATE GREEN"
 ```
 
-The script assumes Poetry, ruff, pylint, mypy, pre-commit, pytest-xdist and a Dockerised Postgres. For a different `{{PY_ENV_TOOL}}`, replace only the `VENV=` line with that tool's command for the project environment path, run from `$MAIN`. Verify each tool exists in `$VENV/bin` before relying on it.
+The script assumes Poetry, ruff, pylint, mypy, pre-commit, pytest-xdist, a Dockerised Postgres, pylint config in `pyproject.toml`, and that the project's settings read the test database from `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD` and `DB_NAME`. Confirm each against the repo at Stage 0; if settings read other names (`DATABASE_URL`, `POSTGRES_*`), export those instead — otherwise the per-run database guarantee silently stops holding and concurrent runs share one test database. For a different `{{PY_ENV_TOOL}}`, replace only the `VENV=` line with that tool's command for the project environment path, run from `$MAIN`. Verify each tool exists in `$VENV/bin` before relying on it.
 
 Read the result from the **exit status and the `GATE GREEN` line**, not by eyeballing the output: a clean mypy prints `Success: no issues found in N source files` followed by a long tail of `note: ... [annotation-unchecked]` lines, which are not failures. Never pipe mypy through `grep " error: "` in an automated run — `grep` exits 1 on clean output and inverts the result of the whole gate.
 
