@@ -1,0 +1,30 @@
+{
+  "name": "gg-v7",
+  "version": "0.1.0",
+  "description": "End-to-end task orchestrator: grills the user for requirements once, then runs autonomously from an isolated worktree through tests, atomic commits, the stack's real gate and an independent audit to a raised PR",
+  "marketplaceDescription": "Take a pasted task end-to-end \u2014 one requirements grill, then worktree, tests, atomic commits, hard gate, audit, and a raised PR",
+  "promptTemplate": "{input}",
+  "workflowFile": "workflow.md",
+  "loop": {
+    "enabled": true,
+    "maxIterations": 50
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "500000"
+  },
+  "examplePrompts": [
+    "Ship this: add idempotency keys to the refund endpoint",
+    "Take this bug end-to-end: the CSV export drops rows with a blank currency field",
+    "Run the full flow on this perf ticket: the payments list endpoint takes 8s"
+  ],
+  "plugins": [
+    {
+      "ref": "matt-pocock-skills@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.8"
+    },
+    {
+      "ref": "clickup@lespaceman/athena-workflow-marketplace",
+      "version": "0.1.1"
+    }
+  ]
+}
